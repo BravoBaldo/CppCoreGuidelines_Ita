@@ -35,7 +35,7 @@ Si può [leggere una spiegazione dello scopo e sulla struttura di questa Guida](
 
 * [In: Introduzione](#S-introduction)
 * [P: Filosofia](#S-philosophy)
-* [I: Interfacce](#S-interfaces)
+* [I: Interfaccia](#S-interfaces)
 * [F: Funzioni](#S-functions)
 * [C: Classi e gerarchie di classi](#S-class)
 * [Enum: Enumerazioni](#S-enum)
@@ -47,7 +47,7 @@ Si può [leggere una spiegazione dello scopo e sulla struttura di questa Guida](
 * [Con: Costanti e immutabilità](#S-const)
 * [T: Template e programmazione generica](#S-templates)
 * [CPL: Programmazione C-style](#S-cpl)
-* [SF: File sorgenti [Source files]](#S-source)
+* [SF: File sorgenti](#S-source)
 * [SL: La Libreria Standard](#S-stdlib)
 
 Sezioni di supporto:
@@ -117,7 +117,7 @@ Si possono provare le regole per delle specifiche funzionalità del linguaggio:
 [`throw`](#Re-throw) --
 [solo per gli errori](#Re-errors) --
 [`noexcept`](#Re-noexcept) --
-[minimizzare `try`](#Re-catch) --
+[minimizzare i `try`](#Re-catch) --
 [e se non ci fossero eccezioni?](#Re-no-throw-codes)
 * `for`:
 [range-for e for](#Res-for-range) --
@@ -152,12 +152,12 @@ Si possono provare le regole per delle specifiche funzionalità del linguaggio:
 [evitare la conversione degli operatori](#Ro-conversion) --
 [e le lambda](#Ro-lambda)
 * `public`, `private`, e `protected`:
-[information hiding](#Rc-private) --
+[occultamento delle informazioni [information hiding]](#Rc-private) --
 [consistenza](#Rh-public) --
 [`protected`](#Rh-protected)
 * `static_assert`:
 [controllo in fase di compilazione](#Rp-compile-time) --
-[e concept](#Rt-check-class)
+[e concetti](#Rt-check-class)
 * `struct`:
 [per organizzare i dati](#Rc-org) --
 [usare se non sono invarianti](#Rc-struct) --
@@ -206,7 +206,7 @@ Tuttavia, niente di ciò che può aiutare il programmatore è fuori luogo.
 Il gruppo iniziale di regole enfatizza la sicurezza (sotto varie forme) e la semplicità.
 Potrebbero essere fin troppo severe.
 Ci si aspetta  di dover introdurre più eccezioni per venire meglio incontro alle esigenze del mondo reale.
-Sono necessaria di altre regole.
+Altre regole sono necessarie.
 
 Alcune delle regole risulteranno contrarie alle proprie aspettative e persino contrarie alla propria esperienza.
 Se non vi abbiamo suggerito di modificare in alcun modo di cambiare lo stile del vostro codice, abbiamo fallito!
@@ -214,12 +214,12 @@ Provate a verificare o confutare le regole!
 In particolare, si vorrebbe davvero avere su alcune regole un sostegno con misure ed esempi migliori.
 
 Alcune regole risulteranno ovvie o addirittura banali.
-Si ricordi che lo scopo di una linea-guida è quello di aiutare qualcuno che ha meno esperienza o che proviene da un diverso background o da un diverso linguaggio a mettersi al passo.
+Si ricordi che lo scopo di una linea-guida è quello di aiutare qualcuno che ha meno esperienza o che proviene da un diverso background o da un diverso linguaggio, a mettersi al passo.
 
-Molte delle regole sono progettate per essere supportate da uno tool di analisi.
+Molte delle regole sono progettate per essere supportate da un tool di analisi.
 Le violazioni alle regole verranno contrassegnate con riferimenti (o link) alla regola violata.
 Non ci aspettiamo che memorizziate tutte le regole senza aver prima provato a scrivere il codice.
-Un modo di vedere queste linee-guida è come a una specifica per dei tool ma leggibile dagli umani.
+Un modo di vedere queste linee-guida è come a una specifica per dei tool, ma leggibile dagli umani.
 
 Le regole sono pensate per essere introdotte gradualmente in un codice.
 Per questo c'è in programma la realizzazione di tool e si spera che anche altri lo facciano.
@@ -229,7 +229,7 @@ Si prevede di modificare ed estendere questo documento man mano che migliora la 
 
 # <a name="S-introduction"></a>In: Introduzione
 
-Questa è una serie di linee-guida basilari per il C++ moderno (attualmente C++17) che tengono conto sia dei possibili futuri miglioramenti che delle ISO Technical Specifications (TSs).
+Questa è una serie di linee-guida basilari per il C++ moderno (attualmente il C++17) che tengono conto sia dei possibili futuri miglioramenti che delle ISO Technical Specifications (TSs).
 L'obiettivo è quello di aiutare i programmatori C++ a scrivere codice più semplice, più efficiente e più manutenibile.
 
 Sommario dell'introduzione:
@@ -247,7 +247,7 @@ Tutti i programmatori C++. Tra cui [i programmatori che potrebbero prendere in c
 
 ## <a name="SS-aims"></a>In.aims: Obiettivi
 
-Lo scopo delle linee-guida è quello di aiutare gli sviluppatori ad adottare il C++ moderno (attualmente C++17) e per ottenere uno stile più uniforme nel codice.
+Lo scopo delle linee-guida è quello di aiutare gli sviluppatori ad adottare il C++ moderno (attualmente il C++17) e per ottenere uno stile più uniforme nel codice.
 
 Non ci si illude di vedere effettivamente applicate ognuna di queste regole a qualsiasi codice. L'aggiornamento dei vecchi sistemi è difficile. Tuttavia, si crede che un programma che usi una regola sia meno soggetto ad errori e più manutenibile di uno che non lo faccia. Spesso, le regole portano anche ad uno sviluppo iniziale più veloce/facile.
 Per quanto si sa, queste regole conducono ad un codice che funziona altrettanto bene, se non meglio, di quello più vecchio, con tecniche più convenzionali; sono pensate per seguire il principio dello "zero-overhead" ("quello che non si usa, non si paga" e "quando si usa bene un meccanismo di astrazione, si ottengono almeno le stesse buone prestazioni di quelle col codice scritto manualmente utilizzando i costrutti del linguaggio di livello più basso").
@@ -264,7 +264,7 @@ Esse, invece, raccomandano fermamente l'uso di alcune semplici "estensioni" ([co
 che rendono ridondanti le funzionalità più soggette ad errori del C++, in modo che possano essere vietate (nel nostro set di regole).
 
 Le regole enfatizzano la sicurezza del tipo statico e la sicurezza delle risorse.
-Per questo motivo, enfatizzano le possibilità di controllare i range, per evitare la de-referenziazione di `nullptr`, per evitare il dangling [penzolamento] dei puntatori, e l'uso sistematico delle eccezioni (tramite il RAII).
+Per questo motivo, enfatizzano la possibilità di controllare i range, per evitare la de-referenziazione di `nullptr`, per evitare il dangling [penzolamento] dei puntatori e l'uso sistematico delle eccezioni (tramite il RAII).
 In parte per questo, e in parte per minimizzare la confusione nel codice come fonte di errori, le regole enfatizzano anche la semplicità e il dover nascondere la complessità necessaria dietro interfacce ben definite.
 
 Molte delle regole sono normative.
@@ -301,7 +301,7 @@ Cioè, un tool cerca le violazioni per poi restituire i link alle regole violate
 Le regole quindi forniscono ragioni, esempi di potenziali conseguenze della violazione e suggeriscono rimedi.
 
 Queste linee-guida non intendono sostituire un tutorial C++.
-Se serve un tutorial per un certo livello di esperienza, si consultino [le referenze](#S-references).
+Se serve un tutorial per un certo livello di esperienza, si consultino [i riferimenti](#S-references).
 
 Questa non è una guida su come convertire del vecchio codice C++ in un codice più moderno.
 Essa ha lo scopo di articolare in modo concreto le idee per il nuovo codice.
@@ -323,7 +323,7 @@ Hanno lo scopo di inibire del codice C++ perfettamente valido ma correlato ad er
 Le regole non sono precise al punto in cui una persona (o una macchina) le possa seguire ciecamente.
 Le parti che lo impongono cercano di farlo, ma si preferisce lasciare una regola o una definizione un po' nel vago ed aperta all'interpretazione anziché specificare qualcosa di preciso e sbagliato.
 A volte, la precisione arriva solo col tempo e l'esperienza.
-Il progetto non è (ancora) una formalismo matematico.
+Il progetto non è (ancora) un formalismo matematico.
 
 Le regole non sono perfette.
 Una regola può nuocere vietando qualcosa di utile in una determinata situazione.
@@ -385,12 +385,12 @@ Poiché le sezioni principali non sono intrinsecamente ordinate, utilizziamo le 
 Lasciamo dei salti nella numerazione per ridurre al minimo le "interruzioni" nell'aggiungere o rimuovere regole.
 * **Motivi** (ragioni, razionale, logica) -- perché i programmatori hanno difficoltà a seguire regole che non capiscono
 * **Esempi** -- perché le regole sono difficili da capire in astratto; può essere positivo o negativo
-* **Alternative** -- per le regole "non farlo"
+* **Alternative** -- per le regole di tipo "non farlo"
 * **Eccezioni** -- preferiamo semplici regole generali. Tuttavia, molte regole si applicano ampiamente, ma non universalmente, quindi è necessario elencare le eccezioni
-* **Enforcement** [Imposizione] -- idee su come la regola potrebbe essere controllata "meccanicamente"
-* **See also** [Vedi anche] -- riferimenti a regole correlate e/o ulteriori discussioni (in questo documento o altrove)
-* **Note** (commenti) -- qualcosa che deve essere detto e che non rientra nelle altre classificazioni
-* **Discussion** -- riferimenti a motivazioni più ampie e/o esempi posti al di fuori delle liste principali di regole
+* **Imposizione** -- idee su come la regola potrebbe essere controllata "meccanicamente"
+* **Si veda anche** -- riferimenti a regole correlate e/o ulteriori discussioni (in questo documento o altrove)
+* **Note** -- qualcosa che deve essere detto e che non rientra nelle altre classificazioni
+* **Discussione** -- riferimenti a motivazioni più ampie e/o esempi posti al di fuori delle liste principali di regole
 
 Alcune regole sono difficili da verificare meccanicamente, ma tutte soddisfano i criteri minimi con cui un esperto programmatore possa individuare molte violazioni senza troppi problemi.
 Si spera che i tool "meccanici" migliorino col tempo per approssimare quello che nota un programmatore esperto.
@@ -411,13 +411,13 @@ Per esempio, molti esempi sono tecnico-linguistici ed usano nomi come `f`, `base
 
 Questo non è un manuale del linguaggio.
 È pensato per essere utile, anziché completo, accuratissimo sui dettagli tecnici, o una guida al codice esistente.
-Le fonti di informazioni consigliate sono disponibili nel[le referenze](#S-references).
+Le fonti di informazioni consigliate sono disponibili nei [riferimenti](#S-references).
 
 ## <a name="SS-sec"></a>In.sec: Sezioni principali
 
 * [In: Introduzione](#S-introduction)
 * [P: Filosofia](#S-philosophy)
-* [I: Interfacce](#S-interfaces)
+* [I: Interfaccia](#S-interfaces)
 * [F: Funzioni](#S-functions)
 * [C: Classi e gerarchie di classi](#S-class)
 * [Enum: Enumerazioni](#S-enum)
@@ -429,7 +429,7 @@ Le fonti di informazioni consigliate sono disponibili nel[le referenze](#S-refer
 * [Con: Costanti e immutabilità](#S-const)
 * [T: Template e programmazione generica](#S-templates)
 * [CPL: Programmazione C-style](#S-cpl)
-* [SF: File sorgenti [Source files]](#S-source)
+* [SF: File sorgenti](#S-source)
 * [SL: La Libreria Standard](#S-stdlib)
 
 Sezioni di supporto:
@@ -532,7 +532,7 @@ Una libreria ben progettata esprime l'intento (cosa si deve fare, piuttosto che 
 
 Un programmatore C++ dovrebbe conoscere le basi della libreria standard e usarla dove appropriato.
 Qualsiasi programmatore dovrebbe conoscere le basi delle librerie fondamentali del progetto su cui si sta lavorando e usarle in modo appropriato.
-Qualsiasi programmatore che utilizza queste linee-guida deve conoscere la [guidelines support library](#S-gsl) [Libreria di Supporto delle linee-guida], e usarla in modo appropriato.
+Qualsiasi programmatore che utilizza queste linee-guida deve conoscere la [guidelines support library](#S-gsl) [Libreria di Supporto delle linee-guida] e usarla in modo appropriato.
 
 ##### Esempio
 
@@ -584,13 +584,13 @@ In questi casi, controllarne l'(ab)uso con un'estensione a queste "Coding Guidel
 
 ##### Imposizione
 
-Utilizzare un compilatore C++ aggiornato (attualmente C++17, C++14, o C++11) con una serie di opzioni che non accettano le estensioni.
+Utilizzare un compilatore C++ aggiornato (attualmente C++17, C++14 o C++11) con una serie di opzioni che non accettano le estensioni.
 
 ### <a name="Rp-what"></a>P.3: Esprimere le intenzioni
 
 ##### Motivo
 
-A meno che non venga dichiarato l'intento di parte del codice (p.es., nei nomi i nei commenti), è impossibile stabilire se il codice fa quello che dovrebbe fare.
+A meno che non venga dichiarato l'intento di parte del codice (p.es., nei nomi o nei commenti), è impossibile stabilire se il codice fa quello che dovrebbe fare.
 
 ##### Esempio
 
@@ -609,7 +609,7 @@ Ora, non vi è alcuna menzione esplicita del meccanismo di iterazione e il ciclo
 
     for (auto& x : v) { /* modifica x */ }
 
-Per ulteriori dettagli dell'istruzione fo, cfr. [ES.71](#Res-for-range).
+Per ulteriori dettagli sull'istruzione "for", cfr. [ES.71](#Res-for-range).
 Talvolta è meglio usare un algoritmo predefinito con nome significativo. Questo esempio usa il `for_each` per i Range TS perché esprime direttamente lo scopo:
 
     for_each(v, [](int x) { /* fa qualcosa col valore di x */ });
@@ -685,7 +685,7 @@ Per esempio:
 ##### Motivo
 
 Chiarezza del codice e prestazioni.
-Non è necessario scrivere error handler per gli errori rilevati durante la compilazione.
+Non è necessario scrivere "error handler" per gli errori rilevati durante la compilazione.
 
 ##### Esempio
 
@@ -696,7 +696,7 @@ Non è necessario scrivere error handler per gli errori rilevati durante la comp
     if (bits < 32)
     cerr << "Int troppo piccolo\n";
 
-Questo esempio non riesce a fare ciò che sta cercando di fare (perché l'overflow è indefinito) e lo si dovrebbe sostituire un semplice `static_assert`:
+Questo esempio non riesce a fare ciò che sta cercando di fare (perché l'overflow è indefinito) e lo si dovrebbe sostituire con un semplice `static_assert`:
 
     // Int è un alias per gli interi
     static_assert(sizeof(Int) >= 4);    // ok: check in fase di compilazione
@@ -761,7 +761,7 @@ Ovviamente si può passare il numero di elementi insieme al puntatore:
 
 Passare il numero di elementi come argomento è meglio (e molto più comune) che passare solo il puntatore e fare affidamento su una convenzione (non dichiarata) per conoscere o scoprire il numero di elementi. Tuttavia (come mostrato), un semplice errore di battitura può introdurre un grave errore. La connessione tra i due argomenti di `f2()` è convenzionale, anziché esplicita.
 
-Inoltre, è implicito che `f2()` dovrebbe eseguire un `delete` del suo argomento (o il chiamante a fatto un secondo errore?).
+Inoltre, è implicito che `f2()` dovrebbe eseguire un `delete` del suo argomento (o il chiamante ha fatto un secondo errore?).
 
 ##### Esempio, cattivo
 
@@ -797,7 +797,7 @@ Questo progetto porta il numero di elementi come parte integrata di un oggetto, 
 
 ##### Esempio
 
-Come possiamo trasferire sia l'ownership assieme a tutte le informazioni necessarie a validarne l'uso?
+Come possiamo trasferire sia la proprietà [ownership] che tutte le informazioni necessarie a validarne l'uso?
 
     vector<int> f5(int n)    // OK: move
     {
@@ -835,7 +835,7 @@ O le stringhe come opzioni "free-style"
 
 ##### Motivo
 
-Evita i "misteriosi" crash.
+Evitare i crash "misteriosi".
 Evitare errori che portano a risultati sbagliati (forse non riconosciuti).
 
 ##### Esempio
@@ -857,7 +857,7 @@ Evitare errori che portano a risultati sbagliati (forse non riconosciuti).
 
 Qui abbiamo fatto un piccolo errore in `use1` che porterà a dei dati corrotti o a un crash.
 L'interfaccia di tipo (puntatore, conteggio) lascia `increment1()` senza un modo realistico per potersi difendere da errori out-of-range.
-Se si potessero controllare gli indici per l'accesso oltre i limiti, allora l'errore non verrebbe scoperto finché non si accede a `p[10]`.
+Se si potessero controllare gli indici per l'accesso oltre i limiti, allora l'errore non verrebbe scoperto finché non si accedesse a `p[10]`.
 Si potrebbe controllare in anticipo migliorando il codice:
 
     void increment2(span<int> p)
@@ -993,11 +993,11 @@ Combinarlo con l'applicazione dei [profili di tipo e bound](#SS-force) ottenendo
 
 ##### Imposizione
 
-* Cercare i puntatori: Classificarli in non-owner (il default) e owner.
-Laddove possibile, sostituire gli owner con handle di risorse della libreria standard (come nell'esempio precedente).
-In alternativa, contrassegnare un owner come tale utilizzando `owner` della [GSL](#S-gsl).
+* Cercare i puntatori: Classificarli in non-proprietari (il default) e proprietari [owner].
+Laddove possibile, sostituire i proprietari con handle di risorse della libreria standard (come nell'esempio precedente).
+In alternativa, contrassegnare un proprietario come tale utilizzando `owner` dalla [GSL](#S-gsl).
 * Cercare i [naked] `new` e `delete`
-* Cercare le funzioni note di allocazione delle risorse che restituiscono puntatori [raw] (come `fopen`, `malloc`, e `strdup`)
+* Cercare le funzioni note di allocazione delle risorse che restituiscono puntatori semplici (come `fopen`, `malloc`, e `strdup`)
 
 ### <a name="Rp-waste"></a>P.9: Non sprecare tempo o spazio
 
@@ -1064,14 +1064,14 @@ Possiamo vedere che nelle nostre condizioni abbiamo `i < strlen(s)`. Questa espr
 
 Un singolo esempio di spreco è raramente significativo e, laddove lo fosse, viene in genere facilmente eliminato da un esperto.
 Tuttavia, gli sprechi diffusi su tutto il codice possono diventare facilmente significativi e gli esperti non sono sempre disponibili come si vorrebbe.
-Lo scopo di questa regola (e le regole più specifiche che la supportano) è quello di eliminare la maggior parte de sprechi sull'uso del C++ prima che avvengano.
+Lo scopo di questa regola (e le regole più specifiche che la supportano) è quello di eliminare la maggior parte degli sprechi sull'uso del C++ prima che avvengano.
 Successivamente, si possono esaminare gli sprechi relativi agli algoritmi e ai requisiti, ma questo va oltre lo scopo di queste linee-guida.
 
 ##### Imposizione
 
 Molte regole più specifiche mirano agli obiettivi generali della semplicità e dell'eliminazione di sprechi.
 
-* Contrassegnare un valore di ritorno inutilizzato da una funzione postfix definita dall'utente e senza default `operator++` o `operator--`. Preferire invece l'uso della forma prefissa. (Nota: Per "definita dall'utente e senza default" ha lo scopo di ridurre la confusione. Rivedere questa imposizione [enforcement] se si rivela ancora confusa nella pratica).
+* Contrassegnare un valore di ritorno inutilizzato da una funzione postfix "definita dall'utente, non-di-default" `operator++` o `operator--`. Preferire invece l'uso della forma prefissa. (Nota: "Definita dall'utente, non-di-default" ha lo scopo di ridurre la confusione. Rivedere questa imposizione se si rivela ancora confusa nella pratica).
 
 
 ### <a name="Rp-mutable"></a>P.10: Preferire dati immutabili ai dati mutabili
@@ -1143,7 +1143,7 @@ In genere abbiamo cose migliori da fare rispetto a svolgere ripetutamente attivi
 
 ##### Esempio
 
-Eseguire un analizzatore statico per verificare che il codice segua le linee-guida che si desidera che seguano.
+Far girare un analizzatore statico per verificare che il codice segua le linee-guida che si desidera che seguano.
 
 ##### Note
 
@@ -1166,7 +1166,7 @@ Potrebbero rendere il codice non-portabile.
 ##### Motivo
 
 L'uso di una libreria ben progettata, ben documentata e ben supportata consente di risparmiare tempo e fatica; tali qualità e documentazione sono probabilmente maggiori di quelle che si potrebbe fare se la maggior parte del tempo si dovesse impiegare in un'implementazione.
-Il costo(tempo, fatica, denaro, ecc.) di una libreria  può essere suddiviso tra molti utenti.
+Il costo (tempo, fatica, denaro, ecc.) di una libreria  può essere suddiviso tra molti utenti.
 È più probabile che una libreria largamente utilizzata venga mantenuta aggiornata e trasferita su nuovi sistemi rispetto a una singola applicazione.
 La conoscenza di una biblioteca ampiamente utilizzata può far risparmiare tempo su altri/futuri progetti.
 Pertanto, se esiste una libreria adatta per il dominio dell'applicazione, utilizzarla.
@@ -1195,7 +1195,7 @@ Se non esiste una libreria ben progettata, ben documentata e ben supportata per 
 Un'interfaccia è un contratto tra due parti di un programma. Indica con precisione cosa ci si aspetta da un fornitore di un servizio e l'essenziale da un utente di tale servizio.
 Avere buone interfacce (di facile comprensione, incoraggianti un uso efficiente, non soggetto a errori, col supporto di test, ecc.) è probabilmente il solo aspetto più importante dell'organizzazione del codice.
 
-Riepilogo delle Regole delle interfacce:
+Riepilogo delle regole delle interfacce:
 
 * [I.1: Rendere esplicite le interfacce](#Ri-explicit)
 * [I.2: Evitare variabili globali non-`const`](#Ri-global)
@@ -1205,9 +1205,9 @@ Riepilogo delle Regole delle interfacce:
 * [I.6: Preferire `Expects()` per esprimere le precondizioni](#Ri-expects)
 * [I.7: Postcondizioni dello stato](#Ri-post)
 * [I.8: Preferire `Ensures()` per esprimere le postcondizioni](#Ri-ensures)
-* [I.9: Se un'interfaccia è un a template, documentarne i parametri usando i concept](#Ri-concepts)
+* [I.9: Se un'interfaccia è un template, documentarne i parametri usando i concetti](#Ri-concepts)
 * [I.10: Usare le eccezioni per segnalare un errore nell'eseguire un compito richiesto](#Ri-except)
-* [I.11: Mai trasferire l'ownership con un puntatore raw (`T*`) o un riferimento (`T&`)](#Ri-raw)
+* [I.11: Mai trasferire la proprietà con un semplice puntatore (`T*`) o un riferimento (`T&`)](#Ri-raw)
 * [I.12: Dichiarare un puntatore che non dev'essere null con `not_null`](#Ri-nullptr)
 * [I.13: Non passare un array come singolo puntatore](#Ri-array)
 * [I.22: Evitare complesse inizializzazioni di oggetti globali](#Ri-global-init)
@@ -1248,7 +1248,7 @@ Non sarà ovvio ad un chiamante che il significato di due chiamate a `round(7.2)
 ##### Eccezione
 
 A volte si controllano i dettagli di un insieme di operazioni tramite una variabile d'ambiente, p.es. output normale anziché verboso o debug anziché ottimizzato.
-L'uso di un controllo-non-locale è potenzialmente confuso, ma regola solo i dettagli di implementativi di una semantica che sarebbe altrimenti fissa.
+L'uso di un controllo-non-locale è potenzialmente confuso, ma regola solo i dettagli implementativi di una semantica che sarebbe altrimenti fissa.
 
 ##### Esempio, cattivo
 
@@ -1312,7 +1312,7 @@ Le costanti globali sono utili.
 
 La regola contro le variabili globali si applica anche alle variabili  nello scope del namespace.
 
-**Alternativa**: Se si usano dati globali (più in generale nello scope del namespace scope) per evitarne la copia, si prenda in considerazione il passare i dati come oggetto per riferimento a `const`.
+**Alternativa**: Se si usano dati globali (più in generale nello scope del namespace) per evitarne la copia, si prenda in considerazione il passare i dati come oggetto per riferimento a `const`.
 Un'altra soluzione è quella di definire i dati come lo stato di alcuni oggetti e le operazioni come funzioni membro.
 
 **Warning**: Attenzione ai conflitti sui dati: Se un thread può accedere a dati non locali (o dati passati per riferimento) mentre un altro thread esegue il chiamato, si può avere un conflitto.
@@ -1322,7 +1322,7 @@ L'uso di puntatori o riferimenti globali per accedere e modificare i dati non-co
 
 ##### Note
 
-Non è possibile avere una condition conflittuale su dati immutabili.
+Non è possibile avere una condizione di conflitto su dati immutabili.
 
 **Riferimenti**: Si vedano le [regole per chiamate a funzioni](#SS-call).
 
@@ -1368,7 +1368,7 @@ Se non si desidera modificare un oggetto globale, dichiararlo `const` o `constex
 Questa è una delle soluzioni più efficaci ai problemi relativi all'ordine di inizializzazione.
 In un ambiente multi-thread, l'inizializzazione dell'oggetto statico non introduce un conflitto (a meno che non si acceda con noncuranza a un oggetto shared dal suo costruttore).
 
-Si noti che l'inizializzazione di uno `static` locale non implica una condizione conflitto.
+Si noti che l'inizializzazione di uno `static` locale non implica una condizione di conflitto.
 Tuttavia, se la distruzione di `X` implica un'operazione che dev'essere sincronizzata, si deve usare una soluzione meno semplice.
 Per esempio:
 
@@ -1413,10 +1413,10 @@ I chiamanti non sono sicuri di quali tipi siano ammessi e se i dati possano esse
 Il chiamato deve eseguire un `static_cast` dei dati ad un tipo non verificato per usarlo.
 Questo è soggetto a errori ed è verboso.
 
-Utilizzare solo `const void*` per passare i dati in progetti che sono indescrivibili in in C++. Si consideri invece l'uso di un `variant` o un puntatore alla base.
+Utilizzare solo `const void*` per passare i dati in progetti che sono indescrivibili in C++. Si consideri invece l'uso di un `variant` o un puntatore alla base.
 
 **Alternativa**: Spesso, un parametro template può eliminare il `void*` trasformandolo in un `T*` o in un `T&`.
-Per il codice generico questi `T` possono essere parametri di template generali o vincolati al concept.
+Per il codice generico questi `T` possono essere parametri di template generali o vincolati al "concetto".
 
 ##### Esempio, cattivo
 
@@ -1426,7 +1426,7 @@ Si consideri:
     
     draw_rect(p.x, p.y, 10, 20); // quali unità sono 10 e 20?
 
-È chiaro che il chiamante sta descrivendo un rettangolo, ma non è chiaro a quali parti si riferiscono. Inoltre, un `int` può rappresentare forme arbitrarie di informazioni, compresi i valori di molte unità, quindi dobbiamo indovinare il significato dei quattro `int`. Molto probabilmente, i primi due sono una coppia di coordinate `x`,`y`, ma che sono gli ultimi due?
+È chiaro che il chiamante sta descrivendo un rettangolo, ma non è chiaro a quali parti si riferisca. Inoltre, un `int` può rappresentare forme arbitrarie di informazioni, compresi i valori di molte unità, quindi dobbiamo indovinare il significato dei quattro `int`. Molto probabilmente, i primi due sono una coppia di coordinate `x`,`y`, ma che sono gli ultimi due?
 
 Commenti e nomi di parametri possono essere d'aiuto, ma potremmo essere espliciti:
 
@@ -1460,7 +1460,7 @@ Nel caso di un insieme di valori booleani prendere in considerazione l'uso di un
 
 ##### Esempio, cattivo
 
-Nel seguente esempio, dall'interfaccia non è chiaro cosa significhi `time_to_blink` means: Secondi? Millisecondi?
+Nel seguente esempio, dall'interfaccia non è chiaro cosa significhi `time_to_blink`: Secondi? Millisecondi?
 
     void blink_led(int time_to_blink) // male -- l'unità è ambigua
     {
@@ -1510,8 +1510,8 @@ La funzione può anche essere scritta in modo tale da accettare qualsiasi unità
 
 ##### Imposizione
 
-* (Semplice) Segnala l'uso di `void*` come parametro o tipo di ritorno.
-* (Semplice) Segnala l'uso di più di un parametro `bool`.
+* (Semplice) Segnalare l'uso di `void*` come parametro o tipo di ritorno.
+* (Semplice) Segnalare l'uso di più di un parametro `bool`.
 * (Difficile da fare bene) Cercare le funzioni che usano troppi argomenti di tipo primitivo..
 
 ### <a name="Ri-pre"></a>I.5: Precondizioni dello stato (se c'è)
@@ -1534,9 +1534,9 @@ Alcune precondizioni possono essere espresse come asserzioni. Per esempio:
 
     double sqrt(double x) { Expects(x >= 0); /* ... */ }
 
-Idealmente, quell'`Expects(x >= 0)` dovrebbe far parte dell'interfaccia di `sqrt()` ma ciò non si fa facilmente. Per ora, lo inseriamolo nella definizione (corpo della funzione).
+Idealmente, quell'`Expects(x >= 0)` dovrebbe far parte dell'interfaccia di `sqrt()` ma ciò non si fa facilmente. Per ora, lo si inserisce nella definizione (corpo della funzione).
 
-**References**: `Expects()` è descritto nella [GSL](#S-gsl).
+**Riferimenti**: `Expects()` è descritto nella [GSL](#S-gsl).
 
 ##### Note
 
@@ -1573,7 +1573,7 @@ Per chiarire che la condizione è una precondizione e per abilitare l'uso del to
 ##### Note
 
 Le precondizioni si possono stabilire in molti modi, inclusi i commenti, istruzioni `if`, e `assert()`.
-Questo può rendere arduo distinguerle dal normale codice, difficile da aggiornare, difficile da gestire con tool, e potrebbe avere la semantica sbagliata (si vuol sempre abortire in debug mode e mai controllare durante l'esecuzione in produzione?).
+Questo può rendere arduo distinguerle dal normale codice, difficile da aggiornarle, difficile da gestirle con tool, e potrebbero avere la semantica sbagliata (si vuol sempre abortire in debug mode e mai controllare durante l'esecuzione in produzione?).
 
 ##### Note
 
@@ -1684,13 +1684,13 @@ Le postcondizioni relative solo allo stato interno appartengono alla definizione
 
 ##### Imposizione
 
-(Non imponibile) Questa è una linea-guida filosofica che è impossibile da controllare direttamente nel caso generale. Controlli specifici al dominio (come i controlli per la ritenzione del lock) esistono per molte toolchain.
+(Non imponibile) Questa è una linea-guida filosofica che è impossibile da controllare direttamente nel caso generale. Controlli specifici al dominio (come i controlli per la ritenzione del lock) esistono in molti tool.
 
 ### <a name="Ri-ensures"></a>I.8: Preferire `Ensures()` per esprimere le postcondizioni
 
 ##### Motivo
 
-Per chiarire che la condizione è un postcondizionato e per consentire l'uso di tool.
+Per chiarire che la condizione è una postcondizione e per consentire l'uso di tool.
 
 ##### Esempio
 
@@ -1705,21 +1705,21 @@ Per chiarire che la condizione è un postcondizionato e per consentire l'uso di 
 ##### Note
 
 Le postcondizioni possono essere dichiarate in molti modi, inclusi i commenti, istruzioni `if` e `assert()`.
-Ciò può renderli difficili da distinguere dal normale codice, difficili da aggiornare, difficili da gestire con dei tool e avere una semantica sbagliata.
+Questo può rendere arduo distinguerle dal normale codice, difficile da aggiornarle, difficile da gestirle con tool, e potrebbero avere la semantica sbagliata.
 
 **Alternative**: Le post-condizioni di tipo "questa risorsa dev'essere rilasciata" si esprimono meglio col [RAII](#Rr-raii).
 
 ##### Note
 
 Idealmente, questo `Ensures` dovrebbe far parte dell'interfaccia, ma ciò non è facile da fare.
-Per ora, lo inseriamolo nella definizione (corpo della funzione).
-Quando sarà disponibile il supporto del linguaggio (p.es., si veda [contract proposal](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf)) si adotterà a versione standard delle precondizioni, delle postcondizioni e delle asserzioni.
+Per ora, lo si inserisce nella definizione (corpo della funzione).
+Quando sarà disponibile il supporto del linguaggio (p.es., si veda [contract proposal](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf)) si adotterà la versione standard delle precondizioni, delle postcondizioni e delle asserzioni.
 
 ##### Imposizione
 
 (Non imponibile) Trovare i diversi modi con cui asserire le postcondizioni non è fattibile. Attenzione a quelli facilmente identificabili (`assert()`) ha un valore discutibile in assenza del supporto del linguaggio.
 
-### <a name="Ri-concepts"></a>I.9: Se un'interfaccia è un a template, documentarne i parametri usando i concept
+### <a name="Ri-concepts"></a>I.9: Se un'interfaccia è un template, documentarne i parametri usando i concetti
 
 ##### Motivo
 
@@ -1727,7 +1727,7 @@ Rendere l'interfaccia esattamente specificata e controllabile durante la compila
 
 ##### Esempio
 
-Isare i Concept ISO in stile TS della specifica dei requisiti. Per esempio:
+Usare i Concept ISO in stile TS della specifica dei requisiti. Per esempio:
 
     template<typename Iter, typename Val>
     // requires InputIterator<Iter> && EqualityComparable<ValueType<Iter>>, Val>
@@ -1741,17 +1741,17 @@ Isare i Concept ISO in stile TS della specifica dei requisiti. Per esempio:
 Presto (forse nel 2018), la maggior parte dei compilatori sarà in grado di controllare le clausole `requires` una volta rimosso il `//`.
 I concetti sono supportati GCC 6.1 e successivi.
 
-**Si veda anche**: [Programmazione generica](#SS-GP) e [concept](#SS-concepts).
+**Si veda anche**: [Programmazione generica](#SS-GP) e [concetti](#SS-concepts).
 
 ##### Imposizione
 
-(Non ancora applicabile) C'è una specifica del linguaggio in esame. Quando tale funzionalità del linguaggio sarà disponibile, avvisa che un qualsiasi parametro template non-variadico non risulta vincolato da un concept ((nella sua dichiarazione o citato in una clausola `requires`).
+(Non ancora applicabile) C'è una specifica del linguaggio in esame. Quando tale funzionalità del linguaggio sarà disponibile, avvisa che un qualsiasi parametro template non-variadico non risulta vincolato da un "concetto" (nella sua dichiarazione o citato in una clausola `requires`).
 
 ### <a name="Ri-except"></a>I.10: Usare le eccezioni per segnalare un errore nell'eseguire un compito richiesto
 
 ##### Motivo
 
-Non dovrebbe essere possibile ignorare un errore perché ciò potrebbe lasciare il sistema o un computo in uno stato indefinito (o imprevisto).
+Non dovrebbe essere possibile ignorare un errore perché ciò potrebbe lasciare il sistema o una elaborazione in uno stato indefinito (o imprevisto).
 Questa è una delle principali fonti di errori.
 
 ##### Esempio
@@ -1767,13 +1767,13 @@ Questa è una delle principali fonti di errori.
 Che cos'è un errore?
 
 Un errore indica che la funzione non può raggiungere lo scopo dichiarato (incluse l'instaurazione delle postcondizioni).
-Chiamando del codice che ignora un errore può portare a risultati errati o a uno stato del sistema indefinito.
+Chiamare del codice che ignora un errore può portare a risultati errati o a uno stato indefinito del sistema.
 Ad esempio, non essere in grado di connettersi a un server remoto non è di per sé un errore: il server può rifiutare una connessione per tutta una serie di motivi, quindi la cosa naturale è quella di restituire un risultato che il chiamante dovrebbe sempre controllare.
 Tuttavia, se il non riuscire a stabilire una connessione viene considerato un errore, allora tale errore dovrebbe generare un'eccezione.
 
 ##### Eccezione
 
-Molte funzioni di interfacce (p.es., gli handler signal di UNIX) usano codici di errore (p.es., `errno`) per segnalare quali sono realmente i codici di stato, piuttosto che degli errori. Se non si ha una buona alternativa all'uso di questi, allora il chiamarli non viola la regola.
+Molte funzioni di interfacce (p.es., gli handler dei signal di UNIX) usano codici di errore (p.es., `errno`) per segnalare quali sono realmente i codici dello stato, piuttosto che degli errori. Se non si ha una buona alternativa all'uso di questi, allora il chiamarli non viola la regola.
 
 ##### Alternativa
 
@@ -1798,7 +1798,7 @@ A partire da C++17 si può usare la funzionalità delle "structured bindings" pe
 
 ##### Note
 
-Non consideriamo la "performance" un motivo valido per non usare le eccezioni.
+Non consideriamo le "prestazioni" un motivo valido per non usare le eccezioni.
 
 * Spesso, il controllo e la gestione espliciti degli errori consumano tanto tempo e spazio quanto la gestione delle eccezioni.
 * Spesso, un codice più pulito produce migliori prestazioni con le eccezioni (semplificando la tracciabilità dei percorsi attraverso il programma e la loro ottimizzazione).
@@ -1806,18 +1806,18 @@ Non consideriamo la "performance" un motivo valido per non usare le eccezioni.
 * Alla lunga, un codice più regolare si ottimizza meglio.
 * [Misurare](#Rper-measure) sempre e accuratamente prima di lamentarsi delle prestazioni.
 
-**Vedere anche**: [I.5](#Ri-pre) e [I.7](#Ri-post) per riportare violazioni di precondizione e postcondizione.
+**Si veda anche**: [I.5](#Ri-pre) e [I.7](#Ri-post) per riportare violazioni di precondizione e post-condizione.
 
 ##### Imposizione
 
 * (Non imponibile) Questa è una linea-guida filosofica che è impossibile da controllare direttamente.
 * Cercare `errno`.
 
-### <a name="Ri-raw"></a>I.11: Mai trasferire l'ownership con un puntatore raw (`T*`) o un riferimento (`T&`)
+### <a name="Ri-raw"></a>I.11: Mai trasferire la proprietà con un semplice puntatore (`T*`) o un riferimento (`T&`)
 
 ##### Motivo
 
-In caso di dubbi sul fatto che sia il chiamante o il chiamato a possedere un oggetto, possono avere dei leak o una prematura distruzione.
+In caso di dubbi sul fatto che sia il chiamante o il chiamato a possedere un oggetto, si possono avere dei leak o una prematura distruzione.
 
 ##### Esempio
 
@@ -1830,7 +1830,7 @@ Si consideri:
     return res;
     }
 
-Chi esegue il delete dell'`X` restituito? Il problema sarebbe più difficile da individuare se `compute` restituisca un riferimento.
+Chi esegue il delete dell'`X` restituito? Il problema sarebbe più difficile da individuare se `compute` restituisse un riferimento.
 Si valuti di restituire il risultato per valore (si usa la semantica move se il risultato e grande):
 
     vector<double> compute(args)  // buono
@@ -1840,7 +1840,7 @@ Si valuti di restituire il risultato per valore (si usa la semantica move se il 
     return res;
     }
 
-**Alternative**: [Passaggio dell'ownership](#Rr-smartptrparam) usando uno "smart pointer", come un `unique_ptr` (per l'ownership esclusiva) e `shared_ptr` (per un'ownership condivisa).
+**Alternative**: [Passaggio della proprietà](#Rr-smartptrparam) usando uno "smart pointer", come un `unique_ptr` (per l'ownership esclusiva) e `shared_ptr` (per un'ownership condivisa).
 Tuttavia, è meno elegante e spesso meno efficiente rispetto al restituire l'oggetto stesso, quindi usare gli smart pointer solo se è necessaria la semantica del riferimento.
 
 **Alternative**: Talvolta il codice pre-esistente non si può modificare a causa dei requisiti di compatibilità ABI o per mancanza di risorse.
@@ -1860,9 +1860,9 @@ Cioè, il suo valore deve subire un `delete` o dev'essere trasferito ad un altro
 
 ##### Note
 
-Si presume che ogni oggetto passato come semplice puntatore (o iteratore) sia proprietà del chiamante, in modo che il suo ciclo di vita sia gestito dal chiamante. In altri termini: le API che trasferiscono l'ownership sono relativamente rare rispetto alle API che passano puntatori, quindi il default è "nessun trasferimento dell'ownership".
+Si presume che ogni oggetto passato come semplice puntatore (o iteratore) sia proprietà del chiamante, in modo che il suo ciclo di vita sia gestito dal chiamante. In altri termini: le API che trasferiscono la proprietà sono relativamente rare rispetto alle API che passano puntatori, quindi il default è "nessun trasferimento della proprietà".
 
-**Si veda anche **: [Passaggio di argomenti](#Rf-conventional), [uso di argomenti smart pointer](#Rr-smartptrparam) e [valore di ritorno](#Rf-value-return).
+**Si veda anche**: [Passaggio di argomenti](#Rf-conventional), [uso di argomenti smart pointer](#Rr-smartptrparam) e [valore di ritorno](#Rf-value-return).
 
 ##### Imposizione
 
@@ -1887,7 +1887,7 @@ Per migliorare le prestazioni evitando controlli ridondanti per `nullptr`.
     
     int length(const char* p);            // dobbiamo supporre che p possa essere nullptr
 
-Dichiarando l'intento nel sorgente, gli implementatori e i tool possono eseguire una diagnostica migliore, come la ricerca di alcune classi di errore con l'analisi statica ed eseguire ottimizzazione come la rimozione di branch e test nulli.
+Dichiarando l'intento nel sorgente, gli implementatori e i tool possono eseguire una diagnostica migliore, come la ricerca di alcune classi di errore con l'analisi statica ed eseguire delle ottimizzazioni quali la rimozione di branch e test nulli.
 
 ##### Note
 
@@ -2041,7 +2041,7 @@ Per ridurre davvero il numero di argomenti, si devono raggruppare gli argomenti 
 
 Raggruppare gli argomenti in "bundle" è una tecnica generale per ridurre il numero degli argomenti e per aumentare la possibilità di controllo.
 
-In alternativa, potremmo usarei concept (come definiti dalla TS ISO) per definire la nozione dei tre tipi che si devono usare per il merge:
+In alternativa, potremmo usare i concetti (come definiti dalla TS ISO) per definire la nozione dei tre tipi che si devono usare per il merge:
 
     Mergeable{In1, In2, Out}
     OutputIterator merge(In1 r1, In2 r2, Out result);
@@ -4049,7 +4049,7 @@ Ad esempio, ora possiamo cambiare la rappresentazione di una `Date` senza influi
 ##### Note
 
 Ovviamente, usare una classe in questo modo per rappresentare la distinzione tra l'interfaccia e l'implementazione, non è l'unico modo.
-Per esempio, possiamo usare un set di dichiarazioni di funzioni indipendenti in un namespace, una classe base astratta o una funzione template con i concept per rappresentare un'interfaccia.
+Per esempio, possiamo usare un set di dichiarazioni di funzioni indipendenti in un namespace, una classe base astratta o una funzione template con i "concetti" per rappresentare un'interfaccia.
 Il problema più importante è distinguere esplicitamente tra un'interfaccia e i suoi "dettagli" di implementazione.
 Idealmente, e solitamente, un'interfaccia è molto più stabile delle sue implementazioni.
 
@@ -5216,7 +5216,7 @@ Tuttavia, la maggior parte delle classi `Date` realistiche hanno una "data inizi
     class Date {
     public:
     Date(int dd, int mm, int yyyy);
-    Date() = default; // [Vedi anche](#Rc-default)
+    Date() = default; // [Si veda anche](#Rc-default)
     // ...
     private:
     int dd = 1;
@@ -5442,7 +5442,7 @@ Per ridurre al minimo la confusione e gli errori. Questo è l'ordine con cui avv
 
 (Semplice) Una lista degli inizializzatori dei membro deve indicare i membri nello stesso ordine con cui sono dichiarati.
 
-**Si veda anche la **: [Discussione](#Sd-order)
+**Si veda anche**: [Discussione](#Sd-order)
 
 ### <a name="Rc-in-class-initializer"></a>C.48: Preferire gli inizializzatori [in-class] agli inizializzatori dei membri nei costruttori per gli inizializzatori costanti
 
@@ -5604,7 +5604,7 @@ Fornendo la funzione factory `create()`, si rende conveniente la costruzione (ne
 
 Le funzioni factory convenzionali vengono allocate nel [free store], anziché sullo stack o in un oggetto che lo racchiude.
 
-**Si veda anche la **: [Discussione](#Sd-factory)
+**Si veda anche**: [Discussione](#Sd-factory)
 
 ### <a name="Rc-delegating"></a>C.51: Utilizzare i costruttori [delegating] per rappresentare azioni comuni a tutti i costruttori di una classe
 
@@ -6263,7 +6263,7 @@ Peggio ancora, una chiamata diretta o indiretta ad una funzione virtuale pura no
 
 Si noti che chiamare una specifica funzione qualificata esplicitamente non è una chiamata virtuale anche se la funzione è `virtual`e.
 
-**Si vedano anche le** [funzioni factory](#Rc-factory) per come ottenere l'effetto di una chiamata a una funzione di una classe derivata senza rischiare il comportamento indefinito.
+**Si veda anche** [funzioni factory](#Rc-factory) per come ottenere l'effetto di una chiamata a una funzione di una classe derivata senza rischiare il comportamento indefinito.
 
 ##### Note
 
@@ -6279,7 +6279,7 @@ Tuttavia, l'esperienza dimostra che tali chiamate sono raramente necessarie, con
 
 ##### Motivo
 
-Uno `swap` può essere utile per implementare una serie di idiomi, da un sicuro spostamento di oggetti alla semplice implementazione di un'assegnazione, al fornire una funzione di 'commit' garantita che consenta di avere un codice chiamante fortemente esente da errori. Si consideri l'uso di swap per implementare l'assegnazione per copia in termini di costruzione-copia. Si vedano anche [distruttori, de-allocazione e swap non devono mai fallire](#Re-never-fail).
+Uno `swap` può essere utile per implementare una serie di idiomi, da un sicuro spostamento di oggetti alla semplice implementazione di un'assegnazione, al fornire una funzione di 'commit' garantita che consenta di avere un codice chiamante fortemente esente da errori. Si consideri l'uso di swap per implementare l'assegnazione per copia in termini di costruzione-copia. Si veda anche [distruttori, de-allocazione e swap non devono mai fallire](#Re-never-fail).
 
 ##### Esempio, buono
 
@@ -6526,7 +6526,7 @@ Riepilogo delle regole sui contenitori:
 * ???
 * [C.109: Se un handle di risorsa ha una semantica di puntatore, fornire `*` e `->`](#Rcon-ptr)
 
-**Si vedano anche**: [Risorse](#S-resource)
+**Si veda anche**: [Risorse](#S-resource)
 
 
 ### <a name="Rcon-stl"></a>C.100: Seguire la STL quando si definisce un contenitore
@@ -8846,7 +8846,7 @@ Col default s ha un insieme consecutivo dei valori ed è un bene per l'implement
     jul, august, sep, oct, nov, dec }; // iniziare con 1 è convenzionale
     enum class Base_flag { dec = 1, oct = dec << 1, hex = dec << 2 }; // insieme di bit
 
-È necessario specificare i valori per far corrispondere i valori convenzionali (p.es., `Month`) e dove non si desiderano valori consecutivi (p.es., per avere bit separati come in in `Base_flag`).
+È necessario specificare i valori per far corrispondere i valori convenzionali (p.es., `Month`) e dove non si desiderano valori consecutivi (p.es., per avere bit separati come in `Base_flag`).
 
 ##### Imposizione
 
@@ -10655,7 +10655,7 @@ Usare la semplice inizializzazione-`{}` a meno che non si desideri disabilitare 
     // ...
     }
 
-**Si veda anche la **: [Discussione](#???)
+**Si veda anche**: [Discussione](#???)
 
 ##### Imposizione
 
@@ -15319,7 +15319,7 @@ Preferire l'uso delle eccezioni.
 
 Per evitare errori di interfaccia.
 
-**Si veda anche **: [regole sulla pre-condizione](#Ri-pre)
+**Si veda anche**: [regole sulla pre-condizione](#Ri-pre)
 
 ### <a name="Re-postcondition"></a>E.8: Dichiarare le proprie post-condizioni
 
@@ -15327,7 +15327,7 @@ Per evitare errori di interfaccia.
 
 Per evitare errori di interfaccia.
 
-**Si veda anche **: [regole della post-condizione](#Ri-post)
+**Si veda anche**: [regole della post-condizione](#Ri-post)
 
 ### <a name="Re-noexcept"></a>E.12: Usare `noexcept` uscendo da una funzione quando un `throw` (un'eccezione) è impossibile o inaccettabile
 
@@ -15480,7 +15480,7 @@ Le classi della libreria standard derivate da `exception` devono essere utilizza
     }
     }
 
-**Si veda anche la **: [Discussione](#Sd-???)
+**Si veda anche**: [Discussione](#Sd-???)
 
 ##### Imposizione
 
@@ -15713,7 +15713,7 @@ Se non si possono generare eccezioni, si può simulare questo stile RAII della g
 
 Il problema è, ovviamente, che ora il chiamante deve ricordarsi di controllare il valore di ritorno.
 
-**Si veda anche la **: [Discussione](#Sd-???)
+**Si veda anche**: [Discussione](#Sd-???)
 
 ##### Imposizione
 
@@ -15725,7 +15725,7 @@ Possibile (solo) per specifiche versioni di questa idea: p.es., test per i contr
 
 Se non si può recuperare per bene, si può almeno uscire prima di fare troppi ulteriori danni.
 
-**Si veda anche **: [Simulare il RAII](#Re-no-throw-raii)
+**Si veda anche**: [Simulare il RAII](#Re-no-throw-raii)
 
 ##### Note
 
@@ -15766,7 +15766,7 @@ Difficile
 
 L'uso sistematico di qualsiasi strategia per la gestione degli errori minimizza le possibilità di dimenticarsi di gestire un errore.
 
-**Si veda anche **: [Simulare il RAII](#Re-no-throw-raii)
+**Si veda anche**: [Simulare il RAII](#Re-no-throw-raii)
 
 ##### Note
 
@@ -15910,7 +15910,7 @@ Inoltre, più grande è il programma, più diventa difficile diventa applicare s
 
 Si deve [preferire la gestione degli errori basata sulle eccezioni](#Re-throw) e si raccomanda di [fare funzioni brevi](#Rf-single).
 
-**Si veda anche la **: [Discussione](#Sd-???)
+**Si veda anche**: [Discussione](#Sd-???)
 
 **Si veda anche**: [Ritornare valori multipli](#Rf-out-multi)
 
@@ -15925,7 +15925,7 @@ Difficile.
 Lo stato globale è difficile da gestire ed è facile che ci si dimentichi di controllarlo.
 Quando è stata l'ultima volta che si è testato il valore di ritorno di `printf()`?
 
-**Si veda anche **: [Simulare il RAII](#Re-no-throw-raii)
+**Si veda anche**: [Simulare il RAII](#Re-no-throw-raii)
 
 ##### Esempio, cattivo
 
@@ -16117,7 +16117,7 @@ Per esempio qui c'è una `Date` che mette in una cache (memoizza [!=memorizza]) 
     }
     // ...
     private:
-    void compute_string_rep() const;    // calcola la rappresentazione stringa e la mette in in string_val
+    void compute_string_rep() const;    // calcola la rappresentazione stringa e la mette in string_val
     mutable string string_val;
     // ...
     };
@@ -16677,7 +16677,7 @@ Se si usa un compilatore che supporta i concetti (p.es., GCC 6.1 o successivi), 
 ## <a name="SS-concepts-def"></a>T.concepts.def: Regole sulla definizione dei concetti
 
 Definire dei buoni concetti non è banale.
-I "concept" hanno lo scopo di rappresentare concetti fondamentali in un dominio di applicazione (da cui il nome "concept").
+I "concetti" hanno lo scopo di rappresentare concetti fondamentali in un dominio di applicazione (da cui il nome "concept").
 Allo stesso modo, mettere insieme una serie di vincoli sintattici da utilizzare per gli argomenti di una classe o di un algoritmo non è ciò per cui i concetti sono stati progettati e non darà tutti i benefici del meccanismo.
 
 Ovviamente, la definizione dei concetti sarà molto utile per il codice che ne utilizzi un'implementazione (ad esempio, il GCC 6.1 o successivi), ma la definizione dei concetti è di per sé una tecnica di progettazione utile e aiuta a rilevare errori concettuali e ripulire i concetti (sic!) di un implementazione.
@@ -19180,7 +19180,7 @@ La `std::string` non lo copre tutto.
 Questa sezione cerca principalmente di chiarire la relazione di `std::string` con `char*`, `zstring`, `string_view` e `gsl::string_span`.
 Sulla questione importante dell'insieme dei caratteri non-ASCII e sulle codifiche (p.es., `wchar_t`, Unicode e UTF-8) se ne parlerà altrove.
 
-**Si vade anche**: [espressioni regolari](#SS-regex)
+**Si veda anche**: [espressioni regolari](#SS-regex)
 
 Qui, si usa "sequenza di caratteri" o "stringa" per rifrirsi ad una sequenza di caratteri che si intende leggere come testo (in qualche modo, forse).
 Non si considera ???
