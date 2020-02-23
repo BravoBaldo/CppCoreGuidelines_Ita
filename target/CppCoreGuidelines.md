@@ -20,7 +20,7 @@ Per contribuire a questo progetto si richiede l'accettazione di una "Licenza per
 Questo progetto è a disposizione degli "utenti amichevoli" per usarlo, copiarlo, modificarlo e ricavarne altri lavori, sperando in input costruttivi.
 
 I commenti e i suggerimenti per migliorare sono sempre benvenuti.
-Si prevede di modificare ed estendere questo documento man mano che migliorano la nostra comprensione, il linguaggio e l'insieme delle librerie disponibili.
+Si prevede di modificare ed estendere questo documento man mano che migliora la nostra comprensione, il linguaggio o l'insieme delle librerie disponibili.
 Nel commentare, si tenga presente [l'introduzione](#S-introduction) che delinea i nostri obiettivi e l'approccio generale.
 L'elenco dei contributori si trova [qui](#SS-ack).
 
@@ -39,16 +39,16 @@ Si può [leggere una spiegazione dello scopo e sulla struttura di questa Guida](
 * [F: Funzioni](#S-functions)
 * [C: Classi e gerarchie di classi](#S-class)
 * [Enum: Enumerazioni](#S-enum)
-* [R: Gestione delle risorse [Resource management]](#S-resource)
+* [R: Gestione delle risorse](#S-resource)
 * [ES: Espressioni e istruzioni](#S-expr)
 * [Per: Prestazione](#S-performance)
 * [CP: Concorrenza e parallelismo](#S-concurrency)
-* [E: Gestione degli errori [Error handling]](#S-errors)
+* [E: Gestione degli errori](#S-errors)
 * [Con: Costanti e immutabilità](#S-const)
 * [T: Template e programmazione generica](#S-templates)
 * [CPL: Programmazione C-style](#S-cpl)
 * [SF: File sorgenti [Source files]](#S-source)
-* [SL: La libreria Standard [Standard Library]](#S-stdlib)
+* [SL: La Libreria Standard](#S-stdlib)
 
 Sezioni di supporto:
 
@@ -56,7 +56,7 @@ Sezioni di supporto:
 * [NR: Non-Regole e miti](#S-not)
 * [RF: Riferimenti](#S-references)
 * [Pro: Profili](#S-profile)
-* [GSL: Libreria di supporto alle linee-guida [Guidelines Support Library]](#S-gsl)
+* [GSL: Libreria di Supporto alle Linee-guida [Guidelines Support Library]](#S-gsl)
 * [NL: Regole di nomenclatura e layout](#S-naming)
 * [FAQ: Risposte a domande frequenti](#S-faq)
 * [Appendice A: Librerie](#S-libraries)
@@ -193,43 +193,43 @@ Potete vedere le bozze dei progetti usati per esprimere le regole:
 Questo documento è un insieme di linee-guida sul buon uso del C++.
 Lo scopo delle linee-guida è quello di aiutare le persone ad usare il C++ moderno in modo efficace.
 Per "C++ moderno" si intende l'uso efficace del C++ standard ISO (attualmente C++17, ma quasi tutte le raccomandazioni si applicano anche al C++14 e al C++11).
-In altre parole, come si vorreste che fosse il vostro codice tra 5 anni, potendo iniziare da adesso? Tra 10 anni?
+In altre parole, come vorreste che fosse il vostro codice tra 5 anni, potendo iniziare adesso? E tra 10 anni?
 
-Le linee-guida si concentrano sulle questioni di livello relativamente più alto, come le interfacce, la gestione delle risorse, la gestione della memorie e la concorrenza.
+Le linee-guida si concentrano sulle questioni di livello relativamente più alto, come le interfacce, la gestione delle risorse, la gestione della memoria e la concorrenza.
 Queste regole riguardano l'applicazione dell'architettura e il design della libreria.
 Seguire le regole porterà ad un codice staticamente type-safe, senza leak [perdite] di risorse, e che intercetta molti più errori logici di programmazione di quanto avvenga nel normale codice oggi.
 E girerà velocemente -- ci si può permettere di fare le cose nel modo giusto.
 
-Ci occupiamo un po' meno dei problemi di basso livello, come le convenzioni sui nomi e lo stile di indentazione.
+Ci si occupa un po' meno dei problemi di basso livello, come le convenzioni sui nomi e lo stile della indentazione.
 Tuttavia, niente di ciò che può aiutare il programmatore è fuori luogo.
 
-Il nostro gruppo iniziale di regole enfatizza la sicurezza (sotto varie forme) e la semplicità.
-Potrebbero essere anche troppo severe.
-Ci aspettiamo di dover introdurre più eccezioni per venire meglio incontro alle esigenze del mondo reale.
-Abbiamo bisogno anche di più regole.
+Il gruppo iniziale di regole enfatizza la sicurezza (sotto varie forme) e la semplicità.
+Potrebbero essere fin troppo severe.
+Ci si aspetta  di dover introdurre più eccezioni per venire meglio incontro alle esigenze del mondo reale.
+Sono necessaria di altre regole.
 
-Troverete alcune delle regole contrarie alle vostre aspettative e persino contrarie alla vostra esperienza.
+Alcune delle regole risulteranno contrarie alle proprie aspettative e persino contrarie alla propria esperienza.
 Se non vi abbiamo suggerito di modificare in alcun modo di cambiare lo stile del vostro codice, abbiamo fallito!
 Provate a verificare o confutare le regole!
-In particolare, vorremmo davvero avere su alcune nostre regole un sostegno con misure ed esempi migliori.
+In particolare, si vorrebbe davvero avere su alcune regole un sostegno con misure ed esempi migliori.
 
-Troverete alcune regole ovvie o addirittura banali.
-Ricordate che lo scopo di una linea-guida è quello di aiutare qualcuno che ha meno esperienza o che proviene da un diverso background o da un diverso linguaggio a mettersi al passo.
+Alcune regole risulteranno ovvie o addirittura banali.
+Si ricordi che lo scopo di una linea-guida è quello di aiutare qualcuno che ha meno esperienza o che proviene da un diverso background o da un diverso linguaggio a mettersi al passo.
 
 Molte delle regole sono progettate per essere supportate da uno tool di analisi.
-Le violazioni delle regole verranno contrassegnate con riferimenti (o link) alla regola violata.
+Le violazioni alle regole verranno contrassegnate con riferimenti (o link) alla regola violata.
 Non ci aspettiamo che memorizziate tutte le regole senza aver prima provato a scrivere il codice.
-Un modo di pensare a queste linee-guida è come a una specifica per dei tool leggibile dagli umani.
+Un modo di vedere queste linee-guida è come a una specifica per dei tool ma leggibile dagli umani.
 
-Le regole sono pensate per un introduzione graduale su una base di codice.
-Per questo abbiamo in programma la realizzazione di tool e speriamo che anche altri lo facciano.
+Le regole sono pensate per essere introdotte gradualmente in un codice.
+Per questo c'è in programma la realizzazione di tool e si spera che anche altri lo facciano.
 
 I commenti e i suggerimenti per migliorare sono sempre benvenuti.
-Si prevede di modificare ed estendere questo documento man mano che migliorano la nostra comprensione, il linguaggio e l'insieme delle librerie disponibili.
+Si prevede di modificare ed estendere questo documento man mano che migliora la nostra comprensione, il linguaggio o l'insieme delle librerie disponibili.
 
 # <a name="S-introduction"></a>In: Introduzione
 
-Questa è una serie di linee-guida basilari per il C++ moderno (attualmente C++17) che tengono conto sia dei possibili futuri miglioramenti che dell' ISO Technical Specifications (TSs).
+Questa è una serie di linee-guida basilari per il C++ moderno (attualmente C++17) che tengono conto sia dei possibili futuri miglioramenti che delle ISO Technical Specifications (TSs).
 L'obiettivo è quello di aiutare i programmatori C++ a scrivere codice più semplice, più efficiente e più manutenibile.
 
 Sommario dell'introduzione:
@@ -249,14 +249,14 @@ Tutti i programmatori C++. Tra cui [i programmatori che potrebbero prendere in c
 
 Lo scopo delle linee-guida è quello di aiutare gli sviluppatori ad adottare il C++ moderno (attualmente C++17) e per ottenere uno stile più uniforme nel codice.
 
-Non ci illudiamo di vedere effettivamente applicate ognuna di queste regole a qualsiasi codice. L'aggiornamento dei vecchi sistemi è difficile. Tuttavia, crediamo che un programma che usi una regola è meno soggetto ad errori e più manutenibile di uno che non lo faccia. Spesso, le regole portano anche ad uno sviluppo iniziale più veloce/facile.
-Per quanto sappiamo, queste regole conducono ad un codice che funziona altrettanto bene, se non meglio, di quello più vecchio, con tecniche più convenzionali; sono pensate per seguire il principio dello zero-overhead ("quello che non si usa, non si paga" e "quando si usa bene un meccanismo di astrazione, si ottengono almeno le stesse buone prestazioni di quelle col codice scritto a mano utilizzando i costrutti del linguaggio di livello più basso").
+Non ci si illude di vedere effettivamente applicate ognuna di queste regole a qualsiasi codice. L'aggiornamento dei vecchi sistemi è difficile. Tuttavia, si crede che un programma che usi una regola sia meno soggetto ad errori e più manutenibile di uno che non lo faccia. Spesso, le regole portano anche ad uno sviluppo iniziale più veloce/facile.
+Per quanto si sa, queste regole conducono ad un codice che funziona altrettanto bene, se non meglio, di quello più vecchio, con tecniche più convenzionali; sono pensate per seguire il principio dello "zero-overhead" ("quello che non si usa, non si paga" e "quando si usa bene un meccanismo di astrazione, si ottengono almeno le stesse buone prestazioni di quelle col codice scritto manualmente utilizzando i costrutti del linguaggio di livello più basso").
 Si considerino queste regole ideali per il nuovo codice, un'opportunità da sfruttare quando si lavora su vecchio codice e si tenti di avvicinarsi il più possibile a tali ideali.
 Da ricordare:
 
 ### <a name="R0"></a>In.0: Non farsi prendere dal panico!
 
-Si prenda il tempo necessario per capire le implicazioni di una regola di una linea-guida per il proprio programma.
+Ci si prenda il tempo necessario per capire le implicazioni di una regola di una linea-guida per il proprio programma.
 
 Queste linee-guida sono progettate secondo il principio del "sottoinsieme di un insieme" ([Stroustrup05](#Stroustrup05)).
 Non definiscono semplicemente un sottoinsieme del C++ da usare (per affidabilità, prestazioni o altro).
@@ -265,18 +265,18 @@ che rendono ridondanti le funzionalità più soggette ad errori del C++, in modo
 
 Le regole enfatizzano la sicurezza del tipo statico e la sicurezza delle risorse.
 Per questo motivo, enfatizzano le possibilità di controllare i range, per evitare la de-referenziazione di `nullptr`, per evitare il dangling [penzolamento] dei puntatori, e l'uso sistematico delle eccezioni (tramite il RAII).
-In parte per questo e in parte per minimizzare la confusione nel codice come fonte di errori, le regole enfatizzano anche la semplicità e il dover nascondere la complessità necessaria dietro interfacce ben definite.
+In parte per questo, e in parte per minimizzare la confusione nel codice come fonte di errori, le regole enfatizzano anche la semplicità e il dover nascondere la complessità necessaria dietro interfacce ben definite.
 
 Molte delle regole sono normative.
 Ci si trova a disagio con regole che dicono semplicemente "non fare questo!" senza dare un'alternativa.
 Una conseguenza di ciò è che alcune regole possono essere supportate solo dall'euristica, anziché da controlli precisi e meccanicamente verificabili.
-Altre regole esprimono principi generali. Per queste regole più generali, di quelle più dettagliate e specifiche, consentono un controllo parziale.
+Altre regole esprimono principi generali. Per queste regole più generali, di quelle più dettagliate e specifiche, si fornisce un controllo parziale.
 
 Queste linee-guida riguardano il nucleo [core] del C++ e il suo utilizzo.
-Ci si aspetta che la maggior parte delle grandi organizzazioni, delle aree di applicazione specifiche e persino dei grandi progetti necessiteranno di ulteriori regole, forse di altre restrizioni e un ulteriore supporto della libreria.
+Ci si aspetta che le maggiori organizzazioni, le specifiche aree applicative e persino i grandi progetti avranno bisogno di altre regole, forse di altre restrizioni e di un ulteriore supporto della libreria.
 Per esempio, i programmatori [hard-real-time] solitamente non possono usare liberamente il [free store] (memoria dinamica) e sono limitati nella scelta delle librerie.
 Noi incoraggiamo lo sviluppo di regole più specifiche da aggiungere a queste "core guidelines".
-Costruite le piccole basi della vostra libreria ideale ed usatela, anziché abbassare il vostro livello di programmazione per glorificare il codice assembly.
+Costruite le piccole basi della vostra libreria ideale ed usatela, anziché abbassare il livello di programmazione al glorificato codice assembly.
 
 Le regole sono progettate per consentirne una [graduale adozione](#S-modernizing).
 
@@ -289,9 +289,9 @@ Tuttavia, quando ci sono due modi per esprimere un'idea e uno si è mostrato una
 Le regole non intendono essere minime o ortogonali.
 In particolare, le regole generali possono essere semplici, ma impossibili da imporre.
 Inoltre, spesso è difficile comprendere le implicazioni di una regola generale.
-Regole più specializzate sono spesso più facili da capire e da applicare, ma senza regole generali formerebbero solo un lungo elenco di casi speciali.
-Forniamo regole volte ad aiutare i principianti così come regole a supporto degli esperti.
-Alcune delle regole si possono completamente imporre, ma al tre sono basate sull'euristica.
+Regole più specializzate sono spesso più facili da capire e da applicare, ma senza regole generali si formerebbe solo un lungo elenco di casi speciali.
+Si forniscono regole volte ad aiutare i principianti ma anche regole a supporto degli esperti.
+Alcune delle regole si possono completamente imporre, ma altre sono basate sull'euristica.
 
 Queste regole non sono pensate per essere lette in sequenza, come un libro.
 
@@ -301,11 +301,11 @@ Cioè, un tool cerca le violazioni per poi restituire i link alle regole violate
 Le regole quindi forniscono ragioni, esempi di potenziali conseguenze della violazione e suggeriscono rimedi.
 
 Queste linee-guida non intendono sostituire un tutorial C++.
-Se serve un tutorial per un certo livello di esperienza, si vedano [le referenze](#S-references).
+Se serve un tutorial per un certo livello di esperienza, si consultino [le referenze](#S-references).
 
 Questa non è una guida su come convertire del vecchio codice C++ in un codice più moderno.
-Essa ha lo scopo di articolare in modo concreto le idee per il codice nuovo.
-Tuttavia, si veda [la sezione della modernizzazione](#S-modernizing) per alcuni possibili approcci alla modernizzazione/ringiovanimento/aggiornamento.
+Essa ha lo scopo di articolare in modo concreto le idee per il nuovo codice.
+Tuttavia, si veda [la sezione sulla modernizzazione](#S-modernizing) per alcuni possibili approcci alla modernizzazione/ringiovanimento/aggiornamento.
 È importante sottolineare che le regole supportano l'adozione graduale: in genere è impossibile convertire completamente una grande quantità di codice in una volta sola.
 
 Queste linee guida non sono pensate per essere complete ed esatte in ogni dettaglio tecnico-linguistico.
@@ -330,7 +330,7 @@ Una regola può nuocere vietando qualcosa di utile in una determinata situazione
 Una regola può nuocere non riuscendo a proibire qualcosa che apre la strada ad un errore grave in una determinata situazione.
 Una regola può causare molti danni essendo vaga, ambigua, inapplicabile o abilitando ogni soluzione a un problema.
 È impossibile soddisfare completamente il criterio del "non danneggiare".
-L'obiettivo, invece, è il meno ambizioso: "Fai del tuo meglio per la maggior parte dei programmatori"; 
+L'obiettivo, invece, è meno ambizioso: "Fai del tuo meglio per la maggior parte dei programmatori"; 
 se non puoi vivere con una regola, contestala, ignorala, ma non diluirla fino a farle perdere di significato.
 Inoltre, suggerisci un miglioramento.
 
@@ -339,7 +339,7 @@ Inoltre, suggerisci un miglioramento.
 Le regole senza un'imposizione non sono gestibili per grandi basi di codice.
 L'imposizione di tutte le regole è possibile solo per un piccolo insieme di semplici regole o per una specifica comunità di utenti.
 
-* Ma vogliamo molte regole e vogliamo regole che tutti possano usare..
+* Ma vogliamo molte regole e vogliamo regole che tutti possano usare.
 * Ma persone diverse hanno esigenze diverse.
 * Ma alle persone non piace leggere molte regole.
 * Ma la gente non ricorda molte regole.
@@ -373,7 +373,7 @@ I tool che implementano queste regole devono rispettare la sintassi seguente per
 
     [[gsl::suppress(tag)]]
 
-dove "tag" è il nome identificativo [anchor name] dell'elemento in cui appare la regola di Imposizione (p.es., per [C.134](#Rh-public) è "Rh-public"), il nome di un profilo gruppo-di-regole ("type", "bounds", o "lifetime"), o una specifica regola di un profilo ([type.4](#Pro-type-cstylecast), o [bounds.2](#Pro-bounds-arrayindex)).
+dove "tag" è il nome identificativo [anchor name] dell'elemento in cui appare la regola di "Imposizione" (p.es., per [C.134](#Rh-public) è "Rh-public"), il nome di un profilo gruppo-di-regole ("type", "bounds" o "lifetime"), o una specifica regola di un profilo ([type.4](#Pro-type-cstylecast) o [bounds.2](#Pro-bounds-arrayindex)).
 
 ## <a name="SS-struct"></a>In.struct: La struttura di questo documento
 
@@ -389,16 +389,16 @@ Lasciamo dei salti nella numerazione per ridurre al minimo le "interruzioni" nel
 * **Eccezioni** -- preferiamo semplici regole generali. Tuttavia, molte regole si applicano ampiamente, ma non universalmente, quindi è necessario elencare le eccezioni
 * **Enforcement** [Imposizione] -- idee su come la regola potrebbe essere controllata "meccanicamente"
 * **See also** [Vedi anche] -- riferimenti a regole correlate e/o ulteriori discussioni (in questo documento o altrove)
-* **Note** (commenti) -- qualcosa che deve essere detto che non rientra nelle altre classificazioni
+* **Note** (commenti) -- qualcosa che deve essere detto e che non rientra nelle altre classificazioni
 * **Discussion** -- riferimenti a motivazioni più ampie e/o esempi posti al di fuori delle liste principali di regole
 
 Alcune regole sono difficili da verificare meccanicamente, ma tutte soddisfano i criteri minimi con cui un esperto programmatore possa individuare molte violazioni senza troppi problemi.
-Noi speriamo che i tool "meccanici" migliorino col tempo per approssimare quello che nota un programmatore esperto.
-Assumiamo, inoltre, che le regole vengano perfezionate nel tempo per renderle più precise e verificabili.
+Si spera che i tool "meccanici" migliorino col tempo per approssimare quello che nota un programmatore esperto.
+Si assume, inoltre, che le regole vengano perfezionate nel tempo per renderle più precise e verificabili.
 
-Una regola mira ad essere semplice, piuttosto che ben formulata per menzionare ogni caso alternativo e quelli speciali.
-Tali informazioni si trovano nelle sezioni **Alternative** e nelle sezioni [Discussion](#S-discussion).
-Se non si capisce una regola o non la si condivide, se ne visiti la **Discussione**e.
+Una regola mira ad essere semplice, piuttosto che essere ben formulata menzionando ogni caso alternativo e speciale.
+Tali informazioni si trovano nelle sezioni **Alternative** e nelle sezioni [Discussione](#S-discussion).
+Se non si capisce una regola o non la si condivide, se ne visiti la **Discussione**.
 Se si ritiene che manchi una discussione o che sia incompleta, si inserisce un [Issue](https://github.com/isocpp/CppCoreGuidelines/issues) [problema] spiegando le proprie motivazioni e possibilmente un corrispondente PR [Pull Request].
 
 Gli esempi sono scritti per illustrare le regole.
@@ -407,10 +407,10 @@ Gli esempi sono scritti per illustrare le regole.
 Per esempio, molti esempi sono tecnico-linguistici ed usano nomi come `f`, `base`, o `x`.
 * Cerchiamo di assicurarci che i "buoni" esempi seguano le "Core Guidelines".
 * I commenti che illustrano le regole spesso sarebbero inutili e/o distraenti in un "codice reale".
-* Presupponiamo la conoscenza della libreria standard. Per esempio, usiamo il semplice `vector` anziché `std::vector`.
+* Si presuppone la conoscenza della libreria standard. Per esempio, si usa il semplice `vector` anziché `std::vector`.
 
 Questo non è un manuale del linguaggio.
-È pensato per essere utile, oltre che completo, molto accurato sui dettagli tecnici, o una guida al codice esistente.
+È pensato per essere utile, anziché completo, accuratissimo sui dettagli tecnici, o una guida al codice esistente.
 Le fonti di informazioni consigliate sono disponibili nel[le referenze](#S-references).
 
 ## <a name="SS-sec"></a>In.sec: Sezioni principali
@@ -421,16 +421,16 @@ Le fonti di informazioni consigliate sono disponibili nel[le referenze](#S-refer
 * [F: Funzioni](#S-functions)
 * [C: Classi e gerarchie di classi](#S-class)
 * [Enum: Enumerazioni](#S-enum)
-* [R: Gestione delle risorse [Resource management]](#S-resource)
+* [R: Gestione delle risorse](#S-resource)
 * [ES: Espressioni e istruzioni](#S-expr)
 * [Per: Prestazione](#S-performance)
 * [CP: Concorrenza e parallelismo](#S-concurrency)
-* [E: Gestione degli errori [Error handling]](#S-errors)
+* [E: Gestione degli errori](#S-errors)
 * [Con: Costanti e immutabilità](#S-const)
 * [T: Template e programmazione generica](#S-templates)
 * [CPL: Programmazione C-style](#S-cpl)
 * [SF: File sorgenti [Source files]](#S-source)
-* [SL: La libreria Standard [Standard Library]](#S-stdlib)
+* [SL: La Libreria Standard](#S-stdlib)
 
 Sezioni di supporto:
 
@@ -438,7 +438,7 @@ Sezioni di supporto:
 * [NR: Non-Regole e miti](#S-not)
 * [RF: Riferimenti](#S-references)
 * [Pro: Profili](#S-profile)
-* [GSL: Libreria di supporto alle linee-guida [Guidelines Support Library]](#S-gsl)
+* [GSL: Libreria di Supporto alle Linee-guida [Guidelines Support Library]](#S-gsl)
 * [NL: Regole di nomenclatura e layout](#S-naming)
 * [FAQ: Risposte a domande frequenti](#S-faq)
 * [Appendice A: Librerie](#S-libraries)
@@ -450,7 +450,7 @@ Sezioni di supporto:
 
 Queste sezioni non sono ortogonali.
 
-Ogni sezione (p.es., "P" per "Filosofia") e ogni sottosezione (p.es., "C.hier" per "Class Hierarchies (OOP)") ha un'abbreviazione per facilitarne la ricerca ed il riferimento.
+Ogni sezione (p.es., "P" per "Filosofia") e ogni sottosezione (p.es., "C.hier" per "Gerarchie di classi (OOP)") ha un'abbreviazione per facilitarne la ricerca ed il riferimento.
 Le abbreviazioni della sezione principale sono utilizzate anche nei numeri delle regole (p.es., "C.11" per "Rendere concreti i tipi regolari").
 
 # <a name="S-philosophy"></a>P: Filosofia
@@ -1225,7 +1225,7 @@ Riepilogo delle Regole delle interfacce:
 * [C.hier: Gerarchie di classi](#SS-hier)
 * [C.over: Overloading e operatori overloaded [sovraccaricati]](#SS-overload)
 * [C.con: Contenitori ed altri handle di risorse](#SS-containers)
-* [E: Gestione degli errori [Error handling]](#S-errors)
+* [E: Gestione degli errori](#S-errors)
 * [T: Template e programmazione generica](#S-templates)
 
 ### <a name="Ri-explicit"></a>I.1: Rendere esplicite le interfacce
@@ -4302,7 +4302,7 @@ I tipi [concrete] vengono spesso definiti tipi di valore per distinguerli dai ti
 Riepilogo delle regole sul tipo [concrete]:
 
 * [C.10: Preferire i tipi [concrete] alle gerarchie di classi](#Rc-concrete)
-* [C.11: Rendere [concrete] i tipi regolari](#Rc-regular)
+* [C.11: Rendere concreti i tipi regolari](#Rc-regular)
 
 ### <a name="Rc-concrete"></a>C.10: Preferire i tipi [concrete] alle gerarchie di classi
 
