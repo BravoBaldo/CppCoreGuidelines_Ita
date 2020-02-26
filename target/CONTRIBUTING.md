@@ -33,20 +33,18 @@ Il codice e il testo nidificato devono utilizzare multipli di 4 spazi di rientro
 
     void func(const int x)
     {
-    std::cout << x << '\n';
+        std::cout << x << '\n';
     }
-
 #### Blocchi di Codice
 
 Usare un'indentazione di 4 spazi per attivare il parsing del codice, anziché [blocchi di codice contornato](https://help.github.com/articles/github-flavored-markdown/#fenced-code-blocks) o qualsiasi altro stile, in questo modo:
 
     Questo è il testo di un documento, seguito da un esempio:
-    
-    void func()
-    {
-    std::cout << "Questo è codice.\n";
-    }
 
+        void func()
+        {
+            std::cout << "Questo è codice.\n";
+        }
 #### Decisioni sullo stile del documento
 
 Abbiamo discusso e deciso su diversi stili del documento. Si prega di non aprire PR [Pull Request] che rivisitino questi punti stilistici:

@@ -1,6 +1,6 @@
 [![C++ Core Guidelines](cpp_core_guidelines_logo_text.png)](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
 
-> "All'interno del C++ c'è un più piccolo, semplice e sicuro linguaggio, che lotta per uscire fuori"
+> "All'interno del C++ c'è un più piccolo, semplice e sicuro linguaggio, che lotta per uscire fuori".
 > -- <cite>Bjarne Stroustrup</cite>
 
 Le [C++ Core Guidelines](CppCoreGuidelines.md) è un lavoro di gruppo guidato da Bjarne Stroustrup, proprio come lo stesso linguaggio C++. Sono il risultato di molti anni-uomo di discussione e progettazione in diverse organizzazioni. Per come sono progettate incoraggiano una generale applicabilità ed un'ampia adozione ma si possono liberamente copiare e modificare per soddisfare le esigenze della propria organizzazione.
