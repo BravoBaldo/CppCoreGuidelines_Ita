@@ -1162,8 +1162,8 @@ Se non esiste una libreria ben progettata, ben documentata e ben supportata per 
 
 # <a name="S-interfaces"></a>I: Interfacce
 
-Un'interfaccia è un contratto tra due parti di un programma. Indica con precisione cosa ci si aspetta da un fornitore di un servizio e l'essenziale da un utente di tale servizio.
-Avere buone interfacce (di facile comprensione, incoraggianti un uso efficiente, non soggetto a errori, col supporto di test, ecc.) è probabilmente il solo aspetto più importante dell'organizzazione del codice.
+Un'interfaccia è un contratto tra due parti di un programma. Indica con precisione cosa ci si aspetta da un fornitore di un servizio e un utente per cui quel servizio è essenziale.
+Avere buone interfacce (di facile comprensione, che ne incoraggino un uso efficiente, non soggette a errori, col supporto di test, ecc.) è probabilmente il solo aspetto più importante dell'organizzazione del codice.
 
 Riepilogo delle regole delle interfacce:
 
@@ -1279,7 +1279,7 @@ Le costanti globali sono utili.
 
 La regola contro le variabili globali si applica anche alle variabili  nello scope del namespace.
 
-**Alternativa**: Se si usano dati globali (più in generale nello scope del namespace) per evitarne la copia, si prenda in considerazione il passare i dati come oggetto per riferimento a `const`.
+**Alternativa**: Se si usano dati globali (più in generale nello scope del namespace) per evitarne la copia, si prenda in considerazione il passare i dati come un oggetto per riferimento a `const`.
 Un'altra soluzione è quella di definire i dati come lo stato di alcuni oggetti e le operazioni come funzioni membro.
 
 **Warning**: Attenzione ai conflitti sui dati: Se un thread può accedere a dati non locali (o dati passati per riferimento) mentre un altro thread esegue il chiamato, si può avere un conflitto.
@@ -1343,7 +1343,7 @@ Per esempio:
         return *p;  // leak potenziale
     }
 Ora qualcuno deve eseguire il `delete` di quest'oggetto quell'oggetto in modo opportunamente sicuro per essere thread-safe.
-Questo è soggetto a errori, quindi non usiamo questa tecnica a meno che
+Questo è soggetto a errori, quindi questa tecnica non va usata a meno che
 
 * `myX` stia in un codice multi-threaded,
 * che l'oggetto `X` debba essere distrutto (p.es., perché rilascia una risorsa), e
@@ -1371,10 +1371,10 @@ Inoltre, il codice tipizzato con precisione viene spesso meglio ottimizzato.
 Si consideri:
 
     void pass(void* data);    // il tipo void* è vago e sospetto
-I chiamanti non sono sicuri di quali tipi siano ammessi e se i dati possano essere mutati come `const` se non specificato. Si noti che tutti i tipi di puntatore vengono convertiti implicitamente in void*, quindi è facile per i chiamanti fornire questo valore.
+I chiamanti non sono sicuri di quali tipi siano ammessi e se i dati possano essere mutati come `const` se non specificato. Si noti che tutti i tipi di puntatori vengono convertiti implicitamente in void*, quindi è facile per i chiamanti fornire questo valore.
 
 Il chiamato deve eseguire un `static_cast` dei dati ad un tipo non verificato per usarlo.
-Questo è soggetto a errori ed è verboso.
+Questo è soggetto a errori ed è prolisso.
 
 Utilizzare solo `const void*` per passare i dati in progetti che sono indescrivibili in C++. Si consideri invece l'uso di un `variant` o un puntatore alla base.
 
@@ -1388,16 +1388,16 @@ Si consideri:
     draw_rect(100, 200, 100, 500); // cosa esattamente indicano i numeri?
 
     draw_rect(p.x, p.y, 10, 20); // quali unità sono 10 e 20?
-È chiaro che il chiamante sta descrivendo un rettangolo, ma non è chiaro a quali parti si riferisca. Inoltre, un `int` può rappresentare forme arbitrarie di informazioni, compresi i valori di molte unità, quindi dobbiamo indovinare il significato dei quattro `int`. Molto probabilmente, i primi due sono una coppia di coordinate `x`,`y`, ma che sono gli ultimi due?
+È chiaro che il chiamante sta descrivendo un rettangolo, ma non è chiaro a quali parti si riferisca. Inoltre, un `int` può rappresentare forme arbitrarie di informazioni, compresi i valori di molte unità, quindi dobbiamo indovinare il significato dei quattro `int`. Molto probabilmente, i primi due sono una coppia di coordinate `x`,`y`, ma cosa rappresentano gli ultimi due?
 
-Commenti e nomi di parametri possono essere d'aiuto, ma potremmo essere espliciti:
+Commenti e nomi di parametri possono essere d'aiuto, ma si può essere espliciti:
 
     void draw_rectangle(Point top_left, Point bottom_right);
     void draw_rectangle(Point top_left, Size height_width);
 
     draw_rectangle(p, Point{10, 20});  // due angoli
     draw_rectangle(p, Size{10, 20});   // un angolo e una coppia(altezza, larghezza)
-Ovviamente, non possiamo rilevare tutti gli errori attraverso il sistema di tipi statici (p.es., il fatto che un primo argomento sia considerato un punto in alto a sinistra è lasciato alla convenzione (nomenclatura e commenti)).
+Ovviamente, non si possono rilevare tutti gli errori attraverso il sistema dei tipi statici (p.es., il fatto che un primo argomento sia considerato un punto in alto a sinistra è lasciato alla convenzione (nomenclatura e commenti)).
 
 ##### Esempio, cattivo
 
@@ -1413,7 +1413,7 @@ Questo progetto è più esplicito, sicuro e leggibile:
     s.displayMode = alarm_settings::mode::spinning_light;
     s.frequency = alarm_settings::every_10_seconds;
     set_settings(s);
-Nel caso di un insieme di valori booleani prendere in considerazione l'uso di un flag enum; un pattern che esprima un insieme di valori booleani.
+Nel caso di un insieme di valori booleani prendere in considerazione l'uso di un flag enum; un costrutto che esprima un insieme di valori booleani.
 
     enable_lamp_options(lamp_option::on | lamp_option::animate_state_transitions);
 ##### Esempio, cattivo
@@ -1480,7 +1480,7 @@ Gli argomenti hanno un significato che può limitarne l'uso corretto nel chiamat
 Si consideri:
 
     double sqrt(double x);
-Qui `x` dev'essere non negativo. Il sistema dei tipi non può (facilmente e naturalmente) esprimerlo, quindi si devono usare altri mezzi. Per esempio:
+Qui `x` dev'essere non negativo. Il sistema dei tipi non può esprimerlo (facilmente e naturalmente), quindi si devono usare altri mezzi. Per esempio:
 
     double sqrt(double x); // x dev'essere non negativo
 Alcune precondizioni possono essere espresse come asserzioni. Per esempio:
@@ -1555,7 +1555,7 @@ Si consideri:
 
     int area(int height, int width) { return height * width; }  // non buono
 Qui, abbiamo (incautamente) escluso la specifica della precondizione, quindi non è esplicito che altezza e larghezza debbano essere positive.
-Abbiamo anche tralasciato la specifica della postcondizione, quindi non è ovvio che l'algoritmo (`height * width`) è sbagliato per le aree più grandi dell'intero più grande.
+Abbiamo anche tralasciato la specifica della postcondizione, quindi non è ovvio che l'algoritmo (`height * width`) sia sbagliato per le aree più grandi dell'intero più grande.
 Può capitare un overflow.
 Si consideri di usare:
 
@@ -1586,7 +1586,7 @@ Non è stata dichiarata alcuna postcondizione che il buffer dev'essere ripulito 
     }
 ##### Note
 
-Le postcondizioni sono spesso dichiarate in modo informale in un commento che indica lo scopo di una funzione; si può usare `Ensures()` per renderlo più sistematico, visibile, e verificabile.
+Le postcondizioni sono spesso dichiarate in modo informale in un commento che indica lo scopo di una funzione; si può usare `Ensures()` per renderlo più sistematico, visibile e verificabile.
 
 ##### Note
 
@@ -1624,7 +1624,7 @@ Meglio ancora, usare il [RAII](#Rr-raii) per assicurarsi che la postcondizione (
 
 Idealmente, le postcondizioni sono indicate nell'interfaccia/dichiarazione in modo che gli utenti possano facilmente vederle.
 Nell'interfaccia è possibile specificare solo le postcondizioni relative agli utenti.
-Le postcondizioni relative solo allo stato interno appartengono alla definizione/implementazione.
+Le postcondizioni relative solo allo stato interno, appartengono alla definizione/implementazione.
 
 ##### Imposizione
 
@@ -1648,7 +1648,7 @@ Per chiarire che la condizione è una postcondizione e per consentire l'uso di t
 ##### Note
 
 Le postcondizioni possono essere dichiarate in molti modi, inclusi i commenti, istruzioni `if` e `assert()`.
-Questo può rendere arduo distinguerle dal normale codice, difficile da aggiornarle, difficile da gestirle con tool, e potrebbero avere la semantica sbagliata.
+Questo può rendere arduo distinguerle dal normale codice, difficile da aggiornarle, difficile da gestirle con tool e potrebbero avere la semantica sbagliata.
 
 **Alternativa**: Le post-condizioni di tipo "questa risorsa dev'essere rilasciata" si esprimono meglio col [RAII](#Rr-raii).
 
@@ -1687,7 +1687,7 @@ I concetti sono supportati GCC 6.1 e successivi.
 
 ##### Imposizione
 
-(Non ancora applicabile) C'è una specifica del linguaggio in esame. Quando tale funzionalità del linguaggio sarà disponibile, avvisa che un qualsiasi parametro template non-variadico non risulta vincolato da un "concetto" (nella sua dichiarazione o citato in una clausola `requires`).
+(Non ancora applicabile) C'è una specifica del linguaggio in esame. Quando tale funzionalità del linguaggio sarà disponibile, avviserà che un qualsiasi parametro template non-variadico non risulta vincolato da un "concetto" (nella sua dichiarazione o citato in una clausola `requires`).
 
 ### <a name="Ri-except"></a>I.10: Usare le eccezioni per segnalare un errore nell'eseguire un compito richiesto
 
@@ -1739,13 +1739,13 @@ A partire da C++17 si può usare la funzionalità delle "structured bindings" pe
 
 Non consideriamo le "prestazioni" un motivo valido per non usare le eccezioni.
 
-* Spesso, il controllo e la gestione espliciti degli errori consumano tanto tempo e spazio quanto la gestione delle eccezioni.
+* Spesso, il controllo e la gestione esplicita degli errori consumano tanto tempo e spazio quanto la gestione delle eccezioni.
 * Spesso, un codice più pulito produce migliori prestazioni con le eccezioni (semplificando la tracciabilità dei percorsi attraverso il programma e la loro ottimizzazione).
 * Una buona regola per il codice critico per le prestazioni è quella di spostare il controllo all'esterno della parte critica del codice ([checking](#Rper-checking)).
 * Alla lunga, un codice più regolare si ottimizza meglio.
 * [Misurare](#Rper-measure) sempre e accuratamente prima di lamentarsi delle prestazioni.
 
-**Si veda anche**: [I.5](#Ri-pre) e [I.7](#Ri-post) per riportare violazioni di precondizione e post-condizione.
+**Si veda anche**: [I.5](#Ri-pre) e [I.7](#Ri-post) per riportare violazioni di pre-condizione e post-condizione.
 
 ##### Imposizione
 
@@ -1853,8 +1853,8 @@ Le interfacce di tipo (puntatore, dimensione) sono soggette ad errori. Inoltre, 
 Si consideri:
 
     void copy_n(const T* p, T* q, int n); // copia da [p:p+n) a [q:q+n)
-Cosa succede se sono presenti meno di `n` elementi nell'array puntato da `q` ? Allora, probabilmente si sovrascrive della memoria esterna.
-Cosa succede se nell'array sono presenti meno di `n` elementi nell'array puntato da `p`? Allora, probabilmente, si leggerà da una memoria esterna.
+Cosa succede se sono presenti meno di `n` elementi nell'array puntato da `q`? Allora, probabilmente si sovrascrive della memoria esterna.
+Cosa succede se sono presenti meno di `n` elementi nell'array puntato da `p`? Allora, probabilmente, si leggerà da una memoria esterna.
 O è un comportamento indefinito o un bug potenzialmente molto pericoloso.
 
 ##### Alternativa
@@ -1870,7 +1870,7 @@ Si consideri:
     Circle arr[10];
     // ...
     draw(arr, 10);
-Passare `10` come l'argomento `n` può essere un errore: la convenzione più comune è assumere `[0:n)` ma non è detto da nessuna parte. Peggio ancora è che la chiamata a `draw()` non viene compilata affatto: c'è stata una conversione implicita da un array a un puntatore (array decay) e poi un'altra conversione implicita da `Circle` a `Shape`. Non è possibile che `draw()` possa iterare in sicurezza per tutto quell'array: non ha modo di conoscere la dimensione degli elementi.
+Passare `10` come l'argomento `n` può risultare un errore: la convenzione più comune è assumere `[0:n)` ma non è detto da nessuna parte. Peggio ancora è che la chiamata a `draw()` non viene compilata affatto: c'è stata una conversione implicita da un array a un puntatore (array decay) e poi un'altra conversione implicita da `Circle` a `Shape`. Non è possibile che `draw()` possa iterare in sicurezza per tutto quell'array: non ha modo di conoscere la dimensione degli elementi.
 
 **Alternativa**: Utilizzare una classe di supporto per garantire che il numero di elementi sia corretto e per prevenire conversioni implicite pericolose. Per esempio:
 
@@ -1891,14 +1891,14 @@ Ma quando lo si fa, si usa `std::string_view` o `string_span` della [GSL](#GSL) 
 
 ##### Imposizione
 
-* (Semplice) ((Bounds)) Segnala un warning per ogni espressione che si baserebbe sulla conversione implicita di un tipo di array ad un tipo di puntatore. Consentire delle eccezioni per tipi di puntatori zstring/czstring.
+* (Semplice) ((Bounds)) Segnala un warning per ogni espressione che si baserebbe sulla conversione implicita da un tipo di array ad un tipo di puntatore. Consentire delle eccezioni per tipi di puntatori zstring/czstring.
 * (Semplice) ((Bounds)) Segnala un warning per ogni operazione aritmetica o espressione di tipo puntatore che risulti nel valore di un tipo puntatore. Consentire delle eccezioni per tipi di puntatori zstring/czstring.
 
 ### <a name="Ri-global-init"></a>I.22: Evitare complesse inizializzazioni di oggetti globali
 
 ##### Motivo
 
-Una complessa inizializzazione può portare ad un ordine indefinito di esecuzione.
+Una inizializzazione complessa può portare ad un ordine indefinito di esecuzione.
 
 ##### Esempio
 
