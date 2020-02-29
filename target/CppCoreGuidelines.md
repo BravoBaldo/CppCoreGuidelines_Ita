@@ -1282,7 +1282,7 @@ La regola contro le variabili globali si applica anche alle variabili  nello sco
 **Alternativa**: Se si usano dati globali (più in generale nello scope del namespace) per evitarne la copia, si prenda in considerazione il passare i dati come un oggetto per riferimento a `const`.
 Un'altra soluzione è quella di definire i dati come lo stato di alcuni oggetti e le operazioni come funzioni membro.
 
-**Warning**: Attenzione ai conflitti sui dati: Se un thread può accedere a dati non locali (o dati passati per riferimento) mentre un altro thread esegue il chiamato, si può avere un conflitto.
+**Warning**: Attenzione ai conflitti sui dati: Se un thread può accedere a dati non-locali (o dati passati per riferimento) mentre un altro thread esegue il chiamato, si può avere un conflitto.
 Ogni puntatore o riferimento a dati mutabili è un potenziale conflitto.
 
 L'uso di puntatori o riferimenti globali per accedere e modificare i dati non-costanti e, in caso contrario, non-globali, non è un'alternativa migliore alle variabili globali non-costanti poiché ciò non risolve il problema delle dipendenze nascoste o delle potenziali condizioni di conflitti dei dati.
@@ -1480,9 +1480,9 @@ Gli argomenti hanno un significato che può limitarne l'uso corretto nel chiamat
 Si consideri:
 
     double sqrt(double x);
-Qui `x` dev'essere non negativo. Il sistema dei tipi non può esprimerlo (facilmente e naturalmente), quindi si devono usare altri mezzi. Per esempio:
+Here `x` dev'essere non-negativo. Il sistema dei tipi non può esprimerlo (facilmente e naturalmente), quindi si devono usare altri mezzi. Per esempio:
 
-    double sqrt(double x); // x dev'essere non negativo
+    double sqrt(double x); // x dev'essere non-negativo
 Alcune precondizioni possono essere espresse come asserzioni. Per esempio:
 
     double sqrt(double x) { Expects(x >= 0); /* ... */ }
@@ -1537,7 +1537,7 @@ Appena sarà disponibile il supporto del linguaggio (p.es., cfr. [contract propo
 
 ##### Note
 
-No, l'uso di `unsigned` non è un buon modo per bypassare il problema per [assicurarsi che il valore sia non-negativo](#Res-nonnegative).
+No, l'uso di `unsigned` non è un buon modo per bypassare il problema per [assicurarsi che il valore sia non-negativo](#Res-non-negative).
 
 ##### Imposizione
 
@@ -2192,10 +2192,10 @@ Presumibilmente, si dovranno aggiungere in un codice reale un po' di controlli p
 
 Una funzione specifica un'azione o un calcolo che porta il sistema da uno stato consistente al successivo. È l'elemento fondamentale dei programmi.
 
-Dovrebbe essere possibile dare un nome significativo alla funzione, specificare i requisiti dei suoi argomenti e indicare chiaramente la relazione tra gli argomenti e il risultato. Un'implementazione non è una specifica. Si provi a pensare a cosa fa una funzione e a come lo fa.
-Le funzioni costituiscono la parte più critica nella maggior parte delle interfacce, quindi si vedano le regole per l'interfaccia.
+Dovrebbe essere possibile dare un nome significativo a una funzione, specificare i requisiti dei suoi argomenti e indicare chiaramente la relazione tra gli argomenti e il risultato. Un'implementazione non è una specifica. Si provi a pensare a cosa fa una funzione e a come lo fa.
+Le funzioni costituiscono la parte più critica nella maggior parte delle interfacce, quindi si vedano le regole per le interfacce.
 
-Riepilogo delle regole delle funzioni:
+Riepilogo delle regole sulle funzioni:
 
 Regole di definizione di una funzione:
 
@@ -2215,7 +2215,7 @@ Regole per l'espressione del passaggio dei parametri:
 * [F.16: Per i parametri "in", si passano i tipi copiati 'a buon prezzo' per valore e gli altri per riferimento a `const`](#Rf-in)
 * [F.17: I parametri "in-out", si passano per riferimento non-`const`](#Rf-inout)
 * [F.18: I parametri "si-sposterà-da", si passano per `X&&` o con `std::move`](#Rf-consume)
-* [F.19: I parametri "forward", si passano per `TP&&` e solo per `std::forward` il parametro](#Rf-forward)
+* [F.19: Per i parametri "forward", si passano per `TP&&` e si esegue `std::forward` solo per il parametro](#Rf-forward)
 * [F.20: Per i valori "out", preferire i valori di ritorno ai parametri di output](#Rf-out)
 * [F.21: Per il return di valori "out" multipli, preferire il ritorno di una struct o di una tupla](#Rf-out-multi)
 * [F.60: Preferire `T*` a `T&` quando "nessun argomento" è una valida opzione](#Rf-ptr-ref)
@@ -2229,7 +2229,7 @@ Regole sulla semantica del passaggio dei parametri:
 * [F.26: Utilizzare `unique_ptr<T>` per trasferire l'ownership dove è necessario un puntatore](#Rf-unique_ptr)
 * [F.27: Utilizzare `shared_ptr<T>` per condividere l'ownership](#Rf-shared_ptr)
 
-<a name="Rf-value-return"></a>Regole di semantica del valore di ritorno:
+<a name="Rf-value-return"></a>Regole sulla semantica del valore di ritorno:
 
 * [F.42: Restituire `T*` per indicare (solo) una posizione](#Rf-return-ptr)
 * [F.43: Mai (direttamente o indirettamente) restituire un puntatore o un riferimento ad un oggetto locale](#Rf-dangle)
@@ -2237,11 +2237,11 @@ Regole sulla semantica del passaggio dei parametri:
 * [F.45: Non restituire un `T&&`](#Rf-return-ref-ref)
 * [F.46: `int` è il tipo restituito da `main()`](#Rf-main)
 * [F.47: Restituire `T&` dagli operatori di assegnamento](#Rf-assignment-op)
-* [F.48: Non fare `return std::move(local)`](#Rf-return-move-local)
+* [F.48: Non scrivere `return std::move(local)`](#Rf-return-move-local)
 
 Altre regole sulle funzioni:
 
-* [F.50: Usare una lambda quando una funzione non va (per acquisire le variabili locali o scrivere una funzione locale)](#Rf-capture-vs-overload)
+* [F.50: Usare una lambda quando non è possibile una funzione (per acquisire le variabili locali o scrivere una funzione locale)](#Rf-capture-vs-overload)
 * [F.51: Potendo scegliere, si preferiscano gli argomenti con default rispetto all'overloading](#Rf-default-args)
 * [F.52: Preferire l'acquisizione per riferimento nelle lambda da usare localmente, compresi quelli passati  agli algoritmi](#Rf-reference-capture)
 * [F.53: Evitare l'acquisizione per riferimento nelle lambda che non si useranno localmente, compresi quelli restituiti, memorizzati nell'heap o passati da un altro thread](#Rf-value-capture)
@@ -2274,13 +2274,13 @@ Se qualcosa è un'azione ben specificata, la si separa dal codice circostante e 
             cerr << "no int on input\n";
     }
 In `read_and_print` è sbagliato quasi tutto.
-Legge, scrive (su un `ostream` fisso), scrive i messaggi di errore (su un `ostream` fisso), gestisce solo `int`s.
+Legge, scrive (su un `ostream` fisso), scrive i messaggi di errore (su un `ostream` fisso), gestisce solo `int`.
 Non c'è nulla da riutilizzare, le operazioni separate logicamente sono mischiate e le variabili locali restano visibili dopo l'uso.
 Per un piccolo esempio, questo sembra OK, ma se l'operazione di input, quella di output e la gestione degli errori fossero state più complicate, il groviglio potrebbe diventare difficile da capire.
 
 ##### Note
 
-Se si scrive una lambda non banale che potenzialmente si possa utilizzare in più posti, gli si dà un nome e assegnandola a una variabile (di solito non locale).
+Se si scrive una lambda non banale che potenzialmente si possa utilizzare in più posti, le si dà un nome e la si assegna ad una variabile (di solito non locale).
 
 ##### Esempio
 
@@ -2357,7 +2357,7 @@ Se fosse necessario, si potrebbero ulteriormente 'templatizzare' `read()` e `pri
 ##### Imposizione
 
 * Sospettare delle funzioni con più di un parametro "out". Utilizzare, invece, i valori di ritorno, comprese le `tuple` per restituire valori multipli.
-* Sospettare delle "grandi" funzioni che rientrano in una schermata dell'editor. Si consideri di riscrivere la funzione come sotto-operazioni più piccole e con dei nomi adeguati.
+* Sospettare delle "grandi" funzioni che non rientrano in una schermata dell'editor. Si consideri di riscrivere la funzione come sotto-operazioni più piccole e con dei nomi adeguati.
 * Si considerino sospette le funzioni con più di 7 parametri.
 
 ### <a name="Rf-single"></a>F.3: Le funzioni devono essere brevi e semplici
@@ -2433,7 +2433,7 @@ Le funzioni tra una e cinque righe dovrebbero considerarsi la norma.
 ##### Note
 
 Suddividere le grandi funzioni in funzioni più piccole e con nomi significativi.
-Le funzioni piccole e semplici si mettono facilmente inline dove se il costo di una call è significativo.
+Le funzioni piccole e semplici si mettono facilmente inline laddove il costo di una call è significativo.
 
 ##### Imposizione
 
@@ -2494,7 +2494,7 @@ Il compilatore genera un errore se viene chiamata una funzione non-`constexpr` d
 ##### Motivo
 
 Alcuni ottimizzatori riescono a mettere inline senza tale suggerimento del programmatore, ma è meglio non farci affidamento.
-Misurare! Negli ultimi 40 circa, ci sono stati promessi compilatori che mettessero inline meglio degli umani senza alcun suggerimento.
+Misurare! Negli ultimi 40 anni circa, ci sono stati promessi compilatori che mettessero inline meglio degli umani senza alcun suggerimento.
 Stiamo ancora aspettando.
 Specificando `inline` si invoglia il compilatore a fare un lavoro migliore.
 
@@ -2512,7 +2512,7 @@ Una funzione inline è parte dell'ABI [Application Binary Interface].
 
 ##### Note
 
-Le funzioni membro definite nella nella classe sono per default `inline`.
+Le funzioni membro definite nella classe sono per default `inline`.
 
 ##### Eccezione
 
@@ -2713,7 +2713,7 @@ Per i (soli) usi avanzati, dove c'è davvero bisogno di ottimizzare gli rvalue p
 Evitare "tecniche esoteriche" come:
 
 * Passaggio di argomenti come `T&&` "per efficienza".
-   La maggior parte delle voci sulle prestazione del passaggio per `&&` sono false o debole (ma si vedano [F.18](#Rf-consume) e [F.19](#Rf-forward)).
+   La maggior parte delle voci sulle prestazione del passaggio per `&&` sono false o deboli (ma si vedano [F.18](#Rf-consume) e [F.19](#Rf-forward)).
 * Restituzione di `const T&` dalle assegnazioni e operazioni simili (cfr. [F.47](#Rf-assignment-op).)
 
 ##### Esempio
@@ -2742,7 +2742,7 @@ Non esiste un (legittimo) "riferimento null". Se si necessita della nozione di u
 * (Semplice) ((Foundation)) Si emette un warning quando un parametro che viene passato per valore ha una dimensione maggiore di `2 * sizeof(void*)`.
    Si suggerisce di usare, invece, un riferimento a `const`.
 * (Semplice) ((Foundation)) Si emette un warning quando un parametro passato per riferimento a `const` ha una dimensione inferiore a `2 * sizeof(void*)`. Si suggerisce, invece, di passare per valore.
-* (Semplice) ((Foundation)) Si emette un warning quando un parametro passato per riferimento a `const` è `move`d.
+* (Semplice) ((Foundation)) Si emette un warning quando un parametro passato per riferimento a `const`, subisce un `move`.
 
 ### <a name="Rf-inout"></a>F.17: I parametri "in-out", si passano per riferimento non-`const`
 
@@ -2774,8 +2774,8 @@ Un brutto errore logico può aversi se chi scrive `g()` assume erroneamente la d
 
 ##### Imposizione
 
-* (Moderate) ((Foundation)) Emette un warning per le funzioni relative a riferimenti di parametri non-`const` che *non* scrivono in essi.
-* (Simple) ((Foundation)) Emette un warning quando un parametro non-`const` passato per riferimento [viene spostato] ne viene fatto un `move`.
+* (Moderato) ((Foundation)) Emette un warning per le funzioni relative a riferimenti di parametri non-`const` che *non* scrivono in essi.
+* (Semplice) ((Foundation)) Emette un warning quando un parametro non-`const` passato per riferimento [viene spostato] ne viene fatto un `move`.
 
 ### <a name="Rf-consume"></a>F.18:  I parametri "si-sposterà-da", si passano per `X&&` o con `std::move`
 
@@ -2788,7 +2788,7 @@ Un brutto errore logico può aversi se chi scrive `g()` assume erroneamente la d
     void sink(vector<int>&& v) {   // sink prende la proprietà di tutto quello che possiede l'argomento
         // qui, di solito, potrebbero esserci accessi const di v
         store_somewhere(std::move(v));
-        // solitamente qui on si usa più v; viene spostato
+        // solitamente qui non si usa più v; esso viene spostato
     }
 Si noti che `std::move(v)` consente a `store_somewhere()` di lasciare `v` in uno stato spostato [moved-from].
 [Questo potrebbe essere pericoloso](#Rc-move-semantic).
@@ -2796,7 +2796,7 @@ Si noti che `std::move(v)` consente a `store_somewhere()` di lasciare `v` in uno
 
 ##### Eccezione
 
-I tipi a proprietà unica che sono move-only ed economici-da-spostare, come `unique_ptr`, si possono passare anche per valore che è più semplice da scrivere e si ha lo stesso effetto. Passando per valore si genera un'operazione extra (economica) di move, ma si preferisce innanzitutto la semplicità e la chiarezza.
+I tipi a proprietà unica che sono move-only ed economici-da-spostare, come `unique_ptr`, si possono passare anche per valore, cosa che è più semplice da scrivere e si ha lo stesso effetto. Passando per valore si genera un'operazione extra (economica) di move, ma è da preferire innanzitutto la semplicità e la chiarezza.
 
 Per esempio:
 
@@ -2810,11 +2810,11 @@ Per esempio:
 * Segnala l'accesso a oggetti spostati [moved-from].
 * Non spostare condizionalmente oggetti
 
-### <a name="Rf-forward"></a>F.19: I parametri "forward", si passano per `TP&&` e solo  `std::forward` il parametro
+### <a name="Rf-forward"></a>F.19: Per i parametri "forward", si passano per `TP&&` e si esegue  `std::forward` solo per il parametro
 
 ##### Motivo
 
-Se l'oggetto deve essere passato ad altro codice e non direttamente usato da questa funzione, vogliamo rendere questa funzione agnostica rispetto all'argomento `const` e rvalue.
+Se l'oggetto deve essere passato ad altro codice e non direttamente usato da questa funzione, si vuol rendere questa funzione agnostica rispetto all'argomento `const` e rvalue.
 
 In quel caso, e solo in quel caso, si rende il parametro `TP&&` dove `TP` è un parametro di tipo template -- esso contemporaneamente *ignora* e *preserva* l'essere `const` e rvalue. Pertanto, qualsiasi codice che utilizza un `TP&&` dichiara implicitamente che esso stesso non considera le variabili `const` e rvalue (perché le ignora), ma che intende passare il valore ad un altro codice che si occuperà di `const` e rvalue (dato che è preservato). Se usato come parametro `TP&&` è sicuro perché qualsiasi oggetto temporaneo passato dal chiamante vivrà per tutta la durata della chiamata alla funzione. Un parametro di tipo `TP&&` deve essenzialmente essere sempre inoltrato tramite  `std::forward` nel corpo della funzione.
 
@@ -2828,7 +2828,7 @@ In quel caso, e solo in quel caso, si rende il parametro `TP&&` dove `TP` è un 
     ??? calls ???
 ##### Imposizione
 
-* Si segnala una funzione che prende un parametro `TP&&` (dove `TP` è il nome di un parametro di tipo template) e ci fa qualsiasi cosa ma non lo `std::forward` esattamente una volta su ogni percorso statico.
+* Si segnala una funzione che prende un parametro `TP&&` (dove `TP` è il nome di un parametro di tipo template) e ci fa qualsiasi cosa che non sia `std::forward` esattamente una volta su ogni percorso statico.
 
 ### <a name="Rf-out"></a>F.20: Per i valori "out", preferire i valori di ritorno ai parametri di output
 
@@ -2836,7 +2836,7 @@ In quel caso, e solo in quel caso, si rende il parametro `TP&&` dove `TP` è un 
 
 Un valore restituito è auto-documentante, mentre un `&` potrebbe essere sia in-out che solo-out e potrebbe essere usato erroneamente.
 
-Ciò include anche grandi oggetti come i contenitori standard che usano operazioni implicite di move per le prestazioni e per evitare un'esplicita gestione della memoria.
+Ciò include anche grandi oggetti come i contenitori standard che usano operazioni implicite di spostamento [move] per una questione di prestazioni e per evitare una esplicita gestione della memoria.
 
 Se ci sono più valori da restituire, si [usa una tupla](#Rf-out-multi) o un simile tipo multi-membro.
 
@@ -2849,7 +2849,7 @@ Se ci sono più valori da restituire, si [usa una tupla](#Rf-out-multi) o un sim
     void find_all(const vector<int>&, vector<const int*>& out, int x);
 ##### Note
 
-Una `struct` di molti (singolarmente economici per il move) elementi si può risultare costosa per il move.
+Una `struct` di molti (singolarmente economici per il move) elementi può risultare costosa per il move.
 
 Non è consigliabile restituire un valore `const`.
 Un consiglio così vecchio è ormai obsoleto; non aggiunge valore e interferisce con la semantica di move.
@@ -2864,12 +2864,12 @@ Un consiglio così vecchio è ormai obsoleto; non aggiunge valore e interferisce
         return fct(); // copia costosa: la semantica del move viene soppressa dal "const"
     }
 L'argomento per aggiungere `const` ad un valore di ritorno è che impedisce (rarissimamente) accessi accidentali a un elemento temporaneo.
-L'argomento contro è che impedisce (molto di frequente) l'uso della semantica move.
+L'argomento contrario è che impedisce (molto di frequente) l'uso della semantica di move.
 
 ##### Eccezioni
 
 * Per i tipi [non-value], come i tipi nella gerarchia ereditaria, si restituisce un oggetto con `unique_ptr` o con `shared_ptr`.
-* Se un tipo è costoso da subire uno spostamento (p.es., `array<BigPOD>`), si consideri di allocarlo nel [free store] e restituirne un handle (p.es., `unique_ptr`), o passandolo in un riferimento ad un oggetto destinazione non-`const` da riempire (da usarsi come parametro di uscita).
+* Se un tipo è costoso da spostare (p.es., `array<BigPOD>`), si consideri di allocarlo nel [free store] e restituirne un handle (p.es., `unique_ptr`), o passandolo in un riferimento ad un oggetto destinazione non-`const` da riempire (da usarsi come parametro di uscita).
 * Per riutilizzare un oggetto che porta il suo contenuto (p.es., `std::string`, `std::vector`) attraverso più chiamate alla funzione in un loop interno: lo si [tratta come un parametro in/out e lo si passa per riferimento](#Rf-out-multi).
 
 ##### Esempio
@@ -2887,14 +2887,14 @@ L'argomento contro è che impedisce (molto di frequente) l'uso della semantica m
 ##### Imposizione
 
 * Segnalare il riferimento a parametri non-`const` che non vengono letti prima di essere scritti e sono di un tipo economico da restituire; questi dovrebbero essere valori di ritorno in "out".
-* Segnala la restituzione di un valore `const`. Per risolvere il problema: Rimuovere `const` nel restituire un valore non-`const`.
+* Segnalare la restituzione di un valore `const`. Per risolvere il problema: Rimuovere `const` nel restituire un valore non-`const`.
 
 ### <a name="Rf-out-multi"></a>F.21: Per il return di valori "out" multipli, preferire il ritorno di una struct o una tupla
 
 ##### Motivo
 
 Un valore di ritorno si auto-dichiara come valore "output-only".
-Si noti che il C++ ha più valori di ritorno, per convenzione usando una `tupla` (compreso `pair`), forse con l'ulteriore vantaggio di `tie` dal lato del chiamante.
+Si noti che il C++ può restituire valori multipli, per convenzione, usando una `tupla` (compreso `pair`), forse con l'ulteriore vantaggio di `tie` [legame] dal lato del chiamante.
 Preferire l'uso di una struttura con un nome dove ci sono semantiche sul valore restituito. Altrimenti, è utile una `tuple` senza nome, nel codice generico.
 
 ##### Esempio
@@ -2913,12 +2913,12 @@ Preferire l'uso di una struttura con un nome dove ci sono semantiche sul valore 
         // ...
         return make_tuple(status, something());
     }
-La libreria standard di C++98 usava già questo stile, perché una `pair` è una `tuple` di due elementi.
+La libreria standard del C++98 usava già questo stile, perché una `pair` è una `tuple` di due elementi.
 Per esempio, dato un `set<string> my_set`, si consideri:
 
     // C++98
     result = my_set.insert("Hello");
-    if (result.second) do_something_with(result.first);    // workaround
+    if (result.second) do_something_with(result.first);    // espediente
 Col C++11 lo possiamo scrivere mettendo il risultato direttamente nelle variabili locali esistenti:
 
     Sometype iter;                                // inizializza col default se non abbiamo già
@@ -2959,10 +2959,10 @@ Per confrontare, se si passassero i valori in uscita come valori di ritorno, si 
     for (auto p = get_string(cin); p.first; ) {
         // fa qualcosa con p.second
     }
-Riteniamo che sia notevolmente meno elegante con prestazioni significativamente meno performanti.
+Si ritiene che sia notevolmente meno elegante e con prestazioni significativamente meno performanti.
 
 Per una lettura veramente rigorosa di questa regola (F.21), l'eccezione non è realmente un'eccezione perché si basa su parametri in-out, anziché su parametri di out citati nella regola.
-Tuttavia, preferiamo essere espliciti, piuttosto che criptici.
+Tuttavia, si preferisce essere espliciti, piuttosto che criptici.
 
 ##### Note
 
@@ -2986,7 +2986,7 @@ Un altro esempio, si usa uno specifico tipo lungo le righe di `variant<T, error_
 ##### Imposizione
 
 * I parametri di output devono essere sostituiti da valori di ritorno.
-   Un parametro di output è quello in cui la funzione scrive, invoca una funzione funzione membro non-`const` o lo passa come non-`const`.
+   Un parametro di output è quello in cui la funzione scrive, invoca una funzione membro non-`const` o lo passa come non-`const`.
 
 ### <a name="Rf-ptr"></a>F.22: Utilizzare `T*` o `owner<T*>` per designare un singolo oggetto
 
@@ -2997,7 +2997,7 @@ Consente un significativo supporto di tool.
 
 ##### Note
 
-Nel tradizionale codice C e C++, si usa un semplice `T*` per molti scopi molto diversi, come:
+Nel tradizionale codice C e C++, si usa un semplice `T*` per molti scopi e molto diversi, come:
 
 * Identificare un (singolo) oggetto (da non cancellare in questa funzione)
 * Puntare ad un oggetto allocato nel [free store] (e cancellarlo in seguito)
@@ -3070,13 +3070,13 @@ Si presume che un `not_null<T*>` non sia `nullptr`; un `T*` può essere `nullptr
 
 ##### Note
 
-`not_null` non è solo per i puntatori [built-in]. Funziona con `unique_ptr`, `shared_ptr` ed altri tipi di puntatori.
+`not_null` non è solo per i puntatori nativi [built-in]. Funziona con `unique_ptr`, `shared_ptr` ed altri tipi di puntatori.
 
 ##### Imposizione
 
-* (Semplice) Emette un warning se un [raw] puntatore viene dereferenziato senza essere testato contro i `nullptr` (o equivalente) in una funzione, suggerendo che, invece, sia dichiarato `not_null`.
+* (Semplice) Emette un warning se un puntatore semplice [raw] viene de-referenziato senza essere testato contro i `nullptr` (o equivalente) in una funzione, suggerendo che, invece, sia dichiarato `not_null`.
 * (Semplice) Solleva un errore se un puntatore [raw] viene a volte dereferenziato dopo un test per `nullptr` (o equivalente) in una funzione e talvolta non lo è.
-* (Semplice) Emette un earning se un puntatore `not_null` viene testato per `nullptr` in una funzione.
+* (Semplice) Emette un warning se un puntatore `not_null` viene testato per `nullptr` in una funzione.
 
 ### <a name="Rf-range"></a>F.24: Utilizzare `span<T>` o `span_p<T>` per indicare una sequenza semiaperta
 
@@ -3096,11 +3096,11 @@ Intervalli informali/non-espliciti sono fonte di errori.
 Gli intervalli sono estremamente comuni nel codice C++. In genere, sono impliciti e il loro corretto utilizzo è molto difficile da garantire.
 In particolare, data una coppia di argomenti `(p, n)` che designa un array `[p:p+n)`,
 è generalmente impossibile sapere se ci sono davvero `n` elementi a cui accedere dopo `*p`.
-`span<T>` e `span_p<T>` sono semplici classi di supporto [helper] che designano un intervallo `[p:q)` e un intervallo che inizia con `p` e termina con il primo elemento per cui un predicato è vero, rispettivamente.
+`span<T>` e `span_p<T>` sono semplici classi di supporto [helper] che designano, rispettivamente, un intervallo [range] `[p:q)` e un intervallo che inizia con `p` e termina con il primo elemento per cui un predicato è vero.
 
 ##### Esempio
 
-Un `span` rappresenta un intervallo di elementi, ma come si possono manipolare gli elementi di quell'intervallo?
+Uno `span` rappresenta un intervallo di elementi, ma come si possono manipolare gli elementi di quell'intervallo?
 
     void f(span<int> s)
     {
@@ -3120,7 +3120,7 @@ Un `span` rappresenta un intervallo di elementi, ma come si possono manipolare g
 
 Un oggetto `span<T>` non possiede i suoi elementi ed è così piccolo che si può passare per valore.
 
-Passare un oggetto `span` come argomento è esattamente tanto efficiente quanto passare, come argomenti, una coppia di puntatori o passare un puntatore ed un conteggio intero.
+Passare un oggetto `span` come argomento è esattamente tanto efficiente quanto passare, come argomenti, una coppia di puntatori o passare un puntatore ed un contatore intero.
 
 **Si veda anche**: [Libreria di supporto](#S-gsl)
 
@@ -3132,8 +3132,8 @@ Passare un oggetto `span` come argomento è esattamente tanto efficiente quanto 
 
 ##### Motivo
 
-Le stringhe in stile C sono onnipresenti. Sono definiti per convenzione: array di caratteri zero-terminated.
-Si deve far distinzione tra le stringhe C-style e i puntatori ad un singolo carattere o puntatori vecchio stile ad un array di caratteri.
+Le stringhe in stile C sono onnipresenti. Sono definite per convenzione: array di caratteri terminate con zero.
+Si deve far distinzione tra le stringhe C-style e i puntatori ad un singolo carattere o i puntatori vecchio stile ad un array di caratteri.
 
 Se non c'è bisogno della terminazione null, si usa `string_view`.
 
@@ -3161,7 +3161,7 @@ Quando si chiama `length(s)` si deve controllare prima se `s` è `nullptr`? L'im
 
 L'uso di `unique_ptr` è il modo più economico per passare un puntatore in modo sicuro.
 
-**Si veda anche**: [C.50](#Rc-factory) riguardo quando restituire uno `shared_ptr` da una factory.
+**Si veda anche**: [C.50](#Rc-factory) a proposito di quando restituire uno `shared_ptr` da una factory.
 
 ##### Esempio
 
@@ -3206,7 +3206,7 @@ L'uso dello `std::shared_ptr` è il modo standard per rappresentare la propriet�
 Preferire un `unique_ptr` rispetto a uno `shared_ptr` se non c'è mai più di un solo proprietario per volta.
 `shared_ptr` è per la proprietà condivisa [shared].
 
-Si noti che l'uso pervasivo di `shared_ptr` ha un costo (operazioni atomiche sul contatore dei riferimenti dello `shared_ptr` ha un costo globale misurabile).
+Si noti che l'uso pervasivo di `shared_ptr` ha un costo (le operazioni atomiche sul contatore dei riferimenti dello `shared_ptr` hanno un costo globale misurabile).
 
 ##### Alternativa
 
@@ -3220,7 +3220,7 @@ Avere un solo oggetto proprietario dell'oggetto condiviso (p.es. un oggetto in u
 
 ##### Motivo
 
-Un puntatore (`T*`) può essere un `nullptr` e un riferimento (`T&`) non può, non c'è nessun valido "riferimento null".
+Un puntatore (`T*`) può essere un `nullptr` mentre un riferimento (`T&`) non può, non c'è nessun valido "riferimento null".
 A volte avere `nullptr`, anziché indicare "nessun oggetto", è utile, ma in caso contrario, un riferimento è una notazione più semplice e può produrre un codice migliore.
 
 ##### Esempio
@@ -3246,7 +3246,7 @@ Se si preferisce la notazione del puntatore (`->` e/o `*` rispetto a `.`), `not_
 
 ##### Imposizione
 
-* Flag ???
+* Segnalare ???
 
 ### <a name="Rf-return-ptr"></a>F.42: Restituire `T*` per indicare (solo) una posizione
 
@@ -3281,7 +3281,7 @@ Non restituire un puntatore a qualcosa che non rientra nello scope del chiamante
 ##### Imposizione
 
 * Segnalare i `delete`, `std::free()`, ecc. applicati a un semplice `T*`.
-   Solo i proprietari [owner] devono essere cancellati.
+   Solo i proprietari [owner] possono cancellare.
 * Segnalare i `new`, `malloc()`, ecc. assegnati a semplici `T*`.
    Solo i proprietari dovrebbero essere responsabili della cancellazione.
 
@@ -3289,7 +3289,7 @@ Non restituire un puntatore a qualcosa che non rientra nello scope del chiamante
 
 ##### Motivo
 
-Per evitare i crash e la corruzione dei dati che avviene a causa dei puntatori 'appesi [dangling].
+Per evitare i crash e la corruzione dei dati che avviene a causa dei puntatori 'appesi' [dangling].
 
 ##### Esempio, cattivo
 
@@ -3340,7 +3340,7 @@ Questo vale anche per i riferimenti:
     }
 ##### Note
 
-Questo vale solo alle variabili locali non-`static`.
+Questo vale solo per le variabili locali non-`static`.
 Tutte le variabili `static` sono (come indica il nome) allocate staticamente, quindi i puntatori ad esse non possono essere 'appesi'.
 
 ##### Esempio, cattivo
@@ -3367,7 +3367,7 @@ Non tutti gli esempi di perdita [leaking] di un puntatore ad una variabile local
         cout << *glob << '\n';
     }
 Qui si riesce a leggere la locazione abbandonata dalla chiamata a `f`.
-Il puntatore memorizzato in `glob` potrebbe essere utilizzato molto e provocare problemi imprevedibili.
+Il puntatore memorizzato in `glob` potrebbe essere utilizzato molto più tardi provocando problemi imprevedibili.
 
 ##### Note
 
@@ -3377,7 +3377,7 @@ L'indirizzo di una variabile locale si può "restituire"/persa: con un comando r
 
 Esempi simili si possono costruire "appendendo" [leaking] un puntatore da uno scope più interno verso uno più esterno; tali esempi vengono gestiti in modo equivalente ai [leak] dei puntatori uscendo da una funzione.
 
-Una variante leggermente diversa del problema consiste nel piazzare i puntatori in un contenitore che sopravvive agli oggetti cui punta.
+Una variante leggermente diversa del problema consiste nel piazzare i puntatori in un contenitore che sopravvive agli oggetti a cui punta.
 
 **Si veda anche**: Un altro modo per ottenere puntatori appesi [dangling] è l'[invalidazione del puntatore](#???).
 Si può rilevare/prevenire con tecniche simili.
@@ -3432,7 +3432,7 @@ Un riferimento a rvalue restituito esce dallo scope alla fine di tutta l'espress
 Questo tipo di utilizzo è una frequente fonte di bug, spesso è erroneamente segnalato come un bug del compilatore.
 Un implementatore di una funzione dovrebbe evitare queste trappole agli utenti.
 
-Il [profilo di sicurezza della durata](#SS-lifetime) (quando è completamente implementato) catturerà questi problemi.
+Il [profilo di sicurezza della durata](#SS-lifetime) (quando è completamente implementato) intercetterà questi problemi.
 
 
 ##### Esempio
@@ -3547,7 +3547,7 @@ Questo dovrebbe essere imposto con dei tool controllando l'espressione del retur
 
 ##### Motivo
 
-Le funzioni non possono acquisire variabili locali o definite nello scope locale; ce ce n'è bisogno, è preferibile una lambda dove possibile altrimenti un oggetto funzione apposito. D'altra parte, lambda e oggetti funzione non consentono l'overload; se c'è bisogno dell'overload, è preferibile una funzione (i workaround per avere l'overload delle lambda  sono ornati [ornate]). Se funzionano entrambi, è preferibile la scrittura di una funzione; si usa il tool necessario più semplice.
+Le funzioni non possono acquisire variabili locali o essere definite nello scope locale; se ce n'è bisogno, è preferibile una lambda dove possibile altrimenti un oggetto funzione apposito. D'altra parte, lambda e oggetti funzione non consentono l'overload; se c'è bisogno dell'overload, è preferibile una funzione (le scappatoie per avere l'overload delle lambda  sono tantissime). Se funzionano entrambi, è preferibile la scrittura di una funzione; si usa il tool necessario più semplice.
 
 ##### Esempio
 
@@ -3587,7 +3587,7 @@ L'uso degli argomenti con default può evitare la replica del codice.
 
 ##### Note
 
-È possibile scegliere tra utilizzare l'argomento di default e l'overloading quando le alternative vengono da una set di argomenti con gli stessi tipi.
+È possibile scegliere tra utilizzare l'argomento di default e l'overloading quando le alternative vengono da un set di argomenti con gli stessi tipi.
 Per esempio:
 
     void print(const string& s, format f = {});
@@ -3607,23 +3607,23 @@ Non c'è scelta quando un set di funzioni viene utilizzato per eseguire un'opera
 
 ##### Imposizione
 
-* Solleva un warning su un insieme di overload dove questi hanno gli stessi parametri iniziali (p.es., `f(int)`, `f(int, const string&)`, `f(int, const string&, double)`). (Nota: Rivedere questo 'enforcement' se è troppo confuso nella pratica).
+* Solleva un warning su un insieme di overload dove questi hanno gli stessi parametri iniziali (p.es., `f(int)`, `f(int, const string&)`, `f(int, const string&, double)`). (Nota: Rivedere questa imposizione [enforcement] se è troppo confuso nella pratica).
 
-### <a name="Rf-reference-capture"></a>F.52: Preferire l'acquisizione per riferimento nelle lambda da usare localmente, compresi quelli passati  agli algoritmi
+### <a name="Rf-reference-capture"></a>F.52: Preferire l'acquisizione per riferimento nelle lambda da usare localmente, compresi quelle passate  agli algoritmi
 
 ##### Motivo
 
-Per efficienza e correttezza, si deve quasi sempre acquisire per riferimento quando si usa la lambda localmente. Questo comprende anche quando si scrivono o si chiamano algoritmi paralleli che sono locali perché si uniscono prima di tornare.
+Per efficienza e correttezza, si deve quasi sempre acquisire per riferimento quando si usa la lambda localmente. Questo comprende anche quando si scrivono o si chiamano algoritmi paralleli che sono locali perché si uniscono [join] prima di tornare.
 
 ##### Discussione
 
 La considerazione sull'efficienza è che la maggior parte dei tipi sono più economici da passare per riferimento che per valore.
 
-La considerazione sulla correttezza è che molte chiamate vogliono hanno degli effetti collaterali sull'oggetto originale dal lato del chiamante (si veda l'esempio sotto). Questo si evita col passaggio per valore.
+La considerazione sulla correttezza è che molte chiamate hanno degli effetti collaterali sull'oggetto originale dal lato del chiamante (si veda l'esempio sotto). Questo si evita col passaggio per valore.
 
 ##### Note
 
-Sfortunatamente, non esiste un modo semplice per acquisire per riferimento a `const` per ottenere l'efficienza di una chiamata locale ma anche per prevenire effetti collaterali.
+Sfortunatamente, non esiste un modo semplice per acquisire per riferimento a `const` per ottenere l'efficienza di una chiamata locale ma per prevenire anche gli effetti collaterali.
 
 ##### Esempio
 
@@ -3646,9 +3646,9 @@ Questa è una semplice pipeline parallela a tre stadi. Ogni oggetto `stage` [sta
     }  // si blocca automaticamente in attesa del completamento della pipeline
 ##### Imposizione
 
-Segnala una lambda che cattura per riferimento, ma viene usata non solo localmente nello scope della funzione o viene passata ad una funzione per riferimento. (Nota: Questa regola è un'approssimazione, segnala i passaggi per puntatore come quelli simili a quelli memorizzati dal chiamato, scrivendo in una locazione dell'heap cui si accede tramite un parametro, restituendo la lambda, ecc. Le regole [Lifetime] forniranno anche regole generali che segnalano i puntatori [escaping] e i riferimenti compresi quelli tramite le lambda).
+Segnala una lambda che cattura per riferimento, ma viene usata non solo localmente nello scope della funzione o viene passata ad una funzione per riferimento. (Nota: Questa regola è un'approssimazione, segnala i passaggi per puntatore simili a quelli memorizzati dal chiamato, scrivendo in una locazione dell'heap cui si accede tramite un parametro, restituendo la lambda, ecc. Le regole [Lifetime] forniranno anche regole generali che segnalano i puntatori in fuga [escaping] e i riferimenti compresi quelli tramite le lambda).
 
-### <a name="Rf-value-capture"></a>F.53: Evitare l'acquisizione per riferimento nelle lambdas che si non si useranno localmente, compresi quelli restituiti, memorizzati nell'heap o passati da un altro thread
+### <a name="Rf-value-capture">F.53: Evitare l'acquisizione per riferimento nelle lambda che non si useranno localmente, compresi quelli restituiti, memorizzati nell'heap o passati da un altro thread</a>
 
 ##### Motivo
 
@@ -3661,7 +3661,7 @@ Puntatori e riferimenti a locali non dovrebbero sopravvivere al loro scope. Le l
     // Vuole un riferimento a local.
     // Si noti che quando il programma esce da questo scope,
     // local non esiste più, pertanto
-    // la chiamata a process() call avrà un comportamento indefinito!
+    // la chiamata a process() avrà un comportamento indefinito!
     thread_pool.queue_work([&]{ process(local); });
 ##### Esempio, buono
 
@@ -3751,7 +3751,7 @@ Questo è alquanto fragile perché non può essere imposta la sicurezza nel ling
 
 ##### Note
 
-La dichiarazione di un parametro `...` talvolta è utile nelle tecniche che non implicano il passaggio il passaggio dell'argomento corrente, in particolare per dichiarare le funzioni "acchiappa-tutto [take-anything]" i modo da disabilitare "tutto il resto" in un insieme di overload o per esprimere il caso 'onnicomprensivo' [catchall] in un metaprogramma template.
+La dichiarazione di un parametro `...` talvolta è utile nelle tecniche che non implicano il passaggio dell'argomento corrente, in particolare per dichiarare le funzioni "acchiappa-tutto [take-anything]" i modo da disabilitare "tutto il resto" in un insieme di overload o per esprimere il caso 'onnicomprensivo' [catchall] in un metaprogramma template.
 
 ##### Imposizione
 
@@ -4434,7 +4434,7 @@ Gli utenti resteranno sorpresi se la costruzione copia/[move] e l'assegnazione c
         };
         shared_ptr<Impl> p;
     public:
-        Silly(const Silly& a) : p{a.p} { *p = *a.p; }   // copia completa [deep]
+        Silly(const Silly& a) : p(make_shared<Impl>()) { *p = *a.p; }   // copia completa [deep]
         Silly& operator=(const Silly& a) { p = a.p; }   // copia superficiale [shallow]
         // ...
     };
@@ -4669,7 +4669,7 @@ Cfr. [questo nella sezione Discussione](#Sd-dtor).
 
 ##### Esempio, cattivo
 
-    struct Base {  // BAD: implicitamente ha un distruttore pubblico non virtuale
+    struct Base {  // BAD: implicitamente ha un distruttore pubblico non-virtuale
         virtual void f();
     };
 
@@ -4710,7 +4710,7 @@ Possiamo immaginare un caso in cui si potrebbe volere un distruttore virtuale pr
 
 ##### Imposizione
 
-* Una classe con una qualsiasi funzione virtuale dovrebbe avere un distruttore o pubblico o virtuale oppure protetto e non virtuale.
+* Una classe con una qualsiasi funzione virtuale dovrebbe avere un distruttore o pubblico o virtuale oppure protetto e non-virtual.
 
 ### <a name="Rc-dtor-fail"></a>C.36: Un distruttore non può fallire
 
@@ -6421,7 +6421,7 @@ Gli oggetti funzione dovrebbero essere economici da copiare (e quindi [passati p
 
 Sommario:
 
-* [F.50: Usare una lambda quando una funzione non va (per acquisire le variabili locali o scrivere una funzione locale)](#Rf-capture-vs-overload)
+* [F.50: Usare una lambda quando non è possibile una funzione (per acquisire le variabili locali o scrivere una funzione locale)](#Rf-capture-vs-overload)
 * [F.52: Preferire l'acquisizione per riferimento nelle lambda da usare localmente, compresi quelli passati  agli algoritmi](#Rf-reference-capture)
 * [F.53: Evitare l'acquisizione per riferimento nelle lambda che non si useranno localmente, compresi quelli restituiti, memorizzati nell'heap o passati da un altro thread](#Rf-value-capture)
 * [ES.28: Usare le lambda per delle inizializzazioni complesse, specialmente di variabili `const`](#Res-lambda-init)
@@ -6652,7 +6652,7 @@ Ci sono persone che non seguono questa regola perché intendono usare una classe
 
 ##### Imposizione
 
-* Una classe con una qualsiasi funzione virtuale dovrebbe avere un distruttore o pubblico o virtuale oppure protetto e non virtuale.
+* Una classe con una qualsiasi funzione virtuale dovrebbe avere un distruttore o pubblico o virtuale oppure protetto e non-virtual.
 * Segnalare il `delete` di una classe con una funzione virtuale ma senza un distruttore virtuale.
 
 ### <a name="Rh-override"></a>C.128: Le funzioni virtuali devono specificare esattamente un attributo tra `virtual`, `override`, e `final`
@@ -9332,7 +9332,7 @@ La correzione è semplice -- si prende una copia locale del puntatore per "mante
     }
 ##### Imposizione
 
-* (Semplice) Avvisa se un puntatore o un riferimento ottenuto da una variabile smart pointer (`Unique_pointer` o `Shared_pointer`) che non sia locale, o che sia locale ma potenzialmente un alias, venga utilizzato nella chiamata di una funzione. Se il puntatore intelligente è uno `Shared_pointer` allora suggerisce, invece, di prendere una copia locale dello smart pointer per ottenerne un puntatore o un riferimento.
+* (Semplice) Avvisa se un puntatore o un riferimento ottenuto da una variabile smart pointer (`Unique_pointer` o `Shared_pointer`) che sia non-locale, o che sia locale ma potenzialmente un alias, venga utilizzato nella chiamata di una funzione. Se il puntatore intelligente è uno `Shared_pointer` allora suggerisce, invece, di prendere una copia locale dello smart pointer per ottenerne un puntatore o un riferimento.
 
 # <a name="S-expr"></a>ES: Espressioni e istruzioni
 
@@ -9349,7 +9349,7 @@ Regole sulle dichiarazioni:
 
 * [ES.5: Tenere gli scope piccoli](#Res-scope)
 * [ES.6: Dichiarare i nomi negli inizializzatori delle istruzioni-for e nelle condizioni per limitarne lo scope](#Res-cond)
-* [ES.7: Mantenere brevi i nomi comuni e locali e quelli meno comuni e non locali più lunghi](#Res-name-length)
+* [ES.7: Mantenere brevi i nomi comuni e locali e quelli meno comuni e non-locali più lunghi](#Res-name-length)
 * [ES.8: Evitare similitudini tra i nomi](#Res-name-similar)
 * [ES.9: Evitare nomi `TUTTO_IN_MAIUSCOLO`](#Res-not-CAPS)
 * [ES.10: Dichiarare un (solo) nome per ogni dichiarazione](#Res-name-one)
@@ -9590,7 +9590,7 @@ Nota: C++17 e C++20 hanno anche gli inizializzatori per le istruzioni `if`, `swi
 
 
 
-### <a name="Res-name-length"></a>ES.7: Mantenere brevi i nomi comuni e locali e quelli meno comuni e non locali più lunghi
+### <a name="Res-name-length"></a>ES.7: Mantenere brevi i nomi comuni e locali e quelli meno comuni e non-locali più lunghi
 
 ##### Motivo
 
@@ -15596,7 +15596,7 @@ Riepilogo delle altre regole sui template:
 * [T.140: Dare un nome a tutte le funzioni potenzialmente riutilizzabili](#Rt-name)
 * [T.141: Usare una lambda anonima se si necessita di un semplice oggetto funzione in un solo posto](#Rt-lambda)
 * [T.142: Usare le variabili template per semplificare la notazione](#Rt-var)
-* [T.143: Non scrivere involontariamente codice non-generico](#Rt-nongeneric)
+* [T.143: Non scrivere involontariamente codice non-generico](#Rt-non-generic)
 * [T.144: Non specializzare le funzioni template](#Rt-specialize-function)
 * [T.150: Verificare che a una classe corrisponda un concetto utilizzando `static_assert`](#Rt-check-class)
 * [T.??: ????](#Rt-???)
@@ -16786,7 +16786,7 @@ Una versione più generale di questa regola sarebbe "Se un membro della classe t
 
 ##### Imposizione
 
-* Flag ???
+* Segnalare ???
 
 ### <a name="Rt-specialization"></a>T.64: Usare la specializzazione per fornire implementazioni alternative di classi template
 
@@ -17418,7 +17418,7 @@ Leggibilità migliorata.
 
 ???
 
-### <a name="Rt-nongeneric"></a>T.143: Non scrivere involontariamente codice non-generico
+### <a name="Rt-non-generic"></a>T.143: Non scrivere involontariamente codice non-generico
 
 ##### Motivo
 
@@ -17623,6 +17623,7 @@ Riepilogo delle regole sui file sorgenti:
 * [SF.9: Evitare le dipendenze cicliche tra i file sorgenti](#Rs-cycles)
 * [SF.10: Evitare dipendenze da nomi inclusi [`#include`] implicitamente](#Rs-implicit)
 * [SF.11: I file header devono essere autonomi [self-contained]](#Rs-contained)
+* [SF.12: Con gli `#include` preferire la forma con le parentesi angolari dove possibile rispetto alle virgolette](#Rs-incform)
 
 * [SF.20: Usare i `namespace` per esprimere le strutture logiche](#Rs-namespace)
 * [SF.21: Non usare un namespace senza nome (anonimo) in un header](#Rs-unnamed)
@@ -18025,6 +18026,27 @@ Un header dovrebbe includere tutte le sue dipendenze. Prestare attenzione all'ut
 ##### Imposizione
 
 Un test dovrebbe verificare che l'header stesso compili e che si compili anche un file cpp che includa il solo l'header.
+
+### <a name="Rs-incform"></a>SF.12: Con gli `#include` preferire la forma con le parentesi angolari dove possibile rispetto alle virgolette
+
+##### Motivo
+
+Lo [standard](http://eel.is/c++draft/cpp.include) impone ai compilatori di implementare le due forme di sintassi per gli `#include` lasciando la scelta tra le parentesi angolari (`<>`) e le virgolette (`""`). I produttori se ne avvantaggiano usando algoritmi diversi di ricerca e metodo per indicare il path dell'include.
+
+Tuttavia, le linee-guida suggeriscono l'uso delle parentesi angolari quando possibile. Questo perché gli header della libreria standard devono essere inclusi in questo modo, ed è più probabile che si crei codice portabile, lasciando la forma virgolettata per altri usi. Per esempio per essere chiari sulla localizzazione dell'header relativamente ai file che esso stesso include o in scenari dove si richiedono diversi algoritmi di localizzazione.
+
+##### Esempio
+
+    #include <string>       // Forma richiesta per la libreria standard
+    #include "helpers.h"    // Un file specifico di un progetto, usa la forma ""
+##### Note
+La mancata osservanza di ciò porta ad una diagnosi difficoltosa degli errori a causa del prelievo del file sbagliato dovuto ad un'errata indicazione del percorso di quanto si include.
+
+I creatori delle librerie dovrebbero mettere i loro header in una cartella e fare in modo che i loro utentili includano con un path relativo `#include <some_library/common.h>`
+
+##### Imposizione
+
+Un test dovrebbe identificare gli header referenziati tramite `""` che dovrebbero invece essere referenziati con `<>`.
 
 ### <a name="Rs-namespace"></a>SF.20: Usare i `namespace` per esprimere le strutture logiche
 
@@ -20469,7 +20491,7 @@ In sintesi, nessuna tecnica di post-costruzione è perfetta. Le tecniche peggior
 
 **Riferimenti**: [\[Alexandrescu01\]](#Alexandrescu01) §3, [\[Boost\]](#Boost), [\[Dewhurst03\]](#Dewhurst03) §75, [\[Meyers97\]](#Meyers97) §46, [\[Stroustrup00\]](#Stroustrup00) §15.4.3, [\[Taligent94\]](#Taligent94)
 
-### <a name="Sd-dtor"></a>Discussione: Rendere pubblici e virtuali i distruttori della classe base, o protected e non virtuali
+### <a name="Sd-dtor"></a>Discussione: Rendere pubblici e virtuali i distruttori della classe base, o protected e non-virtual
 
 La distruzione dovrebbe avere un comportamento virtuale? Cioè, dovrebbe essere consentita la distruzione tramite un puntatore a una classe `base`? Se sì, allora il distruttore della `base` deve essere pubblico per poter essere richiamabile e virtuale altrimenti chiamandolo si ottiene un comportamento indefinito. Se no, dovrebbe essere protected in modo che solo le classi derivate lo possano invocare nei loro distruttori, e non-virtuale perché non necessita di un comportamento virtuale.
 
@@ -20490,7 +20512,7 @@ Il caso comune per una classe base è che si vogliono avere classi derivate pubb
         unique_ptr<Base> pb = make_unique<Derived>();
         // ...
     } // ~pb invola il distruttore corretto solo quando ~Base è virtuale
-In casi più rari, come le classi di sistema [policy], la classe viene usata come classe base per comodità, non per avere un comportamento polimorfico. Si raccomanda che tali distruttori siano protected e non-virtuali:
+In casi più rari, come le classi di sistema [policy], la classe viene usata come classe base per comodità, non per avere un comportamento polimorfico. Si raccomanda che tali distruttori siano protected e non-virtual:
 
     class My_policy {
     public:
@@ -20515,11 +20537,11 @@ Scrivere una classe base vuol dire definire un'astrazione (si vedano i punti dal
 
 Come descritto al punto 39, per una normale funzione membro, la scelta è tra il consentirle di essere chiamata tramite un puntatore a `Base` non-virtualmente (ma forse con un comportamento virtuale se essa invoca funzioni virtuali, come nei pattern "NVI" (Non-Virtual Interface) e il "Template Method"), virtualmente, o niente affatto. Il pattern NVI è una tecnica per evitare le funzioni virtuali pubbliche.
 
-La distruzione può essere vista semplicemente come un'altra operazione, anche se con una semantica speciale che rende pericolose o sbagliate le chiamate non virtuali. Per un distruttore di una classe base, quindi, la scelta è tra il consentirgli di essere chiamato virtualmente tramite un puntatore a `Base` o per niente; il "non-virtualmente" non è un'opzione. Quindi, un distruttore di una classe base è virtuale se può essere chiamato (cioè è pubblico) altrimenti è non-virtuale.
+La distruzione può essere vista semplicemente come un'altra operazione, anche se con una semantica speciale che rende pericolose o sbagliate le chiamate non-virtual. Per un distruttore di una classe base, quindi, la scelta è tra il consentirgli di essere chiamato tramite un puntatore a `Base` virtualmente o per niente; il "non-virtualmente" non è un'opzione. Quindi, un distruttore di una classe base è virtuale se può essere chiamato (cioè è pubblico) altrimenti è non-virtual.
 
 Si noti che il pattern NVI non può essere applicato al distruttore perché i costruttori e i distruttori non possono effettuare chiamate virtuali [deep]. (Si vedano i Punti 39 e 55.)
 
-Corollario: Quando si scrive una classe base, scrivere sempre esplicitamente un distruttore, poiché quello generato in modo implicito è pubblico e non-virtuale. Si può sempre usare `=default` per l'implementazione se va bene il body di default e si sta solo scrivendo la funzione per darle la giusta visibilità e virtualità.
+Corollario: Quando si scrive una classe base, scrivere sempre esplicitamente un distruttore, poiché quello generato in modo implicito è pubblico e non-virtual. Si può sempre usare `=default` per l'implementazione se va bene il body di default e si sta solo scrivendo la funzione per darle la giusta visibilità e virtualità.
 
 ##### Eccezione
 
@@ -20532,9 +20554,9 @@ Si consideri anche questo caso raro:
 
 Quindi, anche se il distruttore deve essere pubblico, può esserci una grande pressione per non renderlo virtuale, poiché come prima funzione virtuale si avrebbe l'[overhead] del tipo a run-time, quando la funzionalità aggiunta non dovrebbe mai essere necessaria.
 
-In questo raro caso, è possibile rendere pubblico e non virtuale il distruttore ma documentare chiaramente che gli oggetti ulteriormente derivati non devono essere usati polimorficamente come `B`'s. Questo è ciò che è stato fatto con `std::unary_function`.
+In questo raro caso, è possibile rendere pubblico e non-virtual il distruttore ma documentare chiaramente che gli oggetti ulteriormente derivati non devono essere usati polimorficamente come `B`'s. Questo è ciò che è stato fatto con `std::unary_function`.
 
-In generale, tuttavia, evitare le classi di base concrete (cfr. Punto 35). Per esempio, la `unary_function` è un bundle-of-typedefs che non è mai stato concepito per essere istanziato da solo. Non ha davvero senso dargli un distruttore pubblico; un progetto migliore sarebbe quello di seguire il consiglio di questo punto e dargli un distruttore non-virtuale protected.
+In generale, tuttavia, evitare le classi di base concrete (cfr. Punto 35). Per esempio, la `unary_function` è un bundle-of-typedefs che non è mai stato concepito per essere istanziato da solo. Non ha davvero senso dargli un distruttore pubblico; un progetto migliore sarebbe quello di seguire il consiglio di questo punto e dargli un distruttore non-virtual protected.
 
 **Riferimenti**: [\[C++CS\]](#CplusplusCS) Item 50, [\[Cargill92\]](#Cargill92) pagg. 77-79, 207, [\[Cline99\]](#Cline99) §21.06, 21.12-13, [\[Henricson97\]](#Henricson97) pp. 110-114, [\[Koenig97\]](#Koenig97) Chapters 4, 11, [\[Meyers97\]](#Meyers97) §14, [\[Stroustrup00\]](#Stroustrup00) §12.4.2, [\[Sutter02\]](#Sutter02) §27, [\[Sutter04\]](#Sutter04) §18
 
@@ -20702,7 +20724,7 @@ In molti casi, mantenere correttamente le risorse incapsulate utilizzando il ogg
 
 Preferire i membri speciali generati dal compilatore (compreso `=default`); solo questi possono essere classificati come "banali", e almeno uno dei principali fornitori della libreria standard ottimizza le classi con membri speciali banali. È probabile che ciò diventi una pratica comune.
 
-**Eccezioni**: Quando una delle funzioni speciali viene dichiarata solo per renderle non pubbliche o virtuali, ma senza una semantica speciale, ciò non implica che le altre siano necessarie.
+**Eccezioni**: Quando una delle funzioni speciali viene dichiarata solo per renderle non-public o virtuali, ma senza una semantica speciale, ciò non implica che le altre siano necessarie.
 In rari casi, le classi che hanno membri di tipi strani (come i riferimenti membro) non sono un'eccezione perché hanno una semantica di copia peculiare.
 In una classe che contiene un riferimento, è probabilmente necessario scrivere il costruttore copia e l'operatore di assegnazione, ma il distruttore predefinito fa già la cosa giusta. (Si noti che l'utilizzo di un riferimento membro è quasi sempre sbagliato).
 
