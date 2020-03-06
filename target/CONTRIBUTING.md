@@ -3,7 +3,7 @@
 > "All'interno del C++ c'è un più piccolo, semplice e sicuro linguaggio, che lotta per uscire fuori".
 > -- <cite>Bjarne Stroustrup</cite>
 
-Le C++ Core Guidelines è un lavoro di gruppo guidato da Bjarne Stroustrup, proprio come lo stesso linguaggio C++. Sono il risultato di molti anni-uomo di discussione e progettazione in diverse organizzazioni. Per come sono progettate incoraggiano una generale applicabilità ed un'ampia adozione ma si possono liberamente copiare e modificare per soddisfare le esigenze della propria organizzazione.
+Le C++ Core Guidelines costituiscono un lavoro di gruppo guidato da Bjarne Stroustrup, proprio come lo stesso linguaggio C++. Sono il risultato di molti anni-uomo di discussione e progettazione in diverse organizzazioni. Per come sono progettate incoraggiano una generale applicabilità ed un'ampia adozione ma si possono liberamente copiare e modificare per soddisfare le esigenze della propria organizzazione.
 
 I contributi alle C++ Core Guidelines vengono incoraggiati in diversi modi:
 - **feedback individuale** Siete sviluppatori appassionati del vostro codice? Partecipate alla discussione [Issues](https://github.com/isocpp/CppCoreGuidelines/issues). Vogliamo sapere quali regole vi garbano e quali no Ci sono regole eccessivamente difficili da applicare? Il fornitore del vostro compilatore segue adeguatamente le Guidelines Support Library (p.es., [l'implementazione di Microsoft delle GSL](https://github.com/microsoft/gsl))?

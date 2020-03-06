@@ -458,7 +458,7 @@ Le abbreviazioni della sezione principale sono utilizzate anche nei numeri delle
 
 Le regole in questa sezione sono molto generali.
 
-Riepilogo delle regole della filosofia:
+Riepilogo delle regole sulla filosofia:
 
 * [P.1: Esprimere le idee direttamente nel codice](#Rp-direct)
 * [P.2: Scrivere in C++ Standard ISO](#Rp-Cplusplus)
@@ -1165,7 +1165,7 @@ Se non esiste una libreria ben progettata, ben documentata e ben supportata per 
 Un'interfaccia è un contratto tra due parti di un programma. Indica con precisione cosa ci si aspetta da un fornitore di un servizio e un utente per cui quel servizio è essenziale.
 Avere buone interfacce (di facile comprensione, che ne incoraggino un uso efficiente, non soggette a errori, col supporto di test, ecc.) è probabilmente il solo aspetto più importante dell'organizzazione del codice.
 
-Riepilogo delle regole delle interfacce:
+Riepilogo delle regole sulle interfacce:
 
 * [I.1: Rendere esplicite le interfacce](#Ri-explicit)
 * [I.2: Evitare variabili globali non-`const`](#Ri-global)
@@ -1194,7 +1194,7 @@ Riepilogo delle regole delle interfacce:
 * [C.concrete: Tipi concreti](#SS-concrete)
 * [C.hier: Gerarchie di classi](#SS-hier)
 * [C.over: Overloading e operatori overloaded [sovraccaricati]](#SS-overload)
-* [C.con: Contenitori ed altri handle di risorse](#SS-containers)
+* [C.con: Contenitori ed altri gestori [handle] di risorse](#SS-containers)
 * [E: Gestione degli errori](#S-errors)
 * [T: Template e programmazione generica](#S-templates)
 
@@ -1891,8 +1891,8 @@ Ma quando lo si fa, si usa `std::string_view` o `string_span` della [GSL](#GSL) 
 
 ##### Imposizione
 
-* (Semplice) ((Bounds)) Segnala un warning per ogni espressione che si baserebbe sulla conversione implicita da un tipo di array ad un tipo di puntatore. Consentire delle eccezioni per tipi di puntatori zstring/czstring.
-* (Semplice) ((Bounds)) Segnala un warning per ogni operazione aritmetica o espressione di tipo puntatore che risulti nel valore di un tipo puntatore. Consentire delle eccezioni per tipi di puntatori zstring/czstring.
+* (Semplice) ((Bounds)) Segnalare un warning per ogni espressione che si baserebbe sulla conversione implicita da un tipo di array ad un tipo di puntatore. Consentire delle eccezioni per tipi di puntatori zstring/czstring.
+* (Semplice) ((Bounds)) Segnalare un warning per ogni operazione aritmetica o espressione di tipo puntatore che risulti nel valore di un tipo puntatore. Consentire delle eccezioni per tipi di puntatori zstring/czstring.
 
 ### <a name="Ri-global-init"></a>I.22: Evitare complesse inizializzazioni di oggetti globali
 
@@ -2616,7 +2616,7 @@ Possiamo intercettare staticamente i puntatori appesi [dangling], quindi non è 
 
 ##### Imposizione
 
-Segnala un parametro di tipo smart pointer (un tipo che fa l'overload di `operator->` o di `operator*`) per cui non viene usata la semantica della proprietà; questo è
+Segnalare un parametro di tipo smart pointer (un tipo che fa l'overload di `operator->` o di `operator*`) per cui non viene usata la semantica della proprietà; questo è
 
 * copiabile ma mai copiato/spostato [moved] o 'movable' ma mai spostato
 * e che non viene mai modificato né passato ad un'altra funzione che potrebbe farlo.
@@ -2806,8 +2806,8 @@ Per esempio:
     }   // p viene distrutto
 ##### Imposizione
 
-* Segnala tutti i parametri `X&&` (dove `X` non è il nome di un parametro di tipo template) dove il corpo della funzione li usa senza `std::move`.
-* Segnala l'accesso a oggetti spostati [moved-from].
+* Segnalare tutti i parametri `X&&` (dove `X` non è il nome di un parametro di tipo template) dove il corpo della funzione li usa senza `std::move`.
+* Segnalare l'accesso a oggetti spostati [moved-from].
 * Non spostare condizionalmente oggetti
 
 ### <a name="Rf-forward"></a>F.19: Per i parametri "forward", si passano per `TP&&` e si esegue  `std::forward` solo per il parametro
@@ -3040,7 +3040,7 @@ Meglio
 
 ##### Imposizione
 
-* (Semplice) ((Bounds)) Segnala un warning per ogni operazione aritmetica o espressione di tipo puntatore che risulti nel valore di un tipo puntatore.
+* (Semplice) ((Bounds)) Segnalare un warning per ogni operazione aritmetica o espressione di tipo puntatore che risulti nel valore di un tipo puntatore.
 
 ### <a name="Rf-nullptr"></a>F.23: Utilizzare `not_null<T>` per indicare che "null" non è un valore valido
 
@@ -3464,7 +3464,7 @@ Meglio:
 
 ##### Imposizione
 
-Segnala qualsiasi uso di `&&` come tipo di ritorno, eccetto in `std::move` e `std::forward`.
+Segnalare qualsiasi uso di `&&` come tipo di ritorno, eccetto in `std::move` e `std::forward`.
 
 ### <a name="Rf-main"></a>F.46: `int` è il tipo restituito da `main()`
 
@@ -3646,7 +3646,7 @@ Questa è una semplice pipeline parallela a tre stadi. Ogni oggetto `stage` [sta
     }  // si blocca automaticamente in attesa del completamento della pipeline
 ##### Imposizione
 
-Segnala una lambda che cattura per riferimento, ma viene usata non solo localmente nello scope della funzione o viene passata ad una funzione per riferimento. (Nota: Questa regola è un'approssimazione, segnala i passaggi per puntatore simili a quelli memorizzati dal chiamato, scrivendo in una locazione dell'heap cui si accede tramite un parametro, restituendo la lambda, ecc. Le regole [Lifetime] forniranno anche regole generali che segnalano i puntatori in fuga [escaping] e i riferimenti compresi quelli tramite le lambda).
+Segnalare una lambda che cattura per riferimento, ma viene usata non solo localmente nello scope della funzione o viene passata ad una funzione per riferimento. (Nota: Questa regola è un'approssimazione, segnala i passaggi per puntatore simili a quelli memorizzati dal chiamato, scrivendo in una locazione dell'heap cui si accede tramite un parametro, restituendo la lambda, ecc. Le regole [Lifetime] forniranno anche regole generali che segnalano i puntatori in fuga [escaping] e i riferimenti compresi quelli tramite le lambda).
 
 ### <a name="Rf-value-capture">F.53: Evitare l'acquisizione per riferimento nelle lambda che non si useranno localmente, compresi quelli restituiti, memorizzati nell'heap o passati da un altro thread</a>
 
@@ -3713,7 +3713,7 @@ Questo è oggetto di un'attiva discussione nella standardizzazione e potrebbe es
 
 ##### Imposizione
 
-* Segnala qualsiasi capture-list di lambda che specifica un'acquisizione di default e cattura anche `this` (esplicitamente o tramite acquisizione di default)
+* Segnalare qualsiasi capture-list di lambda che specifica un'acquisizione di default e cattura anche `this` (esplicitamente o tramite acquisizione di default)
 
 ### <a name="F-varargs"></a>F.55: Non usare gli argomenti `va_arg`
 
@@ -3763,11 +3763,11 @@ La dichiarazione di un parametro `...` talvolta è utile nelle tecniche che non 
 Una classe è un tipo definito dall'utente, per il quale un programmatore può definire la rappresentazione, le operazioni e le interfacce.
 Le gerarchie di classi si usano per organizzare le classi correlate in strutture gerarchiche.
 
-Riepilogo delle regole delle classi:
+Riepilogo delle regole sulle classi:
 
-* [C.1: Organizza i dati correlati in strutture (`struct` o `class`i)](#Rc-org)
+* [C.1: Organizzare i dati correlati in strutture (`struct` o `class`i)](#Rc-org)
 * [C.2: Utilizzare `class` se la classe ha un invariante; usare `struct` se i dati membro possono variare indipendentemente](#Rc-struct)
-* [C.3: Rappresentare la distinzione tra un'interfaccia e un'implementazione con una classe](#Rc-interface)
+* [C.3: Rappresentare la distinzione tra un'interfaccia e un'implementazione utilizzando una classe](#Rc-interface)
 * [C.4: Creare una funzione membro solo se è necessario l'accesso diretto alla rappresentazione di una classe](#Rc-member)
 * [C.5: Inserire le funzioni helper nello stesso namespace della classe che supportano](#Rc-helper)
 * [C.7: Non definire una classe o un enum e dichiarare una variabile dello stesso tipo nella stessa istruzione](#Rc-standalone)
@@ -3778,13 +3778,13 @@ Sottosezioni:
 
 * [C.concrete: Tipi concreti](#SS-concrete)
 * [C.ctor: Costruttori, assegnazioni e distruttori](#S-ctor)
-* [C.con: Contenitori ed altri handle di risorse](#SS-containers)
+* [C.con: Contenitori ed altri gestori [handle] di risorse](#SS-containers)
 * [C.lambdas: Oggetti funzione e lambda](#SS-lambdas)
 * [C.hier: Gerarchie di classi (OOP)](#SS-hier)
 * [C.over: Overloading e operatori overloaded [sovraccaricati]](#SS-overload)
 * [C.union: Unioni](#SS-union)
 
-### <a name="Rc-org"></a>C.1: Organizza i dati correlati in strutture (`struct` o `class`i)
+### <a name="Rc-org"></a>C.1: Organizzare i dati correlati in strutture (`struct` o `class`i)
 
 ##### Motivo
 
@@ -3797,7 +3797,7 @@ Se i dati sono correlati (per motivi di fondo), tale fatto dovrebbe riflettersi 
     void draw(Point from, Point to);          // meglio
 ##### Note
 
-Una semplice classe, senza funzioni virtuali, non implica né spazio né tempo.
+Una semplice classe, senza funzioni virtuali, non implica né un aumento di spazio né di tempo.
 
 ##### Note
 
@@ -3818,8 +3818,8 @@ Questa è un'utile convenzione.
 
 ##### Note
 
-Un invariante, è una condizione logica per i membri di un oggetto che un costruttore deve stabilire, affinché le funzioni membro pubblici la possano assumere.
-Dopo aver stabilito l'invariante (in genere da un costruttore), ogni funzione membro può essere chiamata per l'oggetto.
+Un invariante, è una condizione logica per i membri di un oggetto che un costruttore deve stabilire, affinché le funzioni membro pubbliche la possano assumere.
+Dopo aver stabilito l'invariante (in genere in un costruttore), ogni funzione membro può essere chiamata per l'oggetto.
 Un invariante può essere dichiarato informalmente (p.es., in un commento) o più formalmente utilizzando `Expects`.
 
 Se tutti i dati membro possono variare indipendentemente l'uno dall'altro, non è possibile alcun invariante.
@@ -3846,12 +3846,12 @@ ma:
 
 Se una classe ha dati `privati`, un utente non può completamente inizializzare un oggetto senza l'uso di un costruttore.
 Quindi, chi definisce la classe fornirà un costruttore e deve specificarne il significato.
-Ciò significa effettivamente che chi definisce la classe deve definire un invariante.
+Questo vuol dire effettivamente che chi definisce la classe deve definire un invariante.
 
 **Si veda anche**:
 
-* [definire una classa con dati privati con `class`](#Rc-class)
-* [È preferibile piazzare prima l'interfaccia in una classe](#Rl-order)
+* [definire una classe con dati privati con `class`](#Rc-class)
+* [In una classe, è preferibile piazzare prima l'interfaccia](#Rl-order)
 * [minimizzare l'esposizione dei membri](#Rc-private)
 * [Evitare dati `protected`](#Rh-protected)
 
@@ -3859,7 +3859,7 @@ Ciò significa effettivamente che chi definisce la classe deve definire un invar
 
 Cercare le `struct` con tutti i dati privati e le `class`i con tutti i membri pubblici.
 
-### <a name="Rc-interface"></a>C.3: Rappresentare la distinzione tra un'interfaccia e un'implementazione con una classe
+### <a name="Rc-interface"></a>C.3: Rappresentare la distinzione tra un'interfaccia e un'implementazione utilizzando una classe
 
 ##### Motivo
 
@@ -3883,7 +3883,7 @@ Ad esempio, ora possiamo cambiare la rappresentazione di una `Date` senza influi
 
 ##### Note
 
-Ovviamente, usare una classe in questo modo per rappresentare la distinzione tra l'interfaccia e l'implementazione, non è l'unico modo.
+Ovviamente, usare una classe in questo modo per rappresentare la distinzione tra l'interfaccia e l'implementazione, non è l'unica maniera.
 Per esempio, possiamo usare un set di dichiarazioni di funzioni indipendenti in un namespace, una classe base astratta o una funzione template con i "concetti" per rappresentare un'interfaccia.
 Il problema più importante è distinguere esplicitamente tra un'interfaccia e i suoi "dettagli" di implementazione.
 Idealmente, e solitamente, un'interfaccia è molto più stabile delle sue implementazioni.
@@ -3896,7 +3896,7 @@ Idealmente, e solitamente, un'interfaccia è molto più stabile delle sue implem
 
 ##### Motivo
 
-Meno accoppiamento c'è con le funzioni membro, meno funzioni ci saranno che possono causare problemi modificando lo stato dell'oggetto, e si riduce il numero delle funzioni che si devono modificare dopo averne modificato la rappresentazione.
+Meno accoppiamento c'è con le funzioni membro, meno funzioni ci saranno che possono causare problemi modificando lo stato dell'oggetto, e si riduce il numero delle funzioni che si devono modificare dopo averne cambiato la rappresentazione.
 
 ##### Esempio
 
@@ -3904,14 +3904,14 @@ Meno accoppiamento c'è con le funzioni membro, meno funzioni ci saranno che pos
         // ... un'interfaccia relativamente piccola ...
     };
 
-    // helper functions:
+    // funzioni helper:
     Date next_weekday(Date);
     bool operator==(Date, Date);
 Le "funzioni helper" non hanno bisogno dell'accesso diretto alla rappresentazione di una `Date`.
 
 ##### Note
 
-Questa regola diventa ancora migliore se il C++ ha la["uniform function call [chiamata a funzione uniforme]"](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0251r0.pdf).
+Questa regola diventa ancora migliore se il C++ adotta la ["uniform function call [chiamata a funzione uniforme]"](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0251r0.pdf).
 
 ##### Eccezione
 
@@ -3922,7 +3922,7 @@ Nota [multi-methods](https://parasol.tamu.edu/~yuriys/papers/OMM10.pdf).
 
 ##### Eccezione
 
-Il linguaggio richiede gli operatori `=`, `()`, `[]`, e `->` siano membri.
+Il linguaggio richiede che gli operatori `=`, `()`, `[]`, e `->` siano membri.
 
 ##### Eccezione
 
@@ -3938,7 +3938,7 @@ Un set di overload può avere dei membri che non accedono direttamente ai dati `
     };
 ##### Eccezione
 
-Allo stesso modo, un insieme di funzioni può essere progettato per essere utilizzato in sequenza [chain]:
+Allo stesso modo, un insieme di funzioni può essere progettato per essere utilizzato in sequenze concatenate:
 
     x.scale(0.5).rotate(45).set_color(Color::red);
 In genere, alcune di queste funzioni, ma non tutte, accedono direttamente ai dati `private`.
@@ -3956,7 +3956,7 @@ In genere, alcune di queste funzioni, ma non tutte, accedono direttamente ai dat
 ##### Motivo
 
 Una funzione helper è una funzione (solitamente fornita da chi scrive la classe) che non necessita di accedere direttamente alla rappresentazione della classe, ma viene vista come parte dell'interfaccia utile alla classe.
-Posizionandole nello stesso namespace della classe, rende ovvia la loro relazione con la classe e consente loro essere trovate cercando gli argomenti dipendenti.
+Posizionandole nello stesso namespace della classe, si rende palese la loro relazione con la classe e consente loro di essere trovate cercando gli argomenti dipendenti.
 
 ##### Esempio
 
@@ -4119,17 +4119,17 @@ Preferire un ordine con prima i membri `public` poi i membri `protected` e infin
 L'ideale per una classe è essere un tipo regolare.
 Questo vuol dire più o meno "funzionare come un `int`". Un tipo [concrete] è il più semplice tipo di classe.
 Un valore di un tipo regolare può essere copiato e il risultato di una copia è un oggetto indipendente con lo stesso valore dell'originale.
-Se un tipo [concrete] ha sia `=` che `==`, da `a = b` dovrebbe risultare che `a == b` sia `true`.
-Le classi [concrete] senza assegnazione ed uguaglianza possono essere definite, ma sono (e dovrebbero essere) rare.
-I tipi predefiniti del C++ sono regolari, così come le classi della standard-library, come `string`, `vector` e `map`.
-I tipi [concrete] vengono spesso definiti tipi di valore per distinguerli dai tipi utilizzati come parte di una gerarchia
+Se un tipo concreto ha sia `=` che `==`, da `a = b` dovrebbe risultare che `a == b` sia `true`.
+Le classi concrete senza assegnazione ed uguaglianza possono essere definite, ma sono (e dovrebbero essere) rare.
+I tipi predefiniti del C++ sono regolari, così come le classi della libreria standard, come `string`, `vector` e `map`.
+I tipi concreti vengono spesso definiti tipi di valore per distinguerli dai tipi utilizzati come parte di una gerarchia
 
-Riepilogo delle regole sul tipo [concrete]:
+Riepilogo delle regole sui tipi concreti:
 
-* [C.10: Preferire i tipi [concrete] alle gerarchie di classi](#Rc-concrete)
+* [C.10: Preferire i tipi concreti alle gerarchie di classi](#Rc-concrete)
 * [C.11: Rendere concreti i tipi regolari](#Rc-regular)
 
-### <a name="Rc-concrete"></a>C.10: Preferire i tipi [concrete] alle gerarchie di classi
+### <a name="Rc-concrete"></a>C.10: Preferire i tipi concreti alle gerarchie di classi
 
 ##### Motivo
 
@@ -4164,7 +4164,7 @@ Ciò implica più uso della memoria, più allocazioni e deallocazioni e più lav
 
 ##### Note
 
-I tipi [concrete] si possono allocare sullo stack e possono essere membri di altre classi.
+I tipi concreti si possono allocare sullo stack e possono essere membri di altre classi.
 
 ##### Note
 
@@ -4182,7 +4182,7 @@ Questo viene fatto laddove l'allocazione dinamica è proibita (p.es. hard-real-t
 
 ##### Motivo
 
-I tipi regolari sono più facili da capire e discutere dei tipi non regolari (l'irregolarità richiede uno sforzo aggiuntivo per capire e usare).
+I tipi regolari sono più facili da capire e discutere dei tipi non regolari (l'irregolarità richiede uno sforzo aggiuntivo per capirli e usarli).
 
 ##### Esempio
 
@@ -4201,12 +4201,12 @@ I tipi regolari sono più facili da capire e discutere dei tipi non regolari (l'
     if (!(b1 == b2)) error("impossible!");
     b2.name = "the other bundle";
     if (b1 == b2) error("No!");
-In particolare, se un tipo [concrete] ha un'assegnazione gli si dia anche un operatore di uguaglianza in modo che `a = b` implichi `a == b`.
+In particolare, se un tipo concreto ha un'assegnazione, gli si dia anche un operatore di uguaglianza in modo che `a = b` implichi `a == b`.
 
 ##### Note
 
-Gli handle per le risorse che non possono essere clonate, p.es., uno `scoped_lock` per un `mutex`, assomigliano ai tipi [concrete] in quanto molto spesso sono allocati sullo stack.
-Tuttavia, oggetti di questo tipo solitamente non possono essere copiati (invece, si possono in genere essere spostati), quindi non possono essere `regolari`; mentre tendono ad essere `semiregolari`.
+Gli handle per le risorse che non possono essere clonate, p.es., uno `scoped_lock` per un `mutex`, assomigliano ai tipi concreti in quanto molto spesso sono allocati sullo stack.
+Tuttavia, oggetti di questo tipo solitamente non possono essere copiati (invece, si possono in genere spostare), quindi non possono essere `regolari`; mentre tendono ad essere `semiregolari`.
 Spesso, questi tipi vengono definiti "move-only types" [tipi di solo spostamento].
 
 ##### Imposizione
@@ -4218,7 +4218,7 @@ Spesso, questi tipi vengono definiti "move-only types" [tipi di solo spostamento
 Queste funzioni controllano il ciclo di vita degli oggetti: creazione, copia, spostamento e distruzione.
 Definire i costruttori per garantire e semplificare l'inizializzazione delle classi.
 
-Queste sono *operazioni di default*:
+Queste sono le *operazioni di default*:
 
 * un costruttore di default: `X()`
 * un costruttore copia: `X(const X&)`
@@ -4266,18 +4266,18 @@ Regole del costruttore:
 
 Regole di copia e spostamento [move]:
 
-* [C.60: Creare le assegnazioni di copia non-`virtuali`, prendere il parametro con `const&`, e restiruire con non-`const&`](#Rc-copy-assignment)
+* [C.60: Creare le assegnazioni di copia non-`virtuali`, prendere il parametro con `const&`, e restituire con non-`const&`](#Rc-copy-assignment)
 * [C.61: Un'operazione di copia dovrebbe copiare](#Rc-copy-semantic)
-* [C.62: Rendere l'assegnazione di copia sicura per l'auto-assegnazione](#Rc-copy-self)
+* [C.62: Rendere l'assegnazione di copia sicura in caso di auto-assegnazione](#Rc-copy-self)
 * [C.63: Rendere l'assegnazione di spostamento [move] non-`virtual`, prendere il parametro con `&&`, e restituire con non-`const&`](#Rc-move-assignment)
 * [C.64: Un'operazione di [move] dovrebbe spostare e lasciare il sorgente in uno stato valido](#Rc-move-semantic)
 * [C.65: Rendere l'assegnazione con spostamento sicura per l'auto-assegnazione](#Rc-move-self)
 * [C.66: Creare le operazioni di [move] come `noexcept`](#Rc-move-noexcept)
 * [C.67: Una classe polimorfica dovrebbe sopprimere la copia](#Rc-copy-virtual)
 
-Altre regole delle operazioni di default:
+Altre regole sulle operazioni di default:
 
-* [C.80: Utilizzare `=default` se si deve essere espliciti sull'uso della semantica di default ](#Rc-eqdefault)
+* [C.80: Utilizzare `=default` se si deve essere espliciti sull'uso della semantica del default ](#Rc-eqdefault)
 * [C.81: Utilizzare `=delete` quando si vuol disabilitare il comportamento di default (senza volere un'alternativa)](#Rc-delete)
 * [C.82: Non richiamare funzioni virtuali nei costruttori e nei distruttori](#Rc-ctor-virtual)
 * [C.83: Per i tipi [value-like], si preveda di fornire una funzione di 'swap' di tipo `noexcept`](#Rc-swap)
@@ -4363,7 +4363,7 @@ Questa è nota come "la regola del cinque" o "la regola del sei", a seconda che 
 ##### Note
 
 Se si vuole un'implementazione di default o un'operazione di default (mentre se ne definisce l'altra), si scriva `=default` per mostrare che è intenzionale.
-Se non si vuole un'operazione di operation, la si sopprime con `=delete`.
+Se non si vuole un'operazione di default, la si sopprime con `=delete`.
 
 ##### Esempio, buono
 
@@ -4388,7 +4388,7 @@ In alternativa per evitare lo [slicing] come per la [C.67](#Rc-copy-virtual), si
       ClonableBase(ClonableBase&&) = delete;
       ClonableBase& operator=(ClonableBase&&) = delete;
     };
-Qui, definire solo le operazioni di [move] o solo quelle di copia, avrebbe lo stesso effetto, ma affermare esplicitamente l'intento per ciascun membro speciale, lo rende più ovvio al lettore.
+Qui, definire solo le operazioni di [move] o solo quelle di copia, avrebbe lo stesso effetto, ma affermare esplicitamente l'intento per ciascun membro speciale, lo rende più palese al lettore.
 
 ##### Note
 
@@ -4424,7 +4424,7 @@ Per evitare il tedio e la possibilità di errori, provare a seguire la [regola d
 ##### Motivo
 
 Le operazioni di default sono concettualmente un insieme abbinato. La loro semantica è correlata.
-Gli utenti resteranno sorpresi se la costruzione copia/[move] e l'assegnazione copia/[move] fanno logicamente cose diverse. Gli utenti resteranno sorpresi se i costruttori e i distruttori non forniscono una vista coerente della gestione delle risorse. Gli utenti resteranno sorpresi la copia e il [move] non riflettono il modo in cui funzionano i costruttori e i distruttori.
+Gli utenti resteranno sorpresi se la costruzione copia/[move] e l'assegnazione copia/[move] fanno logicamente cose diverse. Gli utenti resteranno sorpresi se i costruttori e i distruttori non forniscono una vista coerente della gestione delle risorse. Gli utenti resteranno sorpresi se la copia e il [move] non riflettono il modo in cui funzionano i costruttori e i distruttori.
 
 ##### Esempio, cattivo
 
@@ -4442,7 +4442,7 @@ Queste operazioni non concordano per la semantica della copia. Ciò porterà a c
 
 ##### Imposizione
 
-* (Complesso) Un costruttore di copia/[move] e una corrispondente operatore di assegnazione di copia/[move] devono scrivere le stesse variabili membro allo stesso livello di deferenza.
+* (Complesso) Un costruttore di copia/[move] e un corrispondente operatore di assegnazione di copia/[move] devono scrivere le stesse variabili membro allo stesso livello di deferenza.
 * (copia/[move]) Ciascuna variabile membro scritta in un costruttore di copia/[move] deve essere inizializzata anche in tutti gli altri costruttori.
 * (Complesso) Se un costruttore di copia/[move] esegue una [deep copy] di una variabile membro, allora il distruttore deve modificare la variabile membro.
 * (Complesso) Se un distruttore modifica una variabile membro, tale variabile membro dev'essere scritta in qualsiasi costruttore o operatore di assegnazione di copia/[move].
@@ -4458,7 +4458,7 @@ Se la risposta è "sì", ne consegue gran parte della progettazione della classe
 ##### Motivo
 
 Un distruttore viene invocato implicitamente alla fine della vita di un oggetto.
-Se il distruttore di default è sufficiente, utilizzalo.
+Se il distruttore di default è sufficiente, lo si utilizzi.
 Definire un distruttore non di default solo se una classe deve eseguire del codice che non fa già parte dei distruttori dei suoi membri.
 
 ##### Esempio
@@ -4487,9 +4487,9 @@ Lo scopo di `final_action` è quello di ottenere l'esecuzione di un pezzo di cod
 
 ##### Note
 
-Ci cono  due categorie generali di classi che richiedono un distruttore definito dall'utente:
+Ci sono  due categorie generali di classi che richiedono un distruttore definito dall'utente:
 
-* Una classe con una risorsa che non è già rappresentata come una classe con un distruttore, p.es., un `vector` o una classe di transazione.
+* Una classe con una risorsa che non sia già rappresentata come una classe con un distruttore, p.es., un `vector` o una classe di transazione.
 * Una classe che esiste principalmente per eseguire un'azione al momento della distruzione, come un tracer o un `final_action`.
 
 ##### Esempio, cattivo
@@ -4537,12 +4537,12 @@ Nella `X`, `ifstream` chiude implicitamente qualsiasi file che potrebbe aver ape
         FILE* f;   // può possedere un file
         // ... nessuna operazione di default definita o =deleted ...
     };
-`X2` può produrre un [leak] di un handle di file.
+`X2` può generare un [leak] da un handle del file.
 
 ##### Note
 
 Che dire di un socket che non viene chiuso? Un distruttore o un'operazione di chiusura o pulizia [non dovrebbe mai fallire](#Rc-dtor-fail).
-Se capita, abbiamo un problema che non ha una soluzione davvero valida.
+Se tuttavia capita, c'è un problema che non ha una soluzione completamente valida.
 Per cominciare, chi scrive un distruttore non sa perché il distruttore viene chiamato e non può "rifiutarsi di agire" lanciando un'eccezione.
 Si veda  la [discussione](#Sd-never-fail).
 A peggiorare il problema, molte operazioni di "chiusura/rilascio" non si possono rieseguire.
@@ -4569,25 +4569,25 @@ Qui `p` fa riferimento a `pp` ma non lo possiede.
 
 ##### Motivo
 
-C'è un moltissimo codice che non è specifico sulla proprietà [ownership].
+C'è tantissimo codice che non è specifico sulla proprietà [ownership].
 
 ##### Esempio
 
     ???
 ##### Note
 
-Se `T*` o `T&` sono proprietari, si contrassegnano con `owning`. Se `T*` non è proprietario, si prenda in considerazione di segnarlo con `ptr`.
+Se `T*` o `T&` sono proprietari, si contrassegnano con `owning`. Se `T*` non è proprietario, si prenda in considerazione di contrassegnarlo con `ptr`.
 Ciò aiuterà la documentazione e l'analisi.
 
 ##### Imposizione
 
-Osservare l'inizializzazione dei puntatori membro e dei riferimento ai membri e vedere se viene utilizzata un'allocazione.
+Osservare l'inizializzazione dei puntatori membro e dei riferimenti ai membri e vedere se viene utilizzata un'allocazione.
 
 ### <a name="Rc-dtor-ptr2"></a>C.33: Se una classe ha un membro puntatore proprietario, definire un distruttore
 
 ##### Motivo
 
-Un oggetto posseduto deve essere `deleted` quando avviene la distruzione dell'oggetto che lo possiede.
+Un oggetto posseduto deve subire un `delete` quando avviene la distruzione dell'oggetto che lo possiede.
 
 ##### Esempio
 
@@ -4623,7 +4623,7 @@ Da notare che se si definisce un distruttore, si devono definire o cancellare [d
     {
         auto p2 = p1;   // error: errore: doppio delete
     }
-L'operazione copia di default eseguirà soltanto la copia di `p1.p` in `p2.p` portando ad una doppia distruzione di `p1.p`. Siate espliciti sulla proprietà:
+L'operazione copia di default eseguirà soltanto la copia di `p1.p` in `p2.p` portando ad una doppia distruzione di `p1.p`. Si deve essere espliciti sulla proprietà:
 
     template<typename T>
     class Smart_ptr3 {
@@ -4641,7 +4641,7 @@ L'operazione copia di default eseguirà soltanto la copia di `p1.p` in `p2.p` po
     }
 ##### Note
 
-Spesso il modo più semplice per avere un distruttore è quello di sostituire il puntatore con uno smart pointer (p.es., `std::unique_ptr`) e lasciare che il compilatore organizzi opportunamente la distruzione implicita.
+Spesso il modo più semplice per avere un distruttore è quello di sostituire il puntatore con uno smart pointer (p.es., `std::unique_ptr`) e lasciare che il compilatore ne organizzi opportunamente la distruzione implicita.
 
 ##### Note
 
@@ -4660,7 +4660,7 @@ Ciò a volte richiederebbe modifiche non banali al codice e potrebbe influire su
 
 Per prevenire comportamenti indefiniti.
 Se il distruttore è pubblico, il codice chiamante può tentare di distruggere un oggetto derivato della classe tramite un puntatore alla classe base e il risultato è indefinito se il distruttore della classe base è non-virtual.
-Se il distruttore è protected, allora il codice chiamante non può distruggere, tramite un puntatore alla classe base e il distruttore non deve necessariamente essere virtual; deve essere protected, non private, in modo che i distruttori derivati lo possano invocare.
+Se il distruttore è protected, allora il codice chiamante non può distruggere tramite un puntatore alla classe base e il distruttore non deve necessariamente essere virtual; deve essere protected, non private, in modo che i distruttori derivati lo possano invocare.
 In generale, chi scrive una classe base non conosce l'azione appropriata da farsi al momento della distruzione.
 
 ##### Discussione
@@ -4705,12 +4705,12 @@ Un distruttore deve essere non-private altrimenti se ne impedirà l'uso, per ese
     }
 ##### Eccezione
 
-Possiamo immaginare un caso in cui si potrebbe volere un distruttore virtuale protetto: Quando un oggetto di un tipo derivato (e solo di questo tipo) dovrebbe poter distruggere *un altro* oggetto (non se stesso) tramite un puntatore alla base. Tuttavia, non abbiamo visto un caso del genere in pratica.
+Possiamo immaginare un caso in cui si potrebbe volere un distruttore virtuale protetto: Quando un oggetto di un tipo derivato (e solo di questo tipo) dovrebbe poter distruggere *un altro* oggetto (non se stesso) tramite un puntatore alla base. Tuttavia, non si è mai visto un caso del genere in pratica.
 
 
 ##### Imposizione
 
-* Una classe con una qualsiasi funzione virtuale dovrebbe avere un distruttore o pubblico o virtuale oppure protetto e non-virtual.
+* Una classe con una qualsiasi funzione virtuale dovrebbe avere un distruttore o pubblico e virtuale oppure protetto e non-virtuale.
 
 ### <a name="Rc-dtor-fail"></a>C.36: Un distruttore non può fallire
 
@@ -4737,8 +4737,8 @@ La libreria standard richiede che tutte le classi con cui ha a che fare abbiano 
 
 In molti hanno cercato di escogitare uno schema infallibile per affrontare i fallimenti nei distruttori.
 Nessuno è riuscito a elaborare uno schema generale.
-Questo può essere un vero problema in pratica: Ad esempio, che dire di un socket che non si chiude?
-Chi scrive un distruttore non sa perché viene chiamato e non può fa s' che si "rifiuti di agire" lanciando un'eccezione.
+Questo può essere un vero problema nella pratica: Ad esempio, che dire di un socket che non si chiude?
+Chi scrive un distruttore non sa perché viene chiamato e non può fa sì che si "rifiuti di agire" lanciando un'eccezione.
 Cfr. [discussione](#Sd-never-fail).
 A peggiorare il problema, molte operazioni di "chiusura/rilascio" non si possono rieseguire.
 Se possibile, considerare la mancata chiusura/pulizia un errore progettuale fondamentale e terminare.
@@ -4753,7 +4753,7 @@ Se una risorsa non può essere rilasciata e il programma non può fallire, si pr
 Bisogna essere pienamente consapevoli del fatto che questa tecnica è particolare e soggetta a errori.
 Si consideri l'esempio: "la mia connessione non si chiuderà".
 Probabilmente c'è un problema all'altra estremità della connessione e solo un pezzo di codice responsabile di entrambe le estremità della connessione può gestire correttamente il problema.
-Il distruttore potrebbe inviare un messaggio (in qualche modo) alla parte responsabile del sistema, considerare di aver chiuso la connessione e tornare normalmente.
+Il distruttore potrebbe inviare un messaggio (in qualche modo) alla parte responsabile del sistema, assumere di aver chiuso la connessione e tornare normalmente.
 
 ##### Note
 
@@ -4771,7 +4771,7 @@ Se un distruttore esegue operazioni che potrebbero non riuscire, può rilevare d
 
 ##### Note
 
-Un distruttore (sia user-defined che generato dal compilatore) è implicitamente dichiarato `noexcept` (indipendentemente dal codice) se tutti i membri della sua classe hanno distruttori `noexcept`. Segnando esplicitamente i distruttori con `noexcept`, un autore si tutela dal fatto che il distruttore possa diventare implicitamente `noexcept(false)` aggiungendo o modificando un membro della classe.
+Un distruttore (sia "user-defined" che generato dal compilatore) è implicitamente dichiarato `noexcept` (indipendentemente dal codice) se tutti i membri della sua classe hanno distruttori `noexcept`. Segnando esplicitamente i distruttori con `noexcept`, un autore si tutela dal fatto che il distruttore possa diventare implicitamente `noexcept(false)` aggiungendo o modificando un membro della classe.
 
 ##### Esempio
 
@@ -4816,7 +4816,7 @@ Ecco a cosa servono i costruttori.
     private:
         int d, m, y;
     };
-Spesso è una buona idea esprimere l'invariante come un'`Imposizione` sul costruttore.
+Spesso è una buona idea esprimere l'invariante come una `Ensures<` sul costruttore.
 
 ##### Note
 
@@ -4882,11 +4882,11 @@ I compilatori non leggono i commenti.
 
 ##### Eccezione
 
-Se una classe non può convenientemente costruire un oggetto valido, [si una una funzione factory](#Rc-factory).
+Se una classe non può convenientemente costruire un oggetto valido, [si usa una funzione factory](#Rc-factory).
 
 ##### Imposizione
 
-* (Semplice) Ogni costruttore dovrebbe inizializzare ogni variabile membro (o esplicitamente, tramite una chiamata a un ctor delegating, o con la costruzione di default).
+* (Semplice) Ogni costruttore dovrebbe inizializzare ogni variabile membro (o esplicitamente, tramite una chiamata a un costruttore [delegating], o con la costruzione di default).
 * (Ignoto) Se un costruttore ha un contratto `Ensures`, provare a vedere se vale come post-condizione.
 
 ##### Note
@@ -4986,7 +4986,7 @@ Un'altra ragione è stata quella di ritardare l'inizializzazione finché non fos
 ##### Motivo
 
 Molti linguaggi e strutture di librerie si affidano ai costruttori di default per inizializzare i propri elementi, p.es. `T a[10]` e `std::vector<T> v(10)`.
-Un costruttore di default spesso semplifica il compito di definire un adatto [stato spostato](#???) per un tipo che sia anche copiabile.
+Un costruttore di default spesso semplifica il compito di definire uno [stato di spostato](#???) adatto per un tipo che sia anche copiabile.
 
 ##### Note
 
@@ -5001,14 +5001,14 @@ Un [tipo di valore](#SS-concrete) è una classe copiabile (e solitamente anche c
         // ...
     };
 
-    vector<Date> vd1(1000);   // default Date needed here
-    vector<Date> vd2(1000, Date{Month::October, 7, 1885});   // alternative
+    vector<Date> vd1(1000);   // qui serve il default di Date
+    vector<Date> vd2(1000, Date{Month::October, 7, 1885});   // alternativa
 Il costruttore di default viene auto-generato solo se non c'è un costruttore dichiarato dall'utente, quindi è impossibile inizializzare il vettore `vd1` nell'esempio precedente.
 L'assenza di un valore di default può riservare delle sorprese agli utenti e complicarne l'uso, quindi se lo si può ragionevolmente definire, lo si faccia.
 
 Si è scelto `Date` per incoraggiare il pensiero: Non c'è alcuna data di default "naturale" (il big bang è troppo lontano nel tempo per essere utile per la maggior parte delle persone), quindi questo esempio non è banale.
 `{0, 0, 0}` non è una data valida nella maggior parte dei sistemi di calendari, quindi si sceglie quello che potrebbe assomigliare al `NaN` dei numeri a virgola mobile.
-Tuttavia, la maggior parte delle classi `Date` realistiche hanno una "data iniziale" (p.es. è famoso il 1 gennaio 1970), quindi averla come default è solitamente banale.
+Tuttavia, la maggior parte delle classi `Date` realistiche hanno una "data iniziale" (p.es. è famoso il 1 gennaio 1970), quindi averla come default è solitamente ovvio.
 
     class Date {
     public:
@@ -5050,7 +5050,7 @@ Attenzione che i tipi [built-in] non vengono correttamente costruiti di default:
 Gli oggetti allocati staticamente di tipo [built-in] vengono per default inizializzati a `0`, ma non le variabili locali di tipo [built-in].
 Attenzione che il compilatore potrebbe inizializzare per default le variabili locali di tipo [built-in], mentre una compilazione ottimizzata non lo farà.
 Pertanto, codice simile a quello dell'esempio precedente può sembrare funzionante, ma si basa su un comportamento indefinito.
-Assumendo che si voglia un'inizializzazione, un'inizializzazione di default può essere d'aiuto:
+Assumendo che si voglia un'inizializzazione, un'inizializzazione esplicita di default può essere d'aiuto:
 
     struct X {
         string s;
@@ -5084,7 +5084,7 @@ Una classe che ha uno "stato speciale" che deve essere gestito separatamente dag
     ofstream out {"Foobar"};
     // ...
     out << log(time, transaction);
-I tipi simili di stati speciali che sono copiabili, ad esempio i puntatori smart copiabili che hanno lo stato speciale "==nullptr", devono utilizzare lo stato speciale come il valore di default nel costruttore.
+I tipi similari di stati speciali che sono copiabili, ad esempio i puntatori smart copiabili che hanno lo stato speciale "==nullptr", devono utilizzare lo stato speciale come il valore di default nel costruttore.
 
 Tuttavia, è preferibile avere un default per un costruttore di default anziché uno stato significativo come `std::string`s `""` e `std::vector`s `{}`.
 
@@ -5133,7 +5133,7 @@ Per esempio, `Vector0<int> v[100]` costa 100 allocazioni.
         T* space = nullptr;
         T* last = nullptr;
     };
-L'uso di `{nullptr, nullptr, nullptr}` rende `Vector1{}` economico, ma un caso speciale ed implica dei controlli a run-time.
+L'uso di `{nullptr, nullptr, nullptr}` rende `Vector1{}` economico, ma è un caso speciale ed implica dei controlli a run-time.
 Impostare un `Vector1` a vuoto dopo aver rilevato un errore è banale.
 
 ##### Imposizione
@@ -5144,7 +5144,7 @@ Impostare un `Vector1` a vuoto dopo aver rilevato un errore è banale.
 
 ##### Motivo
 
-Utilizzando gli inizializzatori dei membri [in-class], consente al compilatore di generavi la funzione. La funzione generata dal compilatore può essere più efficiente.
+Utilizzando gli inizializzatori dei membri nella stessa classe [in-class], consente al compilatore di generare la funzione. La funzione generata dal compilatore può essere più efficiente.
 
 ##### Esempio, cattivo
 
@@ -5182,7 +5182,7 @@ Per evitare conversioni indesiderate.
         // ...
     };
 
-    String s = 10;   // sorpresa: stringa di dimensioni 10
+    String s = 10;   // sorpresa: stringa di dimensione 10
 ##### Eccezione
 
 Se si vuole veramente una conversione implicita da parte dell'argomento del costruttore al tipo della classe, non usare `explicit`:
@@ -5223,11 +5223,11 @@ Per ridurre al minimo la confusione e gli errori. Questo è l'ordine con cui avv
     Foo x(1); // surprise: x.m1 == x.m2 == 2
 ##### Imposizione
 
-(Semplice) Una lista degli inizializzatori dei membro deve indicare i membri nello stesso ordine con cui sono dichiarati.
+(Semplice) Una lista di inizializzatori dei membri deve indicare i membri nello stesso ordine con cui sono dichiarati.
 
 **Si veda anche**: [Discussione](#Sd-order)
 
-### <a name="Rc-in-class-initializer"></a>C.48: Preferire gli inizializzatori [in-class] agli inizializzatori dei membri nei costruttori per gli inizializzatori costanti
+### <a name="Rc-in-class-initializer"></a>C.48: Preferire gli inizializzatori all'interno della classe [in-class] agli inizializzatori dei membri nei costruttori per gli inizializzatori costanti
 
 ##### Motivo
 
@@ -5270,7 +5270,7 @@ Come può un manutentore sapere se `j` sia stato deliberatamente lasciato non in
     };
 ##### Imposizione
 
-* (Semplice) Ogni costruttore dovrebbe inizializzare ogni variabile membro (o esplicitamente, tramite una chiamata a un ctor delegating, o con la costruzione di default).
+* (Semplice) Ogni costruttore dovrebbe inizializzare ogni variabile membro (o esplicitamente, tramite una chiamata a un costruttore [delegating], o con la costruzione di default).
 * (Semplice) Gli argomenti di default per i costruttori suggeriscono come l'inizializzatore [in-class] possa essere più appropriato.
 
 ### <a name="Rc-initialize"></a>C.49: Nei costruttori preferire l'inizializzazione alle assegnazioni
@@ -5372,7 +5372,7 @@ Il tipo restituito dalla factory dovrebbe normalmente essere `unique_ptr` per de
     };
 
     shared_ptr<D> p = D::create<D>();  // creazione di un oggetto D
-`make_shared` richiede che il costruttore sia pubblico. Richiedendo un `Token` protetto, il costruttore non può più essere chiamato pubblicamente, quindi evitiamo che un oggetto non completamente costruito se ne vada libero.
+`make_shared` richiede che il costruttore sia pubblico. Richiedendo un `Token` protetto, il costruttore non può più essere chiamato pubblicamente, quindi si evita che un oggetto non completamente costruito se ne vada libero.
 Fornendo la funzione factory `create()`, si rende conveniente la costruzione (nel [free store]).
 
 ##### Note
@@ -5456,7 +5456,7 @@ Se sono necessari quei costruttori per una classe derivata, la loro re-implement
     int val = r.x;   // uninitialized
 ##### Imposizione
 
-Assicurarsi che ogni membro della classe derivata sia inizializzato.
+Assicurarsi che ogni membro della classe derivata venga inizializzato.
 
 ## <a name="SS-copy"></a>C.copy: Copia e spostamento
 
@@ -5464,7 +5464,7 @@ I tipi di valori dovrebbero generalmente essere copiabili, ma non le interfacce 
 Gli handle delle risorse possono o meno essere copiabili.
 I tipi possono essere definiti per lo spostamento per motivi logici o prestazionali.
 
-### <a name="Rc-copy-assignment"></a>C.60: Creare le assegnazioni di copia non-`virtuali`, prendere il parametro con `const&`, e restiruire con non-`const&`
+### <a name="Rc-copy-assignment"></a>C.60: Creare le assegnazioni di copia non-`virtuali`, prendere il parametro con `const&`, e restituire con non-`const&`
 
 ##### Motivo
 
@@ -5496,7 +5496,7 @@ La tecnica di implementazione dello `swap` offre la [garanzia forte](#Abrahams01
 
 ##### Esempio
 
-Cosa succede se si possono avere prestazioni superiori non creando una copia temporanea? Si consideri un semplice `Vector` destinato ad un dominio dove è comune l'assegnazione di `Vector` grandi e delle stesse dimensioni. In questo caso, la copia degli elementi implicita nella tecnica dell'implementazione dello `swap` potrebbe aumentare il costo di un ordine di grandezza:
+Cosa succede se si possono avere prestazioni superiori non creando una copia temporanea? Si consideri un semplice `Vector` destinato ad un dominio dove è comune l'assegnazione di grandi `Vector` delle stesse dimensioni. In questo caso, la copia degli elementi implicita nella tecnica dell'implementazione dello `swap` potrebbe aumentare il costo di un ordine di grandezza:
 
     template<typename T>
     class Vector {
@@ -5520,7 +5520,7 @@ Cosa succede se si possono avere prestazioni superiori non creando una copia tem
         }
         return *this;
     }
-Scrivendo direttamente negli elementi target, si otterrà solo [la garanzia di base](#Abrahams01) anziché la garanzia forte offerta dalla tecnica dello `swap`. Attenzione alle [auto-assegnazioni](#Rc-copy-self).
+Scrivendo direttamente negli elementi di destinazione, si otterrà solo [la garanzia di base](#Abrahams01) anziché la garanzia forte offerta dalla tecnica dello `swap`. Attenzione alle [auto-assegnazioni](#Rc-copy-self).
 
 **Alternative**: Se si ritiene di aver bisogno di un operatore di assegnazione `virtuale`, e si capisce perché è profondamente problematico, non lo si chiami `operator=`. Chiamare la funzione come `virtual void assign(const Foo&)`.
 Cfr. [costruttore copia contro `clone()`](#Rc-copy-virtual).
@@ -5528,7 +5528,7 @@ Cfr. [costruttore copia contro `clone()`](#Rc-copy-virtual).
 ##### Imposizione
 
 * (Semplice) Un operatore di assegnazione non dovrebbe essere virtuale. Questo è un punto oscuro!
-* (Semplice) Un operatore di assegnazione dovrebbe restituire `T&` per abilitare il concatenamento, non alternative come `const T&` che interferisce con la componibilità e l'inseribilità degli oggetti nei contenitori.
+* (Semplice) Un operatore di assegnazione dovrebbe restituire `T&` per abilitare il concatenamento, non alternative come `const T&` che interferiscono con la componibilità e l'inseribilità degli oggetti nei contenitori.
 * (Moderato) Un operatore di assegnazione dovrebbe (implicitamente o esplicitamente) invocare tutti gli operatori di assegnazione base e membri.
    Si osservi il distruttore per determinare se il tipo ha la semantica del puntatore o quella del valore.
 
@@ -5601,11 +5601,11 @@ Preferire la semantica del valore a meno che non si stia costruendo uno "smart p
 
 (Non imponibile)
 
-### <a name="Rc-copy-self"></a>C.62: Rendere l'assegnazione di copia sicura per l'auto-assegnazione
+### <a name="Rc-copy-self"></a>C.62: Rendere l'assegnazione di copia sicura in caso di auto-assegnazione
 
 ##### Motivo
 
-Se `x = x` modifica il valore di `x`, si resterà sorpresi ed avverranno brutti errori (spesso anche i leak).
+Se `x = x` modifica il valore di `x`, si resterà sorpresi ed avverranno brutti errori (spesso anche dei leak).
 
 ##### Esempio
 
@@ -5647,7 +5647,7 @@ L'assegnazione di default generata dai membri che gestiscono correttamente l'aut
         return *this;
     }
 Questo è ovviamente sicuro e apparentemente efficiente.
-Tuttavia, cosa succede se facciamo un auto-assegnazione per un milione di assegnazioni?
+Tuttavia, cosa succede se si esegue un auto-assegnazione per un milione di assegnazioni?
 Questo ha a che fare con un milione di test ridondanti (ma dato che la risposta è essenzialmente la stessa, il predittore del branch [branch predictor] del computer indovinerà quasi sempre).
 Si consideri:
 
@@ -5676,7 +5676,7 @@ Si consideri:
 Equivalente a quanto fatto per l'[assegnazione-copia](#Rc-copy-assignment).
 
 * (Semplice) Un operatore di assegnazione non dovrebbe essere virtuale. Questo è un punto oscuro!
-* (Semplice) Un operatore di assegnazione dovrebbe restituire `T&` per abilitare il concatenamento, non alternative come `const T&` che interferisce con la componibilità e l'inseribilità degli oggetti nei contenitori.
+* (Semplice) Un operatore di assegnazione dovrebbe restituire `T&` per abilitare il concatenamento, non alternative come `const T&` che interferiscono con la componibilità e l'inseribilità degli oggetti nei contenitori.
 * (Moderato) Un operatore di assegnazione di spostamento dovrebbe (implicitamente o esplicitamente) invocare tutti gli operatori di assegnazione di spostamento base e membri.
 
 ### <a name="Rc-move-semantic"></a>C.64: Un'operazione di [move] dovrebbe spostare e lasciare il sorgente in uno stato valido
@@ -5760,7 +5760,7 @@ L'obiezione dell'uno-su-un-milione rispetto al test `if (this == &a) return *thi
 
 ##### Note
 
-Non è noto un modo generale per evitare un test `if (this == &a) return *this;` per un assegnazione con spostamento e si ottiene ancora una risposta corretta (ovvero, dopo `x = x` il valore di `x` resta invariato).
+Non è noto un modo generale per evitare che dopo un test `if (this == &a) return *this;` per un assegnazione con spostamento si abbia ancora una risposta corretta (ovvero, dopo `x = x` il valore di `x` resta invariato).
 
 ##### Note
 
@@ -5777,7 +5777,7 @@ Ecco un modo per spostare un puntatore senza un test (lo si immagini come codice
     ptr = temp;
 ##### Imposizione
 
-* (Moderato) Nel caso dell'auto-assegnazione, un operatore di assegnazione con spostamento non deve lasciare l'oggetto che aveva i membri puntatori che sono stati cancellati con `delete` o settati a `nullptr`.
+* (Moderato) Nel caso dell'auto-assegnazione, un operatore di assegnazione con spostamento non deve lasciare l'oggetto con i membri puntatori cancellati con `delete` o settati a `nullptr`.
 * (Non applicabile) Si veda l'uso dei tipi di contenitori nella standard-library (compreso  `string`) e si considerino sicuri per gli usi ordinari (non life-critical).
 
 ### <a name="Rc-move-noexcept"></a>C.66: Creare le operazioni di [move] come `noexcept`
@@ -5873,18 +5873,18 @@ Se è necessario creare copie complete [deep] di oggetti polimorfici, si usano l
 
 ##### Eccezione
 
-Le classi che rappresentano oggetti di eccezione devono sia essere polimorfiche che costruibili-per-copia.
+Le classi che rappresentano oggetti eccezioni devono sia essere polimorfiche che costruibili-per-copia.
 
 ##### Imposizione
 
-* Segnala una classe polimorfica con un'operazione di copia non-cancellata.
-* Segnala un'assegnazione di oggetti di classi polimorfiche.
+* Segnalare una classe polimorfica con un'operazione di copia non-cancellata.
+* Segnalare un'assegnazione di oggetti di classi polimorfiche.
 
-## C.other: Altre regole delle operazioni di default
+## C.other: Altre regole sulle operazioni di default
 
 Oltre alle operazioni per le quali il linguaggio offre implementazioni di default, ci sono alcune operazioni che sono così fondamentali che necessitano di regole per la loro definizione: confronti, `swap`, e `hash`.
 
-### <a name="Rc-eqdefault"></a>C.80: Utilizzare `=default` se si deve essere espliciti sull'uso della semantica di default
+### <a name="Rc-eqdefault"></a>C.80: Utilizzare `=default` se si deve essere espliciti sull'uso della semantica del default
 
 ##### Motivo
 
@@ -6128,7 +6128,7 @@ Questa regola si applica a tutti i soliti operatori di confronto: `!=`, `<`, `<=
 ##### Imposizione
 
 * Segnalare un `operator==()` per cui i tipi degli argomenti differiscano; lo stesso per gli altri operatori di confronto: `!=`, `<`, `<=`, `>`, e `>=`.
-* Segnalare i `operator==()` membri; lo stesso per gli altri operatori di confronto: `!=`, `<`, `<=`, `>`, e `>=`.
+* Segnalare i membri `operator==()`; lo stesso per gli altri operatori di confronto: `!=`, `<`, `<=`, `>`, e `>=`.
 
 ### <a name="Rc-eq-base"></a>C.87: Attenzione a `==` sulle classi base
 
@@ -6174,13 +6174,13 @@ Questa regola si applica a tutti i soliti operatori di confronto: `!=`, `<`, `<=
 
 ##### Imposizione
 
-* Segnala un `operator==()` virtuale; lo stesso per altri operatori di confronto: `!=`, `<`, `<=`, `>`, e `>=`.
+* Segnalare un `operator==()` virtuale; lo stesso per altri operatori di confronto: `!=`, `<`, `<=`, `>`, e `>=`.
 
 ### <a name="Rc-hash"></a>C.89: Rendere un `hash` `noexcept`
 
 ##### Motivo
 
-Gli utenti dei contenitori che usano l'hash lo fanno indirettamente e non si aspettano una semplice eccezione.
+Gli utenti dei contenitori che usano l'hash lo fanno indirettamente e non si aspettano una eccezione.
 È un requisito della standard-library.
 
 ##### Esempio, cattivo
@@ -6217,7 +6217,7 @@ Ciò tende a funzionare meglio della "intelligenza" per i non-specialisti.
 ##### Motivo
 
 Il meccanismo standard del C++ per costruire un'istanza di un tipo consiste nel richiamare il suo costruttore. Come specificato nella linea-guida [C.41](#Rc-complete): un costruttore dovrebbe creare un oggetto completamente inizializzato. Non dovrebbe essere necessaria alcuna ulteriore inizializzazione, come per `memcpy`.
-Un tipo fornirà un costruttore copia e/o un operatore di assegnazione per creare adeguatamente una copia della classe, preservando le invarianti del tipo.  Utilizzando memcpy per copiare un tipo non banalmente copiabile ha un comportamento indefinito.  Spesso ciò provoca lo slicing, e la corruzione dei dati.
+Un tipo fornirà un costruttore copia e/o un operatore di assegnazione per creare adeguatamente una copia della classe, preservando le invarianti del tipo.  Utilizzando memcpy per copiare un tipo non banalmente copiabile si ottiene un comportamento indefinito.  Spesso ciò provoca lo slicing, e la corruzione dei dati.
 
 ##### Esempio, buono
 
@@ -6259,7 +6259,7 @@ Un handle [gestore] di una risorsa è una classe che possiede una risorsa; `std:
 Riepilogo delle regole sui contenitori:
 
 * [C.100: Seguire la STL quando si definisce un contenitore](#Rcon-stl)
-* [C.101: Fornire una semantica di valore ad un contenitore](#Rcon-val)
+* [C.101: Fornire una semantica del valore ad un contenitore](#Rcon-val)
 * [C.102: Fornire ad un contenitore le operazioni di spostamento](#Rcon-move)
 * [C.103: Fornire ad un contenitore un costruttore con una lista inizializzatrice](#Rcon-init)
 * [C.104: Fornire ad un contenitore un costruttore di default che lo imposti a vuoto](#Rcon-empty)
@@ -6277,7 +6277,7 @@ I contenitori della STL sono familiari alla maggior parte dei programmatori C++ 
 
 ##### Note
 
-Esistono, ovviamente, altri stili di progettazione e talvolta si discostano dallo stile della libreria standard, ma in assenza di un solido motivo per differenziarsi, è più semplice e più facile sia per gli implementa che per gli utenti seguire lo standard.
+Esistono, ovviamente, altri stili di progettazione e talvolta si discostano dallo stile della libreria standard, ma in assenza di un solido motivo per differenziarsi, è più semplice e più facile sia per gli implementatori che per gli utenti seguire lo standard.
 
 In particolare, `std::vector` e `std::map` costituiscono dei modelli utili relativamente semplici.
 
@@ -6326,7 +6326,7 @@ Qui sono stati aggiunti degli speciali costruttori per `std::vector`.
 
 ???
 
-### <a name="Rcon-val"></a>C.101: Fornire una semantica di valore ad un contenitore
+### <a name="Rcon-val"></a>C.101: Fornire una semantica del valore ad un contenitore
 
 ##### Motivo
 
@@ -6366,7 +6366,7 @@ I contenitori tendono a diventare grandi; senza un costruttore di spostamento ed
         Sorted_vector<int> sv = v;  // ordina
         return sv;
     }
-Un utente può ragionevolmente presumere che il ritorno da un contenitore di tipo standard sia economica.
+Un utente può ragionevolmente presumere che il ritorno da un contenitore di tipo standard sia economico.
 
 ##### Imposizione
 
@@ -6519,7 +6519,7 @@ La diretta rappresentazione delle idee nel codice facilita la comprensione e la 
         virtual void balance() = 0;
         // ...
     };
-Qui la maggior parte delle classi che si sovrascrivono [overriding] non possono implementare bene la maggior pare delle funzioni richieste nell'interfaccia.
+Qui la maggior parte delle classi che si sovrascrivono [overriding] non possono implementare bene la maggior parte delle funzioni richieste nell'interfaccia.
 Pertanto la classe base diventa un onere di implementazione.
 Inoltre, l'utente di `Container` non può fare affidamento sulle funzioni membro che effettivamente eseguono operazioni significative in modo ragionevolmente efficiente; potrebbe sollevare, invece, un'eccezione.
 Pertanto gli utenti devono ricorrere ad un controllo a run-time e/o a non usare questa interfaccia (super)generale a favore di un'interfaccia particolare trovata a run-time interrogando il tipo (p.es., un `dynamic_cast`).
@@ -6648,11 +6648,11 @@ Una classe con una funzione virtuale è solitamente (e in generale) utilizzata t
     } // comportamento indefinito. Si può chiamare solo B::~B e perdere [leak] la stringa
 ##### Note
 
-Ci sono persone che non seguono questa regola perché intendono usare una classe solo attraverso un `shared_ptr`: `std::shared_ptr<B> p = std::make_shared<D>(args);` Qui, lo shared pointer si occuperà della cancellazione e quindi non avverrà alcun [leak] derivante da un inappropriato `delete` della base. Le persone che lo fanno in modo coerente possono ottenere un falso positivo, ma la regola è importante -- cosa succede se uno viene allocato utilizzando `make_unique`? Non è sicuro a meno che l'autore di `B` assicuri che non possa mai essere utilizzato in modo improprio, ad esempio rendendo privati tutti i costruttori e fornendo una funzione factory per imporre l'allocazione con `make_shared`.
+Ci sono persone che non seguono questa regola perché intendono usare una classe solo attraverso un `shared_ptr`: `std::shared_ptr<B> p = std::make_shared<D>(args);` Qui, lo shared pointer si occuperà della cancellazione e quindi non avverrà alcun [leak] derivante da un inappropriato `delete` della base. Le persone che lo fanno in modo coerente possono ottenere un falso positivo, ma la regola è importante -- cosa succede se ne viene allocato uno utilizzando `make_unique`? Non è sicuro a meno che l'autore di `B` assicuri che non possa mai essere utilizzato in modo improprio, ad esempio rendendo privati tutti i costruttori e fornendo una funzione factory per imporre l'allocazione con `make_shared`.
 
 ##### Imposizione
 
-* Una classe con una qualsiasi funzione virtuale dovrebbe avere un distruttore o pubblico o virtuale oppure protetto e non-virtual.
+* Una classe con una qualsiasi funzione virtuale dovrebbe avere un distruttore o pubblico e virtuale oppure protetto e non-virtuale.
 * Segnalare il `delete` di una classe con una funzione virtuale ma senza un distruttore virtuale.
 
 ### <a name="Rh-override"></a>C.128: Le funzioni virtuali devono specificare esattamente un attributo tra `virtual`, `override`, e `final`
@@ -6661,7 +6661,7 @@ Ci sono persone che non seguono questa regola perché intendono usare una classe
 
 Leggibilità.
 Rilevamento di errori.
-Scrivere un esplicito `virtual`, `override`, o `final` è auto-documentante e consente al compilatore di intercettare gli errori di tipi e/o di nomi tra le classi base e le derivate. Tuttavia, scrivere più di uno di questi tre è sia ridondante che una potenziale fonte di errori.
+Scrivere un esplicito `virtual`, `override`, o `final` è auto-documentante e consente al compilatore di intercettare gli errori di tipi e/o di nomi tra le classi base e quelle derivate. Tuttavia, scrivere più di uno di questi tre è sia ridondante che una potenziale fonte di errori.
 
 È semplice e chiaro:
 
@@ -6727,7 +6727,7 @@ Anche adesso, la confusione non è rara nel vecchio codice e nel materiale didat
 L'importanza di separare i due tipi di ereditarietà aumenta
 
 * con la dimensione della gerarchia (p.es., decine di classi derivate),
-* col periodo tempo in cui viene usata la gerarchia (p.es., decenni), e
+* col periodo di tempo in cui viene usata la gerarchia (p.es., decenni), e
 * col numero di organizzazioni diverse in cui viene usata una gerarchia (p.es., può essere difficile distribuire un aggiornamento di una classe base)
 
 
@@ -6770,7 +6770,7 @@ Problemi:
 
 * Col crescere della gerarchia e con l'aggiunta di più dati a `Shape`, i costruttori diventano sempre più difficili da scrivere e manutenere.
 * Perché calcolare il centro di un `Triangle`? non lo si userà mai.
-* Aggiungendo un dato membro a `Shape` (p.es., lo stile di disegno o la lavagna) tutte le classi derivate da `Shape` e tutto il codice che usa `Shape` dovranno essere rivisti, forse cambiati e probabilmente ricompilati.
+* Aggiungendo un dato membro a `Shape` (p.es., lo stile del disegno o la lavagna) tutte le classi derivate da `Shape` e tutto il codice che usa `Shape` dovranno essere rivisti, forse cambiati e probabilmente ricompilati.
 
 L'implementazione di `Shape::move()` è un esempio di ereditarietà di implementazione: si è definito `move()` una volta e per tutte le classi derivate.
 Maggiore è il codice presente in queste implementazioni delle funzioni membro della classe base e più i dati vengono condivisi mettendoli nella base, più benefici si ottengono - e meno è stabile la gerarchia.
@@ -6860,7 +6860,7 @@ Ora `Shape` è un mediocre esempio di classe con un'implementazione, ma soprasse
         int radius() override { /* ... */ }
         // ...
     };
-E si potrebbe estendere le gerarchie aggiungendo una classe Smiley (:-)):
+E si potrebbero estendere le gerarchie aggiungendo una classe Smiley (:-)):
 
     class Smiley : public virtual Circle { // interfaccia pura
     public:
@@ -6907,7 +6907,7 @@ Un'altra tecnica (correlata) per separare l'interfaccia e l'implementazione è l
 ##### Note
 
 Spesso c'è da scegliere tra l'offrire funzionalità comuni come funzioni della classe base (implementate) e funzioni a sé stanti (in un namespace di implementazione).
-Le classi base forniscono una notazione più breve ed un più facile accesso ai dati condivisi (nella classe base) col costo di avere le funzionalità disponibili solo agli utenti della gerarchia.
+Le classi base forniscono una notazione più breve ed un più facile accesso ai dati condivisi (nella classe base) al costo di avere le funzionalità disponibili solo agli utenti della gerarchia.
 
 ##### Imposizione
 
@@ -6919,7 +6919,7 @@ Le classi base forniscono una notazione più breve ed un più facile accesso ai 
 
 ##### Motivo
 
-La copia di una classe polimorfica è sconsigliata a causa dei problemi di spaccatura [slicing], cfr [C.67](#Rc-copy-virtual). Se c'è davvero bisogno della semantica della copia, si fa una copia completa [deeply]: Si fornisce una funzione `clone` virtuale che copierà l'effettivo tipo più-derivato e restituisce un puntatore che possiede i nuovo oggetto, poi, in una classe derivata  restituisce il tipo derivato (si usa un tipo di ritorno covariante).
+La copia di una classe polimorfica è sconsigliata a causa dei problemi di spaccatura [slicing], cfr [C.67](#Rc-copy-virtual). Se c'è davvero bisogno della semantica della copia, si fa una copia completa [deeply]: Si fornisce una funzione `clone` virtuale che copierà l'effettivo tipo più-derivato e restituisce un puntatore che possiede il nuovo oggetto, poi, in una classe derivata  restituisce il tipo derivato (si usa un tipo di ritorno covariante).
 
 ##### Esempio
 
@@ -6970,7 +6970,7 @@ Si noti che è possibile inserire degli inizializzatori di default sulle variabi
 
 ##### Note
 
-La chiave di questa regola è se la semantica del getter/setter è banale. Anche se non è una definizione completa di "banale", si consideri se ci potrebbero essere delle differenze, oltre alla sintassi, se il getter/setter fosse invece un dato membro pubblico. Esempi di semantiche non-banali sarebbero: mantenere una classe invariante o convertire tra un tipo interno e e un tipo dell'interfaccia.
+La chiave di questa regola è se la semantica del getter/setter è banale. Anche se non è una definizione completa di "banale", si consideri se ci potrebbero essere delle differenze, oltre alla sintassi, se il getter/setter fosse invece un dato membro pubblico. Esempi di semantiche non-banali sarebbero: mantenere una classe invariante o convertire tra un tipo interno e un tipo dell'interfaccia.
 
 ##### Imposizione
 
@@ -6980,7 +6980,7 @@ Segnalare funzioni membro `get` e `set` multiple che accedono semplicemente ad u
 
 ##### Motivo
 
-Un ridondante `virtual` aumenta il la dimensione del run-time e del codice oggetto.
+Un ridondante `virtual` aumenta la dimensione del run-time e del codice oggetto.
 Una funzione virtuale può essere sovrascritta [overridden] ed è quindi aperta ad errori in una classe derivata.
 Una funzione virtuale garantisce la replica del codice in una gerarchia basata sui template.
 
@@ -7027,14 +7027,14 @@ In una grande gerarchia di classi, l'uso coerente di dati protetti è difficile 
 L'insieme delle classi che possono toccare quei dati è aperto: chiunque può derivare una nuova classe e cominciare a cambiare i dati protected.
 Capita spesso, che non sia possibile esaminare l'insieme completo delle classi, quindi qualsiasi modifica alla rappresentazione della classe diventa proibitiva.
 Non c'è alcuna invariante imposta per i dati protected; è molto simile ad un insieme di variabili globali.
-I dati protected sono di diventati fatto globali in moltissimi sorgenti.
+I dati protected sono di fatto diventati globali in moltissimi sorgenti.
 
 ##### Note
 
 Spesso i dati protected sembrano allettanti per consentire innumerevoli miglioramenti tramite la derivazione.
 Spesso, quello che si ottiene sono modifiche ed errori inaspettati.
 [Preferire dati `private`](#Rc-private) con un'invariante ben specificato e ben rispettato.
-In alternativa, che è spesso è meglio, [tenere i dati all'esterno di qualsiasi classe usata come interfaccia](#Rh-abstract).
+In alternativa, e spesso è meglio, [tenere i dati all'esterno di qualsiasi classe usata come interfaccia](#Rh-abstract).
 
 ##### Note
 
@@ -7067,7 +7067,7 @@ I dati membro della categoria B devono essere `private` o `const`. Questo perch�
 
 La maggior parte delle classi sono tutte A o tutte B:
 
-* *Tutte public*: Se si sta scrivendo un blocco-di-variabili aggregato senza un invariante tra tali variabili, allora tutte le variabili dovrebbero essere `public`.
+* *Tutte public*: Se si sta scrivendo un blocco-di-variabili aggregate senza un invariante tra tali variabili, allora tutte le variabili dovrebbero essere `public`.
    [Per convenzione, tali classi si dichiarano `struct` anziché `class`](#Rc-struct)
 * *Tutte private*: Se si sta scrivendo un tipo che mantiene un invariante, allora tutte le variabili non-`const` dovrebbero essere private -- esse dovrebbero essere incapsulate.
 
@@ -7111,7 +7111,7 @@ Tali interfacce sono tipicamente classi astratte.
 ##### Motivo
 
 Alcune forme di [mixin] (classi parziali) hanno uno stato e spesso operazioni su tale stato.
-Se le operazioni sono virtuali, l'uso dell'ereditarietà è necessario, se non si usa l'ereditarietà se non si usa l'ereditarietà si può evitare il codice ripetuto [boilerplate] e il [forwarding].
+Se le operazioni sono virtuali, l'uso dell'ereditarietà è necessario, se non si usa l'ereditarietà si può evitare la ripetizione del codice e il [forwarding].
 
 ##### Esempio
 
@@ -7138,7 +7138,7 @@ Per esempio, si veda `std::enable_shared_from_this` o i vari pezzi di codice da 
 
 ##### Motivo
 
-Consente la separazione di dati condivisi e l'interfaccia.
+Consentire la separazione di dati condivisi e l'interfaccia.
 Per evitare che tutti i dati condivisi vengano inseriti in un'unica classe base.
 
 ##### Esempio
@@ -7230,7 +7230,7 @@ Per le basi variadiche, il C++17 ha introdotto una forma variadica della dichiar
     };
 ##### Imposizione
 
-Diagnosticane l'hiding dei nomi
+Diagnosticare l'hiding dei nomi
 
 ### <a name="Rh-final"></a>C.139: Usare `final` con parsimonia
 
@@ -7254,7 +7254,7 @@ Questa regola riguarda l'utilizzo di `final` sulle classi con funzioni virtuali 
 
 ##### Note
 
-Fermare una singola funzione virtuale con `final` va soggetto ad errori in quanto `final` può facilmente essere bypassare quando si definisce/sovrascrive un insieme di funzioni.
+Fermare una singola funzione virtuale con `final` va incontro ad errori in quanto `final` può facilmente essere bypassato quando si definisce/sovrascrive un insieme di funzioni.
 Fortunatamente, il compilatore rileva questi errori: Non è possibile ri-dichiarare/ri-aprire un membro `final` in una classe derivata.
 
 ##### Note
@@ -7400,14 +7400,14 @@ L'uso degli altri cast può violare la sicurezza sul tipo e causare l'accesso de
     }
 ##### Note
 
-Come per altri cast, si `dynamic_cast` se ne è abusato.
+Come per altri cast, di `dynamic_cast` se ne è abusato.
 [Preferire le funzioni virtuali al casting](#Rh-use-virtual).
-Preferire lo [static polymorphism](#???) alla navigazione nella gerarchia dove possibile (non è necessaria alcuna risoluzione a run-time) e ragionevolmente conveniente.
+Preferire il [polimorfismo statico](#???) alla navigazione nella gerarchia dove possibile (non è necessaria alcuna risoluzione a run-time) ed è ragionevolmente conveniente.
 
 ##### Note
 
 Alcune persone usano `dynamic_cast` dove sarebbe più appropriato un `typeid`; il `dynamic_cast` è un "tipo di operazione" generale per scoprire l'interfaccia migliore per un oggetto, mentre il `typeid` è un'operazione "dammi il tipo esatto di questo oggetto" operazione per scoprire l'effettivo tipo di un oggetto.
-Quest'ultima è un'operazione intrinsecamente più semplice dovrebbe essere più veloce.
+Quest'ultima è un'operazione intrinsecamente più semplice che dovrebbe essere più veloce.
 Quest'ultima (`typeid`) è facilmente realizzabile a mano se necessario (p.es., se si lavora su un sistema in cui l'RTTI (Run-Time Type Information) è - per qualche motivo -- proibito -), la prima (`dynamic_cast`) è molto più difficile da implementare correttamente in generale.
 
 Si consideri:
@@ -7441,8 +7441,8 @@ Si consideri:
         // ...
     }
 Il risultato di `pb2->id() == "D"` è in effetti definito dall'implementazione.
-L'abbiamo aggiunto per porre l'accento sui pericoli dell'RTTI (Run-Time Type Information) fatto in casa.
-Questo codice potrebbe funzionare come previsto per anni, fallisce solo su una nuova macchina, un nuovo compilatore o un nuovo new linker che non unifica i caratteri letterali.
+È stato aggiunto per porre l'accento sui pericoli dell'RTTI (Run-Time Type Information) fatto in casa.
+Questo codice potrebbe funzionare come previsto per anni, fallisce solo su una nuova macchina, un nuovo compilatore o un nuovo linker che non unifica i caratteri letterali.
 
 Se si implementa la propria RTTI, si faccia attenzione.
 
@@ -7453,11 +7453,11 @@ Tuttavia, tutte le soluzioni alternative che non possono essere risolte staticam
 Fondamentalmente si realizzerà il proprio `dynamic_cast` speciale.
 Quindi, per prima cosa ci si assicura che il proprio `dynamic_cast` sia davvero lento come si suppone (ci sono un discreto numero di commenti non supportati a proposito) e che il proprio uso del `dynamic_cast` richieda realmente delle prestazioni elevate.
 
-Riteniamo che le attuali implementazioni di `dynamic_cast` siano inutilmente lente.
+Si ritiene che le attuali implementazioni di `dynamic_cast` siano inutilmente lente.
 Ad esempio, in condizioni adeguate, è possibile eseguire un `dynamic_cast` in un [rapido tempo costante](http://www.stroustrup.com/fast_dynamic_casting.pdf).
 Tuttavia, la compatibilità rende difficili le modifiche anche se tutti concordano sul fatto che sarebbe utile uno sforzo per ottimizzare.
 
-In rarissimi casi, se si è constatato un sensibile overhead del `dynamic_cast`, si hanno altri mezzi per garantire staticamente che un downcast abbia successo (p.es., usando attentamente il CRTP [Curiously Recurring Template Pattern]), e che non vi sia implicata nessuna ereditarietà virtuale, si consideri di ricorrere tatticamente ad uno `static_cast` con un evidente commento e disclaimer che riassuma questo paragrafo e che è necessaria una notevole attenzione umana per la manutenzione perché il sistema dei tpi non può verificare la correttezza. Anche così, nella nostra esperienza, queste situazioni tipo "Io so quello che faccio" restano fonti di errori.
+In rarissimi casi, se si è constatato un sensibile overhead del `dynamic_cast`, si hanno altri mezzi per garantire staticamente che un downcast abbia successo (p.es., usando attentamente il CRTP [Curiously Recurring Template Pattern]), e che non vi sia implicata nessuna ereditarietà virtuale, si consideri di ricorrere tatticamente ad uno `static_cast` con un evidente commento e disclaimer che riassuma questo paragrafo e che è necessaria una notevole attenzione umana per la manutenzione perché il sistema dei tipi non può verificare la correttezza. Anche così, nella nostra esperienza, queste situazioni tipo "Io so quello che faccio" restano fonti di errori.
 
 ##### Eccezione
 
@@ -7491,7 +7491,7 @@ Il cast su un riferimento esprime l'intenzione di finire con un oggetto valido, 
 
 La conversione `dynamic_cast` consente di verificare se un puntatore punta ad un oggetto polimorfico che ha una determinata classe nella sua gerarchia. Dato che quando fallisce nel trovare la classe restituisce semplicemente un valore nullo, lo si può testare a run time. Questo consente di scrivere codice in grado di scegliere percorsi alternativi a seconda dei risultati.
 
-In contrapposizione con la [C.147](#Rh-ptr-cast), dove il fallimento è un errore e non si si deve usare per l'esecuzione condizionale.
+In contrapposizione con la [C.147](#Rh-ptr-cast), dove il fallimento è un errore e non si deve usare per l'esecuzione condizionale.
 
 ##### Esempio
 
@@ -7557,7 +7557,7 @@ Garantisce inoltre la sicurezza delle eccezioni in espressioni complesse.
 
     auto q = make_unique<Foo>(7);      // Meglio: nessuna ripetizione di Foo
 
-    // Non è exception-safe: il compilatore può intercalare i calcoli degli argomenti nel segue modo:
+    // Non è exception-safe: il compilatore può intercalare i calcoli degli argomenti nel seguente modo:
     //
     // 1. alloca memoria per Foo,
     // 2. costruisce Foo,
@@ -7571,7 +7571,7 @@ Garantisce inoltre la sicurezza delle eccezioni in espressioni complesse.
     f(make_unique<Foo>(), bar());
 ##### Imposizione
 
-* Segnalare l'uso ripetitivo di liste si specializzazioni di template `<Foo>`
+* Segnalare l'uso ripetitivo di liste di specializzazioni di template `<Foo>`
 * Segnalare le variabili dichiarate per essere `unique_ptr<Foo>`
 
 ### <a name="Rh-make_shared"></a>C.151: Usare `make_shared()` per costruire oggetti posseduti dagli `shared_ptr`
@@ -7591,7 +7591,7 @@ Offre inoltre l'opportunità di eliminare un'allocazione separata per i conteggi
     }
 ##### Imposizione
 
-* Segnalare l'uso ripetitivo di liste si specializzazioni di template `<Bar>`
+* Segnalare l'uso ripetitivo di liste di specializzazioni di template `<Bar>`
 * Segnalare le variabili dichiarate per essere `shared_ptr<Bar>`
 
 ### <a name="Rh-array"></a>C.152: Mai assegnare un puntatore ad un array di oggetti di classi derivate a un puntatore alla sua classe base
@@ -7637,18 +7637,18 @@ Cfr. [C.146](#Rh-dynamic_cast) e ???
 Si possono sovraccaricare le normali funzioni, le funzioni template e gli operatori.
 Non si possono sovraccaricare gli oggetti funzione.
 
-Riepilogo delle regole dell'overloading:
+Riepilogo delle regole sull'overloading:
 
 * [C.160: Definire gli operatori soprattutto per imitare l'uso convenzionale](#Ro-conventional)
 * [C.161: Utilizzare le funzioni non-membro per gli operatori simmetrici](#Ro-symmetric)
-* [C.162: Sovraccaricare le operazioni che sono approssimativamente equivalenti](#Ro-equivalent)
-* [C.163: Sovraccaricare solo le operazioni che sono approssimativamente equivalenti](#Ro-equivalent-2)
+* [C.162: Eseguire l'overload delle operazioni che sono approssimativamente equivalenti](#Ro-equivalent)
+* [C.163: Eseguire l'overload solo delle operazioni che sono approssimativamente equivalenti](#Ro-equivalent-2)
 * [C.164: Evitare la conversione implicita degli operatori](#Ro-conversion)
 * [C.165: Utilizzare `using` per i punti di personalizzazione](#Ro-custom)
 * [C.166: Eseguire l'overloading del `&` unario solo come parte di un sistema di smart pointer e riferimenti](#Ro-address-of)
-* [C.167: Utilizzare un operatore per un'operazione con un significato convenzionale](#Ro-overload)
-* [C.168: Definire gli operatori sovraccaricati nel namespace dei loro operandi](#Ro-namespace)
-* [C.170: Se si vuole sovraccaricare una lambda, si usi una lambda generica](#Ro-lambda)
+* [C.167: Utilizzare un operatore per un'operazione col suo significato convenzionale](#Ro-overload)
+* [C.168: Definire gli operatori sovraccaricati [overloaded] nel namespace dei loro operandi](#Ro-namespace)
+* [C.170: Se si vuole eseguire l'overloading di una lambda, si usi una lambda generica](#Ro-lambda)
 
 ### <a name="Ro-conventional"></a>C.160: Definire gli operatori principalmente per imitare l'uso convenzionale
 
@@ -7694,7 +7694,7 @@ A meno che non si usi una funzione non membro per (diciamo) `==`, `a == b` e `b 
 
 Segnalare le funzioni operatore membro.
 
-### <a name="Ro-equivalent"></a>C.162: Sovraccaricare le operazioni che sono approssimativamente equivalenti
+### <a name="Ro-equivalent"></a>C.162: Eseguire l'overload delle operazioni che sono approssimativamente equivalenti
 
 ##### Motivo
 
@@ -7707,7 +7707,7 @@ Si consideri:
     void print(int a);
     void print(int a, int base);
     void print(const string&);
-Queste tre funzioni stampano (correttamente) i rispettivi argomenti. Al contrario:
+Queste tre funzioni stampano (correttamente) i rispettivi argomenti. Di contro:
 
     void print_int(int a);
     void print_based(int a, int base);
@@ -7718,7 +7718,7 @@ Queste tre funzioni stampano (correttamente) i rispettivi argomenti. Le aggiunte
 
 ???
 
-### <a name="Ro-equivalent-2"></a>C.163: Sovraccaricare solo le operazioni che sono approssimativamente equivalenti
+### <a name="Ro-equivalent-2"></a>C.163: Eseguire l'overload solo delle operazioni che sono approssimativamente equivalenti
 
 ##### Motivo
 
@@ -7730,7 +7730,7 @@ Si consideri:
 
     void open_gate(Gate& g);   // libera l'uscita del garage
     void fopen(const char* name, const char* mode);   // apre il file
-Le due operazioni sono fondamentalmente diverse (e non correlate), quindi è bene che i loro nomi differiscano. Al contrario:
+Le due operazioni sono fondamentalmente diverse (e non correlate), quindi è bene che i loro nomi differiscano. Di contro:
 
     void open(Gate& g);   // libera l'uscita del garage
     void open(const char* name, const char* mode ="r");   // apre il file
@@ -7784,7 +7784,7 @@ Una conversione implicita inaspettata e potenzialmente dannosa può capitare in 
     {
         return ff();
     }
-La stringa restituita da `ff()` viene distrutta prima che che si possa utilizzare il puntatore restituito.
+La stringa restituita da `ff()` viene distrutta prima che si possa utilizzare il puntatore restituito.
 
 ##### Imposizione
 
@@ -7861,13 +7861,13 @@ Molte parti della semantica del C++ ne presuppongono il significato di default.
 Se si "pasticcia" con l'operatore `&` ci si assicuri che la sua definizione abbia dei significati corrispondenti per `->`, `[]`, `*`, e `.` sul tipo di risultato.
 Si noti che l'operatore `.` al momento non può essere sovraccaricato, quindi un sistema perfetto è impossibile.
 Speriamo di porre rimedio a questo: <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4477.pdf>.
-Si noti che `std::addressof()` produce sempre un puntatore built-in.
+Si noti che `std::addressof()` produce sempre un puntatore [built-in].
 
 ##### Imposizione
 
 Difficile. Avvertire se `&` è definito dall'utente senza definire anche `->` per il tipo di risultato.
 
-### <a name="Ro-overload"></a>C.167: Utilizzare un operatore per un'operazione con un significato convenzionale
+### <a name="Ro-overload"></a>C.167: Utilizzare un operatore per un'operazione col suo significato convenzionale
 
 ##### Motivo
 
@@ -7904,7 +7904,7 @@ Non definire questi in modo non convenzionale e non inventarsi altri nomi per lo
 
 Difficile. Richiede un'analisi semantica.
 
-### <a name="Ro-namespace"></a>C.168: Definire gli operatori sovraccaricati nel namespace dei loro operandi
+### <a name="Ro-namespace"></a>C.168: Definire gli operatori sovraccaricati [overloaded] nel namespace dei loro operandi
 
 ##### Motivo
 
@@ -7965,7 +7965,7 @@ Questo è un caso speciale della regola secondo cui [le funzioni helper dovrebbe
 
 * Segnalare le definizioni degli operatori che non stanno nello stesso namespace dei loro operandi
 
-### <a name="Ro-lambda"></a>C.170: Se si vuole sovraccaricare una lambda, si usi una lambda generica
+### <a name="Ro-lambda"></a>C.170: Se si vuole eseguire l'overloading di una lambda, si usi una lambda generica
 
 ##### Motivo
 
@@ -7992,7 +7992,7 @@ Una `union` non tiene traccia di quale sia il membro che contiene quindi dev'ess
 
 Un tipo che è una `union` più un qualcosa che segnali il membro attualmente contenuto è chiamato *tagged union*, *discriminated union*, o un *variant*.
 
-Riepilogo delle regole sull'union:
+Riepilogo delle regole sulle union:
 
 * [C.180: Usare le `union` per risparmiare Memoria](#Ru-union)
 * [C.181: Evitare `union`i "nude"](#Ru-naked)
@@ -8068,7 +8068,7 @@ Ma fare attenzione alla regola: [Evitare `union`i "nude" ](#Ru-naked)
 
 ##### Motivo
 
-Una *union nuda* è una union senza un indicatore associato di quale membro (se c'è) è contenuto,
+Una *union nuda* è una union senza un indicatore associato che indichi quale membro (se c'è) è contenuto,
 quindi dev'essere il programmatore a tenerne traccia.
 Le unioni nude sono fonti di errori sui tipi.
 
@@ -8120,7 +8120,7 @@ Questo esempio è preso in prestito da TC++PL4 pp216-218.
 Se ne può cercare lì una spiegazione.
 
 Il codice è piuttosto elaborato.
-Gestire un tipo con assegnazione e distruttore definiti dall'utente è complicato..
+Gestire un tipo con assegnazione e distruttore definiti dall'utente è complicato.
 Far risparmiare ai programmatori il dover scrivere questo codice è la ragione per includere il `variant` nello standard.
 
     class Value { // due alternative rappresentazioni realizzate con una union
@@ -8236,7 +8236,7 @@ Se si vogliono vedere i byte di un `int`, si usa un (named) cast:
         cout << p[0] << '\n';     // OK; meglio
         // ...
     }
-Accedere al risultato di un `reinterpret_cast` per un tipo diverso degli oggetti dichiarati è un comportamento definito (anche se `reinterpret_cast` è sconsigliato), ma almeno si può vedere che succede qualcosa di complicato.
+Accedere al risultato di un `reinterpret_cast` per un tipo diverso degli oggetti dichiarati è un comportamento definito (anche se `reinterpret_cast` è sconsigliato), ma almeno si può vedere che succede qualcosa di strano.
 
 ##### Note
 
@@ -9141,7 +9141,7 @@ Una funzione che non gestisce il ciclo di vita dovrebbe, invece, accettare dei p
 
 * (Semplice) Avvisa se una funzione accetta come parametro un tipo di puntatore intelligente (che sovraccarica [overload] `operator->` o `operator*`) che è copiabile ma la funzione chiama solo uno tra: `operator*`, `operator->` o `get()`.
    Suggerisce, invece, di usare `T*` o `T&`.
-* Segnala un parametro di tipo smart pointer (un tipo che sovraccarica [overload] `operator->` o `operator*`) che è copiabile/spostabile ma non viene mai copiato/spostato nel corpo della funzione, e che non viene mai modificato, e che non viene passato ad un'altra funzione che potrebbe farlo. Questo vuol dire che non viene usata la semantica della proprietà [ownership].
+* Segnalare un parametro di tipo smart pointer (un tipo che sovraccarica [overload] `operator->` o `operator*`) che è copiabile/spostabile ma non viene mai copiato/spostato nel corpo della funzione, e che non viene mai modificato, e che non viene passato ad un'altra funzione che potrebbe farlo. Questo vuol dire che non viene usata la semantica della proprietà [ownership].
    Suggerisce, invece, di usare `T*` o `T&`.
 
 ### <a name="Rr-smart"></a>R.31: Se si hanno smart pointer non-`std`, seguire il modello base di `std`
@@ -9540,8 +9540,8 @@ In questo caso, potrebbe essere una buona idea prendere in considerazione la let
     }
 ##### Imposizione
 
-* Segnala una variabile del ciclo dichiarata al di fuori del ciclo e non usata dopo di esso
-* Segnala quando le risorse costose, come gli handle dei file e i lock nn vengono usati per N-righe (con un N adatto
+* Segnalare una variabile del ciclo dichiarata al di fuori del ciclo e non usata dopo di esso
+* Segnalare quando le risorse costose, come gli handle dei file e i lock nn vengono usati per N-righe (con un N adatto
 
 ### <a name="Res-cond"></a>ES.6: Dichiarare i nomi negli inizializzatori delle istruzioni-for e nelle condizioni per limitarne lo scope
 
@@ -9569,8 +9569,8 @@ Leggibilità. Minimizzare la ritenzione delle risorse.
     }
 ##### Imposizione
 
-* Segnala le variabili dei loop dichiarate prima del ciclo e nn usate dopo di esso
-* (difficile) Segnala le variabili dei loop dichiarate prima del ciclo ed usate dopo di esso per un uso non correlato.
+* Segnalare le variabili dei loop dichiarate prima del ciclo e nn usate dopo di esso
+* (difficile) Segnalare le variabili dei loop dichiarate prima del ciclo ed usate dopo di esso per un uso non correlato.
 
 ##### Esempio C++17 e C++20
 
@@ -9585,7 +9585,7 @@ Nota: C++17 e C++20 hanno anche gli inizializzatori per le istruzioni `if`, `swi
     } // qui il risultato è distrutto
 ##### Imposizione C++17 e C++20 (se si usa un compilatore C++17 o C++20)
 
-* Segnala variabili di selezione/loop dichiarate prima del body e non usate dopo
+* Segnalare variabili di selezione/loop dichiarate prima del body e non usate dopo
 * (difficile) Seleziona le variabili di selezione/loop dichiarate prima del body ed usate dopo il body per un uso non correlato.
 
 
@@ -9678,7 +9678,7 @@ I file header più antichi potrebbero dichiarare non tipi e tipi con lo stesso n
 ##### Imposizione
 
 * Controlla i nomi in un elenco di note combinazioni di lettere e numeri.
-* Segnala una dichiarazione di una variabile, una funzione, o un enumeratore che nasconde una classe o una enumerazione dichiarata nello stesso scope.
+* Segnalare una dichiarazione di una variabile, una funzione, o un enumeratore che nasconde una classe o una enumerazione dichiarata nello stesso scope.
 
 ### <a name="Res-not-CAPS"></a>ES.9: Evitare nomi `TUTTO_IN_MAIUSCOLO`
 
@@ -9799,7 +9799,7 @@ Quando i concetti diventano disponibili, possiamo (e dovremmo) essere più speci
     auto [ quotient, remainder ] = div(123456, 73);   // suddivide i membri del risultato div_t
 ##### Imposizione
 
-Segnala la ripetizione ridondante dei nomi dei tipi in una dichiarazione.
+Segnalare la ripetizione ridondante dei nomi dei tipi in una dichiarazione.
 
 ### <a name="Res-reuse"></a>ES.12: Non riutilizzare i nomi all'interno di scope annidati
 
@@ -10328,7 +10328,7 @@ La definizione di `a2` è C ma non C++ ed è considerato un rischio per la sicur
 ##### Imposizione
 
 * Segnalare gli array con dimensioni [bound] non-costanti (VLA [Variable Length Array] del C)
-* Segnala gli array con dimensioni costanti non-locali
+* Segnalare gli array con dimensioni costanti non-locali
 
 ### <a name="Res-lambda-init"></a>ES.28: Usare le lambda per delle inizializzazioni complesse, specialmente di variabili `const`
 
@@ -11385,7 +11385,7 @@ Il linguaggio già sa che un valore restituito è un oggetto temporaneo che può
 
 * Segnalare l'uso di `std::move(x)` dove `x` è un rvalue o il linguaggio lo tratterà già come un rvalue, compreso `return std::move(local_variable);` e `std::move(f())` su una funzione che restituisce per valore.
 * Segnalare le funzioni che prendono un parametro `S&&` se non c'è alcun overload `const S&` per prendersi cura degli lvalue.
-* Segnala uno `std::move` dell'argomento passato ad un parametro, tranne quando il tipo del parametro è un riferimento rvalue `X&&` o il tipo è "move-only" ed il parametro viene passato per valore.
+* Segnalare uno `std::move` dell'argomento passato ad un parametro, tranne quando il tipo del parametro è un riferimento rvalue `X&&` o il tipo è "move-only" ed il parametro viene passato per valore.
 * Segnalare quando `std::move` viene applicato ad un "forwarding" del riferimento (`T&&` dove `T` è un tipo di parametro template). Usare, invece, `std::forward`.
 * Segnalare quando `std::move` viene applicato ad un valore diverso da un riferimento rvalue a un non-const. (Un caso più generale della regola precedente per coprire i casi non-forwarding).
 * Segnalare quando `std::forward` viene applicato ad un riferimento rvalue (`X&&` dove `X` è un tipo concreto). Usare, invece, `std::move`.

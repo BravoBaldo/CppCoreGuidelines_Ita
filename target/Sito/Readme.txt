@@ -6,9 +6,7 @@ Select All
 Copy
 Paste in a new text
 Change path of "stylesheet"s (prepend a dot)
-
-Vedi anche: F:\Dati\OmegaT\Pandoc
-
+Si veda anche: F:\Dati\OmegaT\Pandoc
 
 1) pandoc -s -o output.html -f markdown -t html    ..\CppCoreGuidelines.md
 2) Insert the body content of "output.html" (without tags <body> and </body>) replacing the tag <InsertOrgBodyHere/> in the file "Shell.html"
