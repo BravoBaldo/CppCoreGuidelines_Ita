@@ -1467,7 +1467,7 @@ La funzione può anche essere scritta in modo tale da accettare qualsiasi unità
 
 * (Semplice) Segnalare l'uso di `void*` come parametro o tipo di ritorno.
 * (Semplice) Segnalare l'uso di più di un parametro `bool`.
-* (Difficile da fare bene) Cercare le funzioni che usano troppi argomenti di tipo primitivo..
+* (Difficile da fare bene) Cercare le funzioni che usano troppi argomenti di tipo primitivo.
 
 ### <a name="Ri-pre"></a>I.5: Precondizioni dello stato (se c'è)
 
@@ -2071,7 +2071,7 @@ Ciò costringerà ogni classe derivata a calcolare un centro, anche se non è un
     };
 ##### Imposizione
 
-(Semplice) Avvisa se un puntatore/riferimento ad una classe `C` viene assegnata ad un puntatore/riferimento ad una base di `C` e la classe base contiene dai dati membro.
+(Semplice) Avvisare se un puntatore/riferimento ad una classe `C` viene assegnata ad un puntatore/riferimento ad una base di `C` e la classe base contiene dai dati membro.
 
 ### <a name="Ri-abi"></a>I.26: Se si vuole un cross-compiler ABI, si usi un sottoinsieme in stile C
 
@@ -2740,8 +2740,8 @@ Non esiste un (legittimo) "riferimento null". Se si necessita della nozione di u
 ##### Imposizione
 
 * (Semplice) ((Foundation)) Si emette un warning quando un parametro che viene passato per valore ha una dimensione maggiore di `2 * sizeof(void*)`.
-   Si suggerisce di usare, invece, un riferimento a `const`.
-* (Semplice) ((Foundation)) Si emette un warning quando un parametro passato per riferimento a `const` ha una dimensione inferiore a `2 * sizeof(void*)`. Si suggerisce, invece, di passare per valore.
+   Suggerire di usare, invece, un riferimento a `const`.
+* (Semplice) ((Foundation)) Si emette un warning quando un parametro passato per riferimento a `const` ha una dimensione inferiore a `2 * sizeof(void*)`. Suggerire, invece, di passare per valore.
 * (Semplice) ((Foundation)) Si emette un warning quando un parametro passato per riferimento a `const`, subisce un `move`.
 
 ### <a name="Rf-inout"></a>F.17: I parametri "in-out", si passano per riferimento non-`const`
@@ -3126,7 +3126,7 @@ Passare un oggetto `span` come argomento è esattamente tanto efficiente quanto 
 
 ##### Imposizione
 
-(Complicato) Solleva un warning dove gli accesso ai parametri puntatore sono limitati da altri parametri che siano di tipo intero e suggerisce che si dovrebbe, invece, usare `span`.
+(Complicato) Sollevare un warning dove gli accessi ai parametri puntatore sono limitati da altri parametri che siano di tipo intero e suggerire che si dovrebbe, invece, usare `span`.
 
 ### <a name="Rf-zstring"></a>F.25: Utilizzare `zstring` o `not_null<zstring>` per indicare una stringa C-style
 
@@ -3182,7 +3182,7 @@ Bisogna passare un puntatore anziché un oggetto  se quello che si sta trasferen
 
 ##### Imposizione
 
-(Semplice) Solleva un warning se una funzione restituisce un semplice puntatore allocato localmente. Suggerisce, invece, di usare o `unique_ptr` o `shared_ptr`.
+(Semplice) Solleva un warning se una funzione restituisce un semplice puntatore allocato localmente. Suggerire, invece, di usare o `unique_ptr` o `shared_ptr`.
 
 ### <a name="Rf-shared_ptr"></a>F.27: Utilizzare `shared_ptr<T>` per condividere l'ownership
 
@@ -5231,7 +5231,7 @@ Per ridurre al minimo la confusione e gli errori. Questo è l'ordine con cui avv
 
 ##### Motivo
 
-Rende esplicito che ci si aspetta di usare lo stesso valore in tutti i costruttori. Evita le ripetizioni. Evita problemi di manutenzione. Porta ad un codice più breve e più efficiente.
+Rende esplicito che ci si aspetta di usare lo stesso valore in tutti i costruttori. Evitare le ripetizioni. Evitare i problemi di manutenzione. Porta ad un codice più breve e più efficiente.
 
 ##### Esempio, cattivo
 
@@ -6474,7 +6474,7 @@ Sommario delle regole per l'accesso a oggetti in una gerarchia:
 
 La diretta rappresentazione delle idee nel codice facilita la comprensione e la manutenzione. Assicurarsi che l'idea rappresentata nella classe base coincida esattamente con tutti i tipi derivati e che non esista un modo migliore per rappresentarla che usare l'accoppiamento stretto [tight coupling] dell'ereditarietà.
 
-*Non* usare l'ereditarietà quando basterà semplicemente avere un dato membro. In genere ciò significa che il tipo derivato deve sovrascrivere [override]una funzione base virtuale o deve accedere ad un membro protected.
+*Non* usare l'ereditarietà quando basterà semplicemente avere un dato membro. In genere ciò significa che il tipo derivato deve sovrascrivere [override] una funzione base virtuale o deve accedere ad un membro protected.
 
 ##### Esempio
 
@@ -8264,7 +8264,7 @@ Riepilogo delle regole sulle enumerazioni:
 * [Enum.4: Definire le operazioni sulle enumerazioni per un uso sicuro e semplice](#Renum-oper)
 * [Enum.5: Non usare `TUTTO_IN_MAIUSCOLO` per gli enumeratori](#Renum-caps)
 * [Enum.6: Evitare enumerazioni senza nome](#Renum-unnamed)
-* [Enum.7: Specificare il tipo sottostante di una enumerazione solo quando è necessario](#Renum-underlying)
+* [Enum.7: Specificare il [tipo sottostante] di una enumerazione solo quando è necessario](#Renum-underlying)
 * [Enum.8: Specificare i valori dell'enumeratore solo quando è necessario](#Renum-value)
 
 ### <a name="Renum-macro"></a>Enum.1: Preferire le enumerazioni alle macro
@@ -8288,7 +8288,7 @@ Un primo esempio di vecchio codice non buono:
     #define PURPLE 1
     #define BLUE   2
 
-    int webby = BLUE;   // webby == 2; probabilmente non è quello desiderato
+    int webby = BLUE;   // webby == 2; probabilmente non la cosa desiderata
 Si usi invece un `enum`:
 
     enum class Web_color { red = 0xFF0000, green = 0x00FF00, blue = 0x0000FF };
@@ -8328,7 +8328,7 @@ Lo switch con una enumerazione è una cosa comune ed il compilatore può mettere
         case Product_info::purple: cout << "purple"; break;
         }
     }
-Questi `switch` con case mancanti sono spesso il risultato di un enumeratore aggiunto in seguito e un test insufficiente.
+Questi `switch` con case mancanti sono spesso il risultato di un enumeratore aggiunto in seguito o un test incompleto.
 
 ##### Imposizione
 
@@ -8385,7 +8385,7 @@ Comodità d'uso e per evitare errori.
 
     Day today = Day::sat;
     Day tomorrow = ++today;
-L'uso di uno `static_cast` non è carino, ma
+L'uso di uno `static_cast` non è il massimo, ma
 
     Day& operator++(Day& d)
     {
@@ -8396,7 +8396,7 @@ L'uso di uno `static_cast` non è carino, ma
 
 ##### Imposizione
 
-Segnalare le espressioni ripetute di cast di nuovo verso una enumerazione.
+Segnalare le espressioni ripetute di conversioni ad una enumerazione.
 
 
 ### <a name="Renum-caps"></a>Enum.5: Non usare `TUTTO_IN_MAIUSCOLO` per gli enumeratori
@@ -8429,7 +8429,7 @@ Se non si dà un nome ad un'enumerazione, i valori non vengono correlati
 ##### Esempio, cattivo
 
     enum { red = 0xFF0000, scale = 4, is_signed = 1 };
-Questo codice non è raro nel codice scritto prima che esistessero alternative convenienti per indicare delle costanti intere.
+Questo codice non è raro in quello scritto prima che esistessero alternative convenienti per indicare delle costanti intere.
 
 ##### Alternativa
 
@@ -8443,7 +8443,7 @@ Usare invece i valori `constexpr`. Per esempio:
 Segnalare le enumerazioni senza nome.
 
 
-### <a name="Renum-underlying"></a>Enum.7: Specificare il tipo sottostante di una enumerazione solo quando è necessario
+### <a name="Renum-underlying"></a>Enum.7: Specificare il [tipo sottostante] di una enumerazione solo quando è necessario
 
 ##### Motivo
 
@@ -8454,14 +8454,14 @@ Il default è più facile da leggere e da scrivere.
 ##### Esempio
 
     enum class Direction : char { n, s, e, w,
-                                  ne, nw, se, sw };  // il tipo sottostante risparmia spazio
+                                  ne, nw, se, sw };  // il [tipo sottostante] risparmia spazio
 
     enum class Web_color : int32_t { red   = 0xFF0000,
                                      green = 0x00FF00,
-                                     blue  = 0x0000FF };  // il tipo sottostante è ridondante
+                                     blue  = 0x0000FF };  // il [tipo sottostante] è ridondante
 ##### Note
 
-È necessario specificare il tipo sottostante nelle dichiarazioni "forward" [in avanti] delle enumerazioni:
+È necessario specificare il [tipo sottostante] nelle dichiarazioni "forward" [in avanti] delle enumerazioni:
 
     enum Flags : char;
 
@@ -8480,9 +8480,9 @@ Il default è più facile da leggere e da scrivere.
 
 ##### Motivo
 
-È il più semplice.
-Evita i valori duplicati dell'enumeratore.
-Col default s ha un insieme consecutivo dei valori ed è un bene per l'implementazione delle istruzioni `switch`.
+È la cosa più semplice.
+Evitare i valori duplicati dell'enumeratore.
+Col default si ha un insieme consecutivo dei valori ed è un bene per l'implementazione delle istruzioni `switch`.
 
 ##### Esempio
 
@@ -8496,18 +8496,18 @@ Col default s ha un insieme consecutivo dei valori ed è un bene per l'implement
 ##### Imposizione
 
 * Segnalare i valori duplicati degli enumeratori
-* Segnalare valori consecutivi esplicitamente specificati degli enumeratori
+* Segnalare valori consecutivi esplicitamente indicati degli enumeratori
 
 
 # <a name="S-resource"></a>R: Gestione delle risorse
 
 Questa sezione contiene regole relative alle risorse.
 Una risorsa è tutto ciò che deve essere acquisito e (esplicitamente o implicitamente) rilasciato, come la memoria, gli handle dei file, i socket e i lock.
-Il motivo per cui deve essere rilasciata è in genere che può essere scarseggiante, quindi anche un rilascio ritardato può provocare danni.
+Il motivo per cui deve essere rilasciata è generalmente perché può scarseggiare, quindi anche un rilascio ritardato può provocare danni.
 L'obiettivo fondamentale è garantire che non ci siano perdite di risorse e che non si trattenga una risorsa più a lungo del necessario.
-Un'entità responsabile del rilascio di una risorsa è chiamata owner [proprietario].
+Un'entità responsabile del rilascio di una risorsa è detta proprietario [owner].
 
-Ci sono alcuni casi in cui le perdite [leaks] possono essere accettabili o addirittura ottimali:
+Ci sono alcuni casi in cui le perdite [leak] possono essere accettabili o addirittura ottimali:
 Se si sta scrivendo un programma che produce semplicemente un output basato su un input e la quantità di memoria necessaria è proporzionale alla dimensione dell'input, la strategia ottimale (per le prestazioni e la facilità di programmazione) è talvolta quella di semplicemente mai cancellare niente.
 Se si ha memoria sufficiente per gestire il proprio input più grande, si ha una perdita [leak], ma ci si assicuri di dare un buon messaggio di errore se si sbaglia.
 Qui, non teniamo conto di questi casi.
@@ -8521,7 +8521,7 @@ Qui, non teniamo conto di questi casi.
    * [R.5: Preferire oggetti con scope, non allocare sull'heap se non necessario](#Rr-scoped)
    * [R.6: Evitare le variabili globali non-`const`](#Rr-global)
 
-* Riepilogo delle regole di allocazione e de-allocazione:
+* Riepilogo delle regole sull'allocazione e la de-allocazione:
 
    * [R.10: Evitare `malloc()` e `free()`](#Rr-mallocfree)
    * [R.11: Evitare di chiamare esplicitamente `new` e `delete`](#Rr-newdelete)
@@ -8540,9 +8540,9 @@ Qui, non teniamo conto di questi casi.
    * [R.30: Prendere gli smart pointer come parametri solo per esprimere esplicitamente la semantica della durata [lifetime]](#Rr-smartptrparam)
    * [R.31: Se si hanno smart pointer non-`std`, seguire il modello base di `std`](#Rr-smart)
    * [R.32: Prendere un parametro `unique_ptr<widget>` per esprimere che una funzione assume la proprietà di un `widget`](#Rr-uniqueptrparam)
-   * [R.33: Prendere un parametro `unique_ptr<widget>&` per esprimere che una funzione riposizione/restituisce [reseat] il `widget`](#Rr-reseat)
+   * [R.33: Prendere un parametro `unique_ptr<widget>&` per esprimere che una funzione ricolloca/restituisce [reseat] il `widget`](#Rr-reseat)
    * [R.34: Prendere un parametro `shared_ptr<widget>` per esprimere che una funzione è comproprietaria](#Rr-sharedptrparam-owner)
-   * [R.35: Prendere un parametro `shared_ptr<widget>&` per esprimere che una funzione può riposizionare [reseat] lo shared pointer](#Rr-sharedptrparam)
+   * [R.35: Prendere un parametro `shared_ptr<widget>&` per esprimere che una funzione può ricollocare [reseat] lo shared pointer](#Rr-sharedptrparam)
    * [R.36: Prendere un parametro `const shared_ptr<widget>&` per esprimere che potrebbe conservare un conteggio dei riferimenti all'oggetto ???](#Rr-sharedptrparam-const)
    * [R.37: Non passare un puntatore o un riferimento ottenuti da un alias di uno smart pointer](#Rr-smartptrget)
 
@@ -8552,7 +8552,7 @@ Qui, non teniamo conto di questi casi.
 
 Per evitare leak [perdite] e la complessità di una gestione manuale delle risorse.
 La simmetria obbligata del costruttore/distruttore del linguaggio C++ rispecchia quella derivante dalle coppie di funzioni per acquisire/rilasciare le risorse come `fopen`/`fclose`, `lock`/`unlock`, e `new`/`delete`.
-Quando si ha a che fare con una risorsa che necessita la chiamata alla coppia di funzioni acquisisci/rilascia, si incapsula tale risorsa in un oggetto che gestisca autonomamente tale accoppiata -- acquisisce la risorsa nel costruttore e la rilascia nel suo distruttore.
+Quando si ha a che fare con una risorsa che necessita la chiamata alla coppia di funzioni acquisisci/rilascia, si incapsuli tale risorsa in un oggetto che gestisca autonomamente tale accoppiata -- acquisisce la risorsa nel costruttore e la rilascia nel suo distruttore.
 
 ##### Esempio, cattivo
 
@@ -8569,7 +8569,7 @@ Si consideri:
         close_port(port);
         delete x;
     }
-In questo codice ci si deve ricordare di `unlock`, `close_port`, e `delete` in ogni diramazione del flusso di codice, e farlo esattamente una sola volta.
+In questo codice ci si deve ricordare di `unlock`, `close_port` e `delete` in ogni diramazione del flusso di codice, e farlo esattamente una sola volta.
 Inoltre, se una qualsiasi parte del codice segnalato con `...` genera un'eccezione, allora `x` viene perso e `my_mutex` resta bloccato [locked].
 
 ##### Esempio
@@ -8636,7 +8636,7 @@ Si usi `zstring` invece di `char*` per indicare che ci si affida a questa conven
 
 ##### Note
 
-Attualmente molte volte che si usa un puntatore ad un singolo elemento si potrebbe usare un riferimento.
+Attualmente molte delle volte che si usa un puntatore ad un singolo elemento si potrebbe usare un riferimento.
 Tuttavia, dove `nullptr` è un valore possibile, un riferimento non è ragionevolmente un'alternativa.
 
 ##### Imposizione
@@ -8649,7 +8649,7 @@ Tuttavia, dove `nullptr` è un valore possibile, un riferimento non è ragionevo
 
 ##### Motivo
 
-Non c'è nulla (nello standard del C++e nella maggior parte del codice) per dire il contrario e la maggior parte dei puntatori semplici non sono proprietari.
+Non c'è nulla (nello standard del C++ e nella maggior parte del codice) per dire il contrario e la maggior parte dei puntatori semplici non sono proprietari.
 Si vogliono identificare i puntatori proprietari in modo da gestire efficientemente il delete degli oggetti puntati dai puntatori proprietari.
 
 ##### Esempio
@@ -8677,12 +8677,12 @@ Si può risolvere il problema esplicitando il possesso:
     class X2 {
     public:
         owner<T*> p;  // OK: p è proprietario
-        T* q;         // OK: q is non è proprietario
+        T* q;         // OK: q non è proprietario
         // ...
     };
 ##### Eccezione
 
-Una delle maggiori tipologie di eccezione è il codice legacy, specialmente il codice che deve restare compilabile come C o interfacciarsi col C o il C++ C-style tramite le ABI
+Una delle maggiori tipologie di eccezione è il codice legacy, specialmente il codice che deve restare compilabile come C o interfacciarsi col C o il C++ C-style tramite le ABI.
 Il fatto che ci siano miliardi di righe di codice che violano questa regola contro il possesso dei `T*` non può essere ignorato.
 Ci piacerebbe vedere dei tool che trasformino i programmi con vecchio codice "legacy" di 20 anni fa in un chiaro codice moderno, incoraggiamo lo sviluppo, la distribuzione e l'uso di questi strumenti, speriamo che le linee-guida aiutino lo sviluppo di questi tool e che abbiano anche contribuito (e contribuiscano) alla ricerca e allo sviluppo in questo settore.
 Tuttavia, ci vorrà del tempo: il "codice legacy" viene generato più velocemente di quanto si possa rinnovare il vecchio codice, e così sarà per qualche anno.
@@ -8697,11 +8697,11 @@ Alcune interfacce non possono essere semplicemente annotate con `owner` perché 
 
 `owner<T*>` non ha una semantica di default oltre a `T*`. Esso può essere utilizzato senza modificare alcun codice utilizzandolo e senza influire sulle ABI.
 È semplicemente un indicatore per programmatori e strumenti di analisi.
-Per esempio, se un `owner<T*>` è un membro di una classe, è meglio che quella classe abbia un distruttore che ne esegua un `delete`.
+Per esempio, se un `owner<T*>` è un membro di una classe, è opportuno che quella classe abbia un distruttore che ne esegua un `delete`.
 
 ##### Esempio, cattivo
 
-La restituzione di un puntatore (semplice [raw]), genera nel chiamante un'incertezza sulla gestione del suo ciclo di vita; ovvero, che cancella l'oggetto a cui si punta?
+La restituzione di un puntatore (semplice [raw]), genera nel chiamante un'incertezza sulla gestione del suo ciclo di vita; ovvero, chi cancella l'oggetto a cui si punta?
 
     Gadget* make_gadget(int n)
     {
@@ -8730,22 +8730,22 @@ Questa regola si applica alle funzioni factory.
 
 ##### Note
 
-Se è richiesta la semantica dei puntatori (p. es., perché il tipo restituito deve deve far riferimento ad una classe base della gerarchia (un'interfaccia)), restituire uno "smart pointer."
+Se è richiesta la semantica dei puntatori (p. es., perché il tipo restituito deve far riferimento ad una classe base della gerarchia (un'interfaccia)), restituire uno "smart pointer."
 
 ##### Imposizione
 
 * (Semplice) Un warning su un `delete` di un puntatore semplice che non sia un `owner<T>`.
 * (Moderato) Un warning sia sul fallimento di un `reset` che su un esplicito `delete` di un puntatore a `owner<T>` su ogni percorso del codice.
-* (Semplice) Avvisa se il valore di ritorno di `new` è assegnato ad un puntatore semplice.
-* (Semplice) Avvisa se una funzione restituisce un oggetto che sia stato allocato nella funzione ma che abbia un costruttore di spostamento.
-   Suggerisce, invece, di restituirlo per valore.
+* (Semplice) Avvisare se il valore di ritorno di `new` è assegnato ad un puntatore semplice.
+* (Semplice) Avvisare se una funzione restituisce un oggetto che sia stato allocato nella funzione ma che abbia un costruttore di spostamento.
+   Suggerire, invece, di restituirlo per valore.
 
 ### <a name="Rr-ref"></a>R.4: Un riferimento [raw] (un `T&`) non è proprietario
 
 ##### Motivo
 
-Non c'è nulla (nello standard del C++ nella maggior parte del codice) che dica diversamente e la maggior parte dei riferimenti sono non-proprietari.
-Vogliamo che i proprietari siano identificati in modo da poter affidabilmente ed efficientemente eseguire il delete degli oggetti puntati dai puntatori proprietari.
+Non c'è nulla (nello standard del C++ e nella maggior parte del codice) che dica diversamente e la maggior parte dei riferimenti sono non-proprietari.
+Si vuole che i proprietari siano identificati in modo da poter affidabilmente ed efficientemente eseguire il delete degli oggetti puntati dai puntatori proprietari.
 
 ##### Esempio
 
@@ -8788,7 +8788,7 @@ Utilizzare invece una variabile locale:
     }
 ##### Imposizione
 
-* (Moderato) Avvisa se un oggetto è allocato e poi de-allocato su tutte le diramazioni all'interno di una funzione. Suggerisce, invece, di usare una oggetto variabile locale `auto` sullo stack.
+* (Moderato) Avvisare se un oggetto è allocato e poi de-allocato su tutte le diramazioni all'interno di una funzione. Suggerire, invece, di usare un oggetto variabile locale `auto` sullo stack.
 * (Semplice) Avverte se un locale `Unique_pointer` o uno `Shared_pointer` non viene spostato, copiato, ri-assegnato o `reset`tato prima della fine del suo ciclo di vita.
 
 ### <a name="Rr-global"></a>R.6: Evitare le variabili globali non-`const`
@@ -8842,7 +8842,7 @@ In questi casi si considerino le versioni `nothrow` di `new`.
 
 Segnalare l'uso esplicito di `malloc` o `free`.
 
-### <a name="Rr-newdelete"></a>R.11: Evitare di chiamare esplicitamente `new` e `delete` explicitly
+### <a name="Rr-newdelete"></a>R.11: Evitare di chiamare esplicitamente `new` e `delete`
 
 ##### Motivo
 
@@ -8852,7 +8852,7 @@ Se il puntatore restituito da `new` viene assegnato ad un semplice puntatore, l'
 ##### Note
 
 In un programma di grandi dimensioni, un semplice `delete` (ovvero un `delete` nel codice dell'applicazione, anziché nella parte di codice dedicata alla gestione delle risorse) è un probabile bug: se si hanno N `delete`, come si può essere sicuri che non ne servano N+1 o N-1?
-l bug potrebbe essere latente: potrebbe emergere solo durante la manutenzione.
+Il bug potrebbe essere latente: potrebbe emergere solo durante la manutenzione.
 Se si ha un semplice `new`, probabilmente ci vorrà un semplice `delete` da qualche parte, quindi probabilmente si avrà un bug.
 
 ##### Imposizione
@@ -8884,7 +8884,7 @@ L'allocazione di `buf` potrebbe fallire e produrre un leak dell'handle del file.
         vector<char> buf(1024);
         // ...
     }
-L'utilizzo dell'handle de file (in `ifstream`) è semplice, efficiente e sicuro.
+L'utilizzo dell'handle del file (in `ifstream`) è semplice, efficiente e sicuro.
 
 ##### Imposizione
 
@@ -8969,7 +8969,7 @@ Segnalare le accoppiate incomplete.
 
 ##### Motivo
 
-Si possono prevenire i leak della risorse.
+Si possono prevenire i leak delle risorse.
 
 ##### Esempio
 
@@ -8981,7 +8981,7 @@ Si consideri:
         X* p1 { new X };              // si veda anche ???
         unique_ptr<T> p2 { new X };   // proprietà unica; si veda anche ???
         shared_ptr<T> p3 { new X };   // proprietà condivisa; si veda anche ???
-        auto p4 = make_unique<X>();   // proprietà unica, preferibile all'uso esplicito di "new"
+        auto p4 = make_unique<X>();   // proprietà esclusiva, preferibile all'uso esplicito di "new"
         auto p5 = make_shared<X>();   // proprietà condivisa, preferibile all'uso esplicito di "new"
     }
 Con ciò si avrà un leak dell'oggetto usato per inizializzare `p1` (solamente).
@@ -8998,7 +8998,7 @@ Un `unique_ptr` è concettualmente più semplice e prevedibile (si sa quando vie
 
 ##### Esempio, cattivo
 
-Questo aggiunge e mantiene inutilmente un conteggio dei riferimenti..
+Questo aggiunge e mantiene inutilmente un conteggio dei riferimenti.
 
     void f()
     {
@@ -9016,13 +9016,13 @@ Questo è più efficiente:
     } // distrugge la base
 ##### Imposizione
 
-(Semplice) Avvisa se una funzione usa uno `Shared_pointer` con un oggetto allocato nella funzione, ma non restituisce mai lo `Shared_pointer` né lo passa ad una funzione che richiede uno `Shared_pointer&`. Suggerire, invece, l'uso di `unique_ptr`.
+(Semplice) Avvisare se una funzione usa uno `Shared_pointer` con un oggetto allocato nella funzione, ma non restituisce mai lo `Shared_pointer` né lo passa ad una funzione che richiede uno `Shared_pointer&`. Suggerire, invece, l'uso di `unique_ptr`.
 
-### <a name="Rr-make_shared"></a>R.22: Usare `make_shared()` per creare gli `shared_ptr`s
+### <a name="Rr-make_shared"></a>R.22: Usare `make_shared()` per creare gli `shared_ptr`
 
 ##### Motivo
 
- un oggetto e poi lo si da ad un costruttore di uno `shared_ptr`, si farà (molto probabilmente) una ulteriore allocazione (e poi una de-allocazione)rispetto a quando si usa `make_shared()` perché i contatori dei riferimenti devono essere allocati separatamente dall'oggetto.
+Se si crea prima un oggetto e poi lo si da ad un costruttore di uno `shared_ptr`, si farà (molto probabilmente) una ulteriore allocazione (e poi una de-allocazione) rispetto a quando si usa `make_shared()` perché i contatori dei riferimenti devono essere allocati separatamente dall'oggetto.
 
 ##### Esempio
 
@@ -9034,7 +9034,7 @@ La versione `make_shared()` indica `X` una sola volta, quindi è solitamente pi�
 
 ##### Imposizione
 
-(Semplice) Avvisa se uno `shared_ptr` è costruito partendo dal risultato di un `new` anziché da `make_shared`.
+(Semplice) Avvisare se uno `shared_ptr` è costruito partendo dal risultato di un `new` anziché da `make_shared`.
 
 ### <a name="Rr-make_unique"></a>R.23: Usare `make_unique()` per creare gli `unique_ptr`
 
@@ -9048,13 +9048,13 @@ Per comodità e coerenza con lo `shared_ptr`.
 
 ##### Imposizione
 
-(Semplice) Avvisa se uno `unique_ptr` è costruito partendo dal risultato di un `new` anziché da `make_unique`.
+(Semplice) Avvisare se uno `unique_ptr` è costruito partendo dal risultato di un `new` anziché da `make_unique`.
 
 ### <a name="Rr-weak_ptr"></a>R.24: Usare `std::weak_ptr` per interrompere i cicli di `shared_ptr`
 
 ##### Motivo
 
-Gli `shared_ptr` si basano sul conteggio degli usi e sull'uso dei conteggi per una struttura ciclica che non va mai a zero, c'è quindi bisogno di un meccanismo per sapere quando distruggere una struttura ciclica.
+Gli `shared_ptr` si basano sul conteggio degli utilizzi e sull'uso dei conteggi per una struttura ciclica che non va mai a zero, c'è quindi bisogno di un meccanismo per sapere quando distruggere una struttura ciclica.
 
 ##### Esempio
 
@@ -9089,8 +9089,8 @@ Gli `shared_ptr` si basano sul conteggio degli usi e sull'uso dei conteggi per u
     };
 ##### Note
 
-??? (HS: Molte persone dicono "interrompere cicli", mentre io penso che "proprietà condivisa [shared ownership] temporanea" sia più pertinente).
-???(BS: Interrompere cicli è quello che si deve fare; condividere temporaneamente la proprietà è come farlo.
+??? (HS [Herb Sutter]: Molte persone dicono "interrompere cicli", mentre io penso che "proprietà condivisa [shared ownership] temporanea" sia più pertinente).
+???(BS [Bjarne Stroustrup]: Interrompere cicli è quello che si deve fare; condividere temporaneamente la proprietà è come farlo.
 Si può "temporaneamente condividere la proprietà" semplicemente usando un altro `shared_ptr`.)
 
 ##### Imposizione
@@ -9101,7 +9101,7 @@ Si può "temporaneamente condividere la proprietà" semplicemente usando un altr
 
 ##### Motivo
 
-Accettare un puntatore smart ad un `widget` è sbagliato se la funzione necessita del `widget`.
+Passare un puntatore smart ad un `widget` è sbagliato se la funzione necessita del `widget`.
 Dovrebbe essere in grado di accettare qualsiasi oggetto `widget`, non solo quelli il cui ciclo di vita è gestito da un particolare tipo di puntatore smart.
 Una funzione che non gestisce il ciclo di vita dovrebbe, invece, accettare dei puntatori semplici o dei riferimenti.
 
@@ -9139,17 +9139,17 @@ Una funzione che non gestisce il ciclo di vita dovrebbe, invece, accettare dei p
     f(stack_widget); // ok -- ora questo funziona
 ##### Imposizione
 
-* (Semplice) Avvisa se una funzione accetta come parametro un tipo di puntatore intelligente (che sovraccarica [overload] `operator->` o `operator*`) che è copiabile ma la funzione chiama solo uno tra: `operator*`, `operator->` o `get()`.
-   Suggerisce, invece, di usare `T*` o `T&`.
-* Segnalare un parametro di tipo smart pointer (un tipo che sovraccarica [overload] `operator->` o `operator*`) che è copiabile/spostabile ma non viene mai copiato/spostato nel corpo della funzione, e che non viene mai modificato, e che non viene passato ad un'altra funzione che potrebbe farlo. Questo vuol dire che non viene usata la semantica della proprietà [ownership].
-   Suggerisce, invece, di usare `T*` o `T&`.
+* (Semplice) Avvisare se una funzione accetta come parametro un tipo di puntatore intelligente (che sovraccarica [overload] `operator->` o `operator*`) che è copiabile ma la funzione chiama solo uno tra: `operator*`, `operator->` o `get()`.
+   Suggerire, invece, di usare `T*` o `T&`.
+* Segnalare un parametro di tipo smart pointer (un tipo che sovraccarica [overload] `operator->` o `operator*`) che è copiabile/spostabile ma non viene mai copiato/spostato nel corpo della funzione, che non viene mai modificato, e che non viene passato ad un'altra funzione che potrebbe farlo. Questo vuol dire che non viene usata la semantica della proprietà [ownership].
+   Suggerire, invece, di usare `T*` o `T&`.
 
 ### <a name="Rr-smart"></a>R.31: Se si hanno smart pointer non-`std`, seguire il modello base di `std`
 
 ##### Motivo
 
 Le regole nella sezione seguente funzionano anche per altri tipi di puntatori intelligenti personalizzati e di terze parti e sono molto utili per diagnosticare errori comuni dei puntatori intelligenti che causano problemi di prestazioni e correttezza.
-Si vuole che le regole funzionino per tutti gli smart pointer che si usano.
+Si vuole che le regole funzionino per tutti gli smart pointer utilizzati.
 
 Qualsiasi tipo (compreso il template primario e la specializzazione) che sovraccarica [overload] il `*` unario e il `->` è considerato uno smart pointer:
 
@@ -9171,9 +9171,9 @@ Qualsiasi tipo (compreso il template primario e la specializzazione) che sovracc
     {
         p->foo();
     }
-Entrambi i casi sono errori per la [linea-guida `sharedptrparam`](#Rr-smartptrparam):
-`p` è uno `Shared_pointer`, ma qui niente della sua condivisibilità viene usato o passato per valore in un tacito peggioramento; queste funzioni dovrebbero accettare uno smart pointer solo se devono partecipare alla gestione del ciclo di vita del widget. Altrimenti dovrebbero accettare un `widget*`, se può essere `nullptr`. Altrimenti, ed idealmente, la funzione dovrebbe accettare un `widget&`.
-Questi puntatori intelligenti corrispondono al concetto `Shared_pointer`, quindi queste regole per applicare le linee-guida funzionano su di essi "fuori-dagli-schemi" [out of the box] e li espongono ad un comune peggioramento.
+Entrambi i casi sono errori secondo la [linea-guida `sharedptrparam`](#Rr-smartptrparam):
+`p` è uno `Shared_pointer`, ma qui non viene usato niente della sua condivisibilità e il passarlo per valore è un tacito peggioramento; queste funzioni dovrebbero accettare uno smart pointer solo se devono partecipare alla gestione del ciclo di vita del widget. Altrimenti dovrebbero accettare un `widget*`, se può essere `nullptr`. Altrimenti, ed idealmente, la funzione dovrebbe accettare un `widget&`.
+Questi puntatori intelligenti corrispondono al concetto dello `Shared_pointer`, quindi queste regole per applicare le linee-guida funzionano su di essi in ogni caso e li espongono ad un comune peggioramento.
 
 ### <a name="Rr-uniqueptrparam"></a>R.32: Prendere un parametro `unique_ptr<widget>` per esprimere che una funzione assume la proprietà di un `widget`
 
@@ -9191,18 +9191,18 @@ Usando `unique_ptr` in questo modo si documenta e si rafforza il trasferimento d
     void thinko(const unique_ptr<widget>&); // solitamente non è ciò che si vuole
 ##### Imposizione
 
-* (Semplice) Avvisa se una funzione prende un parametro `Unique_pointer<T>` per riferimento lvalue e non assegna ad esso né ci chiama `reset()` in almeno un ramo del codice. Suggerisce, invece, di prendere un `T*` o un `T&`.
-* (Sempice) ((Foundation)) Avvisa se una funzione accetta un parametro `Unique_pointer<T>` per riferimento a `const`. Suggerisce, invece, di prendere un`const T*` o un `const T&`.
+* (Semplice) Avvisare se una funzione prende un parametro `Unique_pointer<T>` per riferimento lvalue e non assegna ad esso né ci chiama `reset()` in almeno un ramo del codice. Suggerire, invece, di prendere un `T*` o un `T&`.
+* (Sempice) ((Foundation)) Avvisare se una funzione accetta un parametro `Unique_pointer<T>` per riferimento a `const`. Suggerire, invece, di prendere un`const T*` o un `const T&`.
 
-### <a name="Rr-reseat"></a>R.33: Prendere un parametro `unique_ptr<widget>&` per esprimere che una funzione riposizione/restituisce [reseat] il `widget`
+### <a name="Rr-reseat"></a>R.33: Prendere un parametro `unique_ptr<widget>&` per esprimere che una funzione ricolloca/restituisce [reseat] il `widget`
 
 ##### Motivo
 
-Usando `unique_ptr` in questo modo si documenta e si rafforza la semantica del [reseating] della chiamata.
+Usando `unique_ptr` in questo modo si documenta e si rafforza la semantica del ricollocamento [reseating] della chiamata.
 
 ##### Note
 
-"reseat" significa "fare in modo che un puntatore o un puntatore intelligente si riferiscano a un oggetto diverso".
+"reseat" (ricollocare) significa "fare in modo che un puntatore o un puntatore intelligente si riferiscano a un oggetto diverso".
 
 ##### Esempio
 
@@ -9212,8 +9212,8 @@ Usando `unique_ptr` in questo modo si documenta e si rafforza la semantica del [
     void thinko(const unique_ptr<widget>&); // solitamente non è ciò che si vuole
 ##### Imposizione
 
-* (Semplice) Avvisa se una funzione prende un parametro `Unique_pointer<T>` per riferimento lvalue e non assegna ad esso né ci chiama `reset()` in almeno un ramo del codice. Suggerisce, invece, di prendere un `T*` o un `T&`.
-* (Sempice) ((Foundation)) Avvisa se una funzione accetta un parametro `Unique_pointer<T>` per riferimento a `const`. Suggerisce, invece, di prendere un`const T*` o un `const T&`.
+* (Semplice) Avvisare se una funzione prende un parametro `Unique_pointer<T>` per riferimento lvalue e non assegna ad esso né ci chiama `reset()` in almeno un ramo del codice. Suggerire, invece, di prendere un `T*` o un `T&`.
+* (Sempice) ((Foundation)) Avvisare se una funzione accetta un parametro `Unique_pointer<T>` per riferimento a `const`. Suggerire, invece, di prendere un`const T*` o un `const T&`.
 
 ### <a name="Rr-sharedptrparam-owner"></a>R.34: Prendere un parametro `shared_ptr<widget>` per esprimere che una funzione è comproprietaria
 
@@ -9227,35 +9227,35 @@ Ciò rende esplicita la condivisione della proprietà della funzione.
 
     void may_share(const shared_ptr<widget>&); // "potrebbe" mantenere refcountt
 
-    void reseat(shared_ptr<widget>&);          // "potrebbe" eseguire il reseat di ptr
+    void reseat(shared_ptr<widget>&);          // "potrebbe" eseguire il ricollocamento [reseat] di ptr
 ##### Imposizione
 
-* (Semplice) Avvisa se una funzione prende un parametro `Shared_pointer<T>` per riferimento lvalue e non lo assegna né ci chiama il `reset()` in almeno un ramo del codice. Suggerisce, invece, di prendere un `T*` o un `T&`.
-* (Semplice) ((Foundation)) Avvisa se una funzione prende un `Shared_pointer<T>` per valore o per riferimento a `const` e non lo copia né lo sposta [move] verso un altro `Shared_pointer` in almeno un ramo del codice. Suggerisce, invece, di prendere un `T*` o un `T&`.
-* (Semplice) ((Foundation)) Avvisa se una funzione accetta un parametro `Shared_pointer<T>` per riferimento rvalue. Si suggerisce, invece, di passare per valore.
+* (Semplice) Avvisare se una funzione prende un parametro `Shared_pointer<T>` per riferimento lvalue e non lo assegna né ci chiama il `reset()` in almeno un ramo del codice. Suggerire, invece, di prendere un `T*` o un `T&`.
+* (Semplice) ((Foundation)) Avvisare se una funzione prende uno `Shared_pointer<T>` per valore o per riferimento a `const` e non lo copia né lo sposta [move] verso un altro `Shared_pointer` in almeno un ramo del codice. Suggerire, invece, di prendere un `T*` o un `T&`.
+* (Semplice) ((Foundation)) Avvisare se una funzione accetta un parametro `Shared_pointer<T>` per riferimento rvalue. Suggerire, invece, di passare per valore.
 
-### <a name="Rr-sharedptrparam"></a>R.35: Prendere un parametro `shared_ptr<widget>&` per esprimere che una funzione può riposizionare [reseat] lo shared pointer
+### <a name="Rr-sharedptrparam"></a>R.35: Prendere un parametro `shared_ptr<widget>&` per esprimere che una funzione può ricollocare [reseat] lo shared pointer
 
 ##### Motivo
 
-Ciò rende esplicito il reseat della funzione.
+Ciò rende esplicito il ricollocamento [reseat] della funzione.
 
 ##### Note
 
-Eseguire un "reseat" significa "fare in modo che un puntatore o un puntatore intelligente si riferiscano a un oggetto diverso".
+Eseguire un "reseat" [ricollocamento] significa "fare in modo che un puntatore o un puntatore intelligente si riferiscano a un oggetto diverso".
 
 ##### Esempio, buono
 
     void share(shared_ptr<widget>);            // share -- "manterrà" il refcount
 
-    void reseat(shared_ptr<widget>&);          // "potrebbe" eseguire il reseat di ptr
+    void reseat(shared_ptr<widget>&);          // "potrebbe" eseguire il ricollocamento [reseat] di ptr
 
     void may_share(const shared_ptr<widget>&); // "potrebbe" mantenere il refcount
 ##### Imposizione
 
-* (Semplice) Avvisa se una funzione prende un parametro `Shared_pointer<T>` per riferimento lvalue e non lo assegna né ci chiama il `reset()` in almeno un ramo del codice. Suggerisce, invece, di prendere un `T*` o un `T&`.
-* (Semplice) ((Foundation)) Avvisa se una funzione prende un `Shared_pointer<T>` per valore o per riferimento a `const` e non lo copia né lo sposta [move] verso un altro `Shared_pointer` in almeno un ramo del codice. Suggerisce, invece, di prendere un `T*` o un `T&`.
-* (Semplice) ((Foundation)) Avvisa se una funzione accetta un parametro `Shared_pointer<T>` per riferimento rvalue. Si suggerisce, invece, di passare per valore.
+* (Semplice) Avvisare se una funzione prende un parametro `Shared_pointer<T>` per riferimento lvalue e non lo assegna né ci chiama il `reset()` in almeno un ramo del codice. Suggerire, invece, di prendere un `T*` o un `T&`.
+* (Semplice) ((Foundation)) Avvisare se una funzione prende uno `Shared_pointer<T>` per valore o per riferimento a `const` e non lo copia né lo sposta [move] verso un altro `Shared_pointer` in almeno un ramo del codice. Suggerire, invece, di prendere un `T*` o un `T&`.
+* (Semplice) ((Foundation)) Avvisare se una funzione accetta un parametro `Shared_pointer<T>` per riferimento rvalue. Suggerire, invece, di passare per valore.
 
 ### <a name="Rr-sharedptrparam-const"></a>R.36: Prendere un parametro `const shared_ptr<widget>&` per esprimere che potrebbe conservare un conteggio dei riferimenti all'oggetto ???
 
@@ -9267,22 +9267,22 @@ Questo rende la funzione ??? esplicita.
 
     void share(shared_ptr<widget>);            // share -- "manterrà" il refcount
 
-    void reseat(shared_ptr<widget>&);          // "potrebbe" eseguire il reseat di ptr
+    void reseat(shared_ptr<widget>&);          // "potrebbe" eseguire il ricollocamento [reseat] di ptr
 
     void may_share(const shared_ptr<widget>&); // "potrebbe" mantenere il refcount
 ##### Imposizione
 
-* (Semplice) Avvisa se una funzione prende un parametro `Shared_pointer<T>` per riferimento lvalue e non lo assegna né ci chiama il `reset()` in almeno un ramo del codice. Suggerisce, invece, di prendere un `T*` o un `T&`.
-* (Semplice) ((Foundation)) Avvisa se una funzione prende un `Shared_pointer<T>` per valore o per riferimento a `const` e non lo copia né lo sposta [move] verso un altro `Shared_pointer` in almeno un ramo del codice. Suggerisce, invece, di prendere un `T*` o un `T&`.
-* (Semplice) ((Foundation)) Avvisa se una funzione accetta un parametro `Shared_pointer<T>` per riferimento rvalue. Si suggerisce, invece, di passare per valore.
+* (Semplice) Avvisare se una funzione prende un parametro `Shared_pointer<T>` per riferimento lvalue e non lo assegna né ci chiama il `reset()` in almeno un ramo del codice. Suggerire, invece, di prendere un `T*` o un `T&`.
+* (Semplice) ((Foundation)) Avvisare se una funzione prende uno `Shared_pointer<T>` per valore o per riferimento a `const` e non lo copia né lo sposta [move] verso un altro `Shared_pointer` in almeno un ramo del codice. Suggerire, invece, di prendere un `T*` o un `T&`.
+* (Semplice) ((Foundation)) Avvisare se una funzione accetta un parametro `Shared_pointer<T>` per riferimento rvalue. Suggerire, invece, di passare per valore.
 
 ### <a name="Rr-smartptrget"></a>R.37: Non passare un puntatore o un riferimento ottenuti da un alias di uno smart pointer
 
 ##### Motivo
 
-La violazione di questa regola è la causa numero uno della perdita del conteggio dei riferimenti e del ritrovarsi con un puntatore appeso.
-Le funzioni dovrebbero preferire passare i puntatori semplici e i riferimenti lunga la catena delle chiamate.
-Nella parte iniziale dell'albero delle chiamate dove si ottiene il puntatore semplice o il riferimento da uno puntatore intelligente che mantiene in vita l'oggetto.
+La violazione di questa regola è la causa numero uno della perdita del conteggio dei riferimenti e del ritrovarsi con un puntatore appeso [dangling].
+Le funzioni dovrebbero preferire di passare i puntatori semplici e i riferimenti lungo la catena delle chiamate.
+Nella parte iniziale dell'albero delle chiamate, dove si ottiene il puntatore semplice o il riferimento da un puntatore intelligente, che mantiene in vita l'oggetto.
 È necessario assicurarsi che il puntatore intelligente non possa essere inavvertitamente ripristinato o riassegnato nel resto della catena delle chiamate.
 
 ##### Note
@@ -9332,13 +9332,13 @@ La correzione è semplice -- si prende una copia locale del puntatore per "mante
     }
 ##### Imposizione
 
-* (Semplice) Avvisa se un puntatore o un riferimento ottenuto da una variabile smart pointer (`Unique_pointer` o `Shared_pointer`) che sia non-locale, o che sia locale ma potenzialmente un alias, venga utilizzato nella chiamata di una funzione. Se il puntatore intelligente è uno `Shared_pointer` allora suggerisce, invece, di prendere una copia locale dello smart pointer per ottenerne un puntatore o un riferimento.
+* (Semplice) Avvisare se un puntatore o un riferimento ottenuto da una variabile smart pointer (`Unique_pointer` o `Shared_pointer`) che sia non-locale, o che sia locale ma potenzialmente un alias, venga utilizzato nella chiamata di una funzione. Se il puntatore intelligente è uno `Shared_pointer` allora suggerire, invece, di prendere una copia locale dello smart pointer per ottenerne un puntatore o un riferimento.
 
 # <a name="S-expr"></a>ES: Espressioni e istruzioni
 
 Le espressioni e le istruzioni sono il modo più semplice e diretto per esprimere azioni e calcoli. Le dichiarazioni in uno scope locale sono istruzioni.
 
-Per le regole sulla nomenclatura, sui commenti e l'indentazione, cfr.[NL: Nomenclatura e layout](#S-naming).
+Per le regole sulla nomenclatura, sui commenti e l'indentazione, cfr. [NL: Nomenclatura e layout](#S-naming).
 
 Regole generali:
 
@@ -9349,7 +9349,7 @@ Regole sulle dichiarazioni:
 
 * [ES.5: Tenere gli scope piccoli](#Res-scope)
 * [ES.6: Dichiarare i nomi negli inizializzatori delle istruzioni-for e nelle condizioni per limitarne lo scope](#Res-cond)
-* [ES.7: Mantenere brevi i nomi comuni e locali e quelli meno comuni e non-locali più lunghi](#Res-name-length)
+* [ES.7: Mantenere brevi i nomi comuni e locali mentre quelli meno comuni e non-locali più lunghi](#Res-name-length)
 * [ES.8: Evitare similitudini tra i nomi](#Res-name-similar)
 * [ES.9: Evitare nomi `TUTTO_IN_MAIUSCOLO`](#Res-not-CAPS)
 * [ES.10: Dichiarare un (solo) nome per ogni dichiarazione](#Res-name-one)
@@ -9360,7 +9360,7 @@ Regole sulle dichiarazioni:
 * [ES.22: Non dichiarare una variabile fin quando non si abbia un valore con cui inizializzarla](#Res-init)
 * [ES.23: Preferire la sintassi di inizializzazione `{}`](#Res-list)
 * [ES.24: Usare un `unique_ptr<T>` per contenere i puntatori](#Res-unique)
-* [ES.25: Dichiarare un oggetto `const` o `constexpr` a meno che non se ne voglia, in seguito, modificarne il valore](#Res-const)
+* [ES.25: Dichiarare un oggetto `const` o `constexpr` a meno che non se ne voglia, in seguito, modificare il valore](#Res-const)
 * [ES.26: Non usare una variabile per due usi non correlati](#Res-recycle)
 * [ES.27: Usare `std::array` o `stack_array` per gli array sullo stack](#Res-stack)
 * [ES.28: Usare le lambda per delle inizializzazioni complesse, specialmente di variabili `const`](#Res-lambda-init)
@@ -9398,7 +9398,7 @@ Regole sulle istruzioni:
 * [ES.71: Preferire un'istruzione range-`for` ad un'istruzione `for` potendo scegliere](#Res-for-range)
 * [ES.72: Preferire un'istruzione `for` ad un'istruzione `while` quando c'è un'ovvia variabile del ciclo](#Res-for-while)
 * [ES.73: Preferire un'istruzione `while` ad un'istruzione `for` quando non è ovvia la variabile del ciclo](#Res-while-for)
-* [ES.74: Preferire dichiarare una variabile del ciclo nella parte dell'inizializzatore di un'istruzione `for`](#Res-for-init)
+* [ES.74: Dichiarare la variabile del ciclo nella parte dell'inizializzatore dell'istruzione `for`](#Res-for-init)
 * [ES.75: Evitare l'istruzione `do`](#Res-do)
 * [ES.76: Evitare il `goto`](#Res-goto)
 * [ES.77: Minimizzare l'uso di `break` e `continue` nei cicli](#Res-continue)
@@ -9424,7 +9424,7 @@ Regole sull'aritmetica:
 
 ##### Motivo
 
-Il codice che usa una libreria può risultare molto più facile da scrivere rispetto al codice che funziona direttamente con le funzionalità del linguaggio, molto più breve, tende ad avere un livello di astrazione più alto, inoltre il codice della libreria è presumibilmente già testato.
+Il codice che usa una libreria può risultare molto più facile da scrivere rispetto al codice che lavora direttamente con le funzionalità del linguaggio, molto più breve, tende ad avere un livello di astrazione più alto, inoltre il codice della libreria è presumibilmente già testato.
 La ISO C++ Standard Library è tra le librerie più conosciute e meglio testate.
 È disponibile come parte di tutte le implementazioni del C++.
 
@@ -9446,7 +9446,7 @@ Grandi parti della libreria standard si basano sull'allocazione dinamica (free s
 
 ##### Imposizione
 
-Non facile. ??? Cerca loop disordinati, nidificati, funzioni lunghe, assenza di chiamate a funzioni, mancanza dell'utilizzo dei tipi non-built-in. Complessità ciclomatica?
+Non facile. ??? Cercare loop disordinati, nidificati, funzioni lunghe, assenza di chiamate a funzioni, mancanza dell'utilizzo dei tipi non-built-in. Complessità ciclomatica?
 
 ### <a name="Res-abstr"></a>ES.2: Preferire astrazioni adatte all'uso diretto delle funzionalità del linguaggio
 
@@ -9481,7 +9481,7 @@ Una volta aggiunto il controllo per l'overflow e la gestione degli errori questo
 
 ##### Imposizione
 
-Non facile. ??? Cerca loop disordinati, nidificati, funzioni lunghe, assenza di chiamate a funzioni, mancanza dell'utilizzo dei tipi non-built-in. Complessità ciclomatica?
+Non facile. ??? Cercare loop disordinati, nidificati, funzioni lunghe, assenza di chiamate a funzioni, mancanza dell'utilizzo dei tipi non-built-in. Complessità ciclomatica?
 
 ## ES.dcl: Dichiarazioni
 
@@ -9541,7 +9541,7 @@ In questo caso, potrebbe essere una buona idea prendere in considerazione la let
 ##### Imposizione
 
 * Segnalare una variabile del ciclo dichiarata al di fuori del ciclo e non usata dopo di esso
-* Segnalare quando le risorse costose, come gli handle dei file e i lock nn vengono usati per N-righe (con un N adatto
+* Segnalare quando le risorse costose, come gli handle dei file e i lock non vengono usati per N-righe (con un N adatto
 
 ### <a name="Res-cond"></a>ES.6: Dichiarare i nomi negli inizializzatori delle istruzioni-for e nelle condizioni per limitarne lo scope
 
@@ -9569,7 +9569,7 @@ Leggibilità. Minimizzare la ritenzione delle risorse.
     }
 ##### Imposizione
 
-* Segnalare le variabili dei loop dichiarate prima del ciclo e nn usate dopo di esso
+* Segnalare le variabili dei loop dichiarate prima del ciclo e non usate dopo di esso
 * (difficile) Segnalare le variabili dei loop dichiarate prima del ciclo ed usate dopo di esso per un uso non correlato.
 
 ##### Esempio C++17 e C++20
@@ -9586,15 +9586,15 @@ Nota: C++17 e C++20 hanno anche gli inizializzatori per le istruzioni `if`, `swi
 ##### Imposizione C++17 e C++20 (se si usa un compilatore C++17 o C++20)
 
 * Segnalare variabili di selezione/loop dichiarate prima del body e non usate dopo
-* (difficile) Seleziona le variabili di selezione/loop dichiarate prima del body ed usate dopo il body per un uso non correlato.
+* (difficile) Segnalare le variabili di selezione/loop dichiarate prima del body ed usate dopo il body per un uso non correlato.
 
 
 
-### <a name="Res-name-length"></a>ES.7: Mantenere brevi i nomi comuni e locali e quelli meno comuni e non-locali più lunghi
+### <a name="Res-name-length"></a>ES.7: Mantenere brevi i nomi  comuni e locali mentre quelli meno comuni e non-locali più lunghi
 
 ##### Motivo
 
-Leggibilità. Ridurre la possibilità di scontri tra nomi non locali non correlati.
+Leggibilità. Ridurre la possibilità di conflitti tra nomi non locali non correlati.
 
 ##### Esempio
 
@@ -9621,7 +9621,7 @@ Sì, è una caricatura, ma c'è di peggio.
 
 ##### Esempio
 
-Nomi non-locali corti e non convenzionali codice criptico:
+Nomi non-locali corti e non convenzionali in codice criptico:
 
     void use1(const string& s)
     {
@@ -9641,7 +9641,7 @@ Qui, c'è la possibilità che il lettore sappia cosa significa `trim_tail` e che
 
 ##### Esempio, cattivo
 
-I nomi degli argomenti di grandi funzioni sono 'de facto' non locali e dovrebbero essere significativi:
+I nomi degli argomenti di funzioni grandi sono 'de facto' non locali e dovrebbero essere significativi:
 
     void complicated_algorithm(vector<Record>& vr, const vector<int>& vi, map<string, int>& out)
     // legge dagli eventi in vr (segnando i Record usati) secondo gli indici in
@@ -9673,11 +9673,11 @@ Non dichiarare un non-tipo con lo stesso nome di un tipo nello stesso scope. Ci�
     struct foo x = foo();   // richiede una disambiguazione
 ##### Eccezione
 
-I file header più antichi potrebbero dichiarare non tipi e tipi con lo stesso nome nello stesso scope.
+I file header più antichi potrebbero dichiarare non-tipi e tipi con lo stesso nome nello stesso scope.
 
 ##### Imposizione
 
-* Controlla i nomi in un elenco di note combinazioni di lettere e numeri.
+* Controllare i nomi rispetto ad un elenco di combinazioni note di lettere e numeri.
 * Segnalare una dichiarazione di una variabile, una funzione, o un enumeratore che nasconde una classe o una enumerazione dichiarata nello stesso scope.
 
 ### <a name="Res-not-CAPS"></a>ES.9: Evitare nomi `TUTTO_IN_MAIUSCOLO`
@@ -9708,7 +9708,7 @@ Non usare il `TUTTO_IN_MAIUSCOLO` per le costanti solo perché le macro venivano
 
 ##### Imposizione
 
-Segnalare gli usi del TUTTO_IN_MAIUSCOLO. Per il codice più vecchio, accettare il TUTTO_IN_MAIUSCOLO per i nomi delle macro e segnalare i nomi delle macro non in TUTTO_IN_MAIUSCOLO.
+Segnalare gli usi del TUTTO_IN_MAIUSCOLO. Per il codice più vecchio, accettare il TUTTO_IN_MAIUSCOLO per i nomi delle macro e segnalare i nomi delle macro che non siano in TUTTO_IN_MAIUSCOLO.
 
 ### <a name="Res-name-one"></a>ES.10: Dichiarare un (solo) nome per ogni dichiarazione
 
@@ -9763,7 +9763,7 @@ Segnalare le dichiarazioni di variabili o costanti con dichiaratori multipli (p.
 ##### Motivo
 
 * La semplice ripetizione è noiosa e soggetta a errori.
-* Quando si usa `auto`, il nome dell'entità dichiarata si trova in una posizione fissa nella dichiarazione, aumentando la leggibilità..
+* Quando si usa `auto`, il nome dell'entità dichiarata si trova in una posizione fissa nella dichiarazione, aumentando la leggibilità.
 * In una dichiarazione di una funzione template il tipo di ritorno può essere un tipo membro.
 
 ##### Esempio
@@ -9879,7 +9879,7 @@ Spesso si riutilizzano i nomi delle funzioni di una classe base in una classe de
         using B::f;
     };
 Questo è fonte di errori.
-Ad esempio, se avessimo dimenticato la dichiarazione di di using, una chiamata a `d.f(1)` non avrebbe trovato la versione `int` di `f`.
+Ad esempio, se avessimo dimenticato la dichiarazione di using, una chiamata a `d.f(1)` non avrebbe trovato la versione `int` di `f`.
 
 ??? C'è la necessità di una regola specifica per lo shadowing/hiding nelle gerarchie delle classi?
 
@@ -9895,8 +9895,8 @@ Ad esempio, se avessimo dimenticato la dichiarazione di di using, una chiamata a
 ##### Motivo
 
 Evitare errori usato-prima-della-assegnazione e l'associato comportamento indefinito.
--evitare i problemi di comprensione di una inizializzazione complessa.
-Semplifica il refactoring.
+Evitare i problemi di comprensione di una inizializzazione complessa.
+Semplificare il refactoring.
 
 ##### Esempio
 
@@ -9978,7 +9978,7 @@ Ora il compilatore non può nemmeno semplicemente rilevare un usato-prima-della-
 
 ##### Note
 
-L'inizializzazione complessa è stata popolare per decenni con i programmatori intelligenti.
+L'inizializzazione complessa è stata popolare per decenni con i programmatori più abili.
 È stata anche una delle principali fonti di errori e complessità.
 Molti di questi errori vengono introdotti durante gli anni di manutenzione dopo l'implementazione iniziale.
 
@@ -10001,12 +10001,12 @@ Questa regola copre le variabili membro.
         const int cm3;
     };
 Il compilatore segnala il `cm3` non inizializzato perché è un `const`, ma non rileva l'assenza di inizializzazione di `m3`.
-Di solito, una rara inizializzazione del membro spurio giustifica l'assenza di errori dalla mancanza di inizializzazione e spesso un ottimizzatore può eliminare un'inizializzazione ridondante (p.es., un'inizializzazione che si verifica immediatamente prima di un'assegnazione).
+Di solito, una rara inizializzazione del membro spurio giustifica l'assenza di errori per la mancanza di inizializzazione e spesso un ottimizzatore può eliminare un'inizializzazione ridondante (p.es., un'inizializzazione che si verifica immediatamente prima di un'assegnazione).
 
 ##### Eccezione
 
 Se si sta dichiarando un oggetto che sta per essere inizializzato dall'input, l'inizializzazione causerebbe una doppia inizializzazione.
-Tuttavia, si tenga presente che ciò potrebbe lasciare dati non inizializzati dopo l'input -- e che è stata una fertile fonte di errori e violazioni della sicurezza:
+Tuttavia, si tenga presente che ciò potrebbe lasciare dati non inizializzati dopo l'input -- cosa che è stata una fertile fonte di errori e violazioni della sicurezza:
 
     constexpr int max = 8 * 1024;
     int buf[max];         // OK, ma sospetto: non inizializzato
@@ -10103,7 +10103,7 @@ Leggibilità. Limitare lo scope in cui sia possibile usare una variabile. Per no
             var += e;
     }
 
-    // usa var; che non venga fatto troppo spesso può essere imposto staticamente colo colo controllo del flusso
+    // usa var; che non venga fatto troppo spesso può essere imposto staticamente col solo controllo del flusso
 Questo andrebbe bene se ci fosse un'inizializzazione di default per `SomeLargeType` che non fosse troppo costosa.
 Altrimenti, un programmatore potrebbe benissimo chiedersi se sia stato coperto ogni possibile percorso attraverso la rete delle condizioni.
 In caso contrario, abbiamo un bug "usato-prima-della-assegnazione". Questa è una trappola per la manutenzione.
@@ -10141,7 +10141,7 @@ Per i contenitori, esiste una tradizione sull'uso di `{...}` per un elenco di el
     vector<int> v4{1, 2};  // vettore di 2 elementi con i valori 1 e 2
 ##### Note
 
-Gli inizializzatori `{}` non consentono le conversioni "narrowing" (e questo di solito è una cosa buona) e consentono i costruttori espliciti (il che va bene, si sta inizializzando intenzionalmente una nuova variabile).
+Gli inizializzatori `{}` non consentono le conversioni "narrowing" (e questo di solito è una cosa buona) e permettono i costruttori espliciti (il che va bene, si sta inizializzando intenzionalmente una nuova variabile).
 
 ##### Esempio
 
@@ -10233,11 +10233,11 @@ Lo stesso vale quando `at()` solleva un errore.
 
 Si cercano i puntatori che siano destinatari di `new`, `malloc()`, o le funzioni che possano restituire tali puntatori.
 
-### <a name="Res-const"></a>ES.25: Dichiarare un oggetto `const` o `constexpr` a meno che non se ne voglia, in seguito, modificarne il valore
+### <a name="Res-const"></a>ES.25: Dichiarare un oggetto `const` o `constexpr` a meno che non se ne voglia, in seguito, modificare il valore
 
 ##### Motivo
 
-In questo modo non è possibile modificare il valore per errore. In questo modo può offrire l'opportunità di un'ottimizzazione del compilatore.
+In questo modo non è possibile modificare il valore per errore. In questo modo si può dare l'opportunità di un'ottimizzazione del compilatore.
 
 ##### Esempio
 
@@ -10249,7 +10249,7 @@ In questo modo non è possibile modificare il valore per errore. In questo modo 
     }
 ##### Imposizione
 
-Cerca se una variabile viene effettivamente mutata e la segnala se non lo è. Sfortunatamente, potrebbe essere impossibile rilevare quando una non-`const` non era *destinata* a cambiare (rispetto a quando semplicemente non è stata variata).
+Cercare se una variabile viene effettivamente mutata e la segnala se non lo è. Sfortunatamente, potrebbe essere impossibile rilevare quando una non-`const` non era *destinata* a cambiare (rispetto a quando semplicemente non è stata variata).
 
 ### <a name="Res-recycle"></a>ES.26: Non usare una variabile per due usi non correlati
 
@@ -10310,7 +10310,7 @@ Non vengono confusi con le estensioni non-standard degli array nativi [built-in]
 
 La definizione di `a1` è C++ legale e c'è sempre stata.
 C'è molto codice come questo.
-Tuttavia, è soggetto a errori, soprattutto quando la dimensione [bound] non è locale..
+Tuttavia, è soggetto a errori, soprattutto quando la dimensione [bound] non è locale.
 Inoltre, è una fonte "popolare" di errori (overflow del buffer, puntatori dalla conversione [decay] degli array, ecc.).
 La definizione di `a2` è C ma non C++ ed è considerato un rischio per la sicurezza
 
@@ -10365,7 +10365,7 @@ Se possibile, si riducano le condizioni ad un semplice insieme di alternative (p
 
 ##### Imposizione
 
-Difficile. Nel migliore dei casi è una euristica. Cerca una variabile non inizializzata seguita da un ciclo in cui si assegnano.
+Difficile. Nel migliore dei casi è una euristica. Cercare una variabile non inizializzata seguita da un ciclo in cui la si assegna.
 
 ### <a name="Res-macros"></a>ES.30: Non usare le macro per manipolare il testo del programma
 
@@ -10425,7 +10425,7 @@ Esistono soluzioni alternative per la gestione delle stringhe di basso livello u
     }
 Questo non è conveniente come una macro da definire, ma altrettanto facile da usare, ha zero overhead ed è tipizzato e ha uno scope.
 
-In futuro, è probabile che la riflessione statica elimini gli ultimi bisogni del preprocessore per la manipolazione del testo del programma.
+In futuro, è probabile che la riflessione statica [static reflection] elimini gli ultimi bisogni del preprocessore per la manipolazione del testo del programma.
 
 ##### Imposizione
 
@@ -10493,7 +10493,7 @@ Emettere un warning sui nomi di macro troppo brevi.
 
 ##### Motivo
 
-Non "type safe".
+Non è "type safe".
 Richiede un codice disordinato per il-cast-e-pieno-di-macro per funzionare correttamente.
 
 ##### Esempio
@@ -10647,7 +10647,7 @@ Evitare errori. Leggibilità. Non tutti ricordano a memoria la tabella degli ope
     unsigned int a = flag;
 
     if (a & flag != 0)  // bad: significa a&(flag != 0)
-Nota: Si raccomanda ai programmatori di prendere visione della tabella delle precedenze per le operazioni aritmetiche, quella delle operazioni logiche, ma si prenda in considerazione di mescolare le operazioni logiche bit a bit con gli altri operatori che necessitano le parentesi.
+Nota: Si raccomanda ai programmatori di prendere visione della tabella delle precedenze per le operazioni aritmetiche, quella delle operazioni logiche, ma si prenda in considerazione di mescolare le operazioni logiche bit a bit con gli altri operatori che necessitano delle parentesi.
 
     if ((a & flag) != 0)  // OK: funziona come previsto
 ##### Note
@@ -10660,7 +10660,7 @@ Si dovrebbe essere abbastanza esperti da non aver bisogno delle parentesi per:
 ##### Imposizione
 
 * Segnalare le combinazioni di operazioni logiche con altri operatori.
-* Segnalare gli operatori di assegnazioni non come operatore all'estrema sinistra.
+* Segnalare gli operatori di assegnazioni non come un operatore all'estrema sinistra.
 * ???
 
 ### <a name="Res-ptr"></a>ES.42: Usare in modo semplice e diretto i puntatori
@@ -10674,7 +10674,7 @@ La gestione dei puntatori complicati è una delle principali fonti di errori.
 Usare, invece, `gsl::span`.
 I puntatori dovrebbero [fare riferimento solo a singoli oggetti](#Ri-array).
 L'aritmetica dei puntatori è fragile e facile da sbagliare, la fonte di molti, molti bug e violazioni della sicurezza.
-`span` è un tipo sicuro, controllato dai limiti [bounds-checked], per l'accesso ai dati degli array.
+`span` è un tipo sicuro, col controllo dei limiti [bounds-checked], per l'accesso ai dati degli array.
 L'accesso a un array con limiti noti che utilizza una costante come indice può essere convalidato dal compilatore.
 
 ##### Esempio, cattivo
@@ -10721,7 +10721,7 @@ L'accesso a un array con limiti noti che utilizza una costante come indice può 
 ##### Note
 
 L'indicizzazione tramite una variabile è difficile da convalidare sia per i tool che per gli umani.
-`span` è un tipo sicuro, controllato dai limiti [bounds-checked], per l'accesso ai dati degli array.
+`span` è un tipo sicuro, col controllo dei limiti [bounds-checked], per l'accesso ai dati degli array.
 `at()` è un'ulteriore alternativa che garantisce che i singoli accessi controllino i limiti.
 Se sono necessari iteratori per accedere a un array, utilizzare gli iteratori da uno `span` costruito sull'array.
 
@@ -10906,7 +10906,7 @@ Può essere rilevato da un buon analizzatore.
 
 ##### Motivo
 
-Le costanti senza nome incluse in espressioni vengono facilmente trascurate e spesso difficili da capire:
+Le costanti senza nome incluse in espressioni vengono facilmente trascurate e sono spesso difficili da capire:
 
 ##### Esempio
 
@@ -10992,7 +10992,7 @@ Segnalare l'uso di `0` e `NULL` per i puntatori. La trasformazione può essere a
 
 ##### Motivo
 
-I cast sono una fonte ben nota di errori. Rende alcune ottimizzazioni inaffidabili.
+I cast sono una fonte ben nota di errori. Rendono alcune ottimizzazioni inaffidabili.
 
 ##### Esempio, cattivo
 
@@ -11016,7 +11016,7 @@ Sorpresi? Sono contento che il programma non vada in crash.
 
 I programmatori che scrivono cast in genere presumono di sapere cosa stanno facendo o che scrivere un cast rende il programma "più facile da leggere".
 Infatti, spesso disabilitano le regole generali sull'uso dei valori.
-La risoluzione dell'overload è l'istanziazione dei template solitamente sceglie la funzione giusta [right] se c'è una funzione [right] giusta da selezionare.
+La risoluzione dell'overload è l'istanziazione dei template solitamente scelgono la funzione giusta se c'è una funzione giusta da selezionare.
 Se non c'è, forse dovrebbe esserci, piuttosto che applicare una correzione locale (cast).
 
 ##### Note
@@ -11080,11 +11080,11 @@ I "named cast" sono:
         // ...
     }
 L'esempio è stato sintetizzato da un vero bug in cui `D` era derivato da `B`, ma qualcuno ha eseguito il refactorng della gerarchia.
-Il cast in stile C è pericoloso perché può fare qualsiasi tipo di conversione, privandoci da qualsiasi protezione dagli errori (ora e in futuro).
+Il cast in stile C è pericoloso perché può fare qualsiasi tipo di conversione, privandoci di qualsiasi protezione dagli errori (ora e in futuro).
 
 ##### Note
 
-Invece, quando si converte danza perdita di informazioni (p.es. da `float` a `double` o in `int64` da `int32`), si può usare l'inizializzazione tra parenesi graffe.
+Invece, quando si converte senza perdita di informazioni (p.es. da `float` a `double` o in `int64` da `int32`), si può usare l'inizializzazione tra parenesi graffe.
 
     double d {some_float};
     int64_t i {some_int32};
@@ -11154,7 +11154,7 @@ Preferire, invece, la condivisione delle implementazioni. Normalmente, si può s
     private:
         Bar my_bar;
     };
-ebbene questo modello sia sicuro quando applicato correttamente, poiché il chiamante deve avere avuto un oggetto non-`const` per cominciare, non è l'ideale perché la sicurezza è difficile ottenersi automaticamente come regola di un checker.
+Sebbene questo modello sia sicuro quando applicato correttamente, poiché il chiamante deve avere avuto un oggetto non-`const` per cominciare, non è l'ideale perché la sicurezza è difficile da ottenersi automaticamente come regola di un checker.
 
 Preferire, invece, mettere il codice comune in una funzione helper comune -- e trasformarlo in un template in modo da dedurre il  `const`. Questo non usa affatto alcun `const_cast`:
 
@@ -11172,7 +11172,7 @@ Preferire, invece, mettere il codice comune in una funzione helper comune -- e t
 ##### Eccezione
 
 Potrebbe essere necessario eliminare `const` chiamando funzioni con un incorretto `const`.
-È preferibile racchiudere queste funzioni inline correttamente `const` con dei wrapper per incapsulare in un unico posto il cast.
+È preferibile racchiudere queste funzioni inline `const`-corrette con dei wrapper per incapsulare in un unico posto il cast.
 
 ##### Esempio
 
@@ -11180,7 +11180,7 @@ A volte, "eliminare il  `const`" è per consentire l'aggiornamento di alcune inf
 Esempi sono il caching, la memoizzazione e il pre-calcolo.
 Tali esempi spesso gestiti anche o meglio usando `mutable` o una indirezione anziché una `const_cast`.
 
-Si prenda in considerazione la possibilità di memorizzare i risultati calcolati in precedenza di un'operazione costosa:
+Si prenda in considerazione la possibilità di memorizzare i risultati, calcolati in precedenza, di un'operazione costosa:
 
     int compute(int x); // calcola un valore per x; supponendo che sia oneroso
 
@@ -11256,9 +11256,9 @@ Una soluzione alternativa sarebbe quella di memorizzare un puntatore alla `cache
     private:
         unique_ptr<Cache> cache;
     };
-Questa soluzione è la più flessibile, ma richiede la costruzione e la distruzione esplicite di `*cache` (molto probabilmente nel costruttore e distruttore di `X`).
+Questa soluzione è la più flessibile, ma richiede la costruzione e la distruzione esplicite di `*cache` (molto probabilmente nel costruttore e nel distruttore di `X`).
 
-In ogni variant, cci si deve proteggere contro i conflitti sui dati [data race] sulla `cache` nel codice multi-threaded code, forse utilizzando un `std::mutex`.
+In ogni variant, ci si deve proteggere contro i conflitti dei dati [data race] sulla `cache` nel codice multi-threaded, forse utilizzando un `std::mutex`.
 
 ##### Imposizione
 
@@ -11346,7 +11346,7 @@ E dopo averlo fatto, si suppone che l'oggetto sia stato spostato via (cfr. [C.64
 Il linguaggio conosce già i casi comuni dove è possibile spostare gli oggetti, specialmente quando si restituiscono i valori delle funzioni, quindi non si complichi il codice con un ridondante `std::move()`.
 
 Non scrivere mai `std::move()` solo perché qualcuno ha detto che "è più efficiente".
-In generale, non si deve credere alle affermazioni sulla "efficienza" senza dati (???).
+In generale, non si devono credere alle affermazioni sulla "efficienza" senza dati (???).
 In generale, non complicare il proprio codice senza motivo (??).
 Mai scrivere `std::move()` per un oggetto const, esso viene silenziosamente trasformato in una copia (cfr. Item 23 in [Meyers15](#Meyers15))
 
@@ -11384,7 +11384,7 @@ Il linguaggio già sa che un valore restituito è un oggetto temporaneo che può
 ##### Imposizione
 
 * Segnalare l'uso di `std::move(x)` dove `x` è un rvalue o il linguaggio lo tratterà già come un rvalue, compreso `return std::move(local_variable);` e `std::move(f())` su una funzione che restituisce per valore.
-* Segnalare le funzioni che prendono un parametro `S&&` se non c'è alcun overload `const S&` per prendersi cura degli lvalue.
+* Segnalare le funzioni che prendono un parametro `S&&` se non c'è alcun overload `const S&` che si prenda cura degli lvalue.
 * Segnalare uno `std::move` dell'argomento passato ad un parametro, tranne quando il tipo del parametro è un riferimento rvalue `X&&` o il tipo è "move-only" ed il parametro viene passato per valore.
 * Segnalare quando `std::move` viene applicato ad un "forwarding" del riferimento (`T&&` dove `T` è un tipo di parametro template). Usare, invece, `std::forward`.
 * Segnalare quando `std::move` viene applicato ad un valore diverso da un riferimento rvalue a un non-const. (Un caso più generale della regola precedente per coprire i casi non-forwarding).
@@ -11396,7 +11396,7 @@ Il linguaggio già sa che un valore restituito è un oggetto temporaneo che può
 
 ##### Motivo
 
-La gestione diretta delle risorse nel codice di un'applicazione è soggetta ad errori e noiosa.
+La gestione diretta delle risorse nel codice di un'applicazione è soggetta ad errori ed è noiosa.
 
 ##### Note
 
@@ -11485,7 +11485,7 @@ Nei rari casi in cui lo slicing è voluto, il codice può sorprendere.
     }
     Circle c2 {{1, 1}, 43};
     assign(c, c2);   // oops, non viene trasferito tutto lo stato
-    assert(c == c2); // se si fornisce la copia, si deve anche fornire il confronto,,
+    assert(c == c2); // se si fornisce la copia, si deve anche fornire il confronto,
                      // ma questo probabilmente restituirà false
 Il risultato sarà privo di significato perché il centro e il raggio non verranno copiati da `c` in `s`.
 La prima difesa contro questo è [definire la classe base `Shape` in modo che non lo consenta](#Rc-copy-virtual).
@@ -11539,7 +11539,7 @@ Per i tipi nativi, la notazione per la costruzione protegge dal narrowing e dall
         int z3 = (int)p;      // bad: puntatore a->int; usare un reinterpret_cast se lo si vuole veramente fare
         int z4 = (int)lng;    // bad: narrowing di long long->int; usare un cast se lo si vuole fare
     }
-Le conversioni intere in/da puntatori sono definite delle implementazioni quando si usano le notazioni `T(e)` o `(T)e`, e non portabili tra le piattaforme con dimensioni diverse degli interi e dei puntatori.
+Le conversioni intere in/da puntatori sono implementazioni definite quando si usano le notazioni `T(e)` o `(T)e`, e non sono portabili tra le piattaforme con dimensioni diverse degli interi e dei puntatori.
 
 ##### Note
 
@@ -11570,7 +11570,7 @@ Come si ottiene un `vector` di 10 `int` inizializzati col default?
 L'uso di `()` anziché di `{}` per il numero degli elementi è convenzionale (risalente ai primi anni '80), difficile da cambiare, ma resta un errore di progetto: per un contenitore dove il tipo dell'elemento si può confondere col numero degli elementi, si ha un'ambiguità da risolvere.
 La soluzione convenzionale consiste nell'interpretare `{10}` come un elenco di un elemento ed usare `(10)` per distinguere una dimensione.
 
-Non c'è bisogno si ripetere questo errore nel nuovo codice.
+Non c'è bisogno di ripetere questo errore nel nuovo codice.
 Si può definire un tipo per rappresentare il numero degli elementi:
 
     struct Count { int n; };
@@ -11607,9 +11607,9 @@ Questa è una parte importante della discussione sul [modello del C++ per la sic
 
 **Si veda anche**:
 
-* Usare [RAII](#Rr-raii) per evitare i problemi a vita.
-* Usare [unique_ptr](#Rf-unique_ptr) per evitare i problemi a vita.
-* Usare [shared_ptr](#Rf-shared_ptr) per evitare i problemi a vita.
+* Usare [RAII](#Rr-raii) per evitare i problemi sul ciclo-di-vita [lifetime].
+* Usare [unique_ptr](#Rf-unique_ptr) per evitare i problemi sul ciclo-di-vita [lifetime].
+* Usare [shared_ptr](#Rf-shared_ptr) per evitare i problemi sul ciclo-di-vita [lifetime].
 * Usare i [riferimenti](#Rf-ptr-ref) quando non è possibile `nullptr`.
 * Usare [not_null](#Rf-not_null) per rilevare in anticipo un inatteso `nullptr`.
 * Usare il [profilo dei [bound]](#SS-bounds) per evitare gli errori sui range.
@@ -11629,7 +11629,7 @@ Questa è una parte importante della discussione sul [modello del C++ per la sic
 
         *p = 42;            // BAD, p può essere non valido se si esegue il ramo dell'if
     }
-Per risolvere il problema, o si prolunga la durata dell'oggetto a cui si intende fare riferimento col puntatore, o ridurre la durata del puntatore (spostare la dereferenza prima che finisca la durata dell'oggetto puntato).
+Per risolvere il problema, o si prolunga la durata dell'oggetto a cui si intende fare riferimento col puntatore, o si riduce la durata del puntatore (si sposta la dereferenza prima che finisca la durata dell'oggetto puntato).
 
     void f1()
     {
@@ -11653,7 +11653,7 @@ Sfortunatamente, la maggior parte dei problemi sui puntatori non validi sono pi�
     }
 Esiste un'enorme quantità di codice simile.
 La maggior parte funziona -- dopo molti test -- ma isolatamente è impossibile dire se `p` potrebbe essere `nullptr`.
-Di conseguenza, questa è anche una delle principali fonti di errori.
+Di conseguenza, anche questa è una delle principali fonti di errori.
 Esistono molti approcci per affrontare questo potenziale problema:
 
     void f1(int* p) // si ha a che fare con nullptr
@@ -11665,9 +11665,9 @@ Esistono molti approcci per affrontare questo potenziale problema:
     }
 o due potenziali problemi con il test per il `nullptr`:
 
-* non è sempre ovvio su cosa fare se si trova `nullptr`
+* non è sempre ovvio cosa fare se si trova `nullptr`
 * il test può essere ridondante e/o relativamente costoso
-* non è ovvio se il test deve proteggere da una violazione o parte della logica richiesta.
+* non è ovvio se il test deve proteggere da una violazione o è parte della logica richiesta.
 
 <!-- comment needed for code block after list -->
     void f2(int* p) // dice che p non si suppone possa essere nullptr
@@ -11716,7 +11716,7 @@ Si tenga presente che esistono altri modi per ottenere un puntatore invalido.
     }
 ##### Imposizione
 
-Questa regola fa parte del [profilo di sicurezza a vita [lifetime safety]](#SS-lifetime)
+Questa regola fa parte del [profilo di sicurezza sul ciclo-di-vita [lifetime safety]](#SS-lifetime)
 
 * Segnalare una dereferenza di un puntatore che punta ad un oggetto che è uscito dallo scope
 * Segnalare una dereferenza di un puntatore che può essere stato invalidato da un'assegnazione con `nullptr`
@@ -11726,7 +11726,7 @@ Questa regola fa parte del [profilo di sicurezza a vita [lifetime safety]](#SS-l
 
 ## ES.stmt: Istruzioni
 
-Le istruzioni controllano il flusso di controllo (ad eccezione delle chiamate alla funzione e gli errori, che sono espressioni).
+Le istruzioni controllano il flusso di controllo (ad eccezione delle chiamate alla funzione e degli errori, che sono espressioni).
 
 ### <a name="Res-switch-if"></a>ES.70: Preferire l'istruzione `switch` all'istruzione `if` potendo scegliere
 
@@ -11811,7 +11811,7 @@ Meglio ancora, se la variabile del loop non viene modificata o copiata:
     for (const string& s : vs) // ...
 ##### Imposizione
 
-Look at loops, se un tradizionale ciclo cerca solamente ogni elemento di una sequenza e non ci sono effetti collaterali su quello che fa con gli elementi, si riscriva il loop utilizzando un range-`for`.
+Cercare i loop, se un tradizionale ciclo cerca solamente ogni elemento di una sequenza e non ci sono effetti collaterali su quello che fa con gli elementi, si riscriva il loop utilizzando un range-`for`.
 
 ### <a name="Res-for-while"></a>ES.72: Preferire un'istruzione `for` ad un'istruzione `while` quando c'è un'ovvia variabile del ciclo
 
@@ -11859,7 +11859,7 @@ Meglio
 
 Segnalare le azioni negli inizializzatori dei `for` e negli incrementi dei `for` che non sono in relazione con la condizione del `for`.
 
-### <a name="Res-for-init"></a>ES.74: Preferire dichiarare una variabile del ciclo nella parte dell'inizializzatore di un'istruzione `for`
+### <a name="Res-for-init"></a>ES.74: Dichiarare la variabile del ciclo nella parte dell'inizializzatore dell'istruzione `for`
 
 ##### Motivo
 
@@ -11887,7 +11887,7 @@ Evitare di utilizzare la variabile del loop per altri usi dopo il ciclo.
     }
 ##### Imposizione
 
-Avvisare quando una modificata in un'istruzione `for` è dichiarata esternamente al loop e non viene usata esternamente al ciclo.
+Avvisare quando una variabile modificata in un'istruzione `for` è dichiarata esternamente al loop e non viene usata esternamente al ciclo.
 
 **Discussione**: Racchiudere la variabile del loop nello scope del body del loop aiuta molto gli ottimizzatori. Riconoscere che imporre che la variabile sia accessibile solamente all'interno del body del loop sblocca alcune ottimizzazioni quali l'hoisting [spostare le variabili all'inizio], strength reduction [sostituzione di operazioni onerose con altre più economiche], loop-invariant code motion [spostare istruzioni al di fuori del loop], ecc.
 
@@ -11951,7 +11951,7 @@ Se per qualche motivo non si può gestire la ripulitura delle variabili usate co
 
 ##### Imposizione
 
-* Segnalare i `goto`. Meglio ancora segnalare tutti i `goto` che non saltano da un ciclo nidificato all'istruzione immediatamente al ciclo più esterno.
+* Segnalare i `goto`. Meglio ancora segnalare tutti i `goto` che non saltano da un ciclo nidificato all'istruzione immediatamente dopo al ciclo più esterno.
 
 ### <a name="Res-continue"></a>ES.77: Minimizzare l'uso di `break` e `continue` nei cicli
 
@@ -12117,7 +12117,7 @@ Qui è chiaro che esiste un'azione di default e che i casi `a` e `b` sono specia
 ##### Esempio
 
 Ma cosa succede se non c'è un'azione di default e si vogliono gestire solo casi specifici?
-In tal caso, si inserisca un default vuoto o altrimenti sarà impossibile sapere se si intendeva gestire tutti i casi:
+In tal caso, si inserisca un default vuoto o altrimenti sarà impossibile sapere se si intendevano gestire tutti i casi:
 
     void f2(E x)
     {
@@ -12153,7 +12153,7 @@ La dimenticanza di un case solitamente avviene quando viene aggiunto un elemento
 ##### Imposizione
 
 Segnalare le istruzioni `switch` basate su una enumerazione che non gestiscono tutte le enumerazioni e non hanno un `default`.
-Questo potrebbe produrre troppi falsi positivi in certi tipi di codice; in tal caso, segnalare solo gli `switch` che gestiscono la maggior parte ma non tutti (questa era la strategia dei primissimo compilatore C++).
+Questo potrebbe produrre troppi falsi positivi in certi tipi di codice; in tal caso, segnalare solo gli `switch` che gestiscono la maggior parte ma non tutti (questa era la strategia del primissimo compilatore C++).
 
 ### <a name="Res-noname"></a>ES.84: Non tentare di dichiarare una variabile locale senza nome
 
@@ -12277,7 +12277,7 @@ Di conseguenza, è meglio essere specifici sul confronto.
         if (i == success) // forse meglio
         // ...
     }
-Si ricorsi sempre che un intero può avere più di due valori.
+Si ricordi sempre che un intero può avere più di due valori.
 
 ##### Esempio, cattivo
 
@@ -12311,7 +12311,7 @@ Semplice, basta controllare l'uso ridondante di `!=` e `==` nelle condizioni.
 
 ##### Motivo
 
-Evita risultati errati.
+Evitare risultati errati.
 
 ##### Esempio
 
@@ -12382,7 +12382,7 @@ Ciò è ancora più vero per l'aritmetica mista signed e unsigned.
         cout << subtract(s, us + 2) << '\n';  // -2
         cout << subtract(us, s + 2) << '\n';  // 4294967294
     }
-Qui siamo stati molto espliciti su ciò che sta accadendo, ma se si fosse visto `us - (s + 2)` o `s += 2; ...; us - s`, si avrebbe giustamente sospettato che il risultato stampato sarebbe stato `4294967294`?
+Qui siamo stati molto espliciti su ciò che sta accadendo, ma se si fosse visto `us - (s + 2)` o `s += 2; ...; us - s`, sarebbe giustamente sorto il sospetto che il risultato stampato sarebbe stato `4294967294`?
 
 ##### Eccezione
 
@@ -12419,7 +12419,7 @@ Usare `gsl::index` per gli indici; [cfr. ES.107](#Res-subscripts).
 ##### Motivo
 
 Solitamente l'overflow rende l'algoritmo numerico senza senso.
-Incrementando un valore oltre il suo valore massimo può corrompere la memoria e a un comportamento indefinito.
+Incrementando un valore oltre il suo valore massimo può corrompere la memoria e portare a un comportamento indefinito.
 
 ##### Esempio, cattivo
 
@@ -14452,7 +14452,7 @@ A meno che il loop non fosse destinato a essere infinito, la terminazione è nor
 
 ##### Note
 
-Nn usare un `throw` come un semplice modo alternativo per tornare da una funzione.
+Non usare un `throw` come un semplice modo alternativo per tornare da una funzione.
 
 ##### Eccezione
 
@@ -17090,7 +17090,7 @@ Il compilatore lo gestisce.
 ##### Motivo
 
 Migliora la stabilità del codice.
-Evita codice inutile [code bloat].
+Evitare il codice inutile [code bloat].
 
 ##### Esempio
 
@@ -18843,7 +18843,7 @@ Questa sezione contiene regole e linee-guida che sono popolari altrove, ma che d
 È ben noto che ci sono stati tempi e luoghi in cui queste regole avevano un senso, e le abbiamo usate noi stessi a volte.
 Tuttavia, nel contesto degli stili di programmazione che si raccomandano e si supportano con le linee-guida, queste "non regole" risulterebbero dannose.
 
-Tuttora possono esserci contesti in cui le regole hanno senso..
+Tuttora possono esserci contesti in cui le regole hanno senso.
 Per esempio, la mancanza di un adeguato supporto di tool può rendere inadeguate le eccezioni nei sistemi in tempo reale, ma non c'è da fidarsi ciecamente della "saggezza popolare" (p.es, affermazioni non dimostrate sulla "efficienza"); questa "saggezza" potrebbe essere basata su informazioni vecchie di decenni e sperimentate con linguaggi dalle proprietà molto diverse da quelle del C++ (p.es., C o Java).
 
 Gli argomenti positivi come alternative a queste non-regole sono indicate nelle regole proposte come "Alternative".
@@ -20191,7 +20191,7 @@ Per i dettagli si veda [ES.10](#Res-name-one).
 
 ##### Motivo
 
-È prolisso ed è necessario solo dove conta la compatibilità col C..
+È prolisso ed è necessario solo dove conta la compatibilità col C.
 
 ##### Esempio
 
@@ -20211,7 +20211,7 @@ avrebbe causato problemi maggiori, ma non nel 21° secolo e in C++.
 
 ##### Motivo
 
-La notazione convenzionale è più familiare a molti programmatori..
+La notazione convenzionale è più familiare a molti programmatori.
 Coerenza in tantissimo codice esistente.
 
 ##### Esempio
