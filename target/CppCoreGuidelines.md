@@ -181,7 +181,7 @@ Potete vedere le bozze dei progetti usati per esprimere le regole:
 
 * assertion: ???
 * error: ???
-* eccezione: garanzia di eccezione (???)
+* eccezione: garanzia dell'eccezione (???)
 * failure: ???
 * invariante: ???
 * leak: ???
@@ -1681,7 +1681,7 @@ Usare i Concept ISO in stile TS della specifica dei requisiti. Per esempio:
 ##### Note
 
 Presto (forse nel 2018), la maggior parte dei compilatori sarà in grado di controllare le clausole `requires` una volta rimosso il `//`.
-I concetti sono supportati GCC 6.1 e successivi.
+I concetti sono supportati nel GCC 6.1 e successivi.
 
 **Si veda anche**: [Programmazione generica](#SS-GP) e [concetti](#SS-concepts).
 
@@ -1741,7 +1741,7 @@ Non consideriamo le "prestazioni" un motivo valido per non usare le eccezioni.
 
 * Spesso, il controllo e la gestione esplicita degli errori consumano tanto tempo e spazio quanto la gestione delle eccezioni.
 * Spesso, un codice più pulito produce migliori prestazioni con le eccezioni (semplificando la tracciabilità dei percorsi attraverso il programma e la loro ottimizzazione).
-* Una buona regola per il codice critico per le prestazioni è quella di spostare il controllo all'esterno della parte critica del codice ([checking](#Rper-checking)).
+* Una buona regola per le prestazioni del codice critico è quella di spostare il controllo all'esterno della parte [critica](#Rper-critical) del codice.
 * Alla lunga, un codice più regolare si ottimizza meglio.
 * [Misurare](#Rper-measure) sempre e accuratamente prima di lamentarsi delle prestazioni.
 
@@ -1887,7 +1887,7 @@ Questo `draw2()` passa la stessa quantità di informazioni a `draw()`, ma rende 
 ##### Eccezione
 
 Usare `zstring` e `czstring` per rappresentare stringhe C-style e zero-terminated.
-Ma quando lo si fa, si usa `std::string_view` o `string_span` della [GSL](#GSL) per evitare errori di range.
+Ma quando lo si fa, si usa `std::string_view` o `string_span` della [GSL](#S-gsl) per evitare errori di range.
 
 ##### Imposizione
 
@@ -8042,7 +8042,7 @@ Ma fare attenzione alla regola: [Evitare `union`i "nude" ](#Ru-naked)
         ~Immutable_string()
         {
             if (size >= buffer_size)
-                delete string_ptr;
+                delete[] string_ptr;
         }
 
         const char* get_str() const
@@ -9348,7 +9348,7 @@ Regole generali:
 Regole sulle dichiarazioni:
 
 * [ES.5: Tenere gli scope piccoli](#Res-scope)
-* [ES.6: Dichiarare i nomi negli inizializzatori delle istruzioni-for e nelle condizioni per limitarne lo scope](#Res-cond)
+* [ES.6:Dichiarare i nomi nella parte di inizializzazione e in quella delle condizioni delle istruzioni-for per limitarne lo scope](#Res-cond)
 * [ES.7: Mantenere brevi i nomi comuni e locali mentre quelli meno comuni e non-locali più lunghi](#Res-name-length)
 * [ES.8: Evitare similitudini tra i nomi](#Res-name-similar)
 * [ES.9: Evitare nomi `TUTTO_IN_MAIUSCOLO`](#Res-not-CAPS)
@@ -9543,7 +9543,7 @@ In questo caso, potrebbe essere una buona idea prendere in considerazione la let
 * Segnalare una variabile del ciclo dichiarata al di fuori del ciclo e non usata dopo di esso
 * Segnalare quando le risorse costose, come gli handle dei file e i lock non vengono usati per N-righe (con un N adatto
 
-### <a name="Res-cond"></a>ES.6: Dichiarare i nomi negli inizializzatori delle istruzioni-for e nelle condizioni per limitarne lo scope
+### <a name="Res-cond"></a>Dichiarare i nomi nella parte di inizializzazione e in quella delle condizioni delle istruzioni-for per limitarne lo scope
 
 ##### Motivo
 
@@ -11611,7 +11611,7 @@ Questa è una parte importante della discussione sul [modello del C++ per la sic
 * Usare [unique_ptr](#Rf-unique_ptr) per evitare i problemi sul ciclo-di-vita [lifetime].
 * Usare [shared_ptr](#Rf-shared_ptr) per evitare i problemi sul ciclo-di-vita [lifetime].
 * Usare i [riferimenti](#Rf-ptr-ref) quando non è possibile `nullptr`.
-* Usare [not_null](#Rf-not_null) per rilevare in anticipo un inatteso `nullptr`.
+* Usare [not_null](#Rf-nullptr) per rilevare in anticipo un inatteso `nullptr`.
 * Usare il [profilo dei [bound]](#SS-bounds) per evitare gli errori sui range.
 
 
@@ -12666,7 +12666,7 @@ Riepilogo sulle regole per le prestazioni:
 
 ##### Motivo
 
-Se non è necessaria alcuna ottimizzazione, il principale risultato saranno più errori e costi di manutenzione più elevati.
+Se non è necessaria alcuna ottimizzazione, i principali risultati corrisponderanno a più errori e costi di manutenzione più elevati.
 
 ##### Note
 
@@ -12692,8 +12692,8 @@ L'ottimizzazione di una parte non critica per le prestazioni di un programma non
 
 Se il proprio programma trascorre la maggior parte del tempo ad aspettare il web o un essere umano, l'ottimizzazione del calcolo in memoria è probabilmente inutile.
 
-In altre parole: Se il programma impiega il 4% del suo tempo di elaborazione facendo il calcolo A e il 40% del tempo per il calcolo B, un miglioramento del 50% su A impatta quanto un miglioramento del 5% su B. (Se non si sa quanto tempo impiega A e B, cfr. <a href="#Rper-reason">Per.1</a> e <a
-href="#Rper-Knuth">Per.2</a>.)
+In altre parole: Se il programma impiega il 4% del suo tempo di elaborazione facendo il calcolo A e il 40% del tempo per il calcolo B, un miglioramento del 50% su A impatta quanto un miglioramento del 5% su B. (Se non si sa quanto tempo impiegano A e B, cfr. <a href="#Rper-reason">Per.1</a> e <a
+href="#Rper-Knuth">Per.2</a>).
 
 ### <a name="Rper-simple"></a>Per.4: Non dare per scontato che il codice complicato sia necessariamente più veloce del codice semplice
 
@@ -12773,13 +12773,13 @@ Dal C (e dal C++) standard:
 Quando c'è stato bisogno di ordinare la memoria?
 In realtà, si ordinano sequenze di elementi, in genere memorizzati in contenitori.
 Una chiamata a `qsort` elimina molte informazioni utili (p.es., il tipo degli elementi), costringe l'utente a ripetere le informazioni già note  (p.es., la dimensione degli elementi), ed obbliga a scrivere altro codice (p.es., una funzione per confrontare i `double`).
-Ciò implica un lavoro aggiuntivo per il programmatore, è soggetto a errori e priva il compilatore delle informazioni necessarie per l'ottimizzazione.
+Ciò implica un lavoro aggiuntivo per il programmatore, soggetto a errori e si priva il compilatore delle informazioni necessarie per l'ottimizzazione.
 
     double data[100];
     // ... fill a ...
 
     // 100 blocchi di memoria di sizeof(double) cominciando
-    // all'indirizzo data usando l'ordine definito da compare_doubles
+    // dall'indirizzo data usando l'ordine definito da compare_doubles
     qsort(data, 100, sizeof(double), compare_doubles);
 Dal punto di vista della progettazione dell'interfaccia c'è che `qsort` getta via informazioni utili.
 
@@ -12799,18 +12799,18 @@ Col C++11 più i [concetti](#SS-concepts), si può fare ancora meglio
 
     sort(c);
 La chiave è passare informazioni sufficienti per scegliere una buona implementazione.
-In questo, le interfacce `sort` mostrate qui un ulteriore punto debole: Si basano implicitamente sul tipo di elemento che abbia definito il "minore di" (`<`).
+In questo, le interfacce `sort` mostrano qui un ulteriore punto debole: Si basano implicitamente sul tipo di elemento che abbia definito il "minore di" (`<`).
 Per completare l'interfaccia, è necessaria una seconda versione che accetti un criterio di confronto:
 
     // confronta gli elementi di c usando p
     void sort(Sortable& c, Predicate<Value_type<Sortable>> p);
-Le specifiche della libreria standard per `sort` offrono queste due versioni, ma la semantica è espressa in inglese anziché nel codice utilizzando i concetti.
+Le specifiche della libreria standard per `sort` offrono queste due versioni, ma la semantica è espressa in inglese, anziché nel codice utilizzando i concetti.
 
 ##### Note
 
 Si dice che l'ottimizzazione prematura sia [la fonte di tutti i mali](#Rper-Knuth), ma questo non è un motivo per disdegnare le prestazioni.
 Non è mai prematuro considerare ciò che rende un progetto migliorabile e migliorare le prestazioni è un miglioramento comunemente desiderato.
-Si cerchi di creare un insieme di abitudini che per default si traduca in un codice efficiente, gestibile e ottimizzabile.
+Si cerchi di creare un insieme di abitudini che per default si traducano in un codice efficiente, gestibile e ottimizzabile.
 In particolare, quando si scrive una funzione che non sia un dettaglio di implementazione una tantum, considerare
 
 * Passaggio delle informazioni: Preferire delle semplici [interfacce](#S-interfaces) che trasportino abbastanza informazioni per un successivo miglioramento dell'implementazione.
@@ -12821,7 +12821,7 @@ In particolare, quando si scrive una funzione che non sia un dettaglio di implem
    Non imporre l'onere di una gestione delle risorse ai propri utenti.
    Non imporre false indirezione a run-time ai propri clienti.
    Usare [modi convenzionali](#Rf-conventional) per passare le informazioni attraverso l'interfaccia; modi non convenzionali e/o modi "ottimizzati" per il passaggio dei dati possono seriamente complicare le successive ottimizzazioni.
-* Astrazione: Non generalizzare eccessivamente; un progetto  che cerca di soddisfare ogni possibile uso (ed abuso) e che rifiuta ogni decisione progettuale successiva (utilizzando indirezioni alla compilazione o a  run-time) è solitamente un pasticcio complicato, rigonfio e difficile da capire.
+* Astrazione: Non generalizzare eccessivamente; un progetto  che cerca di soddisfare ogni possibile uso (ed abuso) e che rifiuta ogni decisione progettuale successiva (utilizzando indirezioni durante la compilazione o a  run-time) è solitamente un pasticcio complicato, rigonfio e difficile da capire.
    Generalizzare da esempi concreti, preservando le prestazioni.
    Non generalizzare basandosi su mere speculazioni sulle future necessità.
    L'ideale è una generalizzazione "zero-overhead".
@@ -12839,7 +12839,7 @@ Si consideri:
     template <class ForwardIterator, class T>
     bool binary_search(ForwardIterator first, ForwardIterator last, const T& val);
 `binary_search(begin(c), end(c), 7)` dirà se `7` è in `c` oppure no.
-Tuttavia, non dirà dove si trova sia quel `7` e se ci sono più di un `7`.
+Tuttavia, non dirà dove si trova quel `7` e se ci sono più di un `7`.
 
 A volte, è sufficiente restituire la minima quantità di informazioni (qui, `true` o `false`), ma una buona interfaccia restituisce le informazioni necessarie al chiamante. Quindi, la libreria standard offre anche
 
@@ -12857,13 +12857,13 @@ Tuttavia, `lower_bound` non restituisce ancora informazioni sufficienti per tutt
     auto r = equal_range(begin(c), end(c), 7);
     for (auto p = r.first; p != r.second; ++p)
         cout << *p << '\n';
-Ovviamente, queste tre interfacce sono implementate dallo stesso codice di base.
+Ovviamente, queste tre interfacce sono implementate con lo stesso codice di base.
 Sono semplicemente tre modi per presentare agli utenti l'algoritmo di ricerca binaria di base, che vanno da quelle che restituiscono le informazioni più semplici ("semplifica le cose semplici!") a quelle più complete, ma non sempre necessarie, ("non nascondere informazioni utili").
 Naturalmente, la creazione di un tale set di interfacce richiede esperienza e conoscenza del dominio.
 
 ##### Note
 
-Non creare banalmente l'interfaccia in modo che corrisponda alla prima implementazione e al primo caso d'uso a cui pensa.
+Non creare banalmente l'interfaccia in modo che corrisponda alla prima implementazione e al primo caso d'uso a cui si pensa.
 Una volta completata l'implementazione iniziale, la si esamini; una volta distribuita, sarà difficile porre rimedio agli errori.
 
 ##### Note
@@ -12880,7 +12880,7 @@ Per esempio, avere idea del costo di un accesso alla memoria, una chiamata a una
 ##### Note
 
 Se si riesce a pensare a una sola implementazione, probabilmente non si ha qualcosa per cui poter escogitare un'interfaccia stabile.
-Forse, è solo un dettaglio implementativo - non tutte le parti del codice hanno bisogno di un'interfaccia stabile - ma si faccia una pausa e si prenda in considerazione.
+Forse, è solo un dettaglio implementativo - non tutte le parti del codice hanno bisogno di un'interfaccia stabile - ma ci si prenda una pausa e si facciano delle considerazioni.
 Una domanda che può essere utile è "quale interfaccia sarebbe necessaria se questa operazione dovesse essere implementata usando più thread? essere vettorizzata?"
 
 ##### Note
@@ -12897,7 +12897,7 @@ Forse cercando gli argomenti della funzione  `void*` si troveranno esempi di int
 
 ##### Motivo
 
-Le violazioni dei tipi, i tipi deboli (p.es. i `void*`), e il codice a basso-livello (p.es., manipolazione di sequenze come singoli byte) rendono il lavoro dell'ottimizzatore molto più difficile. Il cdice semplice spesso si ottimizza meglio del codice complicato fatto a mano.
+Le violazioni dei tipi, i tipi deboli (p.es. i `void*`), e il codice a basso-livello (p.es., manipolazione di sequenze come singoli byte) rendono il lavoro dell'ottimizzatore molto più difficile. Il codice semplice spesso si ottimizza meglio del codice complicato fatto a mano.
 
 ???
 
@@ -12959,8 +12959,8 @@ Si prenda in considerazione una popolare tecnica per fornire un handle per memor
         Handle<std::array<double, 200>> v2;  // l'array va sul free store
         // ...
     }
-Si supponga che `Scoped` e `On_heap` abbiano delle interfaccia utente compatibili.
-Qui si calca il tipo ottimale da utilizzare in fase di compilazione.
+Si supponga che `Scoped` e `On_heap` abbiano delle interfacce utente compatibili.
+Qui si calcola il tipo ottimale da utilizzare in fase di compilazione.
 Esistono tecniche simili per selezionare la funzione ottimale da chiamare.
 
 ##### Note
@@ -12968,7 +12968,7 @@ Esistono tecniche simili per selezionare la funzione ottimale da chiamare.
 L'ideale {non} è il tentare di eseguire tutto durante la compilazione.
 Ovviamente, la maggior parte dei calcoli dipende dagli input, quindi non si possono spostare al tempo della compilazione, ma al di là di questo vincolo logico c'è il fatto che un calcolo complesso in fase di compilazione può aumentare seriamente i tempi di compilazione e complicare il debug.
 È anche possibile che si rallenti il codice mediante il calcolo in fase di compilazione.
-Questo è certamente raro, ma suddividendo un calcolo generico in diversi sotto-calcoli ottimali è possibile rendere meno efficace la cache delle istruzioni.
+Questo è certamente raro, ma suddividendo un calcolo generico in diversi sotto-calcoli ottimizzati è possibile rendere meno efficace la cache delle istruzioni.
 
 ##### Imposizione
 
@@ -13039,27 +13039,27 @@ Le prestazioni sono molto sensibili alle prestazioni della cache e gli algoritmi
 
 Spesso si vuole che i computer facciano molte cose contemporaneamente (o almeno che sembrino eseguirle nello stesso tempo).
 I motivi per volerlo sono vari (p.es., aspettare molti eventi con un singolo processore, elaborare molti flussi di dati simultaneamente o utilizzare tante infrastrutture hardware) e questo lo fanno delle strutture basilari per espletare la concorrenza e il parallelismo.
-Qui, si parla di alcuni principi e regole per usare le strutture del C++ standard ISO C++ per espletare la concorrenza e il parallelismo.
+Qui, si parla di alcuni principi e regole per usare le strutture del C++ standard ISO per espletare la concorrenza e il parallelismo.
 
 I thread sono le fondamenta a livello macchina per la programmazione concorrente e parallela.
 I thread consentono l'esecuzione di più sezioni di un programma indipendentemente, condividendo la stessa memoria. La programmazione concorrente è complicata, perché proteggere i dati condivisi tra i thread è più facile a dirsi che a farsi.
-Eseguire un codice single-threaded esistente in modo concorrente può risultare banale come aggiungere strategicamente `std::async` o `std::thread`, o può essere necessario riscrivere tutto, a seconda che il codice originale sia stato scritto in modo thread-friendly.
+Eseguire un codice single-thread esistente in modo concorrente può risultare banale come aggiungere strategicamente `std::async` o `std::thread`, o può essere necessario riscrivere tutto, a seconda che il codice originale sia stato scritto in modo thread-friendly.
 
 Le regole della concorrenza/parallelismo in questo documento sono progettate tenendo tre obiettivi in mente:
 
 * Aiutare a scrivere codice utilizzabile in un ambiente con thread
-* Illustrare un modo pulito, sicuro per utilizzare le primitive del threading fornite dalla libreria standard
+* Illustrare un modo pulito e sicuro per utilizzare le primitive del threading fornite dalla libreria standard
 * Offrire indicazioni su cosa fare quando la concorrenza e il parallelismo non raggiungono le prestazioni necessarie
 
 È anche importante notare che la concorrenza in C++ è una storia incompiuta. Il C++11 ha introdotto molte primitive centrali per la concorrenza, il C++14 e il C++17 le hanno migliorate, e c'è molto interesse nel semplificare la scrittura di programmi concorrenti in C++. Si prevede che alcune di queste linee-guida relative alla libreria cambieranno significativamente nel tempo.
 
 Questa sezione richiede molto lavoro (ovviamente).
 Si noti che si inizia con le regole riguardanti i non esperti.
-I veri esperti devono aspettare un po'; i contributi sono ben accetti, ma per favore, si pensi alla maggior parte dei programmatori che stanno lottando per far funzionare correttamente e performanti i loro programmi concorrenti.
+I veri esperti devono aspettare un po'; i contributi sono ben accetti, ma per favore, si pensi alla maggior parte dei programmatori che stanno lottando per far funzionare correttamente e in modo performante i loro programmi concorrenti.
 
 Riepilogo delle regole sul parallelismo e la concorrenza:
 
-* [CP.1: Si assuma che il proprio codice girerà come parte di un programma multi-threaded](#Rconc-multi)
+* [CP.1: Si assuma che il proprio codice girerà come parte in un programma multi-threaded](#Rconc-multi)
 * [CP.2: Evitare i conflitti dei dati [data race]](#Rconc-races)
 * [CP.3: Minimizzare la condivisione esplicita dei dati scrivibili](#Rconc-data)
 * [CP.4: Pensare in termini di task, anziché di thread](#Rconc-task)
@@ -13073,15 +13073,15 @@ Riepilogo delle regole sul parallelismo e la concorrenza:
 * [CP.mess: Passaggio dei messaggi](#SScp-mess)
 * [CP.vec: Vettorizzazione](#SScp-vec)
 * [CP.free: Programmazione senza lock](#SScp-free)
-* [CP.etc: Ecc. regole della concorrenza](#SScp-etc)
+* [CP.etc: Ecc. Regole sulla concorrenza](#SScp-etc)
 
-### <a name="Rconc-multi"></a>CP.1: Si assuma che il proprio codice girerà come parte di un programma multi-threaded
+### <a name="Rconc-multi"></a>CP.1: Si assuma che il proprio codice girerà come parte in un programma multi-threaded
 
 ##### Motivo
 
 È difficile essere certi che la concorrenza non sia utilizzata ora e che non verrà utilizzata in futuro.
 Il codice si riutilizza.
-Le librerie che non utilizzano i thread possono essere utilizzate da un'altra parte di un programma che utilizza i thread.
+Le librerie che non utilizzano i thread possono essere utilizzate da un'altra parte in un programma che utilizza i thread.
 Si noti che questa regola si applica subito al codice della libreria e meno urgentemente alle applicazioni singole.
 Tuttavia, nel tempo, pezzi di codice possono apparire in luoghi inaspettati.
 
@@ -13101,7 +13101,7 @@ Tuttavia, nel tempo, pezzi di codice possono apparire in luoghi inaspettati.
         cached_result = result;
         return result;
     }
-Sebbene `cached_computation` funziona perfettamente in un ambiente single-threaded, in uno multi-threaded le due variabili `static` provocano conflitti e quindi un comportamento indefinito.
+Sebbene `cached_computation` funziona perfettamente in un ambiente single-thread, in uno multi-threaded le due variabili `static` provocano conflitti e quindi un comportamento indefinito.
 
 Ci sono diversi modi per rendere questo esempio sicuro per un ambiente multi-threaded:
 
@@ -13141,7 +13141,7 @@ Esistono molti esempi di conflitti, alcuni dei quali girano in software di produ
     }
 L'incremento qui è un esempio di conflitto [data race]. Questo può andar male in molti modi, tra cui:
 
-* Il thread A carica il valore di `id`, Il contesto del sistema operativo disattiva A per un po', curante il quale altri thread creano centinaia di ID. Quando torna in esecuzione il thread A, `id` viene riscritto col valore di `id` letto da A più uno.
+* Il thread A carica il valore di `id`, Il contesto del sistema operativo disattiva A per un po', durante il quale altri thread creano centinaia di ID. Quando torna in esecuzione il thread A, `id` viene riscritto col valore di `id` letto da A più uno.
 * I thread A e B caricano `id` e lo incrementano simultaneamente.  Entrambi ottengono lo stesso ID.
 
 Le variabili static locali sono una comune fonte di conflitti [data race].
@@ -13189,7 +13189,7 @@ In realtà, può capitare di peggio: guardando il codice generato si potrebbe es
 
 Se possibile, fare almeno qualcosa.
 Ci sono tool commerciali ed open-source che cercano di risolvere questo problema, ma si tenga presente che le soluzioni hanno un costo e dei punti ignoti.
-I tool statici spesso hanno molti falsi positivi mentre i tool a run-time tools spesso hanno un costo elevato.
+I tool statici spesso hanno molti falsi positivi mentre quelli a run-time spesso hanno un costo elevato.
 Si spera in strumenti migliori.
 Utilizzando più tool si possono rilevare più problemi che con uno solo.
 
@@ -13198,7 +13198,7 @@ Ci sono altri modi per attenuare la possibilità di conflitti:
 * Evitare i dati globali
 * Evitare le variabili `static`
 * Usare più tipi di valori sullo stack (e non passare troppi puntatori in giro)
-* Usare di più dati immutabili (letterali, `constexpr`, e `const`)
+* Usare maggiormente dati immutabili (letterali, `constexpr`, e `const`)
 
 ### <a name="Rconc-data"></a>CP.3: Minimizzare la condivisione esplicita dei dati scrivibili
 
@@ -13206,7 +13206,7 @@ Ci sono altri modi per attenuare la possibilità di conflitti:
 
 Se non si condividono dati scrivibili, non si hanno conflitti.
 Meno condivisione si fa, minori possibilità si hanno di dimenticare di sincronizzare l'accesso (ottenendo conflitti).
-Meno condivisione si fa, minori possibilità si hanno d aspettare per un lock (migliorando le prestazioni).
+Meno condivisione si fa, minori possibilità si hanno di aspettare per un lock (migliorando le prestazioni).
 
 ##### Esempio
 
@@ -13226,12 +13226,12 @@ Meno condivisione si fa, minori possibilità si hanno d aspettare per un lock (m
         auto v3 = h3.get();
         // ...
     }
-Senza quelle `const`, si dovrebbe rivedere ogni funzione richiamata modo asincrono per un potenziale conflitto su `surface_readings`.
+Senza quelle `const`, si dovrebbe rivedere ogni funzione richiamata in modo asincrono per un potenziale conflitto su `surface_readings`.
 Rendere `surface_readings` per essere `const` (rispetto a questa funzione) consente il ragionamento utilizzando solo il corpo della funzione.
 
 ##### Note
 
-I dati immutabili si possono condividere i modo sicuro ed efficientemente.
+I dati immutabili si possono condividere in modo sicuro ed efficientemente.
 Non è necessario alcun lock: Non si può avere un conflitto su una costante.
 Si veda anche [CP.mess: Passaggio dei Parametri](#SScp-mess) e [CP.31: preferire il passaggio per valore](#Rconc-data-by-value).
 
@@ -13283,8 +13283,8 @@ Semplicemente non ha nulla a che fare con la concorrenza.
     {
         if (int n = free_slots--) return &pool[n];
     }
-Qui c'è un problema: Questo è un codice perfettamente valido in un programma a thread singolo, ma due thread che lo eseguono e c'è una condizione di conflitto su `free_slots` in cui due i thread possono ottenere lo stesso valore [] e `free_slots`.
-Questo è (ovviamente) un brutto conflitto, è gli esperti di altri linguaggi potrebbero cercare di risolvere in questo modo:
+Qui c'è un problema: Questo è un codice perfettamente valido in un programma a thread singolo, ma ci sono due thread che lo eseguono e c'è una condizione di conflitto su `free_slots` in cui due i thread possono ottenere lo stesso valore [] e `free_slots`.
+Questo è (ovviamente) un brutto conflitto, e gli esperti di altri linguaggi potrebbero cercare di risolvere in questo modo:
 
     volatile int free_slots = max_slots; // attuale fonte di memoria per gli oggetti
 
@@ -13315,7 +13315,7 @@ Usare un `mutex` per esempi più complicati.
 
 ### <a name="Rconc-tools"></a>CP.9: Quando possibile utilizzare i tool per validare il proprio codice concorrente
 
-L'esperienza dimostra che il codice concorrente è estremamente difficile da ottenere correttamente e che il controllo in fase di compilazione, quelli a run-time, ed i test sono meno efficaci nel trovare gli errori sulla concorrenza rispetto a quelli che cercano errori nel codice sequenziale.
+L'esperienza dimostra che il codice concorrente è estremamente difficile da scrivere correttamente e che il controllo in fase di compilazione, quelli a run-time, ed i test sono meno efficaci nel trovare gli errori sulla concorrenza rispetto a quelli che cercano errori nel codice sequenziale.
 Subdoli errori di concorrenza possono avere effetti drammaticamente negativi, tra cui la corruzione della memoria e i deadlock.
 
 ##### Esempio
@@ -13328,14 +13328,14 @@ Ci sono molti tool "in giro", sia commerciali che open-source, sia tool per la r
 Sfortunatamente le esigenze e i vincoli delle persone differiscono in modo così drammatico che non si possono formulare raccomandazioni specifiche, ma si può menzionare:
 
 * Strumenti di imposizione [enforcement] statica: sia [clang](http://clang.llvm.org/docs/ThreadSafetyAnalysis.html) e qualche più vecchia versione di [GCC](https://gcc.gnu.org/wiki/ThreadSafetyAnnotation)
-   hanno qualche supporto per l'annotazione statica delle proprietà di sicurezza del thread.
+   hanno qualche supporto per l'annotazione statica delle proprietà sulla sicurezza del thread.
    L'uso coerente di questa tecnica trasforma molte classi di errori sulla sicurezza dei thread in errori di compilazione.
    Le annotazioni sono generalmente locali (rendendo una particolare variabile membro come protetta da un particolare mutex), e sono solitamente facili da imparare. Tuttavia, come con molti tool statici, possono spesso presentare falsi negativi; casi che avrebbero dovuto essere rilevati ma vengono autorizzati.
 
 * strumenti di imposizione [enforcement] dinamica: Il [Thread Sanitizer](http://clang.llvm.org/docs/ThreadSanitizer.html) di Clang (aka TSAN) è un potente esempio di strumenti dinamici: esso cambia la compilazione e l'esecuzione del proprio programma aggiungendo un conteggio sull'accesso della memoria, identificando assolutamente i conflitti in una data esecuzione del codice binario.
    Il suo costo è sia in memoria (5-10x nella maggior parte dei casi) che in rallentamento della CPU (2-20x).
    Gli strumenti dinamici come questi sono migliori quando vengono applicati ai test di integrazione, [canary pushes], o unit di test che operano su thread multipli.
-   Il carico di lavoro è importante: Quando TSAN identifica un problema, si tratta sempre di una vero e proprio confitto [data race],
+   Il carico di lavoro è importante: Quando TSAN identifica un problema, si tratta sempre di un vero e proprio confitto [data race],
    ma può identificare solo i conflitti visti in una data esecuzione.
 
 ##### Imposizione
@@ -13532,7 +13532,7 @@ questi `thread` possono essere visti come un solo oggetto funzione chiamato da `
 
 ##### Imposizione
 
-Assicurarsi che dei `joining_thread` non esegua il `detach()`.
+Assicurarsi che dei `joining_thread` non eseguano il `detach()`.
 Successivamente, si applica la solita imposizione sul ciclo di vita [lifetime] e la proprietà [ownership] (per gli oggetti locali).
 
 ### <a name="Rconc-detach"></a>CP.24: Pensare ad un `thread` come ad un contenitore globale
@@ -13631,7 +13631,7 @@ I thread staccati [detached] sono difficili da monitorare.
 
 ##### Esempio, cattivo
 
-Il codice che determina se usare `join()` o `detach()` può essere complicato e persino deciso nel thread o nelle funzioni che chiama o nelle funzioni chiamate dalle funzioni che creano un thread:
+Il codice che determina se usare `join()` o `detach()` può essere complicato e persino deciso nel thread delle funzioni che esso chiama o nelle funzioni chiamate dalla funzione che crea un thread:
 
     void tricky(thread* t, int n)
     {
@@ -13648,11 +13648,11 @@ Il codice che determina se usare `join()` o `detach()` può essere complicato e 
         // ... si esegue il join qui? ...
     }
 Ciò complica seriamente l'analisi della durata, e, in casi non troppo improbabili, la rende addirittura impossibile.
-Ciò implica che non ci si può affidare con sicurezza agli oggetti locali in `use()` dal thread e riferirsi agli oggetti locali nel thread da `use()`.
+Questo implica che non ci si può affidare con sicurezza agli oggetti locali in `use()` dal thread e riferirsi agli oggetti locali nel thread da `use()`.
 
 ##### Note
 
-Creare "thread immortali" globali, racchiuderli in uno scope, o sull'heap [free store] piuttosto che eseguire il `detach()`.
+Creare i "thread immortali" globali, racchiuderli in uno scope, o sull'heap [free store] anziché eseguire il `detach()`.
 [non eseguire il `detach`](#Rconc-detached_thread).
 
 ##### Note
@@ -13664,7 +13664,7 @@ A causa del vecchio codice e delle librerie di terze parti che usano `std::threa
 Segnalare l'uso di `std::thread`:
 
 * Suggerire l'utilizzo di `gsl::joining_thread`.
-* Suggerire l'["l'esportazione della proprietà [exporting ownership]"](#Rconc-detached_thread) in uno scope circoscritto se si esegue il detach.
+* Suggerire ["l'esportazione della proprietà [exporting ownership]"](#Rconc-detached_thread) in uno scope circoscritto se si esegue il detach.
 * Segnalare con forza se non è chiaro se si esegue il join o il detach.
 
 ### <a name="Rconc-detached_thread"></a>CP.26: Non eseguire il `detach()` di un thread
@@ -13737,7 +13737,7 @@ Definire esattamente "piccola quantità" è impossibile.
         async(modify2, s);
     }
 La chiamata a `modify1` implica la copia di due valori `string`; la chiamata a `modify2` no.
-D'altra parte, l'implementazione di `modify1` è esattamente come la si avrebbe scritta per il codice single-threaded, mentre l'implementazione di `modify2` necessiterà di una forma di lock per evitare conflitti.
+D'altra parte, l'implementazione di `modify1` è esattamente come la si avrebbe scritta per il codice single-thread, mentre l'implementazione di `modify2` necessiterà di una forma di lock per evitare conflitti.
 Se la stringa è breve (diciamo 10 caratteri), la chiamata a `modify1` può risultare sorprendentemente veloce; essenzialmente tutto il costo è nello scambio [switch] del `thread`. Se la stringa è lunga (diciamo 1,000,000 di caratteri), copiarla due volte non è una buona idea.
 
 Si noti che questo argomento non ha nulla a che fare con `async` in quanto tale. Si applica ugualmente alle considerazioni sull'opportunità di utilizzare il passaggio dei messaggi o la memoria condivisa.
@@ -13751,7 +13751,7 @@ Si noti che questo argomento non ha nulla a che fare con `async` in quanto tale.
 
 ##### Motivo
 
-Se i thread non sono correlati (ovvero, non si sa se stanno nello stesso scope o uno nella durata dell'altro) e devono condividere la stessa memoria sull'heap [free store]da cancellare, uno `shared_ptr` (o equivalente) è il solo modo sicuro per garantire il corretto 'delete'.
+Se i thread non sono correlati (ovvero, non si sa se stanno nello stesso scope o uno nella durata dell'altro) e devono condividere la stessa memoria sull'heap [free store] da cancellare, uno `shared_ptr` (o equivalente) è il solo modo sicuro per garantire il corretto 'delete'.
 
 ##### Esempio
 
@@ -13863,7 +13863,7 @@ Un `wait` senza una condizione può perdere un [wakeup] o svegliarsi semplicemen
             // fa qualcosa ...
         }
     }
-Qui, se qualche altro `thread` 'consuma' la notifica di `thread1`, il `thread2` può aspettare per sempre.
+Qui, se qualche altro `thread` 'consuma' la notifica di `thread1`, il `thread2` potrebbe aspettare per sempre.
 
 ##### Esempio
 
@@ -13907,7 +13907,7 @@ Segnalare tutti i `wait` senza condizioni.
 ##### Motivo
 
 Meno tempo si passa per un `mutex` preso, minore è la possibilità che un altro `thread` debba aspettare,
-e le sospensioni e le riprese dei `thread` sono costose.
+dato che le sospensioni e le riprese dei `thread` sono costose.
 
 ##### Esempio
 
@@ -13929,7 +13929,7 @@ Lo si può riscrivere in questo modo
         my_lock.unlock();
         do2();  // pulizia: non necessita del lock
     }
-Ma ciò compromette la sicurezza e e viola la regola di [usare il RAII](#Rconc-raii) rule.
+Ma ciò compromette la sicurezza e viola la regola di [usare il RAII](#Rconc-raii).
 Si aggiunga, invece, un blocco per la sezione critica:
 
     void do_something() // OK
@@ -13970,7 +13970,7 @@ Segnalare tutti i `lock_guard` e gli `unique_lock` senza nome.
 
 ##### Motivo
 
-Dovrebbe essere ovvio al lettore che i dati devono essere protetti e come lo sono. Ciò riduce la possibilità che venga bloccato il mutex sbagliato o che il mutex non venga bloccato.
+Dovrebbe essere ovvio al lettore che i dati devono essere protetti e si deve sapere come viene fatto. Ciò riduce la possibilità che venga bloccato il mutex sbagliato o che il mutex non venga bloccato.
 
 L'uso di un `synchronized_value<T>` garantisce che i dati abbiano un mutex e che il giusto mutex venga bloccato quando si accede ai dati.
 Si veda la [WG21 proposal](http://wg21.link/p0290) per aggiungere un `synchronized_value` ad una futura TS o revisione dello standard del C++.
@@ -14194,7 +14194,7 @@ Si deve diventare esperti prima di cimentarsi in codice lock-free utilizzabile d
 
 ##### Motivo
 
-Dal C++11, le variabili locali statiche vengono ora inizializzate in modo thread-safe. In combinazione con il modello RAII, le variabili locali statiche possono sostituire la necessità di scrivere il proprio blocco "double-checked" per l'inizializzazione. Anche con std::call_once can si può raggiungere lo stesso scopo. Utilizzare le variabili locali statiche del C++11 o std::call_once anziché scriversi il proprio blocco "double-checked" per l'inizializzazione.
+Dal C++11, le variabili locali statiche vengono ora inizializzate in modo thread-safe. In combinazione con il modello RAII, le variabili locali statiche possono sostituire la necessità di scrivere il proprio blocco "double-checked" per l'inizializzazione. Anche con std::call_once si può raggiungere lo stesso scopo. Utilizzare le variabili locali statiche del C++11 o std::call_once anziché scriversi il proprio blocco "double-checked" per l'inizializzazione.
 
 ##### Esempio
 
@@ -14209,7 +14209,7 @@ Esempio con std::call_once.
         });
         // ...
     }
-Esempio cono le variabili locali "thread-safe" del C++11.
+Esempio con le variabili locali "thread-safe" del C++11.
 
     void f()
     {
@@ -14237,7 +14237,7 @@ Esempio cono le variabili locali "thread-safe" del C++11.
 
 Il "double-checked locking" è facile da rovinare. Se è davvero necessario scrivere il proprio "double-checked locking", nonostante le regole [CP.110: Non scriversi il proprio "interblocco ricontrollato" [double-checked locking] per l'inizializzazione](#Rconc-double) e [CP.100: Non utilizzare la programmazione lock-free a meno che non sia assolutamente necessario](#Rconc-lockfree), farlo secondo un modello convenzionale.
 
-Gli usi del pattern "double-checked locking" che non sono in violazione della [CP.110: Non scriversi il proprio "interblocco ricontrollato" [double-checked locking] per l'inizializzazione](#Rconc-double), si hanno quando un'azione "non-thread-safe" è sia difficile [hard] che rara, ed esiste un test veloce "thread-safe" utilizzabile per garantire che l'azione non è necessaria, ma non è utilizzabile per garantire il contrario.
+Gli usi del pattern "double-checked locking" che non sono in violazione della [CP.110: Non scriversi il proprio "interblocco ricontrollato" [double-checked locking] per l'inizializzazione](#Rconc-double), si hanno quando un'azione "non-thread-safe" è sia difficile [hard] che rara, ed esiste un test veloce "thread-safe" utilizzabile per garantire che l'azione non sia necessaria, ma non è utilizzabile per garantire il contrario.
 
 ##### Esempio, cattivo
 
@@ -14318,7 +14318,7 @@ Solitamente il codice C++ riceve come `volatile` la memoria posseduta altrove (h
     int volatile* vi = get_hardware_memory_location();
         // nota: qui si ha un puntatore alla memoria di qualcun altro
         // volatile says "treat this with extra respect"
-A volte il codice C++ code alloca memoria `volatile` e la condivide con "qualcun altro" (hardware o un altro linguaggio) per sfuggire deliberatamente ad un puntatore [escaping a pointer]:
+A volte il codice C++ alloca memoria `volatile` e la condivide con "qualcun altro" (hardware o un altro linguaggio) per sfuggire deliberatamente ad un puntatore [escaping a pointer]:
 
     static volatile long vl;
     please_use_this(&vl);   // 'porta' un riferimento a questo "altrove" (non in C++)
@@ -14347,7 +14347,7 @@ In C++, diversamente da altri linguaggi, `volatile` non ha [niente a che fare co
 
 ### <a name="Rconc-signal"></a>CP.201: ??? Signal
 
-???Gestione dei signal di UNIX???. Potrebbe essere utile ricordare quando siano poco sicuri i async-signal-safe, e come comunicare con un gestore di signal (forse è meglio "non farlo affatto")
+???Gestione dei signal di UNIX???. Potrebbe essere utile ricordare quando siano poco sicuri gli async-signal-safe, e come comunicare con un gestore di signal (forse è meglio "non farlo affatto")
 
 
 # <a name="S-errors"></a>E: Gestione degli errori
@@ -14359,7 +14359,7 @@ La gestione degli errori implica:
 * Preservare uno stato valido del programma
 * Evitare perdite (leak) di risorse
 
-Non è possibile recuperare da tutti gli errori. Se il recuero da un errore non è possibile, è importante "uscire" rapidamente in un modo ben definito. Una strategia per la gestione degli errori deve essere semplice, altrimenti diventa fonte di errori anche peggiori.  Anche il codice per gestire gli errori se non testato, o eseguito raramente, è esso stesso una sorgenti di molti bug.
+Non è possibile recuperare da tutti gli errori. Se il recupero da un errore non è possibile, è importante "uscire" rapidamente in un modo ben definito. Una strategia per la gestione degli errori deve essere semplice, altrimenti diventa fonte di errori anche peggiori.  Anche il codice per gestire gli errori se non testato, o eseguito raramente, è esso stesso una sorgenti di molti bug.
 
 Le regole sono fatte per aiutare a evitare i diversi tipi di errori:
 
@@ -15351,7 +15351,7 @@ Per evitare confusione ed un sacco di falsi positivi, non imporre questa regola 
 
     void f(const char* const p); // pedante
     void g(const int i);        // pedante
-Si noti che i parametro della funzione è una variabile locale, quindi le sue modifiche sono locali.
+Si noti che il parametro della funzione è una variabile locale, quindi le sue modifiche sono locali.
 
 ##### Imposizione
 
@@ -15378,25 +15378,25 @@ Ciò fornisce una dichiarazione più precisa dello scopo del progetto, una migli
     }
 ##### Note
 
-Non è intrinsecamente un male passare un puntatore o un riferimento a non-`const`, ma dovrebbe essere fatto solo quando si suppone che la funzione chiamata modifichi l'oggetto.
-Chi legge il codice deve presumere che una funzione che prende un "semplice" `T*` o `T&` modificherà l'oggetto a cui ci si riferisce.
+Non è intrinsecamente un male passare un puntatore o un riferimento come non-`const`, ma dovrebbe essere fatto solo quando si suppone che la funzione chiamata modifichi l'oggetto.
+Chi legge il codice deve presumere che una funzione che prende un "semplice" `T*` o `T&`, modificherà l'oggetto a cui ci si riferisce.
 Se non lo fa per adesso, potrebbe farlo in seguito senza obbligare la ricompilazione.
 
 ##### Note
 
-Ci sono codice/librerie che propongono funzioni che dichiarano un `T*` anche se quelle funzioni non modificano quel `T`.
+Ci sono dei sorgenti/librerie che propongono funzioni che dichiarano un `T*` anche se quelle funzioni non modificano quel `T`.
 Questo è un problema per chi modernizza il codice.
 Si può
 
 * aggiornare la libreria affinché abbia i `const` corretti; soluzione preferita per il lungo-termine
-* Eseguire il "cast di `const`"; [meglio evitare](#Res-casts-const)
+* eseguire il "cast di `const`"; [meglio evitare](#Res-casts-const)
 * fornire una funzione wrapper
 
 Esempio:
 
     void f(int* p);   // old code: f() does not modify `*p`
     void f(const int* p) { f(const_cast<int*>(p)); } // wrapper
-Si noti che la soluzione del wrapper è una patch che si dovrebbe usare solo quando la dichiarazione di `f()` non può essere modificata, p.es. perché sta i una libreria che non può essere modificata.
+Si noti che la soluzione del wrapper è una patch che si dovrebbe usare solo quando la dichiarazione di `f()` non può essere modificata, p.es. perché sta in una libreria che non può essere modificata.
 
 ##### Note
 
@@ -15428,7 +15428,7 @@ Un altro modo per dire che la proprietà `const` non è transitiva.
 
 * Segnalare una funzione membro non segnata come `const`, ma che non esegue un'operazione non-`const` su alcuna variabile membro.
 
-### <a name="Rconst-ref"></a>Con.3: Per default, passare puntatori e riferimenti `const`s
+### <a name="Rconst-ref"></a>Con.3: Per default, passare puntatori e riferimenti `const`
 
 ##### Motivo
 
@@ -15441,7 +15441,7 @@ Per evitare che una funzione chiamata cambi valore inaspettatamente.
     void g(const char* p);  // g non modifica *p
 ##### Note
 
-Non è intrinsecamente un male passare un puntatore o un riferimento a non-`const`, ma dovrebbe essere fatto solo quando si suppone che la funzione chiamata modifichi l'oggetto.
+Non è intrinsecamente un male passare un puntatore o un riferimento come non-`const`, ma dovrebbe essere fatto solo quando si suppone che la funzione chiamata modifichi l'oggetto.
 
 ##### Note
 
@@ -15456,7 +15456,7 @@ Non è intrinsecamente un male passare un puntatore o un riferimento a non-`cons
 
 ##### Motivo
 
-Evitare sorprese dal modificare inaspettatamente i valori degli oggetti.
+Evitare sorprese dalla modifica inaspettata dei valori degli oggetti.
 
 ##### Esempio
 
@@ -15476,7 +15476,7 @@ Dato che `x` non è `const`, si deve presumere che venga modificato da qualche p
 
 * Segnalare le variabili non-`const` non modificate.
 
-### <a name="Rconst-constexpr"></a>Con.5: Utilizzare `constexpr` per i valori per i valori calcolabili durante la compilazione
+### <a name="Rconst-constexpr"></a>Con.5: Utilizzare `constexpr` per i valori calcolabili durante la compilazione
 
 ##### Motivo
 
@@ -15497,10 +15497,10 @@ Cfr. F.4.
 
 # <a name="S-templates"></a>T: Template e programmazione generica
 
-La "programmazione generica" utilizza i tipi e gli algoritmi parametrizzati coi tipi, i valori e gli algoritmi.
+La "programmazione generica" è quella che utilizza tipi e algoritmi parametrizzati dai tipi, dai valori e dagli algoritmi.
 Nel C++, la programmazione generica è supportata dal meccanismo dei `template` del linguaggio.
 
-Gli argomenti alle funzioni generiche sono caratterizzati da un insieme di requisiti sui tipi degli argomenti e sui valori coinvolti.
+Gli argomenti delle funzioni generiche sono caratterizzati da un insieme di requisiti sui tipi degli argomenti e sui valori coinvolti.
 Nel C++, questi requisiti sono espressi da predicati di compilazione chiamati concetti [concept].
 
 I template si possono usare anche per la meta-programmazione; vale a dire, programmi che compongono il codice in fase di compilazione.
@@ -15534,11 +15534,11 @@ Riepilogo delle regole sulla definizione dei concetti:
 * [T.21: Richiedere un set completo di operazioni per un concetto](#Rt-complete)
 * [T.22: Specificare gli assiomi per i concetti](#Rt-axiom)
 * [T.23: Differenziare un concetto speciale dal suo caso più generale aggiungendo nuovi schemi di utilizzo](#Rt-refine)
-* [T.24: Usare classi tag o [trait] per differenziare i concetti che hanno solo una semantica diversa](#Rt-tag)
-* [T.25: Evitare i vincoli complementari [complementary constraints]](#Rt-not)
+* [T.24: Usare classi tag o [trait] per differenziare i concetti che hanno solamente una semantica diversa](#Rt-tag)
+* [T.25: Evitare i vincoli complementari](#Rt-not)
 * [T.26: Preferire la definizione dei concetti in termini di schemi d'uso anziché la semplice sintassi](#Rt-use)
-* [T.30: Usare con parsimonia la negazione del concetto (`!C<T>`) per esprimere piccole differenze](#Rt-not)
-* [T.31: Usare con parsimonia la disgiunzione del concetto (`C1<T> || C2<T>`) per esprimere le alternative](#Rt-or)
+* [T.30: Usare con parsimonia la negazione del concetto (`!C<T>`) per esprimere piccole differenze](#Rt-???)
+* [T.31: Usare con parsimonia la disgiunzione del concetto (`C1<T> || C2<T>`) per esprimere le alternative](#Rt-???)
 * ???
 
 Riepilogo delle regole sull'interfaccia dei template:
@@ -15549,14 +15549,14 @@ Riepilogo delle regole sull'interfaccia dei template:
 * [T.43: Preferire `using` a `typedef` per definire gli alias](#Rt-using)
 * [T.44: Usare template di funzioni per dedurre i tipi degli argomenti della classe (dove fattibile)](#Rt-deduce)
 * [T.46: Richiedere che gli argomenti template siano almeno `Regolari` o `SemiRegolari`](#Rt-regular)
-* [T.47: Evitare i template senza vincoli molto evidenti con nomi comuni](#Rt-visible)
+* [T.47: Evitare i template senza vincoli molto visibili con nomi comuni](#Rt-visible)
 * [T.48: Se il compilatore non supporta i concetti, simularli con `enable_if`](#Rt-concept-def)
 * [T.49: Dove possibile, evitare la [type-erasure]](#Rt-erasure)
 
 Riepilogo delle regole sulla definizione dei template:
 
 * [T.60: Minimizzare le dipendenze dal contesto di un template](#Rt-depend)
-* [T.61: Non sovra-parametrizzare i membri (PAUROSO)](#Rt-scary)
+* [T.61: Non sovra-parametrizzare i membri (SCARY)](#Rt-scary)
 * [T.62: Porre i membri della classe template non-dipendenti in una classe base non-template](#Rt-nondependent)
 * [T.64: Usare la specializzazione per fornire implementazioni alternative di classi template](#Rt-specialization)
 * [T.65: Usare il [tag dispatch] per fornire implementazioni alternative delle funzioni](#Rt-tag-dispatch)
@@ -15566,7 +15566,7 @@ Riepilogo delle regole sulla definizione dei template:
 
 Riepilogo delle regole sulla gerarchia dei template:
 
-* [T.80: Non rendere template nativamente una gerarchia di classi](#Rt-hier)
+* [T.80: Non rendere nativamente template una gerarchia di classi](#Rt-hier)
 * [T.81: Non mischiare le gerarchie con gli array](#Rt-array) // ??? da qualche parte nelle "gerarchie"
 * [T.82: Linearizzare una gerarchia quando le funzioni virtuali sono indesiderabili](#Rt-linear)
 * [T.83: Non dichiarare virtuale una funzione membro template](#Rt-virtual)
@@ -15575,7 +15575,7 @@ Riepilogo delle regole sulla gerarchia dei template:
 
 Riepilogo delle regole sui template variadici:
 
-* [T.100: Usare i template variadici quando c'è bisogno di una funzione che prende un numero variabile di argomenti di vari tipi](#Rt-variadic)
+* [T.100: Usare i template variadici quando c'è bisogno di una funzione che accetti un numero variabile di argomenti di vari tipi](#Rt-variadic)
 * [T.101: ??? Come passare gli argomenti ad un template variadico ???](#Rt-variadic-pass)
 * [T.102: ??? Come processare gli argomenti in un template variadico ???](#Rt-variadic-process)
 * [T.103: Non usare i template variadici per liste di argomenti omogenei](#Rt-variadic-not)
@@ -15603,7 +15603,7 @@ Riepilogo delle altre regole sui template:
 
 ## <a name="SS-GP"></a>T.gp: Programmazione generica
 
-La "programmazione generica" utilizza i tipi e gli algoritmi parametrizzati coi tipi, i valori e gli algoritmi.
+La "programmazione generica" è quella che utilizza tipi e algoritmi parametrizzati dai tipi, dai valori e dagli algoritmi.
 
 ### <a name="Rt-raise"></a>T.1: Utilizzare i template per elevare il livello di astrazione del codice
 
@@ -15645,22 +15645,22 @@ E, in questo caso, perdendo un'opportunità di generalizzazione.
 Assumendo che `Arithmetic` richieda sia `+` che `+=`, si vincola l'utente di `sum` a fornire un tipo completamente aritmetico.
 Questo non è un requisito minimo, ma fornisce all'implementatore degli algoritmi la libertà necessaria e garantisce che si possa usare qualsiasi tipo `Arithmetic` per un'ampia varietà di algoritmi.
 
-Per ulteriore generalità e riusabilità, si potrebbe anche usare un più generale concetto di `Container` o d `Range` anziché affidarsi ad un solo contenitore, `vector`.
+Per ulteriore generalità e riusabilità, si potrebbe anche usare un più generale concetto di `Container` o di `Range` anziché affidarsi ad un solo contenitore, `vector`.
 
 ##### Note
 
-Se si definisce un modello per avere esattamente le sole operazioni richieste per una particolare implementazione di un singolo algoritmo (p.es., richiedere solo `+=` anziché anche `=` e `+`) e solo quelle, si hanno dei manutentori troppo vincolati.
+Se si definisce un modello per avere solo e solamente le operazioni richieste per una particolare implementazione di un singolo algoritmo (p.es., si richiede solo `+=` anziché anche `=` e `+`), si hanno dei manutentori troppo vincolati.
 Lo scopo è quello di minimizzare i requisiti sugli argomenti template, ma i requisiti assolutamente minimali di un'implementazione raramente costituiscono un concetto significativo.
 
 ##### Note
 
-I template si possono usare per esprimere essenzialmente qualsiasi cosa (sono Turing equivalenti), ma lo scopo della programmazione generica che si ha con i template) è quello di generalizzare efficientemente operazioni e/o algoritmi gli per un insieme di tipi con proprietà semantiche simili.
+I template si possono usare per esprimere praticamente qualsiasi cosa (sono Turing equivalenti), ma lo scopo della programmazione generica (che si realizza con i template) è quello di generalizzare efficientemente operazioni e/o algoritmi per un insieme di tipi con proprietà semantiche simili.
 
 ##### Note
 
 I `requires` nei commenti sono utilizzi dei `concetti`.
 I "Concetti" sono definiti in una Specifica Tecnica ISO: [concetti](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
-I concetti sono supportati GCC 6.1 e successivi.
+I concetti sono supportati nel GCC 6.1 e successivi.
 Di conseguenza, si commenta l'uso dei concetti negli esempi; cioè vengono usati  solo come commenti formalizzati.
 Se si usa il GCC 6.1 o successivi, si possono de-commentare.
 
@@ -15699,7 +15699,7 @@ Non essere eccessivamente concisi.
 
 ##### Motivo
 
-I contenitori necessitano di un tipo elemento, ed esprimerlo come un argomento template è generale, riutilizzabile e sicuro rispetto al tipo.
+I contenitori necessitano di un tipo per l'elemento, ed esprimerlo come un argomento template è generale, riutilizzabile e sicuro rispetto al tipo.
 Si evitano, inoltre, alternative fragili ed inefficienti. Convenzione: Questo è come fa la STL.
 
 ##### Esempio
@@ -15789,7 +15789,7 @@ Si vedano i riferimenti a regole più specifiche.
 ## <a name="SS-concepts"></a>T.concepts: Regole sui concetti
 
 I "concetti" sono funzionalità per specificare i requisiti per gli argomenti template.
-È una [ISO Technical Specification](#Ref-conceptsTS), ma è attualmente supportata solo dal GCC.
+È una [ISO Technical Specification](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf), ma è attualmente supportata solo dal GCC.
 I concetti sono, tuttavia, cruciali nel pensare alla programmazione generica e sono alla base di tanto lavoro sulle future librerie C++ (sia standard che altre).
 
 Questa sezione presuppone il supporto del concetto
@@ -15808,8 +15808,8 @@ Riepilogo delle regole sulla definizione dei concetti:
 * [T.21: Richiedere un set completo di operazioni per un concetto](#Rt-complete)
 * [T.22: Specificare gli assiomi per i concetti](#Rt-axiom)
 * [T.23: Differenziare un concetto speciale dal suo caso più generale aggiungendo nuovi schemi di utilizzo](#Rt-refine)
-* [T.24: Usare classi tag o [trait] per differenziare i concetti che hanno solo una semantica diversa](#Rt-tag)
-* [T.25: Evitare vincoli gratuiti](#Rt-not)
+* [T.24: Usare classi tag o [trait] per differenziare i concetti che hanno solamente una semantica diversa](#Rt-tag)
+* [T.25: Evitare i vincoli complementari](#Rt-not)
 * [T.26: Preferire la definizione dei concetti in termini di schemi d'uso anziché la semplice sintassi](#Rt-use)
 * ???
 
@@ -15822,7 +15822,7 @@ Riepilogo delle regole sulla definizione dei concetti:
 Correttezza e leggibilità.
 Il significato supposto (sintattico e semantico) di un argomento template è fondamentale per l'interfaccia di un template.
 Un concetto migliora enormemente la documentazione e la gestione degli errori per il template.
-La specificare i concetti per gli argomenti template costituisce un potente strumento di progettazione.
+Lo specificare i concetti per gli argomenti template costituisce un potente strumento di progettazione.
 
 ##### Esempio
 
@@ -15872,13 +15872,13 @@ Segnalare i tipi di argomenti template senza concetti
 
 ##### Motivo
 
-I concetti "standard" (come quelli forniti dalle [GSL](#S-GSL) e le [Ranges TS](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf), e si spera presto dallo stesso standard ISO) evitano la fatica di idearsi i propri concetti, sono progettati meglio di quanto si farebbe in proprio frettolosamente, migliorando l'interoperabilità.
+I concetti "standard" (come quelli forniti dalle [GSL](#S-gsl) e la [TS "Ranges"](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf), e si spera presto dallo stesso standard ISO) evitano la fatica di idearsi i propri concetti, sono progettati meglio di quanto si farebbe in proprio frettolosamente, migliorando l'interoperabilità.
 
 ##### Note
 
 A meno che non si stia creando una nuova libreria generica, la maggior parte dei concetti necessari sarà già stata definita dalla libreria standard.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
     template<typename T>
         // da non definire: Sortable sta nelle GSL
@@ -15903,7 +15903,7 @@ Progettare un concetto utile è impegnativo.
 Difficile.
 
 * Cercare argomenti senza vincoli, template che usano concetti "insoliti"/non-standard, template che usano concetti "fatti in casa" senza assiomi.
-* Sviluppare un tool per scoprire i concetti (p.es., cfr.[un primo esperimento](http://www.stroustrup.com/sle2010_webversion.pdf)).
+* Sviluppare un tool per scoprire i concetti (p.es., cfr. [un primo esperimento](http://www.stroustrup.com/sle2010_webversion.pdf)).
 
 ### <a name="Rt-auto"></a>T.12: Preferire i nomi dei concetti ad `auto` per le variabili locali
 
@@ -15911,7 +15911,7 @@ Difficile.
 
 `auto` è il concetto più debole. I nomi dei concetti convogliano più significato che il semplice `auto`.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
     vector<string> v{ "abc", "xyz" };
     auto& x = v.front();     // bad
@@ -15926,7 +15926,7 @@ Difficile.
 
 Leggibilità. Espressione diretta di un'idea.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
 Per dire che "`T` è `Sortable [Ordinabile]`":
 
@@ -15965,9 +15965,9 @@ Ovviamente, la definizione dei concetti sarà molto utile per il codice che ne u
 
 ##### Motivo
 
-I concetti hanno lo scopo di esprimere nozioni semantiche, come in "un numero", "a intervallo [range]" di elementi, e "totalmente ordinato". Semplici vincoli, come  in "ha un operatore `+`" e "ha un operatore `>`" non possono essere specificati in modo significativo in modo isolato e si dovrebbero usare solo come elementi costitutivi di concetti significativi, piuttosto che nel codice utente.
+I concetti hanno lo scopo di esprimere nozioni semantiche, come in "un numero", "un intervallo [range]" di elementi, e "totalmente ordinato". Semplici vincoli, come  in "ha un operatore `+`" e "ha un operatore `>`" non possono essere specificati in modo significativo isolatamente e si dovrebbero usare solo come elementi costitutivi di concetti significativi, piuttosto che nel codice utente.
 
-##### Esempio, cattivo (utilizzando i concetti TS)
+##### Esempio, cattivo (utilizzando la TS "concepts")
 
     template<typename T>
     concept Addable = has_plus<T>;    // bad; insufficiente
@@ -15992,7 +15992,7 @@ Questo `Addable` viola la regola matematica che supponga che l'addizione sia com
 
 La capacità di specificare una semantica significativa è una caratteristica distintiva di un vero concetto, al contrario di un vincolo sintattico.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
     template<typename T>
     // Gli operatori +, -, *, e/ per un numero si suppone che seguano le solite regole matematiche
@@ -16036,7 +16036,7 @@ Aiuta gli implementatori e i manutentori.
 
 Questa è una specifica variante della regola generale [un concetto deve avere un senso semantico](#Rt-low).
 
-##### Esempio, cattivo (utilizzando i concetti TS)
+##### Esempio, cattivo (utilizzando la TS "concepts")
 
     template<typename T> concept Subtractable = requires(T a, T, b) { a-b; };
 Questo non ha un senso semantico.
@@ -16119,7 +16119,7 @@ Un concetto significativo/utile ha un significato semantico.
 Esprimere queste semantiche in modo informale, semi-formale o formale rende il concetto comprensibile ai lettori e lo sforzo di esprimerlo può intercettare errori concettuali.
 La specifica della semantica è un potente strumento di progettazione.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
     template<typename T>
         // Gli operatori +, -, *, e / per un numero si suppone che seguano le solite regole matematiche
@@ -16140,14 +16140,14 @@ Un assioma può non essere generale, ma chi scrive il template può presumere ch
 
 In questo contesto gli assiomi sono espressioni Booleane.
 Per gli esempi si veda [Palo Alto TR](#S-references).
-Attualmente, il C++ non supporta gli assiomi (anche gli [ISO Concepts TS]), quindi ci si dovrà accontentare a lungo dei commenti.
+Attualmente, il C++ non supporta gli assiomi (nemmeno la TS ISO "Concepts"), quindi ci si dovrà accontentare a lungo dei commenti.
 Appena sarà disponibile il supporto del linguaggio, si potranno rimuovere le `//` davanti all'assioma
 
 ##### Note
 
-I  concetti GSL hanno una semantica ben definita; si veda il [Palo Alto TR] e il [Ranges TS].
+I  concetti GSL hanno una semantica ben definita; si veda la TR "Palo Alto" e la TS "Ranges".
 
-##### Eccezioni (utilizzando i concetti TS)
+##### Eccezioni (utilizzando la TS "concepts")
 
 Le prime versioni di un nuovo "concept" ancora in fase di sviluppo definiranno spesso semplici insiemi di vincoli senza una semantica ben specificata.
 Trovare una buona semantica può richiedere tempo e fatica.
@@ -16164,11 +16164,11 @@ Quindi un `Balancer` deve fornire almeno tre operazioni su un albero `Node`, ma 
 Un "concept" incompleto o senza una semantica ben specificata può ancora essere utile.
 Per esempio, consente alcuni controlli durante la sperimentazione iniziale.
 Tuttavia, non si deve supporre che sia stabile.
-Ogni nuovo caso d'uso può richiedere un tale concetto incompleto e da migliorare.
+Ciascun nuovo caso d'uso può richiedere uno di questi concetti incompleti da migliorare.
 
 ##### Imposizione
 
-* Cercare la parola "axiom" nei commenti per la definizione dei concept
+* Cercare la parola "axiom" [assioma] nei commenti per la definizione dei concept
 
 ### <a name="Rt-refine"></a>T.23: Differenziare un concetto speciale dal suo caso più generale aggiungendo nuovi schemi di utilizzo.
 
@@ -16176,7 +16176,7 @@ Ogni nuovo caso d'uso può richiedere un tale concetto incompleto e da migliorar
 
 Altrimenti non possono essere distinti automaticamente dal compilatore.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
     template<typename I>
     concept bool Input_iter = requires(I iter) { ++iter; };
@@ -16185,20 +16185,20 @@ Altrimenti non possono essere distinti automaticamente dal compilatore.
     concept bool Fwd_iter = Input_iter<I> && requires(I iter) { iter++; }
 Il compilatore può determinare il perfezionamento in base all'insieme di operazioni richieste (qui, il suffisso `++`).
 Ciò riduce l'onere per gli implementatori di questi tipi poiché non necessitano di dichiarazioni speciali per "agganciarsi al concetto".
-Se due concetti hanno esattamente gli stessi requisiti, sono logicamente equivalenti (non c'è alcuna elaborazione [refinement]).
+Se due concetti hanno esattamente gli stessi requisiti, sono logicamente equivalenti (non c'è alcun aggiustamento).
 
 ##### Imposizione
 
 * Segnalare un concetto che ha esattamente gli stessi requisiti di un altro concetto già visto (nessuno dei due è più elaborato [refined]).
    Per chiarire le ambiguità, si veda [T.24](#Rt-tag).
 
-### <a name="Rt-tag"></a>T.24: Usare classi tag o [trait] per differenziare i concetti che hanno solo una semantica diversa.
+### <a name="Rt-tag"></a>T.24: Usare classi tag o [trait] per differenziare i concetti che hanno solamente una semantica diversa.
 
 ##### Motivo
 
 Due concetti che richiedono la stessa sintassi ma hanno semantica diversa portano ad un'ambiguità a meno che il programmatore non li differenzi.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
     template<typename I>    // iteratore che fornisce un accesso random
     concept bool RA_iter = ...;
@@ -16227,14 +16227,14 @@ Preferire quelli della libreria standard.
 * Il compilatore segnala l'uso ambiguo di concetti identici.
 * Segnalare la definizione di concetti identici.
 
-### <a name="Rt-not"></a>T.25: Evitare i vincoli complementari [complementary constraints]
+### <a name="Rt-not"></a>T.25: Evitare i vincoli complementari
 
 ##### Motivo
 
 Chiarezza. Manutenibilità.
-Le funzioni con requisiti complementari espressi usando la negazione sono fragili.
+Le funzioni con requisiti complementari, espressi usando la negazione sono fragili.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
 Inizialmente, le persone proveranno a definire funzioni con requisiti complementari:
 
@@ -16253,11 +16253,11 @@ Questo è migliore:
     template<typename T>   // specializzazione tramite il concetto
         requires C<T>
     void f();
-Il compilatore sceglierà il modello non vincolato solo quando `C<T>` non è soddisfatto. Se non si vuole (o non si può) definire una versione non vincolata di `f()`, allora a si elimina [delete].
+Il compilatore sceglierà il modello non vincolato solo quando `C<T>` non è soddisfatto. Se non si vuole (o non si può) definire una versione non vincolata di `f()`, allora la si cancella.
 
     template<typename T>
     void f() = delete;
-Il compilatore selezionerà il sovraccarico [overload] ed solleverà un errore appropriato.
+Il compilatore selezionerà l'overload ed emetterà l'errore appropriato.
 
 ##### Note
 
@@ -16293,12 +16293,12 @@ Ora le opportunità di errori si moltiplicano.
 La definizione è più leggibile e corrisponde direttamente a ciò che un utente deve scrivere.
 Le conversioni vengono prese in considerazione. Non si devono ricordare i nomi di tutti i [traits] del tipo.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
 Si potrebbe essere tentati di definire un concetto `Equality` in questo modo:
 
     template<typename T> concept Equality = has_equal<T> && has_not_equal<T>;
-Ovviamente, sarebbe meglio e più semplice usare lo standard `EqualityComparable`, ma - solo per fare un esempio - se si dovesse definire un tale concetto, si preferisca:
+Ovviamente, sarebbe meglio e più semplice usare lo `EqualityComparable` standard, ma - solo per fare un esempio - se si dovesse definire un tale concetto, si preferisca:
 
     template<typename T> concept Equality = requires(T a, T b) {
         bool == { a == b }
@@ -16306,8 +16306,8 @@ Ovviamente, sarebbe meglio e più semplice usare lo standard `EqualityComparable
         // axiom { !(a == b) == (a != b) }
         // axiom { a = b; => a == b }  // => significa "implica"
     }
-anziché definire due concetti insignificanti `has_equal` e `has_not_equal` solo cole degli [just helper] nella definizione di `Equality`.
-Per "insignificante" si intende che non si può specificare la semantica di `has_equal` in isolamento.
+anziché definire due concetti insignificanti `has_equal` e `has_not_equal` solo come 'helper' nella definizione di `Equality`.
+Per "insignificante" si intende che non si può specificare la semantica di `has_equal` isolatamente.
 
 ##### Imposizione
 
@@ -16317,17 +16317,17 @@ Per "insignificante" si intende che non si può specificare la semantica di `has
 
 Nel corso degli anni, la programmazione con i template ha subito una debole distinzione tra l'interfaccia di un template
 e la sua implementazione.
-Prima dei concetti, quella distinzione non aveva un supporto linguistico diretto.
-Tuttavia, l'interfaccia per un template è un concetto critico - un contratto tra un utente e un implementatore - e dovrebbe essere progettato con cura.
+Prima dei concetti, tale distinzione non aveva un supporto linguistico diretto.
+Tuttavia, l'interfaccia per un template è un concetto critico - un contratto tra un utente e un implementatore - e dovrebbe essere progettata con cura.
 
 ### <a name="Rt-fo"></a>T.40: Usare oggetti funzione per passare le operazioni agli algoritmi
 
 ##### Motivo
 
-Gli oggetti funzione possono trasportare più informazioni attraverso un'interfaccia che un "semplice" puntatore a una funzione.
+Gli oggetti funzione possono trasportare più informazioni attraverso un'interfaccia anziché un "semplice" puntatore a una funzione.
 In generale, passare oggetti funzione ha prestazioni migliori che passare puntatori a funzioni.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
     bool greater(double x, double y) { return x > y; }
     sort(v, greater);                                    // puntatore a funzione: potenzialmente lento
@@ -16362,7 +16362,7 @@ L'argomento delle prestazioni dipende dalla tecnologia del compilatore e di quel
 
 Mantenere le interfacce semplici e stabili.
 
-##### Esempio (utilizzando i concetti TS)
+##### Esempio (utilizzando la TS "concepts")
 
 Si consideri, un `sort` dotato di un semplice (molto semplificato) supporto per il debug:
 
@@ -16387,7 +16387,7 @@ D'altra parte, nell'idea fondamentale dell'ordinamento non c'è nulla che dica q
 
 ##### Note
 
-Se si richiede che ogni operazione utilizzata sia elencata tra i requisiti, l'interfaccia diventa instabile: Ogni volta che cambiano le strutture di debug, la raccolta dei dati utilizzati, il supporto dei test, la segnalazione degli errori, ecc., si dovrebbe cambiare il template e si dovrebbe ricompilare ogni utilizzo del template.
+Se si chiede che ogni operazione utilizzata venga elencata tra i requisiti, l'interfaccia diventa instabile: Ogni volta che cambiano le strutture di debug, la raccolta dei dati utilizzati, il supporto dei test, la segnalazione degli errori, ecc., si dovrebbe cambiare il template e si dovrebbe ricompilare ogni utilizzo del template.
 Questo è poco gestibile e, in alcuni ambienti, impossibile.
 
 Al contrario, se si utilizza un'operazione nell'implementazione che non è garantita dal controllo concettuale, si potrebbe ricevere un successivo errore di compilazione.
@@ -16542,7 +16542,7 @@ Semiregolare richiede il costruttore di default.
 
 * Segnalare i tipi che non sono almeno `SemiRegolari`.
 
-### <a name="Rt-visible"></a>T.47: Evitare i template senza vincoli molto evidenti con nomi comuni
+### <a name="Rt-visible"></a>T.47: Evitare i template senza vincoli molto visibili con nomi comuni
 
 ##### Motivo
 
@@ -16616,7 +16616,7 @@ Perché è il meglio che possiamo fare senza il supporto diretto del concetto.
     }
 ##### Note
 
-Attenzione ai [vincoli complementari [complementary constraints]](# T.25).
+Attenzione ai [vincoli complementari](#Rt-not).
 Il falso [overloading] del concetto utilizzando `enable_if` a volte costringe ad usare questa tecnica di progettazione soggetta a errori.
 
 ##### Imposizione
@@ -16689,7 +16689,7 @@ E non si cominci ad usare le macro!
 
 ??? Difficile
 
-### <a name="Rt-scary"></a>T.61: Non sovra-parametrizzare i membri ("SCARY")
+### <a name="Rt-scary"></a>T.61: Non sovra-parametrizzare i membri (SCARY)
 
 ##### Motivo
 
@@ -16744,8 +16744,8 @@ In genere, la soluzione consiste nel rendere non locale quella che sarebbe stata
 
     List<int> lst1;
     List<int, My_allocator> lst2;
-Alcuni hanno trovato l'idea che il `Link` non sia più nascosto nel pauroso [scary] elenco, quindi chiamiamo tale tecnica
-[SCARY](http://www.open-std.org/jtc1/sc22/WG21/docs/papers/2009/n2911.pdf). Da quel documento accademico: "L'acronimo SCARY descrive assegnazioni e inizializzazioni che Sembrano sbagliate (apparendo vincolate [Constrained] da parametri generici in conflitto), ma in realtà [Actually] funzionano con la giusta [Right] implementazione (non vincolata dal [bY] conflitto a causa di dipendenze minimizzate)".
+Alcuni hanno trovato l'idea che il `Link` non venga più nascosto nel terrificante elenco, quindi chiamiamo tale tecnica
+[SCARY](http://www.open-std.org/jtc1/sc22/WG21/docs/papers/2009/n2911.pdf) [terrificante]. Da quel documento accademico: "L'acronimo SCARY descrive assegnazioni e inizializzazioni che Sembrano sbagliate (apparendo vincolate [Constrained] da parametri generici in conflitto), ma in realtà [Actually] funzionano con la giusta [Right] implementazione (non vincolata dal [bY] conflitto a causa di dipendenze minimizzate)".
 
 ##### Imposizione
 
@@ -16782,7 +16782,7 @@ Consentire ai membri della classe base di essere utilizzati senza specificare gl
 
 Una versione più generale di questa regola sarebbe "Se un membro della classe template dipende da solo N parametri template di M, lo si mette in una classe base con solo N parametri". Per N == 1, si ha una scelta di una classe base di una classe nello scope circostante come in [T.61](#Rt-scary).
 
-??? E sulle costanti? statica delle classi?
+??? E sulle costanti? staticità delle classi?
 
 ##### Imposizione
 
@@ -16818,7 +16818,7 @@ La specializzazione offre un potente meccanismo per fornire implementazioni alte
 
 ##### Esempio
 
-Questa è una versione semplificata di `std::copy` (si ignora la possibilità di sequenze non contigue)
+Questa è una versione semplificata di `std::copy` (viene ignorata la possibilità di sequenze non contigue)
 
     struct pod_tag {};
     struct non_pod_tag {};
@@ -16854,7 +16854,7 @@ Questa è una tecnica generale e potente per la selezione dell'algoritmo in fase
 
 ##### Note
 
-Quando diventerà ampiamente disponibile il `concept` tali alternative si potranno distinguere direttamente:
+Quando diventerà ampiamente disponibile il `concept`, tali alternative si potranno distinguere direttamente:
 
     template<class Iter>
         requires Pod<Value_type<iter>>
@@ -16945,8 +16945,8 @@ Un [trait] è solitamente un alias di un tipo per calcolare un tipo, una funzion
 
 ##### Note
 
-Se si intende chiamare la propria funzione d'aiuto `helper(t)` con un valore `t` che dipende da un tipo di parametro template, si mette in un namespace `::detail` e si qualifica la chiamata come `detail::helper(t);`.
-Una chiamata non qualificata diventa un punto di personalizzazione in cui ogni funzione `helper` si può chiamare nel namespace dei tipi `t`; ciò può provocare problemi come [invocare involontariamente funzioni template non vincolate](#Rt-unconstrained-adl).
+Se si intende chiamare la propria funzione `helper(t)` con un valore `t` che dipende da un tipo di parametro template, si mette in un namespace `::detail` e si qualifica la chiamata come `detail::helper(t);`.
+Una chiamata non qualificata diventa un punto di personalizzazione in cui ogni funzione `helper` si può chiamare nel namespace dei tipi `t`; ciò può provocare problemi come [invocare involontariamente funzioni template non vincolate](#Rt-visible).
 
 
 ##### Imposizione
@@ -16959,7 +16959,7 @@ Una chiamata non qualificata diventa un punto di personalizzazione in cui ogni f
 I template sono la spina dorsale del C++ per il supporto alla programmazione generica e la gerarchia di classi è la spina dorsale per il supporto della programmazione object-oriented.
 I due meccanismi del linguaggio si possono usare efficacemente in combinazione, ma è necessario evitare alcune insidie progettuali.
 
-### <a name="Rt-hier"></a>T.80: Non rendere template nativamente una gerarchia di classi
+### <a name="Rt-hier"></a>T.80: Non rendere nativamente template una gerarchia di classi
 
 ##### Motivo
 
@@ -16987,7 +16987,7 @@ Probabilmente è una idea stupida definire un `sort` come funzione membro di un 
 
 Detto questo, il compilatore non può sapere se viene chiamato `vector<int>::sort()`, quindi deve generare del codice per esso.
 Lo stesso per `vector<string>::sort()`.
-A meno che queste due funzioni non siano chiamate, questo è codice inutile [code bloat].
+A meno che queste due funzioni non vengano chiamate, questo è codice inutile [code bloat].
 Si immagini cosa farebbe ad una gerarchia di classi con decine di classi derivate con molte istanze.
 
 ##### Note
@@ -17079,7 +17079,7 @@ C'è bisogno di una regola perché le persone continuano a chiederlo
 
 ##### Alternativa
 
-Double dispatch, visitors, calcola quale funzione chiamare
+Double dispatch, visitors, calcolare quale funzione chiamare
 
 ##### Imposizione
 
@@ -17123,10 +17123,10 @@ Potrebbe essere una classe base:
 
     List<int> li;
     List<string> ls;
-Ora c'è solo una copia delle operazioni degli elementi collegati e non di un elenco `List`.
-Le classi `Link` e `List` non fanno nulla altro che gestire il tipo.
+Ora c'è solo una sola copia delle operazioni degli elementi, collegati e non, di un  elenco: `List`.
+Le classi `Link` e `List` non fanno altro che gestire il tipo.
 
-Anziché usare un tipo "base" separato, un'altre comune tecnica consiste nello specializzare `void` o `void*` ed avere il template generale per `T` solo per i cast sicuri incapsulati da e per l'implementazione centrale di `void`.
+Anziché usare un tipo "base" separato, un'altra tecnica comune consiste nello specializzare `void` o `void*` ed avere il template generale per `T` solo per i cast sicuri incapsulati da e per l'implementazione centrale di `void`.
 
 **Alternativa**: Usare un'implementazione [Pimpl](#Ri-pimpl) [Pointer to IMPLementation].
 
@@ -17138,11 +17138,11 @@ Anziché usare un tipo "base" separato, un'altre comune tecnica consiste nello s
 
 ???
 
-### <a name="Rt-variadic"></a>T.100: Usare i template variadici quando c'è bisogno di una funzione che prende un numero variabile di argomenti di vari tipi
+### <a name="Rt-variadic"></a>T.100: Usare i template variadici quando c'è bisogno di una funzione che accetti un numero variabile di argomenti di vari tipi
 
 ##### Motivo
 
-Il template variadico è il meccanismo più generale, ed è sia efficiente che sicuro [type-safe]. Non usare i vararg del C.
+Il template variadico è il meccanismo più generale, ed è sia efficiente che [type-safe]. Non usare i vararg del C.
 
 ##### Esempio
 
@@ -17229,7 +17229,7 @@ Se si ritiene di dover nascondere la meta-programmazione dei template nelle macr
 ##### Motivo
 
 Finché i concetti non saranno generalmente disponibili, si dovranno emulare con la TMP.
-I casi d'uso che richiedono i concetti (p.es. l'overloading basato sui concetti) sono tra quelli più comuni (e semplici) utilizzi della TMP.
+I casi d'uso che richiedono i concetti (p.es. l'overloading basato sui concetti) sono tra gli utilizzi più comuni (e semplici) della TMP.
 
 ##### Esempio
 
@@ -17242,7 +17242,7 @@ I casi d'uso che richiedono i concetti (p.es. l'overloading basato sui concetti)
     advance(Iter p, int n) { assert(n >= 0); while (n--) ++p;}
 ##### Note
 
-Tale codice è molto più semplice usando i concetti:
+Tale codice risulta molto più semplice usando i concetti:
 
     void advance(RandomAccessIterator p, int n) { p += n; }
 
@@ -17255,7 +17255,7 @@ Tale codice è molto più semplice usando i concetti:
 
 ##### Motivo
 
-La meta-programmazione template è l'unico modo essere supportato direttamente, e quasi un principio [half-way principled], per generare tipi in fase di compilazione.
+La meta-programmazione template è l'unico modo ad essere supportato direttamente, ed è quasi il modo principale, per generare tipi in fase di compilazione.
 
 ##### Note
 
@@ -17312,7 +17312,7 @@ Le funzionalità definite nello standard, come `conditional`, `enable_if`, e `tu
 
 ##### Motivo
 
-Ottenere servizi TMP non è facile e l'uso di una libreria ci rende parte (si spera di supporto) di una comunità.
+Ottenere servizi TMP non è facile e l'uso di una libreria ci rende parte (e si spera di supporto) di una comunità.
 Scrivere il proprio "supporto TMP avanzato" solo se è veramente necessario.
 
 ##### Esempio
@@ -17328,7 +17328,7 @@ Scrivere il proprio "supporto TMP avanzato" solo se è veramente necessario.
 
 ##### Motivo
 
-Documentazione, leggibilità, opportunità di riutilizzo.
+Documentazione, leggibilità, possibilità di riutilizzo.
 
 ##### Esempio
 
@@ -17353,7 +17353,7 @@ Documentazione, leggibilità, opportunità di riutilizzo.
             return true;
         }
     );
-Qui c'è una funzione nascosta (confronta "case insensitive" di stringhe), come spesso accade quando gli argomenti della lambda diventano grandi.
+Qui c'è una funzione nascosta (confronto "case insensitive" di stringhe), come spesso accade quando gli argomenti della lambda diventano grandi.
 
     bool compare_insensitive(const string& a, const string& b)
     {
@@ -17435,7 +17435,7 @@ Usare `!=` anziché `<` per confrontare iteratori; `!=` funziona per più oggett
     for (auto i = first; i != last; ++i) {   // good; più generico
         // ...
     }
-Ovviamente, il range-`for` è ancora meglio dove fa quello che si vuole.
+Ovviamente, il range-`for` è ancora meglio in quanto fa quello che si vuole.
 
 ##### Esempio
 
@@ -17473,14 +17473,14 @@ Usare la classe meno-derivata che abbia le funzionalità richieste.
 ##### Imposizione
 
 * Segnalare i confronti di iteratori con `<` anziché con `!=`.
-* Segnalare `x.size() == 0` quando è disponibile `x.empty()` o `x.is_empty()`. Controllare se vuoto, funziona per più contenitori rispetto a size(), perché alcuni contenitori non conoscono la propria dimensione [size] o sono concettualmente di dimensioni illimitate.
+* Segnalare `x.size() == 0` quando è disponibile `x.empty()` o `x.is_empty()`. Il controllare se vuoto, funziona per più contenitori rispetto a size(), perché alcuni contenitori non conoscono la propria dimensione [size] o sono concettualmente di dimensioni illimitate.
 * Segnalare le funzioni che prendono un puntatore o un riferimento a un tipo multi-derivato ma usano solo funzioni del tipo base.
 
 ### <a name="Rt-specialize-function"></a>T.144: Non specializzare le funzioni template
 
 ##### Motivo
 
-Non si può specializzare parzialmente una funzione template per le del linguaggio. Si può completamente specializzare una funzione template ma quasi certamente si vuole eseguire invece l'overload -- perché le specializzazioni della funzione template non partecipa all'overloading, esse non agiscono come probabilmente si voleva. Raramente, si dovrebbe effettivamente specializzare delegando ad una classe template giustamente specializzata.
+Non si può specializzare parzialmente una funzione template per le regole del linguaggio. Si può completamente specializzare una funzione template ma quasi certamente si vuole eseguire invece l'overload -- perché le specializzazioni della funzione template non partecipano all'overloading, esse non agiscono come probabilmente si voleva. Raramente, si dovrebbe effettivamente specializzare delegando ad una classe template giustamente specializzata.
 
 ##### Esempio
 
@@ -18293,7 +18293,7 @@ Inoltre, `std::array<>::fill()` o `std::fill()` o anche un inizializzatore vuoto
         array<int, 10> a, b, c{};       // c è inizializzato con zero
         a.fill(0);
         fill(b.begin(), b.end(), 0);    // std::fill()
-        fill(b, 0);                     // std::fill() + Ranges TS
+        fill(b, 0);                     // std::fill() + TS "Ranges"
 
         if ( a == b ) {
           // ...
@@ -19416,9 +19416,9 @@ Riepilogo del profilo sulla sicurezza dei tipi [type safety]:
    <a name="Pro-type-implicitpointercast">d. </a>Non eseguire il cast tra i tipi di puntatore quando la conversione potrebbe essere implicita; Una versione rigorosa di [Evitare i cast](#Res-casts).
 * <a name="Pro-type-downcast"></a>Type.2: Non usare `static_cast` per il [downcast]: [Usare, invece, `dynamic_cast`](#Rh-dynamic_cast).
 * <a name="Pro-type-constcast"></a>Type.3: Non usare `const_cast` per eliminare il `const` (cioè per niente): [Non eliminare const](#Res-casts-const).
-* <a name="Pro-type-cstylecast"></a>Type.4: Non usare cast `(T)espressione` in stile C o il funzionale `T(espressione)`: Preferire la [costruzione](#Res-construct) o i [[named cast]](#Res-cast-named).
+* <a name="Pro-type-cstylecast"></a>Type.4: Non usare cast `(T)espressione` in stile C o il funzionale `T(espressione)`: Preferire la [costruzione](#Res-construct) o i [[named cast]](#Res-casts-named).
 * <a name="Pro-type-init"></a>Type.5: Non usare una variabile prima che sia stata inizializzata: [inizializzare sempre](#Res-always).
-* <a name="Pro-type-memberinit"></a>Type.6: Inizializzare sempre una variabile membro: [inizializzare sempre](#Res-always), forse utilizzando i [costruttori di default](#Rc-default0) o gli [gli inizializzatori membro di default](#Rc-in-class-initializers).
+* <a name="Pro-type-memberinit"></a>Type.6: Inizializzare sempre una variabile membro: [inizializzare sempre](#Res-always), forse utilizzando i [costruttori di default](#Rc-default0) o gli [gli inizializzatori membro di default](#Rc-in-class-initializer).
 * <a name="Pro-type-unon"></a>Type.7: Evitare le semplici [naked] union: [Usare, invece, `variant`](#Ru-naked).
 * <a name="Pro-type-varargs"></a>Type.8: Evitare i vararg: [Non usare gli argomenti `va_arg`](#F-varargs).
 
@@ -19596,7 +19596,7 @@ Questi concetti (tipi predicati) sono presi in prestito da
 "Andrew Sutton's Origin library, the Range proposal, and the ISO WG21 Palo Alto TR".
 È probabile che siano molto simili a ciò che diventerà una parte dello standard C++ ISO.
 La notazione è quella della ISO WG21 [Concepts TS](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
-La maggior parte dei concetti seguenti sono definiti in [the Ranges TS](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf).
+La maggior parte dei concetti seguenti sono definiti nella [TS "Ranges"](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf).
 
 * `Range`
 * `String`   // ???
@@ -21012,7 +21012,7 @@ Maggiori informazioni su molti argomenti riguardo al C++ si possono trovare sul 
    In realtà, questa ricorsione non è mai infinita ma viene interrotta da un errore hardware.
 * *information hiding*: l'atto di separare l'interfaccia dall'implementazione, nascondendo così i dettagli dell'implementazione non destinati all'attenzione degli utenti e fornendo un'astrazione.
 * *inizializzare*: dare ad un oggetto il suo primo (iniziale) valore.
-* *input*: i valori usati da una elaborazione (p.es., gli argomenti d una funzione o i caratteri digitati su una tastiera).
+* *input*: i valori usati da una elaborazione (p.es., gli argomenti di una funzione o i caratteri digitati su una tastiera).
 * *intero [integer]*: un numero intero, come 42 e -99.
 * *interfaccia*: una dichiarazione o una serie di dichiarazioni che specifica come un pezzo di codice (come una funzione o una classe) debba essere chiamato.
 * *invariante*: qualcosa che deve essere sempre vero in un dato punto (o punti) di un programma; tipicamente usato per descrivere lo stato (l'insieme dei valori) di un oggetto o lo stato di un loop prima di entrare nelle istruzioni da ripetere.
@@ -21168,6 +21168,10 @@ Oppure, si deciderà di non cambiare nulla e la voce verrà cancellata.
    \[Meyers96]:        S. Meyers. More Effective C++ (Addison-Wesley, 1996).
 * <a name="Meyers97"></a>
    \[Meyers97]:        S. Meyers. Effective C++ (2nd Edition) (Addison-Wesley, 1997).
+* <a name="Meyers01"></a>
+   \[Meyers01]:        S. Meyers. Effective STL (Addison-Wesley, 2001).
+* <a name="Meyers05"></a>
+   \[Meyers05]:        S. Meyers. Effective C++ (3rd Edition) (Addison-Wesley, 2005).
 * <a name="Meyers15"></a>
    \[Meyers15]:        S. Meyers. Effective Modern C++ (O'Reilly, 2015).
 * <a name="Murray93"></a>
