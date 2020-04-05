@@ -2949,7 +2949,7 @@ Questa tecnica è talvolta detta schema di "out allocato-dal-chiamante" ed è pa
 
 Per confrontare, se si passassero i valori in uscita come valori di ritorno, si farebbe qualcosa del genere:
 
-    pair<istream&, string> get_string(istream& is);  // non raccomandato
+    pair<istream&, string> get_string(istream& is)  // non raccomandato
     {
         string s;
         is >> s;
@@ -7963,7 +7963,7 @@ Questo è un caso speciale della regola secondo cui [le funzioni helper dovrebbe
 
 ##### Imposizione
 
-* Segnalare le definizioni degli operatori che non stanno nello stesso namespace dei loro operandi
+* Segnalare le definizioni degli operatori che non stanno nel namespace dei loro operandi
 
 ### <a name="Ro-lambda"></a>C.170: Se si vuole eseguire l'overloading di una lambda, si usi una lambda generica
 
@@ -8603,7 +8603,7 @@ Che cos'è `Port`? Un comodo involucro [wrapper] che incapsula la risorsa:
 
 Laddove una risorsa abbia "strani comportamenti" perché non è rappresentata come una classe con un distruttore, la si racchiude in una classe o si usa [`finally`](#Re-finally)
 
-**Si veda anche**: [RAII](#Rr-raii)
+**Si veda anche**: [RAII](#Re-raii)
 
 ### <a name="Rr-use-ptr"></a>R.2: Nelle interfacce, usare puntatori semplici [raw] per denotare (solo) i singoli oggetti
 
@@ -11041,7 +11041,7 @@ I cast sono ampiamente (ab) usati. Il C++ moderno ha delle regole e dei costrutt
 
 ##### Imposizione
 
-* Forzare l'eliminazione dei cast in stile C, tranne per una funzione con un ritorno `[[nodiscard]]`.
+* Forzare l'eliminazione dei cast in stile C, tranne quando si esegue il cast del ritorno di una funzione `[[nodiscard]]` a `void`.
 * Segnalare se ci sono molti cast di stile funzionale (c'è un ovvio problema nella quantificazione di 'molti').
 * Il [profilo del tipo](#Pro-type-reinterpretcast) vieta il `reinterpret_cast`.
 * Mettere in guardia contro i [cast di identità](#Pro-type-identitycast) tra puntatori, dove i tipi di origine e quelli di destinazione sono gli stessi (#Pro-type-identitycast).
@@ -11084,7 +11084,7 @@ Il cast in stile C è pericoloso perché può fare qualsiasi tipo di conversione
 
 ##### Note
 
-Invece, quando si converte senza perdita di informazioni (p.es. da `float` a `double` o in `int64` da `int32`), si può usare l'inizializzazione tra parenesi graffe.
+Invece, quando si converte senza perdita di informazioni (p.es. da `float` a `double` o da `int32` a `int64`), si può usare l'inizializzazione tra parenesi graffe.
 
     double d {some_float};
     int64_t i {some_int32};
@@ -15507,7 +15507,7 @@ I template si possono usare anche per la meta-programmazione; vale a dire, progr
 
 Una nozione centrale nella programmazione generica sono i  "concetti"; vale a dire, i requisiti sugli argomenti dei template presenti come predicati in fase di compilazione.
 I "concetti" vengono definiti in una "Technical Specification" ISO: [concetti](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
-Una bozza di un insieme di concetti della libreria standard si può trovare in un altro TS ISO: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
+Una bozza di un insieme di concetti della libreria standard si può trovare in un altro TS ISO: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf).
 I concetti sono supportati nel GCC 6.1 e successivi.
 Di conseguenza, si commenta l'uso dei concetti negli esempi; cioè vengono usati  solo come commenti formalizzati.
 Se si usa il GCC 6.1 o successivi, si possono de-commentare.
@@ -16680,7 +16680,7 @@ I template solitamente appaiono nei file header quindi le loro dipendenze dal co
 ##### Note
 
 Avere un template che opera solo sui suoi argomenti sarebbe un modo per ridurre il numero delle dipendenze al minimo, ma sarebbe generalmente ingestibile.
-Per esempio, un algoritmo solitamente usa altri algoritmi e invoca operazioni che non operano esclusivamente su argomenti.
+Per esempio, gli algoritmi solitamente usano altri algoritmi ed invocano operazioni che non operano esclusivamente su argomenti.
 E non si cominci ad usare le macro!
 
 **Si veda anche**: [T.69](#Rt-customization)
@@ -16839,7 +16839,7 @@ Questa è una versione semplificata di `std::copy` (viene ignorata la possibilit
         // usa un ciclo che chiama i costruttori copia
     }
 
-    template<class Itert>
+    template<class Iter>
     Out copy(Iter first, Iter last, Iter out)
     {
         return copy_helper(first, last, out, typename copy_trait<Iter>::tag{})
@@ -17542,7 +17542,7 @@ Fornisce un supporto migliore per la programmazione ad alto livello e spesso gen
     void* pv = &ch;
     int* pi = pv;   // non è C++
     *pi = 999;      // sovrascrive sizeof(int) byte vicino a &ch
-Le regole per il cast implicito da e verso `void*` in C sono subdole e non imposte.
+Le regole per il cast implicito da e verso `void*` in C sono subdole e inapplicate.
 In particolare, questo esempio viola una regola contro la conversione in un tipo con un allineamento più rigoroso.
 
 ##### Imposizione
@@ -17615,7 +17615,7 @@ Riepilogo delle regole sui file sorgenti:
 * [SF.1: Usare un suffisso `.cpp` per i file del codice e `.h` per i file delle interfacce nei propri progetti se non si sta già seguendo un'altra convenzione](#Rs-file-suffix)
 * [SF.2: Un file `.h` potrebbe non contenere definizioni di oggetti o definizioni di funzioni non-inline](#Rs-inline)
 * [SF.3: Usare i file `.h` per tutte le dichiarazioni usate in più file sorgenti](#Rs-declaration-header)
-* [SF.4: Includere in un file, i file `.h` prima di altre dichiarazioni](#Rs-include-order)
+* [SF.4: Includere in un file, i file `.h` prima delle altre dichiarazioni](#Rs-include-order)
 * [SF.5: Un file `.cpp` deve includere i(l) file `.h` che ne definiscono l'interfaccia](#Rs-consistency)
 * [SF.6: Usare le direttive `using namespace` per la transizione, per le librerie di base (come la `std`), o (solamente) all'interno di uno scope locale](#Rs-using)
 * [SF.7: Non scrivere `using namespace` nello scope globale in un file header](#Rs-using-directive)
@@ -17638,7 +17638,7 @@ Ma la coerenza è più importante, quindi se il progetto utilizza qualcos'altro,
 
 ##### Note
 
-Questa convenzione riflette un modello di uso comune: Gli header sono più spesso condivise col C per compilare sia come C++ che C, cghe tipicamente usa `.h`, ed è più facile dare un nome a tutti gli header `.h` anziché avere diverse estensioni solo per quegli header che si intendono usare col C. D'altra parte, i file delle di implementazione vengono raramente condivisi col C e quindi dovrebbero generalmente essere distinti dai file `.c`, quindi normalmente è meglio dare un nome a tutti i file C++ dell'implementazione con qualcos'altro (come `.cpp`).
+Questa convenzione riflette un modello di uso comune: Gli header vengono molto spesso condivisi col C per compilare sia come C++ che C, che tipicamente usa `.h`, ed è più facile dare un nome a tutti gli header `.h` anziché avere diverse estensioni solo per quegli header che si intendono usare col C. D'altra parte, i file delle di implementazione vengono raramente condivisi col C e quindi dovrebbero generalmente essere distinti dai file `.c`, quindi normalmente è meglio dare un nome a tutti i file C++ dell'implementazione con qualcos'altro (come `.cpp`).
 
 I nomi specifici `.h` e `.cpp` non sono richiesti (solo raccomandati per default) e si utilizzano ampiamente altri nomi.
 Esempi sono `.hh`, `.C`, e `.cxx`. Usare questi nomi in modo equivalente.
@@ -17662,7 +17662,7 @@ L'IDE utilizzato (se se ne usa uno) potrebbe essere più restrittivo sui suffiss
     // foo.h:
     int a;   // una definizione
     void foo() { ++a; }
-Scrivendo `#include <foo.h>` due volte in un programma, si ottiene un errore di due violazioni regola-della-mono-definizione [one-definition-rule violations].
+Scrivendo `#include <foo.h>` due volte in un programma, si ottiene un errore di due violazioni regola-della-definizione-singola.
 
 ##### Imposizione
 
@@ -17673,7 +17673,7 @@ Scrivendo `#include <foo.h>` due volte in un programma, si ottiene un errore di 
 
 ##### Motivo
 
-L'inclusione di entità soggette alla regola della mono-definizione comporta errori del linker.
+L'inclusione di entità soggette alla regola della definizione-singola comporta errori del linker.
 
 ##### Esempio
 
@@ -17730,7 +17730,7 @@ L'utente di `bar` non può sapere se l'interfaccia usata è completa e corretta.
 
 * Segnalare le dichiarazioni di entità in altri file sorgenti non inserite in un `.h`.
 
-### <a name="Rs-include-order"></a>SF.4: Includere in un file, i file `.h` prima di altre dichiarazioni
+### <a name="Rs-include-order"></a>SF.4: Includere in un file, i file `.h` prima delle altre dichiarazioni
 
 ##### Motivo
 
@@ -17757,10 +17757,10 @@ Questo vale sia per i file `.h` che i `.cpp`.
 
 ##### Note
 
-C'è un argomento per isolare il codice dalle dichiarazioni e le macro nei file header `#include`ndo degli header *dopo* il codice che si vuol proteggere (come nell'esempio etichettato come "cattivo").
+C'è una discussione per isolare il codice dalle dichiarazioni e le macro nei file header `#include`ndo degli header *dopo* il codice che si vuol proteggere (come nell'esempio etichettato come "cattivo").
 Tuttavia
 
-* questo funziona solo per un file (a un livello): Usare questa tecnica negli header inclusi con altri header e la vulnerabilità riappare.
+* questo funziona solo per un file (a un livello): Se si usa questa tecnica negli header inclusi con altri header la vulnerabilità riappare.
 * un namespace (un "namespace di implementazione") può proteggere da molte dipendenze dal contesto.
 * la totale protezione e flessibilità si ottiene con i moduli.
 
@@ -17806,7 +17806,7 @@ Gli errori non verranno rilevati fino al momento del link per un programma che c
     int bar(double) { /* ... */ }
     double foobar(int);   // errore: tipo restituito sbagliato
 L'errore sul tipo restituito per `foobar` ora viene intercettato immediatamente quando si compila `foo.cpp`.
-L'errore sul tipo dell'argomento per `bar` non può essere intercettato fino al momento del link perché c'è la possibilità dell'overloading, ma l'uso sistematico dei file `.h` aumentano la la probabilità venga rilevato prima dal programmatore.
+L'errore sul tipo dell'argomento per `bar` non può essere intercettato fino al momento del link perché c'è la possibilità dell'overloading, ma l'uso sistematico dei file `.h` aumenta la la probabilità venga rilevato prima dal programmatore.
 
 ##### Imposizione
 
@@ -17817,7 +17817,7 @@ L'errore sul tipo dell'argomento per `bar` non può essere intercettato fino al 
 ##### Motivo
 
 `using namespace` può portare a conflitti con i nomi, quindi dovrebbe essere usato con parsimonia.
-Tuttavia, non è sempre possibile qualificare ogni nome da uno namespace nel codice utente (p.es., durante la transizione) e talvolta un namespace è così fondamentale e prevalente nel codice, che una qualificazione coerente sarebbe prolissa e distraente.
+Tuttavia, non è sempre possibile qualificare ogni nome da un namespace nel codice utente (p.es., durante la transizione) e talvolta un namespace è così fondamentale e prevalente nel codice, che una qualificazione coerente sarebbe prolissa e distraente.
 
 ##### Esempio
 
@@ -17845,7 +17845,7 @@ L'utilizzo di `using namespace std;` lascia il programmatore la possibilità di 
         // ...
         return sqrt(x); // errore
     }
-Tuttavia, questo non favorisce particolarmente una soluzione dei conflitti senza un errori e quelli che usano `using namespace std` si suppone che sappiano di `std` e su questo rischio.
+Tuttavia, questo non favorisce particolarmente una soluzione dei conflitti senza errori e quelli che usano `using namespace std` si suppone che sappiano di `std` e di questo rischio.
 
 ##### Note
 
@@ -17867,7 +17867,7 @@ Segnalare direttive `using namespace` multiple per diversi namespace in un solo 
 
 ##### Motivo
 
-Facendolo elimina la capacità di chi `#include` di chiarire efficacemente e usare alternative. Rende anche gli header inclusi [`#include`] dipendenti dall'ordine in quanto possono avere un significato diverso se inclusi in un ordine diverso.
+Facendolo si elimina la capacità di chi `#include` di chiarire efficacemente e usare alternative. Rende anche gli header inclusi [`#include`] dipendenti dall'ordine in quanto possono avere un significato diverso se inclusi in un ordine diverso.
 
 ##### Esempio
 
@@ -18025,13 +18025,13 @@ Un header dovrebbe includere tutte le sue dipendenze. Prestare attenzione all'ut
 
 ##### Imposizione
 
-Un test dovrebbe verificare che l'header stesso compili e che si compili anche un file cpp che includa il solo l'header.
+Un test dovrebbe verificare che l'header stesso compili e che si compili anche un file cpp che includa il solo file header.
 
 ### <a name="Rs-incform"></a>SF.12: Con gli `#include` preferire la forma con le parentesi angolari dove possibile rispetto alle virgolette
 
 ##### Motivo
 
-Lo [standard](http://eel.is/c++draft/cpp.include) impone ai compilatori di implementare le due forme di sintassi per gli `#include` lasciando la scelta tra le parentesi angolari (`<>`) e le virgolette (`""`). I produttori se ne avvantaggiano usando algoritmi diversi di ricerca e metodo per indicare il path dell'include.
+Lo [standard](http://eel.is/c++draft/cpp.include) impone ai compilatori di implementare le due forme di sintassi per gli `#include` lasciando la scelta tra le parentesi angolari (`<>`) e le virgolette (`""`). I produttori se ne avvantaggiano usando algoritmi diversi di ricerca e metodi per indicare il path dell'include.
 
 Tuttavia, le linee-guida suggeriscono l'uso delle parentesi angolari quando possibile. Questo perché gli header della libreria standard devono essere inclusi in questo modo, ed è più probabile che si crei codice portabile, lasciando la forma virgolettata per altri usi. Per esempio per essere chiari sulla localizzazione dell'header relativamente ai file che esso stesso include o in scenari dove si richiedono diversi algoritmi di localizzazione.
 
@@ -18040,9 +18040,9 @@ Tuttavia, le linee-guida suggeriscono l'uso delle parentesi angolari quando poss
     #include <string>       // Forma richiesta per la libreria standard
     #include "helpers.h"    // Un file specifico di un progetto, usa la forma ""
 ##### Note
-La mancata osservanza di ciò porta ad una diagnosi difficoltosa degli errori a causa del prelievo del file sbagliato dovuto ad un'errata indicazione del percorso di quanto si include.
+La mancata osservanza di ciò porta ad una diagnostica difficoltosa degli errori a causa del prelievo del file sbagliato dovuto ad un'errata indicazione del percorso di quanto si include.
 
-I creatori delle librerie dovrebbero mettere i loro header in una cartella e fare in modo che i loro utentili includano con un path relativo `#include <some_library/common.h>`
+I creatori delle librerie dovrebbero mettere i loro header in una cartella e fare in modo che i loro utenti li includano con un path relativo `#include <some_library/common.h>`
 
 ##### Imposizione
 
@@ -18147,7 +18147,7 @@ Le aggiunte a `std` possono creare conflitti con le future versioni dello standa
     ???
 ##### Imposizione
 
-Possibile, ma disordinato e suscettibile di causare problemi con le piattaforme.
+Possibile, ma disordinata e suscettibile di causare problemi con le piattaforme.
 
 ### <a name="sl-safe"></a>SL.4: Usare la libreria standard in modo sicuro per i tipi [type-safe]
 
@@ -18158,7 +18158,7 @@ Perché, ovviamente, infrangere questa regola può portare a comportamenti indef
 ##### Note
 
 Questa è una meta-regola semi-filosofica, che necessita di molte regole concrete a supporto.
-È necessaria come di un ombrello per regole più specifiche.
+È necessaria come un ombrello per regole più specifiche.
 
 Riepilogo delle regole più specifiche:
 
@@ -18180,10 +18180,10 @@ Riepilogo delle regole sui contenitori:
 
 ##### Motivo
 
-Gli array del C sono meno sicuri e non hanno vantaggi rispetto a `array` e `vector`.
+Gli array del C sono meno sicuri e non hanno vantaggi rispetto ad `array` ed a `vector`.
 Per un array a lunghezza fissa, si usa `std::array`, che non degenera in un puntatore quando viene passato ad una funzione e conosce la propria dimensione.
-Inoltre, come un gli array nativo, uno `std::array` allocato sullo stack tiene i suoi elementi sullo stack.
-Per un array a lunghezza variabile, si usa `std::vector`, che può inoltre modificare la sua dimensione a gestire l'allocazione della memoria.
+Inoltre, come un array nativo, uno `std::array` allocato sullo stack tiene i suoi elementi sullo stack.
+Per un array a lunghezza variabile, si usa `std::vector`, che può inoltre modificare la sua dimensione e gestire l'allocazione della memoria.
 
 ##### Esempio
 
@@ -18203,15 +18203,15 @@ Usare `gsl::span` per i riferimenti non proprietari in un contenitore [container
 ##### Note
 
 Il confronto delle prestazioni tra un array a dimensione fissa allocato sullo stack rispetto ad un `vector` con gli elementi sull'heap [free store] è falsato.
-Si potrebbe anche confrontare uno `std::array` sullo stack rispetto all'accesso ad risultato di un `malloc()` tramite un puntatore.
-Per la maggior parte del codice, tra l'allocazione sullo stack e sull'heap [free-store] non importa, ma la praticità e la convenienza di `vector` sono importanti.
+Si potrebbe anche confrontare uno `std::array` sullo stack rispetto all'accesso al risultato di un `malloc()` tramite un puntatore.
+Per la maggior parte del codice, la differenza tra l'allocazione sullo stack e quella sull'heap [free-store] non importa, ma la praticità e la convenienza di `vector` sono importanti.
 Le persone che lavorano col codice per cui conta questa differenza sono abbastanza capaci di scegliere tra l'`array` e il `vector`.
 
 ##### Imposizione
 
-* Segnalare la dichiarazione di un array C in una funzione o una classe che dichiara anche un contenitore STL (per evitare un un numero eccessivo di avvisi per il codice ereditato non-STL). Per risolvere: Modificare almeno l'array the in uno `std::array`.
+* Segnalare la dichiarazione di un array C in una funzione o in una classe che dichiara anche un contenitore STL (per evitare un numero eccessivo di avvisi per il codice ereditato non-STL). Per risolvere: Modificare almeno l'array C in uno `std::array`.
 
-### <a name="Rsl-vector"></a>SL.con.2: Preferire l'uso del `vector` della STL di default a meno che non ci sia un motivo per usare un contenitore differente container
+### <a name="Rsl-vector"></a>SL.con.2: Preferire l'uso del `vector` della STL di default a meno che non ci sia un motivo per usare un contenitore differente
 
 ##### Motivo
 
@@ -18227,7 +18227,7 @@ Anche quando altri contenitori sembrano più adatti, come la `map` per una veloc
 
 ##### Note
 
-La `string` non dev'essere usata come contenitore per caratteri singoli. Una `string` è una stringa di testo; se si vuole un contenitore di caratteri, si usa `vector</*char_type*/>` o `array</*char_type*/>` instead.
+La `string` non dev'essere usata come contenitore per caratteri singoli. Una `string` è una stringa di testo; se si vuole un contenitore di caratteri, invece si usa `vector</*char_type*/>` o `array</*char_type*/>`.
 
 ##### Eccezioni
 
@@ -18235,7 +18235,7 @@ Se si ha una buona ragione per usare un altro contenitore, lo si usi. Per esempi
 
 * Se `vector` soddisfa le proprie esigenze ma non si ha la necessità che il contenitore sia variabile in ampiezza, usare, invece, `array`.
 
-* Se si vuole un contenitore per una ricerca in stile dizionario che garantisca ricerche O(K) o O(log N), il contenitore sarà più grande (più che qualche KB) e si eseguiranno frequenti inserimenti per cui mantenere lo spazio superfluo [overhead] di un `vector` ordinato non è fattibile, proseguire, invece, con l'uso di `unordered_map` o `map`.
+* Se si vuole un contenitore per una ricerca in stile dizionario che garantisca ricerche O(K) o O(log N), con un contenitore più grande (più che qualche KB) e si dovranno eseguire frequenti inserimenti per cui la gestione dello spazio aggiuntivo [overhead] di un `vector` ordinato non è fattibile, tendere, invece, all'uso di `unordered_map` o `map`.
 
 ##### Note
 
@@ -18254,7 +18254,7 @@ Per inizializzare un vettore con una lista di elementi, usare l'inizializzazione
 
 ##### Motivo
 
-Leggere o scrivere oltre un intervallo allocato di elementi solitamente porta a brutti errori, risultati sbagliati, crash e violazioni della sicurezza.
+Leggere o scrivere oltre un intervallo allocato di elementi solitamente porta a brutti errori, risultati sbagliati, crash e violazioni sulla sicurezza.
 
 ##### Note
 
@@ -18265,7 +18265,7 @@ Idealmente, la garanzia di stare tra i limiti dovrebbe essere imposta staticamen
 Per esempio:
 
 * un range-`for` non può ciclare oltre i limiti del contenitore cui viene applicato
-* un `v.begin(),v.end()` viene facilmente identificato per stare sicuramente nei limiti
+* un `v.begin(),v.end()` viene determinato facilmente per stare sicuramente nei limiti
 
 Tali loop sono veloci come qualsiasi altro equivalente incontrollato/insicuro.
 
@@ -18363,14 +18363,14 @@ Definire invece le funzioni di inizializzazione, copia e confronto di default ap
 **TODO Note**:
 
 * L'impatto sulla libreria standard richiederà uno stretto coordinamento con il WG21, se non altro per garantire la compatibilità anche se non sarà mai standardizzata.
-* Stiamo valutando la possibilità di specificare [bounds-safe overloads] per le funzioni stdlib (in particolare per la stdlib C) come `memcmp` e inserirle nel GSL.
-* Per le funzioni e i tipi stdlib come `vector` che non sono completamente [bounds-checked], l'obiettivo è che tali funzioni siano [bounds-checked] quando vengono chiamate dal codice col [bounds profile] attivato e incontrollate quando chiamate da codice ereditato, forse utilizzando i contratti (attualmente proposti da diversi membri del WG21).
+* Si sta valutando la possibilità di specificare [bounds-safe overloads] per le funzioni stdlib (in particolare per la stdlib C) come `memcmp` e inserirle nelle GSL.
+* Per le funzioni e i tipi stdlib come `vector` che non sono completamente [bounds-checked], l'obiettivo è che tali funzioni siano [bounds-checked] quando vengono chiamate dal codice col [bounds profile] attivato e non controllate quando chiamate da codice ereditato, forse utilizzando i contratti (attualmente proposti da diversi membri del WG21).
 
 
 
 ## <a name="SS-string"></a>SL.str: Stringhe
 
-La gestione del testo è un enorme argomento
+La gestione del testo è un enorme argomento.
 La `std::string` non lo copre tutto.
 Questa sezione cerca principalmente di chiarire la relazione di `std::string` con `char*`, `zstring`, `string_view` e `gsl::string_span`.
 Sulla questione importante dell'insieme dei caratteri non-ASCII e sulle codifiche (p.es., `wchar_t`, Unicode e UTF-8) se ne parlerà altrove.
@@ -18451,11 +18451,11 @@ Non usare stringhe in stile C per le operazioni che richiedono una gestione non 
     }
 Abbiamo capito bene?
 Il chiamante si ricorderà di eseguire il `free()` per il puntatore restituito?
-Questo codice supererà una test sulla sicurezza?
+Questo codice supererà un test sulla sicurezza?
 
 ##### Note
 
-Non dare per scontato che `string` sia più lenta delle tecniche  basso livello senza fare delle misure e si ricordi che non in tutto il codice sono importanti le prestazioni.
+Non dare per scontato che `string` sia più lenta delle tecniche a basso livello senza fare delle misure e si ricordi che non in tutto il codice sono importanti le prestazioni.
 [Non ottimizzare prematuramente](#Rper-Knuth)
 
 ##### Imposizione
@@ -18628,8 +18628,8 @@ L'espressione diretta di un'idea minimizza gli errori.
 
 ## <a name="SS-io"></a>SL.io: Iostream
 
-Le `iostream` costituiscono una libreria di per lo streaming con un tipi sicuri, espandibile, con I/O formattato e non.
-Essa supporta molteplici strategie di buffering (e estensibili dall'utente) e diverse localizzazioni.
+Le `iostream` costituiscono una libreria per lo streaming " type safe", espandibile, con I/O formattato e non.
+Supporta molteplici strategie di buffering (e estensibili dall'utente) e diverse localizzazioni.
 Si può utilizzare per l'I/O convenzionale, la lettura e la scrittura in memoria (flussi [stream] di stringhe) e per le estensioni definite dall'utente, come lo streaming attraverso la rete (l'ASIO [Audio Streaming Input Output]: non ancora standardizzato).
 
 Riepilogo delle regole sull'iostream:
@@ -18761,7 +18761,7 @@ A parte il problema (occasionalmente importante) della performance, la scelta tr
 ## <a name="SS-regex"></a>SL.regex: Regex
 
 `<regex>` è la libreria standard del C++ per le espressioni regolari.
-Essa supporta diverse convenzioni di modelli di espressioni regolari.
+Supporta diverse convenzioni di modelli di espressioni regolari.
 
 ## <a name="SS-chrono"></a>SL.chrono: Time
 
@@ -19047,17 +19047,20 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
 
 ##### Esempio, cattivo
 
+    // Vecchio stile convenzionale: parecchi problemi
+
     class Picture
     {
         int mx;
         int my;
         char * data;
     public:
+        // il problema principale: il costruttore non costruisce completamente
         Picture(int x, int y)
         {
-            mx = x,
+            mx = x;         // altro errore: assegnazione nel corpo del costruttore anziché nell'inizializzatore del membro
             my = y;
-            data = nullptr;
+            data = nullptr; // altro errore: inizializzazione costante nel costruttore anziché nell'inizializzatore del membro
         }
 
         ~Picture()
@@ -19065,6 +19068,7 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
             Cleanup();
         }
 
+        // errore: inizializzazione bi-fase [two-phase]
         bool Init()
         {
             // controlli invarianti
@@ -19074,10 +19078,11 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
             if (data) {
                 return false;
             }
-            data = (char*) malloc(mx*my*sizeof(int));
+            data = (char*) malloc(mx*my*sizeof(int));   // altro errore: possesso di raw * e malloc
             return data != nullptr;
         }
 
+        // altro errore: non c'è alcun motivo per fare una funzione separata per la pulizia
         void Cleanup()
         {
             if (data) free(data);
@@ -19095,20 +19100,20 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
 
     class Picture
     {
-        size_t mx;
-        size_t my;
+        int mx;
+        int my;
         vector<char> data;
 
-        static size_t check_size(size_t s)
+        static int check_size(int size)
         {
             // controllo dell'invariante
-            Expects(s > 0);
-            return s;
+            Expects(size > 0);
+            return size;
         }
 
     public:
-        // ancor meglio sarebbe una classe per una Size 2D come parametro singolo
-        Picture(size_t x, size_t y)
+        // ancor meglio sarebbe una classe con 2 dimensioni come parametro unico
+        Picture(int x, int y)
             : mx(check_size(x))
             , my(check_size(y))
             // ora si sa che x e y sono dimensioni valide
@@ -19116,6 +19121,7 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
         {
             // picture è pronta all'uso
         }
+
         // il lavoro viene fatto dal distruttore [dtor] generato dal compilatore. (si veda anche C.21)
     };
 
