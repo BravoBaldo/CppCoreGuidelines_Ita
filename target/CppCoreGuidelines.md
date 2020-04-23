@@ -4243,7 +4243,7 @@ Regole del distruttore:
 * [C.30: Definire un distruttore se una classe necessita di un'azione esplicita alla distruzione di un oggetto](#Rc-dtor)
 * [C.31: Tutte le risorse acquisite da una classe devono essere rilasciate dal distruttore della classe](#Rc-dtor-release)
 * [C.32: Se una classe ha un puntatore [raw] (`T*`) o un riferimento (`T&`), si valuti se potrebbe essere proprietario](#Rc-dtor-ptr)
-* [C.33: Se una classe ha un membro puntatore proprietario, definire o `=delete` di un distruttore](#Rc-dtor-ptr2)
+* [C.33: Se una classe ha un membro puntatore proprietario, definire un distruttore](#Rc-dtor-ptr2)
 * [C.35: Il distruttore di una classe base dovrebbe essere sia public che virtual, oppure protected e non-virtual](#Rc-dtor-virtual)
 * [C.36: Un distruttore non può fallire](#Rc-dtor-fail)
 * [C.37: Creare i distruttori come `noexcept`](#Rc-dtor-noexcept)
@@ -11965,7 +11965,7 @@ Un `break` in un ciclo ha un significato terribilmente diverso da un `break` in 
 
     switch(x){
     case 1 :
-        while(/* alcune condizioni */){
+        while (/* alcune condizioni */) {
             //...
         break;
         } //Oops! si intende interrompere lo switch o il while?
@@ -11981,8 +11981,8 @@ Spesso, un loop che richiede un `break` è un buon candidato per una funzione (a
     void use1(){
         std::vector<T> vec = {/* inizializzato con qualche valore */};
         T value;
-        for(const T item : vec){
-            if(/* qualche condizione*/){
+        for (const T item : vec) {
+            if (/* qualche condizione*/) {
                 value = item;
                 break;
             }
@@ -11991,29 +11991,29 @@ Spesso, un loop che richiede un `break` è un buon candidato per una funzione (a
     }
 
     //MEGLIO: si crea una funzione e si torna nel loop
-    T search(const std::vector<T> &vec){
-        for(const T &item : vec){
-            if(/* qualche condizione*/) return item;
+    T search(const std::vector<T> &vec) {
+        for (const T &item : vec) {
+            if (/* qualche condizione*/) return item;
         }
         return T(); //il valore di default
     }
 
-    void use2(){
+    void use2() {
         std::vector<T> vec = {/* inizializzato con qualche valore */};
         T value = search(vec);
         /* quindi fa qualcosa con value */
     }
 Spesso, un ciclo che usa il `continue` può essere equivalentemente e chiaramente espresso da un'istruzione `if`.
 
-    for(int item : vec){ //BAD
-        if(item%2 == 0) continue;
-        if(item == 5) continue;
-        if(item > 10) continue;
+    for (int item : vec) { //BAD
+        if (item%2 == 0) continue;
+        if (item == 5) continue;
+        if (item > 10) continue;
         /* fa qualcosa con item */
     }
 
-    for(int item : vec){ //GOOD
-        if(item%2 != 0 && item != 5 && item <= 10){
+    for (int item : vec) { //GOOD
+        if (item%2 != 0 && item != 5 && item <= 10) {
             /* fa qualcosa con item */
         }
     }
@@ -14060,7 +14060,6 @@ Non c'è un lock esplicito e vengono gestiti semplicemente sia il corretto (valo
         in >> value;
         return value;
     }
-
 
     void async_example()
     {
@@ -18040,6 +18039,7 @@ Tuttavia, le linee-guida suggeriscono l'uso delle parentesi angolari quando poss
     #include <string>       // Forma richiesta per la libreria standard
     #include "helpers.h"    // Un file specifico di un progetto, usa la forma ""
 ##### Note
+
 La mancata osservanza di ciò porta ad una diagnostica difficoltosa degli errori a causa del prelievo del file sbagliato dovuto ad un'errata indicazione del percorso di quanto si include.
 
 I creatori delle librerie dovrebbero mettere i loro header in una cartella e fare in modo che i loro utenti li includano con un path relativo `#include <some_library/common.h>`
@@ -18817,7 +18817,7 @@ L'isolamento del codice meno stabile ne facilita le unità di test, migliora l'i
 ##### Note
 
 Una libreria è una collezione di dichiarazioni e definizioni mantenute, documentate e raggruppate assieme.
-Una libreria può essere un set di header (una "header-only library") o un insieme di header pi+ un insieme di file oggetto.
+Una libreria può essere un set di header (una "header-only library") o un insieme di header più un insieme di file oggetto.
 È possibile linkare staticamente o dinamicamente una libreria con un programma, o si può `#include`re una libreria "header-only".
 
 
@@ -18834,17 +18834,17 @@ Una libreria può contenere riferimenti ciclici nella definizione dei propri com
 Per esempio:
 
     ???
-Tuttavia, una libreria non dovrebbe dipendere da un'altra che dipende da essa.
+Tuttavia, una libreria non dovrebbe dipendere da un'altra che, a sua volta, dipende da essa.
 
 
 # <a name="S-not"></a>NR: Non-Regole e leggende [myth]
 
 Questa sezione contiene regole e linee-guida che sono popolari altrove, ma che deliberatamente non si raccomandano.
-È ben noto che ci sono stati tempi e luoghi in cui queste regole avevano un senso, e le abbiamo usate noi stessi a volte.
+È ben noto che ci sono stati tempi e luoghi in cui queste regole avevano un senso, e a volte le abbiamo usate noi stessi.
 Tuttavia, nel contesto degli stili di programmazione che si raccomandano e si supportano con le linee-guida, queste "non regole" risulterebbero dannose.
 
 Tuttora possono esserci contesti in cui le regole hanno senso.
-Per esempio, la mancanza di un adeguato supporto di tool può rendere inadeguate le eccezioni nei sistemi in tempo reale, ma non c'è da fidarsi ciecamente della "saggezza popolare" (p.es, affermazioni non dimostrate sulla "efficienza"); questa "saggezza" potrebbe essere basata su informazioni vecchie di decenni e sperimentate con linguaggi dalle proprietà molto diverse da quelle del C++ (p.es., C o Java).
+Per esempio, la mancanza di un adeguato supporto di tool può rendere inadeguate le eccezioni nei sistemi in tempo reale, ma non c'è da fidarsi ciecamente della "saggezza popolare" (p.es., affermazioni non dimostrate sulla "efficienza"); questa "saggezza" potrebbe essere basata su informazioni vecchie di decenni e sperimentate con linguaggi dalle proprietà molto diverse da quelle del C++ (p.es., C o Java).
 
 Gli argomenti positivi come alternative a queste non-regole sono indicate nelle regole proposte come "Alternative".
 
@@ -18888,7 +18888,7 @@ Ciò porta a programmi più lunghi e più errori causati da variabili non inizia
     }
 Maggiore è la distanza tra la variabile non inizializzata e il suo utilizzo, maggiore è la probabilità di un bug.
 Fortunatamente, i compilatori rilevano molti errori "utilizzo prima dell'assegnazione".
-Sfortunatamente, i compilatori non possono rilevare tutti questi errori e, sfortunatamente, i bug non sono sempre così facili da individuare come in questo piccolo esempio.
+Purtroppo, i compilatori non possono rilevare tutti questi errori e, sfortunatamente, i bug non sono sempre così facili da individuare come in questo piccolo esempio.
 
 
 ##### Alternativa
@@ -18932,7 +18932,7 @@ per usare un return unico si dovrebbe fare qualcosa del genere
     }
 Questo è sia più lungo che probabilmente meno efficiente.
 Più grande e complicata è la funzione, più contorte sono le soluzioni alternative.
-Naturalmente molte funzioni semplici avranno naturalmente solo un `return` a causa della loro logica intrinseca più semplice.
+Ovviamente molte funzioni semplici avranno naturalmente un solo `return` a causa della loro logica intrinseca più semplice.
 
 ##### Esempio
 
@@ -18973,12 +18973,12 @@ Sembrano esserci quattro principali ragioni per non usare le eccezioni:
 * La prestazione di un'eccezione non è prevedibile
 * il supporto a run-time della gestione delle eccezioni occupa troppo spazio
 
-Non è possibile di risolvere questo problema soddisfacendo tutti.
+Non è possibile risolvere questo problema assecondando tutti.
 Dopotutto, le discussioni sulle eccezioni vanno avanti da oltre 40 anni.
 Alcuni linguaggi non si possono usare senza le eccezioni, ma altri non le supportano.
 Ciò porta a delle consolidate tradizioni sull'uso e il non-uso delle eccezioni e ad accesi dibattiti.
 
-Tuttavia, si può descrivere brevemente il motivo per cui si considerano le eccezioni la migliore alternativa per la programmazione generale e per il contesto di queste linee-guida.
+Tuttavia, si può descrivere brevemente il motivo per cui si considerano le eccezioni l'alternativa migliore per la programmazione ad uso generale e nel contesto di queste linee-guida.
 Semplici argomenti a favore o contro spesso sono inconcludenti.
 Esistono applicazioni specializzate in cui le eccezioni possono essere inopportune (p.es., sistemi con un rigido real-time senza il supporto di stime affidabili dei costi della gestione degli errori).
 
@@ -18991,7 +18991,7 @@ Si considerino le principali obiezioni una per una
    che pulisce accuratamente le risorse prima di tener traccia di un errore.
    Sì, alcuni sistemi hanno implementazioni di gestione delle eccezioni scadenti; a volte, tali implementazioni ci obbligano a utilizzare altri approcci per la gestione degli errori, ma questo non è un problema fondamentale per le eccezioni.
    Quando si utilizza un argomento di efficienza - in qualsiasi contesto - fare attenzione a disporre di dati validi che forniscano effettivamente informazioni sul problema in esame.
-* Le eccezioni portano a leak e ed errori.
+* Le eccezioni portano a leak e ad errori.
    Non lo fanno.
    Se il programma è un ammasso di puntatori senza una strategia globale per la gestione delle risorse, c'è un problema, qualunque cosa si faccia.
    Se il sistema è costituito da un milione di righe di tale codice, probabilmente non si sarà in grado di usare le eccezioni, ma questo è un problema per un uso eccessivo e indisciplinato dei puntatori, piuttosto che con le eccezioni.
@@ -19058,9 +19058,11 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
         // il problema principale: il costruttore non costruisce completamente
         Picture(int x, int y)
         {
-            mx = x;         // altro errore: assegnazione nel corpo del costruttore anziché nell'inizializzatore del membro
+            mx = x;         // altro errore: assegnazione nel corpo del costruttore
+                            // anziché in un inizializzatore membro
             my = y;
-            data = nullptr; // altro errore: inizializzazione costante nel costruttore anziché nell'inizializzatore del membro
+            data = nullptr; // altro errore: inizializzazione costante nel costruttore
+                            // anziché in un inizializzatore membro
         }
 
         ~Picture()
@@ -19238,7 +19240,7 @@ Sezioni sui riferimenti:
    Le librerie usate sono state approvate per applicazioni "mission critical".
    Non deve sorprendere che ci sia qualche somiglianza con queste linee-guida perché Bjarne Stroustrup è stato uno degli autori della JSF++.
    Raccomandata, ma si noti che ha un focus molto specifico.
-* [_MISRA C++ 2008: Linee-guida per l'uso del linguaggio C++ in sistemi critici_] (https://www.misra.org.uk/Buyonline/tabid/58/Default.aspx).
+* [MISRA C++ 2008: Linee-guida per l'uso del linguaggio C++ in sistemi critici](https://www.misra.org.uk/Buyonline/tabid/58/Default.aspx).
 * [Mozilla Portability Guide](https://developer.mozilla.org/en-US/docs/Mozilla/C%2B%2B_Portability_Guide).
    Come indica il nome, si pone lo scopo della portabilità tra molti (vecchi) compilatori.
    In quanto tale, è restrittivo.
