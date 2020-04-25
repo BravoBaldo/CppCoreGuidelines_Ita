@@ -15,7 +15,7 @@ Italian translation of CppCoreGuidelines and some handling tool
 
 ## Tools used:
 
-* [OmegaT v.4.3.2 - (but with Okapi Filters For OmegaT -1.6-m38)](https://omegat.org).
+* [OmegaT v.4.3.2](https://omegat.org) - (but with [Okapi Filters For OmegaT-1.7-1.39](https://okapiframework.org/wiki/index.php/Okapi_Filters_Plugin_for_OmegaT)).
 * [Pandoc v.2.9.2](https://pandoc.org).
 * [Notepad++ v.7.8.2](https://notepad-plus-plus.org).
 * [Dillinger](https://dillinger.io) - an online Markdown editor/viewer.
