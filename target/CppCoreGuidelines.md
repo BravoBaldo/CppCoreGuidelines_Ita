@@ -262,8 +262,7 @@ Ci si prenda il tempo necessario per capire le implicazioni di una regola di una
 
 Queste linee-guida sono progettate secondo il principio del "sottoinsieme di un insieme" ([Stroustrup05](#Stroustrup05)).
 Non definiscono semplicemente un sottoinsieme del C++ da usare (per affidabilità, prestazioni o altro).
-Esse, invece, raccomandano fermamente l'uso di alcune semplici "estensioni" ([componenti della libreria](#S-gsl))
-che rendono ridondanti le funzionalità più soggette ad errori del C++, in modo che possano essere vietate (nel nostro set di regole).
+Esse, invece, raccomandano fermamente l'uso di alcune semplici "estensioni" ([componenti della libreria](#S-gsl)) che rendono ridondanti le funzionalità più soggette ad errori del C++, in modo che possano essere vietate (nel nostro set di regole).
 
 Le regole enfatizzano la sicurezza del tipo statico e la sicurezza delle risorse.
 Per questo motivo, enfatizzano la possibilità di controllare i range, per evitare la de-referenziazione di `nullptr`, per evitare il dangling [penzolamento] dei puntatori e l'uso sistematico delle eccezioni (tramite il RAII).
@@ -891,7 +890,7 @@ La data viene validata due volte (dal costruttore `Date`) e passata come stringa
 ##### Esempio
 
 L'eccesso di controlli può essere costoso.
-Ci sono casi in cui il controllo anticipato è stupido perché si potrebbe non aver mai bisogno del valore, o potrebbe servire solo una parte del valore che è più facile da testare rispetto all'intero valore.  Allo stesso modo, non aggiungere controlli di validità che cambiano il comportamento asintotico della propria interfaccia (p.es., non aggiungere un check `O(n)` ad un'interfaccia con una complessità media di `O(1)`).
+Ci sono casi in cui il controllo anticipato è inefficiente perché potrebbe non essere mai necessario il valore, o potrebbe servire solo una parte del valore che è più facile da testare rispetto all'intero valore.  Allo stesso modo, non aggiungere controlli di validità che cambiano il comportamento asintotico della propria interfaccia (p.es., non aggiungere un check `O(n)` ad un'interfaccia con una complessità media di `O(1)`).
 
     class Jet {    // La fisica dice: e * e < x * x + y * y + z * z
         float x;
@@ -4745,7 +4744,7 @@ Se possibile, considerare la mancata chiusura/pulizia un errore progettuale fond
 
 ##### Note
 
-Dichiarare un distruttore `noexcept`. Ciò garantirà il normale completamento o la chiusura del programma.
+Dichiarare un distruttore `noexcept`. Ciò garantirà il normale completamento o la terminazione del programma.
 
 ##### Note
 
@@ -8979,8 +8978,8 @@ Si consideri:
     {
         X x;
         X* p1 { new X };              // si veda anche ???
-        unique_ptr<T> p2 { new X };   // proprietà unica; si veda anche ???
-        shared_ptr<T> p3 { new X };   // proprietà condivisa; si veda anche ???
+        unique_ptr<X> p2 { new X };   // proprietà unica; si veda anche ???
+        shared_ptr<X> p3 { new X };   // proprietà condivisa; si veda anche ???
         auto p4 = make_unique<X>();   // proprietà esclusiva, preferibile all'uso esplicito di "new"
         auto p5 = make_shared<X>();   // proprietà condivisa, preferibile all'uso esplicito di "new"
     }
@@ -9751,7 +9750,7 @@ o:
     double scalbn(double base, int exponent);
 ##### Esempio
 
-    int a = 7, b = 9, c, d = 10, e = 3;
+    int a = 10, b = 11, c = 12, d, e = 14, f = 15;
 In un lungo elenco di dichiaratori, è facile trascurare una variabile non inizializzata.
 
 ##### Imposizione
@@ -18997,7 +18996,7 @@ Si considerino le principali obiezioni una per una
    Se il sistema è costituito da un milione di righe di tale codice, probabilmente non si sarà in grado di usare le eccezioni, ma questo è un problema per un uso eccessivo e indisciplinato dei puntatori, piuttosto che con le eccezioni.
    A nostro avviso, c'è bisogno del RAII per rendere la gestione degli errori basata sulle eccezioni semplice e sicura -- più semplice e più sicura delle alternative.
 * Le prestazioni delle eccezioni non sono prevedibili.
-   Se ci si trova in un sistema strettamente real-time in cui è necessario garantire il completamento di un'attività in un determinato tempo, si necessita di tool per avallare queste necessità.
+   Se ci si trova in un sistema fortemente real-time in cui è necessario garantire il completamento di un'attività in un determinato tempo, sono necessari dei tool per avallare queste necessità.
    Per quanto si sa, tali tool non sono disponibili (almeno non per la maggior parte dei programmatori).
 * il supporto a run-time per la gestione delle eccezioni occupa troppo spazio Questo può essere il caso di piccoli sistemi (di solito sistemi embedded).
    Tuttavia, prima di abbandonare le eccezioni, considerare quanto spazio richiederebbe una gestione coerente degli errori utilizzando i codici di errore e quanto costerebbe la mancata rilevazione di un errore.
@@ -19006,7 +19005,7 @@ Molti, forse la maggior parte, dei problemi con le eccezioni derivano da esigenz
 
 Gli argomenti fondamentali per l'uso delle eccezioni sono
 
-* distinguono chiaramente tra un return cn errore e un return normale
+* Distinguono chiaramente tra un return con errore e un return senza
 * Non possono essere dimenticati o ignorati
 * Possono essere usati sistematicamente
 
@@ -19014,8 +19013,8 @@ Da ricordare
 
 * Le eccezioni servono per segnalare errori (nel C++; altri linguaggi le possono usare per altri usi).
 * Le eccezioni non riguardano errori che possono essere gestiti localmente.
-* Non cercare di catturare ogni eccezione in ogni funzione (è noioso, goffo e porta a un codice lento).
-* Le eccezioni non riguardano gli errori che richiedono la chiusura immediata di u modulo/sistema dopo un errore irrecuperabile.
+* Non cercare di catturare tutte le eccezioni in ogni funzione (è noioso, goffo e porta a un codice lento).
+* Le eccezioni non riguardano gli errori che richiedono la chiusura immediata di un modulo/sistema dopo un errore irrecuperabile.
 
 ##### Esempio
 
