@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-8 dicembre 2019
+28 Maggio 2020
 
 
 Editori:
@@ -1697,10 +1697,10 @@ Questa è una delle principali fonti di errori.
 
 ##### Esempio
 
-    int printf(const char* ...);    // male: restituisce un numero negativo se l'output fallisce
+    int printf(const char* ...);    // bad: restituisce un numero negativo se l'output fallisce
 
     template <class F, class ...Args>
-    // buono: esegue system_error se non è in grado di avviare un nuovo thread
+    // buono: genera system_error se non è in grado di avviare un nuovo thread
     explicit thread(F&& f, Args&&... args);
 ##### Note
 
@@ -2784,7 +2784,8 @@ Un brutto errore logico può aversi se chi scrive `g()` assume erroneamente la d
 
 ##### Esempio
 
-    void sink(vector<int>&& v) {   // sink prende la proprietà di tutto quello che possiede l'argomento
+    void sink(vector<int>&& v)  // sink prende la proprietà di tutto quello che possiede l'argomento
+    {
         // qui, di solito, potrebbero esserci accessi const di v
         store_somewhere(std::move(v));
         // solitamente qui non si usa più v; esso viene spostato
@@ -2800,7 +2801,8 @@ I tipi a proprietà unica che sono move-only ed economici-da-spostare, come `uni
 Per esempio:
 
     template <class T>
-    void sink(std::unique_ptr<T> p) {
+    void sink(std::unique_ptr<T> p)
+    {
         // usa p ... forse std::move(p) altrove in seguito
     }   // p viene distrutto
 ##### Imposizione
@@ -2820,7 +2822,8 @@ In quel caso, e solo in quel caso, si rende il parametro `TP&&` dove `TP` è un 
 ##### Esempio
 
     template <class F, class... Args>
-    inline auto invoke(F f, Args&&... args) {
+    inline auto invoke(F f, Args&&... args)
+    {
         return f(forward<Args>(args)...);
     }
 
@@ -3506,7 +3509,8 @@ Questo principalmente per evitare il codice nella forma di `(a = b) = c` -- tale
     {
      public:
         ...
-        Foo& operator=(const Foo& rhs) {
+        Foo& operator=(const Foo& rhs)
+        {
           // Membri copia.
           ...
           return *this;
@@ -3686,7 +3690,8 @@ Puntatori e riferimenti a locali non dovrebbero sopravvivere al loro scope. Le l
         int x = 0;
         // ...
 
-        void f() {
+        void f()
+        {
             int i = 0;
             // ...
 
@@ -3724,7 +3729,8 @@ Questo è alquanto fragile perché non può essere imposta la sicurezza nel ling
 
 ##### Esempio
 
-    int sum(...) {
+    int sum(...)
+    {
         // ...
         while (/*...*/)
             result += va_arg(list, int); // BAD, presuppone che vengano passati degli int
@@ -3735,7 +3741,8 @@ Questo è alquanto fragile perché non può essere imposta la sicurezza nel ling
     sum(3.14159, 2.71828); // BAD, indefinito
 
     template<class ...Args>
-    auto sum(Args... args) { // GOOD, e molto più flessibile
+    auto sum(Args... args) // GOOD, e molto più flessibile
+    {
         return (... + args); // nota: C++17 "fold expression"
     }
 
@@ -5326,7 +5333,8 @@ Il tipo restituito dalla factory dovrebbe normalmente essere `unique_ptr` per de
 
     class B {
     public:
-        B() {
+        B()
+        {
             /* ... */
             f(); // BAD: C.82: Non richiamare funzioni virtuali nei costruttori e nei distruttori
             /* ... */
@@ -5838,7 +5846,8 @@ Una *classe polimorfica* è una classe che definisce o eredita almeno una funzio
         // ...
     };
 
-    void f(B& b) {
+    void f(B& b)
+    {
         auto b2 = b; // oops, [slice[ spaccatura dell'oggetto; b2.m() restituirà 'B'
     }
 
@@ -5860,7 +5869,8 @@ Una *classe polimorfica* è una classe che definisce o eredita almeno una funzio
         // ...
     };
 
-    void f(B& b) {
+    void f(B& b)
+    {
         auto b2 = b; // ok, il compilatore rileverà la copia involontaria e protesterà
     }
 
@@ -6220,14 +6230,12 @@ Un tipo fornirà un costruttore copia e/o un operatore di assegnazione per crear
 
 ##### Esempio, buono
 
-    struct base
-    {
+    struct base {
         virtual void update() = 0;
         std::shared_ptr<int> sp;
     };
 
-    struct derived : public base
-    {
+    struct derived : public base {
         void update() override {}
     };
 ##### Esempio, cattivo
@@ -7582,7 +7590,8 @@ Offre inoltre l'opportunità di eliminare un'allocazione separata per i conteggi
 
 ##### Esempio
 
-    void test() {
+    void test()
+    {
         // OK: ma ripetitivo; e allocazioni separate per Bar e i conteggi di shared_ptr
         shared_ptr<Bar> p {new Bar{7}};
 
@@ -9061,8 +9070,7 @@ Gli `shared_ptr` si basano sul conteggio degli utilizzi e sull'uso dei conteggi 
 
     class bar;
 
-    class foo
-    {
+    class foo {
     public:
       explicit foo(const std::shared_ptr<bar>& forward_reference)
         : forward_reference_(forward_reference)
@@ -9071,8 +9079,7 @@ Gli `shared_ptr` si basano sul conteggio degli utilizzi e sull'uso dei conteggi 
       std::shared_ptr<bar> forward_reference_;
     };
 
-    class bar
-    {
+    class bar {
     public:
       explicit bar(const std::weak_ptr<foo>& back_reference)
         : back_reference_(back_reference)
@@ -10268,10 +10275,10 @@ Leggibilità e sicurezza.
 
 Come ottimizzazione, si può voler ri-usare un buffer come un block-notes, ma anche in questo caso si preferisca limitare lo 'scope' della variabile il più possibile e si faccia attenzione a non provocare bug dai dati lasciati in un buffer riciclato in quanto questa è una comune sorgente di bug sulla sicurezza.
 
-    void write_to_file() {
+    void write_to_file()
+    {
         std::string buffer;             // per evitare le riallocazioni su ogni iterazione del ciclo
-        for (auto& o : objects)
-        {
+        for (auto& o : objects) {
             // Prima parte del lavoro.
             generate_first_string(buffer, o);
             write_to_file(buffer);
@@ -11129,11 +11136,13 @@ Talvolta, si può essere tentati di ricorrere a `const_cast` per evitare la dupl
     class Foo {
     public:
         // BAD, logica duplicata
-        Bar& get_bar() {
+        Bar& get_bar()
+        {
             /* logica complessa per ottenere un riferimento non-const a my_bar */
         }
 
-        const Bar& get_bar() const {
+        const Bar& get_bar() const
+        {
             /* stessa logica complessa per ottenere un riferimento const my_bar */
         }
     private:
@@ -11144,10 +11153,12 @@ Preferire, invece, la condivisione delle implementazioni. Normalmente, si può s
     class Foo {
     public:
         // non eccezionale, non-const chiama la versione const ma ricorre a const_cast
-        Bar& get_bar() {
+        Bar& get_bar()
+        {
             return const_cast<Bar&>(static_cast<const Foo&>(*this).get_bar());
         }
-        const Bar& get_bar() const {
+        const Bar& get_bar() const
+        {
             /* la logica complessa per ottenere un riferimento const a my_bar */
         }
     private:
@@ -11316,7 +11327,8 @@ Il `move` esplicito è necessario per spostare [move] esplicitamente un oggetto 
 Solitamente, viene usato un `std::move()` come argomento di un parametro `&&`.
 E dopo averlo fatto, si suppone che l'oggetto sia stato spostato via (cfr. [C.64](#Rc-move-semantic)) e che non se ne debba leggere lo stato finché non lo si imposti ad un nuovo valore.
 
-    void f() {
+    void f()
+    {
         string s1 = "supercalifragilisticexpialidocious";
 
         string s2 = s1;             // ok, fa una copia
@@ -11332,7 +11344,8 @@ E dopo averlo fatto, si suppone che l'oggetto sia stato spostato via (cfr. [C.64
 
     void sink(unique_ptr<widget> p);  // passa la proprietà di p a sink()
 
-    void f() {
+    void f()
+    {
         auto w = make_unique<widget>();
         // ...
         sink(std::move(w));               // ok, si da a sink()
@@ -11351,7 +11364,8 @@ Mai scrivere `std::move()` per un oggetto const, esso viene silenziosamente tras
 
 ##### Esempio, cattivo
 
-    vector<int> make_vector() {
+    vector<int> make_vector()
+    {
         vector<int> result;
         // ... carica i dati in result
         return std::move(result);       // bad; basta scrivere "return result;"
@@ -11368,14 +11382,16 @@ Il linguaggio già sa che un valore restituito è un oggetto temporaneo che può
 
 ##### Esempio
 
-    void mover(X&& x) {
+    void mover(X&& x)
+    {
         call_something(std::move(x));         // ok
         call_something(std::forward<X>(x));   // bad, non eseguire un std::forward di un riferimento a un rvalue
         call_something(x);                    // sospetto, perché non usare std::move?
     }
 
     template<class T>
-    void forwarder(T&& t) {
+    void forwarder(T&& t)
+    {
         call_something(std::move(t));         // bad, non eseguire un std::move del forwarding di un riferimento
         call_something(std::forward<T>(t));   // ok
         call_something(t);                    // sospetto, perché non usare std::forward?
@@ -11479,7 +11495,8 @@ Nei rari casi in cui lo slicing è voluto, il codice può sorprendere.
     Shape s {c};    // la copia costruisce solo la parte Shape di Circle
     s = c;          // e l'assegnazione copia solo la parte Shape di Circle
 
-    void assign(const Shape& src, Shape& dest) {
+    void assign(const Shape& src, Shape& dest)
+    {
         dest = src;
     }
     Circle c2 {{1, 1}, 43};
@@ -11977,7 +11994,8 @@ Un `break` in un ciclo ha un significato terribilmente diverso da un `break` in 
 Spesso, un loop che richiede un `break` è un buon candidato per una funzione (algoritmo), nel qual caso il `break` diventa un `return`.
 
     //Codice originale: un break all'interno di un ciclo
-    void use1(){
+    void use1()
+    {
         std::vector<T> vec = {/* inizializzato con qualche valore */};
         T value;
         for (const T item : vec) {
@@ -11990,14 +12008,16 @@ Spesso, un loop che richiede un `break` è un buon candidato per una funzione (a
     }
 
     //MEGLIO: si crea una funzione e si torna nel loop
-    T search(const std::vector<T> &vec) {
+    T search(const std::vector<T> &vec)
+    {
         for (const T &item : vec) {
             if (/* qualche condizione*/) return item;
         }
         return T(); //il valore di default
     }
 
-    void use2() {
+    void use2()
+    {
         std::vector<T> vec = {/* inizializzato con qualche valore */};
         T value = search(vec);
         /* quindi fa qualcosa con value */
@@ -12481,19 +12501,22 @@ Questo vale anche per `%`.
 
 ##### Esempio, cattivo
 
-    double divide(int a, int b) {
+    double divide(int a, int b)
+    {
         // BAD, si dovrebbe controllare (p.es., in una precondizione)
         return a / b;
     }
 ##### Esempio, buono
 
-    double divide(int a, int b) {
+    double divide(int a, int b)
+    {
         // good, fatto tramite una precondizione (e da sostituire con i contratti appena saranno introdotti nel C++)
         Expects(b != 0);
         return a / b;
     }
 
-    double divide(int a, int b) {
+    double divide(int a, int b)
+    {
         // good, fatto tramite un check
         return b ? a / b : quiet_NaN<double>();
     }
@@ -12714,8 +12737,7 @@ Il codice semplice può essere molto veloce. Gli ottimizzatori a volte fanno mer
 
     vector<uint8_t> v(100000);
 
-    for (size_t i = 0; i < v.size(); i += sizeof(uint64_t))
-    {
+    for (size_t i = 0; i < v.size(); i += sizeof(uint64_t)) {
         uint64_t& quad_word = *reinterpret_cast<uint64_t*>(&v[i]);
         quad_word = ~quad_word;
     }
@@ -13088,28 +13110,44 @@ Tuttavia, nel tempo, pezzi di codice possono apparire in luoghi inaspettati.
 
     double cached_computation(double x)
     {
-        // bad: questi due static provocano conflitti [data race] se usati in multi-thread
+        // bad: questi static provocano conflitti [data race] se usati in multi-thread
         static double cached_x = 0.0;
         static double cached_result = COMPUTATION_OF_ZERO;
-        double result;
 
-        if (cached_x == x)
-            return cached_result;
-        result = computation(x);
-        cached_x = x;
-        cached_result = result;
-        return result;
+        if (cached_x != x) {
+            cached_x = x;
+            cached_result = computation(x);
+        }
+        return cached_result;
     }
 Sebbene `cached_computation` funziona perfettamente in un ambiente single-thread, in uno multi-threaded le due variabili `static` provocano conflitti e quindi un comportamento indefinito.
 
-Ci sono diversi modi per rendere questo esempio sicuro per un ambiente multi-threaded:
+##### Esempio, buono
 
-* Delegare i problemi sulla concorrenza al chiamante.
-* Segnalare le variabili `static` come `thread_local` (che potrebbe rendere meno efficace l'uso della cache).
-* Implementare il controllo della concorrenza, per esempio, proteggendo le due variabili `static` con un lock `static` (che potrebbe ridurre le prestazioni).
-* Si deve chiedere al chiamante di fornire la memoria da usare per la cache, delegando in tal modo al chiamante sia l'allocazione della memoria che i problemi sulla concorrenza.
+    struct ComputationCache {
+        double cached_x = 0.0;
+        double cached_result = COMPUTATION_OF_ZERO;
+
+        double compute(double x) {
+            if (cached_x != x) {
+                cached_x = x;
+                cached_result = computation(x);
+            }
+            return cached_result;
+    }
+    };
+Qui la cache viene memorizzata come un dato membro di un oggetto `ComputationCache`, anziché come uno stato statico condiviso.
+Questa refactoring essenzialmente delega la responsabilità al chiamante: un programma single-threaded potrebbe ancora decidere di avere un `ComputationCache` globale, mentre un programma multi-threaded potrebbe avere un'istanza `ComputationCache` per ciascun thread o una per ciascun "contesto" per qualsiasi definizione di "contesto".
+La funzione refactored non tenta più di gestire l'allocazione di `cached_x`. In questo senso, questa è un'applicazione del "Single Responsibility Principle".
+
+In questo specifico esempio, il refactoring per la sicurezza del thread migliora anche la riutilizzabilità nei programmi single-threaded. Non è difficile immaginare che un programma a thread singolo potrebbe volere due istanze `ComputationCache` per usarle in diverse parti del programma, senza che i dati memorizzati nella cache vengano sovrascritti a vicenda.
+
+Ci sono molti altri modi con cui si può migliorare la sicurezza dei thread al codice scritto per un ambiente multi-threaded standard (ovvero, uno in cui l'unica forma di concorrenza sia `std::thread`):
+
+* Contrassegnare le variabili di stato come `thread_local` anziché `static`.
+* Implementare il controllo della concorrenza, ad esempio, proteggendo l'accesso alle due variabili `static` con uno  `static std::mutex`.
 * Rifiutare di compilare e/o eseguire in un ambiente multi-thread.
-* Fornire due implementazioni, una da usarsi negli ambienti single-thread e l'altra in quelli multi-threaded.
+* Fornire due implementazioni: una per ambienti a singolo thread e un'altra per ambienti a thread multipli.
 
 ##### Eccezione
 
@@ -13134,7 +13172,8 @@ Per ulteriori informazioni su come utilizzare bene la sincronizzazione per elimi
 
 Esistono molti esempi di conflitti, alcuni dei quali girano in software di produzione in questo preciso momento. Un semplicissimo esempio:
 
-    int get_id() {
+    int get_id()
+    {
       static int id = 1;
       return id++;
     }
@@ -13249,7 +13288,8 @@ I concetti dell'applicazione sono più facili da immaginare.
 
 ##### Esempio
 
-    void some_fun() {
+    void some_fun()
+    {
         std::string msg, msg2;
         std::thread publisher([&] { msg = "Hello"; });       // bad: meno espressivo
                                                              //      e più soggetto a errori
@@ -14015,7 +14055,7 @@ Questa sezione tratta il passaggio dei messaggi in modo che un programmatore non
 Riepilogo delle regole sul passaggio dei messaggi:
 
 * [CP.60: Usare un `future` per restituire un valore da un task concorrente](#Rconc-future)
-* [CP.61: Usare un `async()` per generare [spawn] un task concorrente](#Rconc-async)
+* [CP.61: Usare `async()` per generare [spawn] un task concorrente](#Rconc-async)
 * code di messaggi [message queues]
 * Librerie di [messaging]
 
@@ -14042,12 +14082,11 @@ Non c'è un lock esplicito e vengono gestiti semplicemente sia il corretto (valo
 
 ???
 
-### <a name="Rconc-async"></a>CP.61: Usare un `async()` per generare [spawn] un task concorrente
+### <a name="Rconc-async"></a>CP.61: Usare `async()` per generare [spawn] un task concorrente
 
 ##### Motivo
 
-Un `future` preserva la solita semantica del return da una chiamata a una funzione per i task asincroni.
-Non c'è un lock esplicito e vengono gestiti semplicemente sia il corretto (valore) di ritorno che l'errore (eccezione) restituito.
+Simile alla [R.12](#Rr-immediate-alloc), che dice di evitare i puntatori semplici proprietari, si dovrebbero anche evitare i thread semplici [raw] e le [promise] dove possibile. Utilizzare una funzione factory come `std::async`, che gestisce la generazione o il riutilizzo di un thread senza esporre i thread semplici [raw] al proprio codice.
 
 ##### Esempio
 
@@ -14062,23 +14101,52 @@ Non c'è un lock esplicito e vengono gestiti semplicemente sia il corretto (valo
 
     void async_example()
     {
-        try
-        {
-            auto v1 = std::async(std::launch::async, read_value, "v1.txt");
-            auto v2 = std::async(std::launch::async, read_value, "v2.txt");
-            std::cout << v1.get() + v2.get() << '\n';
-        }
-        catch (std::ios_base::failure & fail)
-        {
+        try {
+            std::future<int> f1 = std::async(read_value, "v1.txt");
+            std::future<int> f2 = std::async(read_value, "v2.txt");
+            std::cout << f1.get() + f2.get() << '\n';
+        } catch (const std::ios_base::failure& fail) {
             // gestire qui l'eccezione
         }
     }
 ##### Note
 
-Sfortunatamente, `async()` non è perfetto.
-Per esempio, non c'è la garanzia che venga usato un pool di thread per ridurre la costruzione dei thread.
-Infatti, la maggior parte delle implementazioni attuali di `async()` non lo fanno.
-Tuttavia, `async()` è semplice e logicamente corretto, quindi fino a quando non arriva qualcosa di meglio e a meno che non sia veramente necessario ottimizzare per molti task asincroni, restiamo con `async()`.
+Sfortunatamente, `std::async` non è perfetto. Per esempio, non usa un pool di thread, il che significa che potrebbe non riuscire a a causa dell'esaurimento delle risorse, anziché accodare i task da utilizzare in seguito. Tuttavia, anche se non puoi usare `std::async`, si dovrebbe preferire la scrittura di una propria funzione factory  `future`-returning, anziché usare le [raw promise].
+
+##### Esempio (cattivo)
+
+Questo esempio mostra due modi diversi per usare  `std::future`, ma falliscono nell'evitare la gestione di `std::thread`.
+
+    void async_example()
+    {
+        std::promise<int> p1;
+        std::future<int> f1 = p1.get_future();
+        std::thread t1([p1 = std::move(p1)]() mutable {
+            p1.set_value(read_value("v1.txt"));
+        });
+        t1.detach(); // pericolosissimo
+
+        std::packaged_task<int()> pt2(read_value, "v2.txt");
+        std::future<int> f2 = pt2.get_future();
+        std::thread(std::move(pt2)).detach();
+
+        std::cout << f1.get() + f2.get() << '\n';
+    }
+##### Esempio (buono)
+
+Questo esempio mostra un modo con cui è possibile seguire seguire lo schema generale impostato da `std::async`, in un contesto in cui lo stesso `std::async` era inaccettabile per andare in produzione.
+
+    void async_example(WorkQueue& wq)
+    {
+        std::future<int> f1 = wq.enqueue([]() {
+            return read_value("v1.txt");
+        });
+        std::future<int> f2 = wq.enqueue([]() {
+            return read_value("v2.txt");
+        });
+        std::cout << f1.get() + f2.get() << '\n';
+    }
+Ogni  thread generato per eseguire il codice di `read_value` viene nascosto dietro la chiamata `WorkQueue::enqueue`. Il codice utente si occupa solo degli oggetti `future`, mai con `thread`, `promise`  o oggetti `packaged_task`.
 
 ##### Imposizione
 
@@ -14325,7 +14393,8 @@ A volte il codice C++ alloca memoria `volatile` e la condivide con "qualcun altr
 Le variabili locali `volatile` sono quasi sempre sbagliate -- come si possono condividere con altri linguaggi o con l'hardware se sono temporanee?
 Lo stesso vale quasi altrettanto fortemente per le variabili membro, per lo stesso motivo.
 
-    void f() {
+    void f()
+    {
         volatile int i = 0; // bad, variabile locale volatile
         // ecc.
     }
@@ -14479,7 +14548,8 @@ Per mantenere la gestione degli errori separata dal "codice ordinario." le imple
         try {
             for (gsl::index i = 0; i < vec.size(); ++i)
                 if (vec[i] == x) throw i;  // trovato x
-        } catch (int i) {
+        }
+        catch (int i) {
             return i;
         }
         return -1;   // non trovato
@@ -15371,7 +15441,8 @@ Ciò fornisce una dichiarazione più precisa dello scopo del progetto, una migli
         // ...
     };
 
-    void f(const Point& pt) {
+    void f(const Point& pt)
+    {
         int x = pt.getx();          // ERRORE, non compila perché getx non è stato segnato come const
     }
 ##### Note
@@ -16663,7 +16734,8 @@ Facilita la creazione di tool.
     }
 
     template<typename Iter>
-    Iter algo(Iter first, Iter last) {
+    Iter algo(Iter first, Iter last)
+    {
         for (; first != last; ++first) {
             auto x = sqrt(*first); // dipendenza potenzialmente sorprendente: quale sqrt()?
             helper(first, x);      // dipendenza potenzialmente sorprendente:
@@ -17878,7 +17950,8 @@ Facendolo si elimina la capacità di chi `#include` di chiarire efficacemente e 
 
     bool copy(/*... alcuni parametri ...*/);    // alcune funzioni che si chiamano copy
 
-    int main() {
+    int main()
+    {
         copy(/*...*/);    // ora si ha l'overload di local ::copy e di std::copy, potrebbe esserci ambiguità
     }
 ##### Note
@@ -17948,12 +18021,12 @@ Evitare sorprese.
 Evitare di dover modificare gli `#include` se si modifica l'header di un `#include`.
 Evitare di diventare accidentalmente dipendenti dai dettagli dell'implementazione e da entità logicamente separate incluse in un header.
 
-##### Esempio
+##### Esempio, cattivo
 
     #include <iostream>
     using namespace std;
 
-    void use()                  // bad
+    void use()
     {
         string s;
         cin >> s;               // va bene
@@ -17965,6 +18038,8 @@ Evitare di diventare accidentalmente dipendenti dai dettagli dell'implementazion
 `<iostream>` espone la definizione di `std::string` ("perché?" sembra un quiz divertente), ma non è necessario farlo, quindi include transitivamente tutto l'header di `<string>`, da cui la nota domanda del principiante "perché `getline(cin,s);` non funziona?" o anche delle eventuali "`string`he non si possono confrontare con `==`).
 
 La soluzione è scrivere esplicitamente `#include <string>`:
+
+##### Esempio, buono
 
     #include <iostream>
     #include <string>
@@ -20436,7 +20511,8 @@ Questo è un esempio dell'ultima opzione:
 
     class B {
     public:
-        B() {
+        B()
+        {
             /* ... */
             f(); // BAD: C.82: Non richiamare funzioni virtuali nei costruttori e nei distruttori
             /* ... */
@@ -20640,7 +20716,8 @@ Si tengano presenti i seguenti consigli e requisiti trovati nel C++ Standard:
 Le funzioni di de-allocazione, compresi in particolare gli "overload" di  `operator delete` e di `operator delete[]`,  rientrano nella stessa categoria, poiché anch'esse vengono utilizzate durante la pulizia in generale e durante la gestione delle eccezioni in particolare, per eseguire il "rollback" del lavoro parziale che deve essere annullato.
 Oltre ai distruttori e alle funzioni di de-allocazione, le comuni tecniche [error-safety] si basano anche su operazioni `swap` che non falliscono mai -- in questo caso, non perché vengono utilizzate per implementare un "rollback" garantito, ma perché vengono utilizzate per implementare un "commit" garantito. Ad esempio, ecco un'implementazione idiomatica dell'`operator=` per un tipo `T` che esegue la costruzione copia seguita da una chiamata "no-fail" a `swap`:
 
-    T& T::operator=(const T& other) {
+    T& T::operator=(const T& other)
+    {
         auto temp = other;
         swap(temp);
         return *this;
