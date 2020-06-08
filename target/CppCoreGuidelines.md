@@ -1699,7 +1699,7 @@ Questa è una delle principali fonti di errori.
 
     int printf(const char* ...);    // bad: restituisce un numero negativo se l'output fallisce
 
-    template <class F, class ...Args>
+    template<class F, class ...Args>
     // buono: genera system_error se non è in grado di avviare un nuovo thread
     explicit thread(F&& f, Args&&... args);
 ##### Note
@@ -2171,10 +2171,10 @@ Quindi, si scrive una classe
     public:
         enum Opt { from_line = 1 };
         Istream() { }
-        Istream(zstring p) :owned{true}, inp{new ifstream{p}} {}            // legge dal file
-        Istream(zstring p, Opt) :owned{true}, inp{new istringstream{p}} {}  // legge dalla riga di comando
+        Istream(zstring p) : owned{true}, inp{new ifstream{p}} {}            // legge dal file
+        Istream(zstring p, Opt) : owned{true}, inp{new istringstream{p}} {}  // legge dalla riga di comando
         ~Istream() { if (owned) delete inp; }
-        operator istream& () { return *inp; }
+        operator istream&() { return *inp; }
     private:
         bool owned = false;
         istream* inp = &cin;
@@ -2515,7 +2515,7 @@ Le funzioni membro definite nella classe sono per default `inline`.
 
 ##### Eccezione
 
-Le funzioni template (comprese le funzioni  template membro) vengono normalmente definite negli header e quindi sono inline.
+Le funzioni template (comprese le funzioni membro delle classi template `A<T>::function()` e le funzioni template membro `A::function<T>()`) vengono di norma definite negli header e quindi sono inline.
 
 ##### Imposizione
 
@@ -2800,7 +2800,7 @@ I tipi a proprietà unica che sono move-only ed economici-da-spostare, come `uni
 
 Per esempio:
 
-    template <class T>
+    template<class T>
     void sink(std::unique_ptr<T> p)
     {
         // usa p ... forse std::move(p) altrove in seguito
@@ -2821,7 +2821,7 @@ In quel caso, e solo in quel caso, si rende il parametro `TP&&` dove `TP` è un 
 
 ##### Esempio
 
-    template <class F, class... Args>
+    template<class F, class... Args>
     inline auto invoke(F f, Args&&... args)
     {
         return f(forward<Args>(args)...);
@@ -3563,7 +3563,7 @@ Le funzioni non possono acquisire variabili locali o essere definite nello scope
     // nello scope dell'istruzione o dell'espressione -- viene naturale una lambda
     vector<work> v = lots_of_work();
     for (int tasknum = 0; tasknum < max; ++tasknum) {
-        pool.run([=, &v]{
+        pool.run([=, &v] {
             /*
             ...
             ... process 1 / max - th of v, the tasknum - th chunk
@@ -3578,7 +3578,7 @@ Le generiche lambda offrono un modo conciso di scrivere funzioni template e quin
 
 ##### Imposizione
 
-* Genera un warning quando c'è il nome di una non-generica lambda (p.es., `auto x = [](int i){ /*...*/; };`) che non cattura niente ed appare nello scope globale. Scrivere, invece, una normale funzione.
+* Genera un warning quando c'è il nome di una non-generica lambda (p.es., `auto x = [](int i) { /*...*/; };`) che non cattura niente ed appare nello scope globale. Scrivere, invece, una normale funzione.
 
 ### <a name="Rf-default-args"></a>F.51: Potendo scegliere, si preferiscano gli argomenti con default rispetto all'overloading
 
@@ -3642,9 +3642,9 @@ Questa è una semplice pipeline parallela a tre stadi. Ogni oggetto `stage` [sta
 
     void send_packets(buffers& bufs)
     {
-        stage encryptor([] (buffer& b){ encrypt(b); });
-        stage compressor([&](buffer& b){ compress(b); encryptor.process(b); });
-        stage decorator([&](buffer& b){ decorate(b); compressor.process(b); });
+        stage encryptor([](buffer& b) { encrypt(b); });
+        stage compressor([&](buffer& b) { compress(b); encryptor.process(b); });
+        stage decorator([&](buffer& b) { decorate(b); compressor.process(b); });
         for (auto& b : bufs) { decorator.process(b); }
     }  // si blocca automaticamente in attesa del completamento della pipeline
 ##### Imposizione
@@ -3665,14 +3665,14 @@ Puntatori e riferimenti a locali non dovrebbero sopravvivere al loro scope. Le l
     // Si noti che quando il programma esce da questo scope,
     // local non esiste più, pertanto
     // la chiamata a process() avrà un comportamento indefinito!
-    thread_pool.queue_work([&]{ process(local); });
+    thread_pool.queue_work([&] { process(local); });
 ##### Esempio, buono
 
     int local = 42;
     // Vuole una copia di local.
     // Poiché viene creata una copia di local, sarà
     // sempre disponibile per la chiamata.
-    thread_pool.queue_work([=]{ process(local); });
+    thread_pool.queue_work([=] { process(local); });
 ##### Imposizione
 
 * (Semplice) Emette un warning quando la 'capture-list' [lista dei parametri] contiene un riferimento ad una variabile definita localmente
@@ -3695,7 +3695,7 @@ Puntatori e riferimenti a locali non dovrebbero sopravvivere al loro scope. Le l
             int i = 0;
             // ...
 
-            auto lambda = [=]{ use(i, x); };   // BAD: "sembra" una cattura per copia/valore
+            auto lambda = [=] { use(i, x); };   // BAD: "sembra" una cattura per copia/valore
             // [&] ha l'identica semantica e copia il puntatore this secondo le regole correnti
             // [=,this] e [&,this] non sono migliori e confondono
 
@@ -3706,7 +3706,7 @@ Puntatori e riferimenti a locali non dovrebbero sopravvivere al loro scope. Le l
 
             // ...
 
-            auto lambda2 = [i, this]{ use(i, x); }; // ok, più esplicito e meno confuso
+            auto lambda2 = [i, this] { use(i, x); }; // ok, più esplicito e meno confuso
 
             // ...
         }
@@ -3936,7 +3936,7 @@ Un set di overload può avere dei membri che non accedono direttamente ai dati `
 
     class Foobar {
     public:
-        void foo(long x)    { /* modifica il dato privato */ }
+        void foo(long x) { /* modifica il dato privato */ }
         void foo(double x) { foo(std::lround(x)); }
         // ...
     private:
@@ -4472,7 +4472,7 @@ Definire un distruttore non di default solo se una classe deve eseguire del codi
     template<typename A>
     struct final_action {   // leggermente semplificato
         A act;
-        final_action(A a) :act{a} {}
+        final_action(A a) : act{a} {}
         ~final_action() { act(); }
     };
 
@@ -4484,7 +4484,7 @@ Definire un distruttore non di default solo se una classe deve eseguire del codi
 
     void test()
     {
-        auto act = finally([]{ cout << "Exit test\n"; });  // stabilisce l'azione di uscita
+        auto act = finally([] { cout << "Exit test\n"; });  // stabilisce l'azione di uscita
         // ...
         if (something) return;   // l'azione è fatta qui
         // ...
@@ -5957,7 +5957,7 @@ In alcuni casi, un'operazione di default non è desiderabile.
 
 Un `unique_ptr` può essere spostato, ma non copiato. Per farlo, ne vengono cancellate le operazioni di copia. Per evitare la copia è necessario il `=delete` accanto alle sue operazioni di copia dagli lvalue:
 
-    template <class T, class D = default_delete<T>> class unique_ptr {
+    template<class T, class D = default_delete<T>> class unique_ptr {
     public:
         // ...
         constexpr unique_ptr() noexcept;
@@ -6158,7 +6158,7 @@ Questa regola si applica a tutti i soliti operatori di confronto: `!=`, `<`, `<=
     };
 Il confronto di `B` accetta le conversioni per il secondo operando, ma non per il primo.
 
-    class D :B {
+    class D : B {
         char character;
         virtual bool operator==(const D& a) const
         {
@@ -6761,7 +6761,7 @@ L'importanza di separare i due tipi di ereditarietà aumenta
 
     class Circle : public Shape {
     public:
-        Circle(Point c, int r) :Shape{c}, rad{r} { /* ... */ }
+        Circle(Point c, int r) : Shape{c}, rad{r} { /* ... */ }
 
         // ...
     private:
@@ -6802,7 +6802,7 @@ Si noti che un'interfaccia pura ha raramente costruttori: non c'è niente da cos
 
     class Circle : public Shape {
     public:
-        Circle(Point c, int r, Color c) :cent{c}, rad{r}, col{c} { /* ... */ }
+        Circle(Point c, int r, Color c) : cent{c}, rad{r}, col{c} { /* ... */ }
 
         Point center() const override { return cent; }
         Color color() const override { return col; }
@@ -7231,7 +7231,7 @@ Questo problema riguarda sia le funzioni membro virtuali che quelle non virtuali
 
 Per le basi variadiche, il C++17 ha introdotto una forma variadica della dichiarazione 'using',
 
-    template <class... Ts>
+    template<class... Ts>
     struct Overloader : Ts... {
         using Ts::operator()...; // espone operator() da ogni base
     };
@@ -7852,7 +7852,7 @@ Molte parti della semantica del C++ ne presuppongono il significato di default.
 ##### Esempio
 
     class Ptr { // uno smart pointer
-        Ptr(X* pp) :p(pp) { /* check */ }
+        Ptr(X* pp) : p(pp) { /* check */ }
         X* operator->() { /* check */ return p; }
         X operator[](int i);
         X operator*();
@@ -9737,7 +9737,7 @@ Un'associazione strutturata [structured binding] (C++17) è specificamente proge
     if (inserted) { /* è stata inserita una nuova voce */ }
 ##### Esempio
 
-    template <class InputIterator, class Predicate>
+    template<class InputIterator, class Predicate>
     bool any_of(InputIterator first, InputIterator last, Predicate pred);
 o meglio usando i concetti:
 
@@ -9779,7 +9779,7 @@ Si consideri:
     auto p = v.begin();   // vector<int>::iterator
     auto h = t.future();
     auto q = make_unique<int[]>(s);
-    auto f = [](int x){ return x + 10; };
+    auto f = [](int x) { return x + 10; };
 In ciascun caso, ci si risparmia la scrittura di un tipo lungo e difficile da ricordare che il compilatore già conosce ma che un programmatore potrebbe scrivere in modo sbagliato.
 
 ##### Esempio
@@ -9962,7 +9962,7 @@ Supponendo che vi sia una connessione logica tra `i` e `j`, tale connessione dov
     auto [i, j] = make_related_widgets(cond);    // C++17
 Se la funzione `make_related_widgets` è altrimenti ridondante, possiamo eliminarla usando una lambda [ES.28](#Res-lambda-init):
 
-    auto [i, j] = [x]{ return (x) ? pair{f1(), f2()} : pair{f3(), f4()} }();    // C++17
+    auto [i, j] = [x] { return (x) ? pair{f1(), f2()} : pair{f3(), f4()} }();    // C++17
 L'uso di un valore che rappresenta il "non-inizializzato" è un sintomo di un problema e non una soluzione:
 
     widget i = uninit;  // bad
@@ -10096,7 +10096,7 @@ Leggibilità. Limitare lo scope in cui sia possibile usare una variabile. Per no
     s = "che spreco";
 ##### Esempio, cattivo
 
-    SomeLargeType var;   // una brutta CaMeLcAsEvArIaBilE
+    SomeLargeType var;
 
     if (cond)   // delle condizioni non banali
         Set(&var);
@@ -10351,7 +10351,7 @@ Incapsula bene l'inizializzazione locale, inclusa la pulizia delle variabili nec
     // da qui, x dovrebbe essere const, ma non possiamo dirlo con questo stile del codice
 ##### Esempio, buono
 
-    const widget x = [&]{
+    const widget x = [&] {
         widget val;                                // assume si suppone che widget abbia un costruttore di default
         for (auto i = 2; i <= N; ++i) {            // questo potrebbe essere un
             val += some_obj.do_something_with(i);  // codice arbitrariamente lungo
@@ -10360,7 +10360,7 @@ Incapsula bene l'inizializzazione locale, inclusa la pulizia delle variabili nec
     }();
 ##### Esempio
 
-    string var = [&]{
+    string var = [&] {
         if (!in) return "";   // default
         string s;
         for (char c : in >> c)
@@ -10544,7 +10544,7 @@ Richiede un codice disordinato per il-cast-e-pieno-di-macro per funzionare corre
         std::exit(severity);
     }
 
-    template <typename T, typename... Ts>
+    template<typename T, typename... Ts>
     constexpr void error(int severity, T head, Ts... tail)
     {
         std::cerr << head;
@@ -11979,7 +11979,7 @@ Un `break` in un ciclo ha un significato terribilmente diverso da un `break` in 
 
 ##### Esempio
 
-    switch(x){
+    switch(x) {
     case 1 :
         while (/* alcune condizioni */) {
             //...
@@ -12857,20 +12857,20 @@ In particolare, quando si scrive una funzione che non sia un dettaglio di implem
 
 Si consideri:
 
-    template <class ForwardIterator, class T>
+    template<class ForwardIterator, class T>
     bool binary_search(ForwardIterator first, ForwardIterator last, const T& val);
 `binary_search(begin(c), end(c), 7)` dirà se `7` è in `c` oppure no.
 Tuttavia, non dirà dove si trova quel `7` e se ci sono più di un `7`.
 
 A volte, è sufficiente restituire la minima quantità di informazioni (qui, `true` o `false`), ma una buona interfaccia restituisce le informazioni necessarie al chiamante. Quindi, la libreria standard offre anche
 
-    template <class ForwardIterator, class T>
+    template<class ForwardIterator, class T>
     ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& val);
 `lower_bound` restituisce un iteratore alla prima corrispondenza se c'è, altrimenti al primo elemento maggiore di `val`, o `last` se nessun elemento è stato trovato.
 
 Tuttavia, `lower_bound` non restituisce ancora informazioni sufficienti per tutti gli usi, quindi la libreria standard propone anche
 
-    template <class ForwardIterator, class T>
+    template<class ForwardIterator, class T>
     pair<ForwardIterator, ForwardIterator>
     equal_range(ForwardIterator first, ForwardIterator last, const T& val);
 `equal_range` restituisce una `pair` [coppia] di iteratori il primo e uno oltre l'ultima corrispondenza.
@@ -13134,7 +13134,7 @@ Sebbene `cached_computation` funziona perfettamente in un ambiente single-thread
                 cached_result = computation(x);
             }
             return cached_result;
-    }
+        }
     };
 Qui la cache viene memorizzata come un dato membro di un oggetto `ComputationCache`, anziché come uno stato statico condiviso.
 Questa refactoring essenzialmente delega la responsabilità al chiamante: un programma single-threaded potrebbe ancora decidere di avere un `ComputationCache` globale, mentre un programma multi-threaded potrebbe avere un'istanza `ComputationCache` per ciascun thread o una per ciascun "contesto" per qualsiasi definizione di "contesto".
@@ -13192,9 +13192,9 @@ Le variabili static locali sono una comune fonte di conflitti [data race].
         int sz = read_vec(fs, buf, max);            // legge da fs in buf
         gsl::span<double> s {buf};
         // ...
-        auto h1 = async([&]{ sort(std::execution::par, s); });     // produce [spawn] un task per ordinare [sort]
+        auto h1 = async([&] { sort(std::execution::par, s); });     // produce [spawn] un task per ordinare [sort]
         // ...
-        auto h2 = async([&]{ return find_all(buf, sz, pattern); });   // produce [spawn] un task per trovare le corrispondenze
+        auto h2 = async([&] { return find_all(buf, sz, pattern); });   // produce [spawn] un task per trovare le corrispondenze
         // ...
     }
 Qui, si ha un (brutto) conflitto tra gli elementi di `buf` (`sort` leggerà e scriverà).
@@ -13930,7 +13930,7 @@ Qui, se qualche altro `thread` 'consuma' la notifica di `thread1`, il `thread2` 
     void Sync_queue<T>::get(T& val)
     {
         unique_lock<mutex> lck(mtx);
-        cond.wait(lck, [this]{ return !q.empty(); });    // impedisce il risveglio spurio
+        cond.wait(lck, [this] { return !q.empty(); });    // impedisce il risveglio spurio
         val = q.front();
         q.pop_front();
     }
@@ -14499,7 +14499,7 @@ Si noti che non esiste alcun valore ritorno che potrebbe contenere un codice di 
 Il costruttore `File_handle` potrebbe essere definito in questo modo:
 
     File_handle::File_handle(const string& name, const string& mode)
-        :f{fopen(name.c_str(), mode.c_str())}
+        : f{fopen(name.c_str(), mode.c_str())}
     {
         if (!f)
             throw runtime_error{"File_handle: could not open " + name + " as " + mode};
@@ -15377,7 +15377,7 @@ Le istruzioni `catch` vengono valutate nell'ordine con cui appaiono e un'istruzi
         catch (Base& b) { /* ... */ }
         catch (Derived& d) { /* ... */ }
         catch (...) { /* ... */ }
-        catch (std::exception& e){ /* ... */ }
+        catch (std::exception& e) { /* ... */ }
     }
 Se `Derived` è derivato da `Base` il gestore `Derived` non verrà mai invocato.
 Il gestore "acchiappa tutto" garantisce che il gestore `std::exception` non sia mai invocato.
@@ -16670,7 +16670,7 @@ Perché è il meglio che possiamo fare senza il supporto diretto del concetto.
 
 ##### Esempio
 
-    template <typename T>
+    template<typename T>
     enable_if_t<is_integral_v<T>>
     f(T v)
     {
@@ -16678,7 +16678,7 @@ Perché è il meglio che possiamo fare senza il supporto diretto del concetto.
     }
 
     // Equivalente a:
-    template <Integral T>
+    template<Integral T>
     void f(T v)
     {
         // ...
@@ -16850,7 +16850,7 @@ Consentire ai membri della classe base di essere utilizzati senza specificare gl
     };
 ##### Note
 
-Una versione più generale di questa regola sarebbe "Se un membro della classe template dipende da solo N parametri template di M, lo si mette in una classe base con solo N parametri". Per N == 1, si ha una scelta di una classe base di una classe nello scope circostante come in [T.61](#Rt-scary).
+Una versione più generale di questa regola sarebbe "Se un membro template della classe dipende solo da N parametri template su M, lo si mette in una classe base con solo N parametri". Per N == 1, si ha una scelta di una classe base di una classe nello scope circostante come in [T.61](#Rt-scary).
 
 ??? E sulle costanti? staticità delle classi?
 
@@ -19684,7 +19684,7 @@ La maggior parte dei concetti seguenti sono definiti nella [TS "Ranges"](http://
 * `String`   // ???
 * `Number`   // ???
 * `Sortable`
-* `EqualityComparable`   // ???Si deve subire il "CaMelcAse"???
+* `EqualityComparable`
 * `Convertible`
 * `Common`
 * `Boolean`
@@ -19873,7 +19873,7 @@ Certi stili distinguono tra variabili membro, locali e globali.
 
     struct S {
         int m_;
-        S(int m) :m_{abs(m)} { }
+        S(int m) : m_{abs(m)} { }
     };
 Ciò non è dannoso e non rientra in questa linea-guida poiché non codifica il tipo.
 
@@ -20011,6 +20011,35 @@ Lo Standard ISO, ma con le maiuscole usate per i propri tipi e i propri concetti
 
 Impossibile.
 
+### <a name="Rl-literals"></a>NL.11: Rendere leggibili i letterali
+
+##### Motivo
+
+Leggibilità.
+
+##### Esempio
+
+Usare i separatori dei decimali per evitare lunghe stringhe di numeri
+
+    auto c = 299'792'458; // m/s2
+    auto q2 = 0b0000'1111'0000'0000;
+    auto ss_number = 123'456'7890;
+##### Esempio
+
+Usare suffissi letterali dove è necessario chiarire
+
+    auto hello = "Hello!"s; // una std::string
+    auto world = "world";   // una stringa C-style
+    auto interval = 100ms;  // using <chrono>
+##### Note
+
+I letterali non devono essere sparpagliati per tutto il codice come ["costanti magiche"](#Res-magic), ma è comunque una buona idea renderli leggibili dove sono definiti.
+È facile sbagliare con una lunga stringa di interi.
+
+##### Imposizione
+
+Segnalare le lunghe sequenze di cifre. Il problema è definire "lunghe"; forse 7.
+
 ### <a name="Rl-space"></a>NL.15: Usare gli spazi con parsimonia
 
 ##### Motivo
@@ -20043,35 +20072,6 @@ Questa regola è stata aggiunta dopo molte richieste di regolamentazione.
 ##### Note
 
 Sono ben accetti gli spazi ben posizionati come un aiuto significativo alla leggibilità. Non esagerare.
-
-### <a name="Rl-literals"></a>NL.11: Rendere leggibili i letterali
-
-##### Motivo
-
-Leggibilità.
-
-##### Esempio
-
-Usare i separatori dei decimali per evitare lunghe stringhe di numeri
-
-    auto c = 299'792'458; // m/s2
-    auto q2 = 0b0000'1111'0000'0000;
-    auto ss_number = 123'456'7890;
-##### Esempio
-
-Usare suffissi letterali dove è necessario chiarire
-
-    auto hello = "Hello!"s; // una std::string
-    auto world = "world";   // una stringa C-style
-    auto interval = 100ms;  // using <chrono>
-##### Note
-
-I letterali non devono essere sparpagliati per tutto il codice come ["costanti magiche"](#Res-magic), ma è comunque una buona idea renderli leggibili dove sono definiti.
-È facile sbagliare con una lunga stringa di interi.
-
-##### Imposizione
-
-Segnalare le lunghe sequenze di cifre. Il problema è definire "lunghe"; forse 7.
 
 ### <a name="Rl-order"></a>NL.16: Usare un ordine convenzionale per la dichiarazione dei membri di una classe
 
@@ -20655,7 +20655,7 @@ Non consentire mai la segnalazione di un errore da un distruttore, da una funzio
 
     class Nefarious {
     public:
-        Nefarious()  { /* codice che potrebbe andare in errore [throw] */ }   // ok
+        Nefarious() { /* codice che potrebbe andare in errore [throw] */ }    // ok
         ~Nefarious() { /* codice che potrebbe andare in errore [throw] */ }   // BAD, non dovrebbe eseguire [throw]
         // ...
     };
