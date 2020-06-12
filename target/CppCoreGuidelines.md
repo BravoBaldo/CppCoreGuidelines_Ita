@@ -1669,7 +1669,7 @@ Rendere l'interfaccia esattamente specificata e controllabile durante la compila
 
 ##### Esempio
 
-Usare i Concept ISO in stile TS della specifica dei requisiti. Per esempio:
+Usare lo stile C++20 della specifica dei requisiti. Per esempio:
 
     template<typename Iter, typename Val>
     // requires InputIterator<Iter> && EqualityComparable<ValueType<Iter>>, Val>
@@ -1679,7 +1679,7 @@ Usare i Concept ISO in stile TS della specifica dei requisiti. Per esempio:
     }
 ##### Note
 
-Presto (forse nel 2018), la maggior parte dei compilatori sarà in grado di controllare le clausole `requires` una volta rimosso il `//`.
+Presto (nel C++20), tutti i compilatori saranno in grado di controllare le clausole `requires` una volta rimosso il `//`.
 I concetti sono supportati nel GCC 6.1 e successivi.
 
 **Si veda anche**: [Programmazione generica](#SS-GP) e [concetti](#SS-concepts).
@@ -10358,15 +10358,6 @@ Incapsula bene l'inizializzazione locale, inclusa la pulizia delle variabili nec
         }                                          // necessario per inizializzare x
         return val;
     }();
-##### Esempio
-
-    string var = [&] {
-        if (!in) return "";   // default
-        string s;
-        for (char c : in >> c)
-            s += toupper(c);
-        return s;
-    }(); // notare ()
 Se possibile, si riducano le condizioni ad un semplice insieme di alternative (p.es., un `enum`) e non si confonda la selezione con l'inizializzazione.
 
 ##### Imposizione
