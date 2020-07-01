@@ -1536,7 +1536,7 @@ Appena sarà disponibile il supporto del linguaggio (p.es., cfr. [contract propo
 
 ##### Note
 
-No, l'uso di `unsigned` non è un buon modo per bypassare il problema per [assicurarsi che il valore sia non-negativo](#Res-non-negative).
+No, l'uso di `unsigned` non è un buon modo per bypassare il problema per [assicurarsi che il valore sia non-negativo](#Res-nonnegative).
 
 ##### Imposizione
 
@@ -5316,7 +5316,7 @@ come [un modo più generale di presentare gli argomenti ad una funzione](#Rstr-v
     class D {   // Good
         string s1;
     public:
-        A(string_view v) : s1{v} { }    // GOOD: costruisce direttamente
+        D(string_view v) : s1{v} { }    // GOOD: costruito direttamente
         // ...
     };
 ### <a name="Rc-factory"></a>C.50: Usare una funzione factory se c'è bisogno di un "comportamento virtuale" durante l'inizializzazione
