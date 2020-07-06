@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-28 Maggio 2020
+3 Luglio 2020
 
 
 Editori:
@@ -321,7 +321,7 @@ Le regole non sono indipendenti dal valore.
 Hanno lo scopo di rendere il codice più semplice e più corretto/più sicuro della maggior parte del codice C++ esistente, senza perdita di prestazioni.
 Hanno lo scopo di inibire del codice C++ perfettamente valido ma correlato ad errori, complessità superflua o basse prestazioni.
 
-Le regole non sono precise al punto in cui una persona (o una macchina) le possa seguire ciecamente.
+Le regole non sono precise al punto in cui una persona (o una macchina) le possa seguire senza riflettere.
 Le parti che lo impongono cercano di farlo, ma si preferisce lasciare una regola o una definizione un po' nel vago ed aperta all'interpretazione anziché specificare qualcosa di preciso e sbagliato.
 A volte, la precisione arriva solo col tempo e l'esperienza.
 Il progetto non è (ancora) un formalismo matematico.
@@ -358,7 +358,7 @@ Cerchiamo di risolvere quelli che utilizzano i tool.
 Ogni regola ha una sezione **Imposizione** che elenca le idee per imporla.
 L'imposizione si può ottenere con la revisione del codice, l'analisi statica, col compilatore o con dei controlli durante l'esecuzione.
 Ove possibile, preferiamo il controllo "meccanico" (gli umani sono lenti, inaccurati e si annoiano facilmente) e quello statico.
-I controlli a run-time vengono suggeriti raramente dove non esiste un'alternativa; non vogliamo sparpagliare controlli a casaccio.
+I controlli a run-time vengono suggeriti solo raramente laddove non esiste un'alternativa; non si desidera introdurre codice extra distribuito.
 Se opportuno, etichettiamo una regola (nelle sezioni **Imposizione**) col nome di gruppi di regole correlate (dette "profili").
 Una regola può far parte di più profili o di nessuno.
 Per cominciare, abbiamo alcuni profili corrispondenti ai bisogni comuni (desideri, ideali):
@@ -4455,7 +4455,7 @@ Queste operazioni non concordano per la semantica della copia. Ciò porterà a c
 
 ## <a name="SS-dtor"></a>C.dtor: Distruttori
 
-"Questa classe ha bisogno di un distruttore?" è una domanda sul design sorprendentemente potente.
+"Questa classe necessita di un distruttore?" è una domanda sul design sorprendentemente perspicace.
 Per la maggior parte delle classi la risposta è "no" o perché la classe non ha risorse o perché la distruzione è gestita dal[la regola dello zero](#Rc-zero); cioè, i suoi membri possono prendersi cura di se stessi per quanto riguarda la distruzione.
 Se la risposta è "sì", ne consegue gran parte della progettazione della classe (cfr. [la regola del cinque](#Rc-five)).
 
@@ -5250,7 +5250,7 @@ Rende esplicito che ci si aspetta di usare lo stesso valore in tutti i costrutto
         X(int ii) :i{ii} {}         // s è "" e j non è inizializzato
         // ...
     };
-Come può un manutentore sapere se `j` sia stato deliberatamente lasciato non inizializzato (probabilmente è comunque una cattiva idea) e se è stato intenzionale dare a `s` il valore di default `""` in un caso e `qqq` in un altro (quasi certamente un bug)? Il problema con `j` (dimenticando di inizializzare un membro) si verifica spesso quando si aggiunge un nuovo membro a una classe esistente.
+Come può un manutentore sapere se `j` sia stato deliberatamente lasciato non inizializzato (probabilmente è comunque una cattiva idea) e se sia stato intenzionale dare a `s` il valore di default `""` in un caso e `qqq` in un altro (quasi certamente un bug)? Il problema con `j` (dimenticando di inizializzare un membro) si verifica spesso quando si aggiunge un nuovo membro a una classe esistente.
 
 ##### Esempio
 
@@ -6199,7 +6199,7 @@ Gli utenti dei contenitori che usano l'hash lo fanno indirettamente e non si asp
         using result_type = size_t;
         using argument_type = My_type;
 
-        size_t operator() (const My_type & x) const
+        size_t operator()(const My_type & x) const
         {
             size_t xs = x.s.size();
             if (xs < 4) throw Bad_My_type{};    // "Nessuno si aspetta l'inquisizione spagnola!"
@@ -6351,7 +6351,7 @@ In particolare, ci si assicuri che un oggetto risulti uguale a se stesso da un'o
     {
         Sorted_vector<string> v2 {v};
         if (v != v2)
-            cout << "insanity rules!\n";
+            cout << "Comportamento irragionevole e illogico.\n";
         // ...
     }
 ##### Imposizione
@@ -8249,7 +8249,7 @@ Accedere al risultato di un `reinterpret_cast` per un tipo diverso degli oggetti
 ##### Note
 
 Sfortunatamente, le `union`i vengono comunemente usate per il "type punning".
-Non si considera "a volte funziona come previsto" un argomento robusto.
+Non si considera "a volte funziona come previsto" un argomento conclusivo.
 
 Il C++17 ha introdotto un tipo diverso `std::byte` per facilitare le operazioni sulla rappresentazione grezza degli oggetti.  Per queste operazioni si usi questo tipo invece di `unsigned char` o di `char`.
 
@@ -10096,7 +10096,7 @@ Leggibilità. Limitare lo scope in cui sia possibile usare una variabile. Per no
     s = "che spreco";
 ##### Esempio, cattivo
 
-    SomeLargeType var;
+    SomeLargeType var;  // CaMeLcAsEvArIaBlE difficile da leggere
 
     if (cond)   // delle condizioni non banali
         Set(&var);
@@ -12652,7 +12652,7 @@ Alternative per gli utenti
 Questa sezione contiene le regole per le persone che necessitano di prestazioni elevate e una bassa latenza.
 Cioè, queste sono regole che riguardano come utilizzare il minor tempo e il minor numero possibile di risorse per realizzare un'attività in un tempo prevedibilmente breve.
 Le regole in questa sezione sono più restrittive ed intrusive di quelle necessarie per molte (la maggior parte) delle applicazioni.
-Non cercare di seguirle ciecamente nel codice generico: raggiungere gli obiettivi di bassa latenza richiede un lavoro extra.
+Non cercare ingenuamente di seguirle nel codice generico: raggiungere gli obiettivi di bassa latenza richiede un lavoro extra.
 
 Riepilogo sulle regole per le prestazioni:
 
@@ -13627,14 +13627,14 @@ Segnalare i tentativi di passare variabili locali ad un thread di cui si può es
 
 Un `joining_thread` è un thread che si unisce [joins] alla fine del suo scope.
 I thread staccati [detached] sono difficili da monitorare.
-È più difficile garantire l'assenza di errori nei thread separati [detached] (e nei thread potenzialmente detached)
+È più difficile garantire l'assenza di errori nei thread staccati [detached] (e nei thread potenzialmente detached).
 
 ##### Esempio, cattivo
 
     void f() { std::cout << "Hello "; }
 
     struct F {
-        void operator()() { std::cout << "parallel world "; }
+        void operator()() const { std::cout << "parallel world "; }
     };
 
     int main()
@@ -13647,7 +13647,7 @@ I thread staccati [detached] sono difficili da monitorare.
     void f() { std::cout << "Hello "; }
 
     struct F {
-        void operator()() { std::cout << "parallel world "; }
+        void operator()() const { std::cout << "parallel world "; }
     };
 
     int main()
@@ -13658,44 +13658,22 @@ I thread staccati [detached] sono difficili da monitorare.
         t1.join();
         t2.join();
     }  // resta un brutto bug
-
-##### Esempio, cattivo
-
-Il codice che determina se usare `join()` o `detach()` può essere complicato e persino deciso nel thread delle funzioni che esso chiama o nelle funzioni chiamate dalla funzione che crea un thread:
-
-    void tricky(thread* t, int n)
-    {
-        // ...
-        if (is_odd(n))
-            t->detach();
-        // ...
-    }
-
-    void use(int n)
-    {
-        thread t { tricky, this, n };
-        // ...
-        // ... si esegue il join qui? ...
-    }
-Ciò complica seriamente l'analisi della durata, e, in casi non troppo improbabili, la rende addirittura impossibile.
-Questo implica che non ci si può affidare con sicurezza agli oggetti locali in `use()` dal thread e riferirsi agli oggetti locali nel thread da `use()`.
-
 ##### Note
 
 Creare i "thread immortali" globali, racchiuderli in uno scope, o sull'heap [free store] anziché eseguire il `detach()`.
-[non eseguire il `detach`](#Rconc-detached_thread).
+[Non eseguire il `detach`](#Rconc-detached_thread).
 
 ##### Note
 
-A causa del vecchio codice e delle librerie di terze parti che usano `std::thread` questa regola può essere difficile da applicare.
+A causa del vecchio codice e delle librerie di terze parti che usano `std::thread`, questa regola può essere difficile da applicare.
 
 ##### Imposizione
 
 Segnalare l'uso di `std::thread`:
 
-* Suggerire l'utilizzo di `gsl::joining_thread`.
+* Suggerire l'utilizzo di `gsl::joining_thread` o `std::jthread` nel C++20.
 * Suggerire ["l'esportazione della proprietà [exporting ownership]"](#Rconc-detached_thread) in uno scope circoscritto se si esegue il detach.
-* Segnalare con forza se non è chiaro se si esegue il join o il detach.
+* Segnalare se non è chiaro se si esegue il join o il detach di un thread.
 
 ### <a name="Rconc-detached_thread"></a>CP.26: Non eseguire il `detach()` di un thread
 
@@ -13821,10 +13799,10 @@ La creazione del thread è costosa.
 
     void worker(Message m)
     {
-        // process
+        // processo
     }
 
-    void master(istream& is)
+    void dispatcher(istream& is)
     {
         for (Message m; is >> m; )
             run_list.push_back(new thread(worker, m));
@@ -13835,7 +13813,7 @@ Invece, si potrebbe avere una serie di thread di lavoro pre-creati che elaborano
 
     Sync_queue<Message> work;
 
-    void master(istream& is)
+    void dispatcher(istream& is)
     {
         for (Message m; is >> m; )
             work.put(m);
@@ -17044,7 +17022,7 @@ Rendere template una gerarchia di classi con molte funzioni, specialmente molte 
 
     Vector<int> vi;
     Vector<string> vs;
-Probabilmente è una idea stupida definire un `sort` come funzione membro di un container, ma non è inaudito ed è un buon esempio di cosa non fare.
+Probabilmente è una cattiva idea definire un `sort` come funzione membro di un container, ma non è inaudito ed è un buon esempio di cosa non fare.
 
 Detto questo, il compilatore non può sapere se viene chiamato `vector<int>::sort()`, quindi deve generare del codice per esso.
 Lo stesso per `vector<string>::sort()`.
@@ -18909,7 +18887,7 @@ Questa sezione contiene regole e linee-guida che sono popolari altrove, ma che d
 Tuttavia, nel contesto degli stili di programmazione che si raccomandano e si supportano con le linee-guida, queste "non regole" risulterebbero dannose.
 
 Tuttora possono esserci contesti in cui le regole hanno senso.
-Per esempio, la mancanza di un adeguato supporto di tool può rendere inadeguate le eccezioni nei sistemi in tempo reale, ma non c'è da fidarsi ciecamente della "saggezza popolare" (p.es., affermazioni non dimostrate sulla "efficienza"); questa "saggezza" potrebbe essere basata su informazioni vecchie di decenni e sperimentate con linguaggi dalle proprietà molto diverse da quelle del C++ (p.es., C o Java).
+Per esempio, la mancanza di un adeguato supporto di tool può rendere inadeguate le eccezioni nei sistemi in tempo reale, ma non c'è da fidarsi ingenuamente della "saggezza popolare" (p.es., affermazioni non dimostrate sulla "efficienza"); questa "saggezza" potrebbe essere basata su informazioni vecchie di decenni e sperimentate con linguaggi dalle proprietà molto diverse da quelle del C++ (p.es., C o Java).
 
 Gli argomenti positivi come alternative a queste non-regole sono indicate nelle regole proposte come "Alternative".
 
@@ -20658,9 +20636,9 @@ Non consentire mai la segnalazione di un errore da un distruttore, da una funzio
             Nefarious n;          // preparazione difficile
             string copy = s;      // copia la stringa
         } // distrugge copy e poi n
-   Qui, la copia di `s` potrebbe generare un errore [throw], e se lo fa e lo fa anche il distruttore di `n` il programma terminerà tramite `std::terminate` perché non possono essere propagate due eccezioni contemporaneamente.
+   Qui, la copia di `s` potrebbe generare un errore [throw], e se va in errore anche il distruttore di `n` il programma terminerà tramite `std::terminate` perché non possono essere propagate due eccezioni contemporaneamente.
 
-2. Anche le classi basi o con membri `Nefarious` sono difficili da usare in sicurezza, perché i loro devono invocare il distruttore di `Nefarious` restando allo stesso modo avvelenati dal suo comportamento:
+2. Anche le classi basi o con membri `Nefarious` sono difficili da usare in sicurezza, perché i loro distruttori devono invocare il distruttore di `Nefarious` restando al loro volta avvelenati dal suo comportamento:
 
 
        class Innocent_bystander {
@@ -20670,7 +20648,7 @@ Non consentire mai la segnalazione di un errore da un distruttore, da una funzio
 
         void test(string& s)
         {
-            Innocent_bystander i; // altri problemi nella preparazione
+            Innocent_bystander i;  // altri problemi nella preparazione
             string copy2 = s;      // copia la stringa
         } // distrugge copy e poi i
    Qui, se la costruzione di `copy2` genera un errore [throws], si pone lo stesso problema perché ora anche il distruttore di `i` può generare un errore [throw] e se lo farà verrà invocato `std::terminate`.
