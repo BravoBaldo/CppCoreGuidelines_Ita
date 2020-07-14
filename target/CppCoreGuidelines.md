@@ -2896,7 +2896,7 @@ L'argomento contrario è che impedisce (molto di frequente) l'uso della semantic
 ##### Motivo
 
 Un valore di ritorno si auto-dichiara come valore "output-only".
-Si noti che il C++ può restituire valori multipli, per convenzione, usando una `tupla` (compreso `pair`), forse con l'ulteriore vantaggio di `tie` [legame] dal lato del chiamante.
+Si noti che il C++ può restituire valori di ritorno multipli, per convenzione usando una `tupla` (compreso `pair`), con l'eventuale ulteriore vantaggio di `tie` [legame] e dei binding strutturati (C++17) dal lato del chiamante.
 Preferire l'uso di una struttura con un nome dove ci sono semantiche sul valore restituito. Altrimenti, è utile una `tuple` senza nome, nel codice generico.
 
 ##### Esempio
@@ -4241,7 +4241,7 @@ Per default, il C++ tratta le classi come tipi simil-valore, ma non tutti i tipi
 Regole sull'insieme delle operazioni di default:
 
 * [C.20: Se si può evitare di definire un'operazione di default, lo si faccia](#Rc-zero)
-* [C.21: Se si definisce o `=delete` un'operazione di default, si definiscano o `=delete` tutte](#Rc-five)
+* [C.21: Se c'è la definizione o il `=delete` di qualsiasi funzione di copia, spostamento o distruzione, ci dev'essere la definizione o il `=delete` per tutte](#Rc-five)
 * [C.22: Uniformare le operazioni di default](#Rc-matched)
 
 Regole del distruttore:
@@ -4328,22 +4328,19 @@ Questa è conosciuta come "la regola dello zero".
 (Non imponibile) Sebbene non imponibile, un buon analizzatore statico può rilevare schemi che segnalano un possibile miglioramento per soddisfare questa regola.
 Per esempio, una classe con una coppia (pointer, size) membro e un distruttore che esegue il `delete` del puntatore, probabilmente si potrebbe convertire in un `vector`.
 
-### <a name="Rc-five"></a>C.21: Se si definisce o `=delete` un'operazione di default, si definiscano o `=delete` tutte
+### <a name="Rc-five"></a>C.21: Se c'è la definizione o il `=delete` di qualsiasi funzione di copia, spostamento o distruzione, ci dev'essere la definizione o il `=delete` per tutte
 
 ##### Motivo
 
-Le *funzioni membro speciali* sono il costruttore di default, il costruttore copia,
-l'operatore di assegnazione per copia, l'operatore di spostamento [move], l'operatore di assegnazione per spostamento [move], e il distruttore.
+Le semantiche per la copia, lo spostamento e la distruzione sono strettamente correlate, quindi se una dev'essere dichiarata, è probabile che anche le altre debbano essere considerate.
 
-La semantica delle funzioni speciali è strettamente correlata, quindi se una dev'essere dichiarata, è probabile che anche le altre si debbano prendere in considerazione.
-
-Dichiarando una qualsiasi funzione membro speciale tranne un costruttore di default, anche se `=default` o `=delete`, sopprimerà la dichiarazione implicita di un costruttore [move] e un operatore di assegnazione [move].
-Dichiarando un costruttore [move] o un operatore di assegnazione [move], anche come `=default` o `=delete`, si farà im modo che la generazione implicita, di un costruttore copia o di un operatore di assegnazione, venga definita come cancellata.
-Quindi appena viene dichiarata una qualsiasi delle funzioni speciali, si dovrebbero dichiarare tutte le altre per evitare effetti indesiderati come il trasformare tutti i potenziali spostamenti [move] nelle più costose copie o rendere una classe [move-only].
+Dichiarando una qualsiasi funzione copia/spostamento/distruttore, anche se `=default` o `=delete`, sopprimerà la dichiarazione implicita di un costruttore di spostamento e di un operatore di assegnazione con spostamento.
+Dichiarando un costruttore [move] o un operatore di assegnazione [move], anche come `=default` o `=delete`, si farà in modo che la generazione implicita, di un costruttore copia o di un operatore di assegnazione, venga definita come cancellata.
+Quindi appena uno di questi viene dichiarato, dovrebbero essere dichiarati tutti gli altri per evitare effetti indesiderati come il trasformare tutti i potenziali spostamenti in più costose copie, o il rendere una classe [move-only].
 
 ##### Esempio, cattivo
 
-    struct M2 {   // bad: insieme incompleto delle operazioni di default
+    struct M2 {   // bad: set incompleto delle operazioni di copia/spostamento/distruttore
     public:
         // ...
         // ... nessuna operazione di copia o move ...
@@ -4364,12 +4361,12 @@ Dato che era necessaria una "attenzione speciale" per il distruttore (qui, per d
 
 ##### Note
 
-Questa è nota come "la regola del cinque" o "la regola del sei", a seconda che si conti o meno il costruttore di default.
+Questa è nota come "la regola del cinque".
 
 ##### Note
 
-Se si vuole un'implementazione di default o un'operazione di default (mentre se ne definisce l'altra), si scriva `=default` per mostrare che è intenzionale.
-Se non si vuole un'operazione di default, la si sopprime con `=delete`.
+Se si vuole un'implementazione di default (mentre se ne definisce l'altra), si scriva `=default` per mostrare che lo si sta facendo intenzionalmente per questa funzione.
+Se non si vuole generare una funzione di default, la si sopprime con `=delete`.
 
 ##### Esempio, buono
 
@@ -4406,7 +4403,7 @@ Affidarsi ad un'operazione di copia, generata implicitamente, in una classe con 
 
 ##### Note
 
-Scrivere le sei funzioni membro speciali può essere soggetto a errori.
+La scrittura di queste funzioni può essere soggetta ad errori.
 Notare i tipi dei loro argomenti:
 
     class X {
@@ -4423,7 +4420,7 @@ Per evitare il tedio e la possibilità di errori, provare a seguire la [regola d
 
 ##### Imposizione
 
-(Semplice) Una classe dovrebbe avere una dichiarazione (anche un `=delete`) o per tutte o per nessuna funzione speciale.
+(Semplice) Una classe dovrebbe avere una dichiarazione (anche un `=delete`) per tutte o per nessuna delle funzioni copia/spostamento/distruttore.
 
 ### <a name="Rc-matched"></a>C.22: Uniformare le operazioni di default
 
@@ -19113,6 +19110,8 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
             Cleanup();
         }
 
+        // ...
+
         // errore: inizializzazione bi-fase [two-phase]
         bool Init()
         {
@@ -19168,13 +19167,15 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
         }
 
         // il lavoro viene fatto dal distruttore [dtor] generato dal compilatore. (si veda anche C.21)
+
+        // ...
     };
 
     Picture picture1(100, 100);
-    // qui picture è pronta all'uso...
+    // qui picture è pronta-all'uso...
 
     // y non ha una dimensione valida,
-    // quindi per la violazione del contratto di default si chiamerà std::terminate
+    // per la violazione del contratto di default verrà chiamato, quindi, std::terminate
     Picture picture2(100, 0);
     // non si arriva qui...
 ##### Alternativa
