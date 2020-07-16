@@ -18455,7 +18455,7 @@ Sommario sulle stringhe:
     }
 Si noti come `>>` e `!=` siano disponibili per `string` (come esempio di operazioni utili) e che non ci sono esplicite allocazioni, de-allocazioni o controlli dei limiti [range check] (è la `string` che se ne occupa).
 
-Nel C++17, si può usare `string_view` come argomento, anziché `const string*` per dare una maggiore flessibilità ai chiamanti:
+Nel C++17, si può usare `string_view` come argomento, anziché `const string&` per dare una maggiore flessibilità ai chiamanti:
 
     vector<string> read_until(string_view terminator)   // C++17
     {
