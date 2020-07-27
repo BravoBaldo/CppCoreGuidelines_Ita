@@ -13174,7 +13174,7 @@ Le variabili static locali sono una comune fonte di conflitti [data race].
 
 ##### Esempio, cattivo:
 
-    void f(fstream&  fs, regex pattern)
+    void f(fstream& fs, regex pattern)
     {
         array<double, max> buf;
         int sz = read_vec(fs, buf, max);            // legge da fs in buf
@@ -17659,7 +17659,7 @@ Riepilogo delle regole sui file sorgenti:
 * [SF.9: Evitare le dipendenze cicliche tra i file sorgenti](#Rs-cycles)
 * [SF.10: Evitare dipendenze da nomi inclusi [`#include`] implicitamente](#Rs-implicit)
 * [SF.11: I file header devono essere autonomi [self-contained]](#Rs-contained)
-* [SF.12: Con gli `#include` preferire la forma con le parentesi angolari dove possibile rispetto alle virgolette](#Rs-incform)
+* [SF.12: Preferire la forma virgolettata di `#include` per i file relativi a quello principale e la forma con parentesi angolari negli altri casi](#Rs-incform)
 
 * [SF.20: Usare i `namespace` per esprimere le strutture logiche](#Rs-namespace)
 * [SF.21: Non usare un namespace senza nome (anonimo) in un header](#Rs-unnamed)
@@ -18066,21 +18066,24 @@ Un header dovrebbe includere tutte le sue dipendenze. Prestare attenzione all'ut
 
 Un test dovrebbe verificare che l'header stesso compili e che si compili anche un file cpp che includa il solo file header.
 
-### <a name="Rs-incform"></a>SF.12: Con gli `#include` preferire la forma con le parentesi angolari dove possibile rispetto alle virgolette
+### <a name="Rs-incform"></a>SF.12: Preferire la forma virgolettata di `#include` per i file relativi a quello principale e la forma con parentesi angolari negli altri casi
 
 ##### Motivo
 
-Lo [standard](http://eel.is/c++draft/cpp.include) impone ai compilatori di implementare le due forme di sintassi per gli `#include` lasciando la scelta tra le parentesi angolari (`<>`) e le virgolette (`""`). I produttori se ne avvantaggiano usando algoritmi diversi di ricerca e metodi per indicare il path dell'include.
+Lo [standard](http://eel.is/c++draft/cpp.include) impone ai compilatori di implementare le due forme di sintassi per gli `#include` lasciando la scelta tra le parentesi angolari (`<>`) e le virgolette (`""`). I produttori se ne avvantaggiano usando algoritmi diversi di ricerca e metodi per indicare il percorso per l'include.
 
-Tuttavia, le linee-guida suggeriscono l'uso delle parentesi angolari quando possibile. Questo perché gli header della libreria standard devono essere inclusi in questo modo, ed è più probabile che si crei codice portabile, lasciando la forma virgolettata per altri usi. Per esempio per essere chiari sulla localizzazione dell'header relativamente ai file che esso stesso include o in scenari dove si richiedono diversi algoritmi di localizzazione.
+Tuttavia, il consiglio è quello di utilizzare la forma virgolettata per includere i file che esistono su un percorso relativo a quello contenente l'istruzione `#include` (all'interno dello stesso componente o progetto) e di usare la forma con le parentesi angolari in tutti gli altri casi, dove possibile. Ciò incoraggia ad essere chiari riguardo la posizione relativa del file rispetto a quelli che lo includono e agli scenari in cui si richiedono diversi algoritmi di ricerca. Questo rende subito comprensibile se un header viene incluso da un file locale o da un header di una libreria standard o anche da un percorso alternativo di ricerca (p.es. un header da un'altra libreria o da insieme comune di inclusione).
 
 ##### Esempio
 
-    #include <string>       // Forma richiesta per la libreria standard
-    #include "helpers.h"    // Un file specifico di un progetto, usa la forma ""
+    // foo.cpp:
+    #include <string>                // Da una libreria standard, richiede la forma <>
+    #include <some_library/common.h> // Un file non localmente relativo, incluso da un'altra libreria; usa la forma <>
+    #include "foo.h"                 // Un file localmente relativo a foo.cpp nello stesso progetto, usa la forma ""
+    #include "foo_utils/utils.h"     // Un file localmente relativo a foo.cpp nello stesso progetto, usa la forma ""
 ##### Note
 
-La mancata osservanza di ciò porta ad una diagnostica difficoltosa degli errori a causa del prelievo del file sbagliato dovuto ad un'errata indicazione del percorso di quanto si include.
+La mancata osservanza di ciò porta ad una diagnostica difficoltosa degli errori a causa del prelievo del file sbagliato dovuto ad un'errata indicazione del percorso di quanto si include. Per esempio, in un tipico caso in cui l'algoritmo di ricerca di `#include ""` può cercare un file dapprima posizionato in un percorso locale relativo, poi utilizzare questa forma per far riferimento ad un file non localmente relativo potrebbe significare che se un file dovesse mai esistere nel percorso locale relativo (p.es. il file principale è stato spostato in una nuova posizione), verrà trovato prima del del file include precedente e l'insieme degli include risulteranno modificati in modo inaspettato.
 
 I creatori delle librerie dovrebbero mettere i loro header in una cartella e fare in modo che i loro utenti li includano con un path relativo `#include <some_library/common.h>`
 
