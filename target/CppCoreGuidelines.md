@@ -1181,7 +1181,7 @@ Riepilogo delle regole sulle interfacce:
 * [I.13: Non passare un array come singolo puntatore](#Ri-array)
 * [I.22: Evitare complesse inizializzazioni di oggetti globali](#Ri-global-init)
 * [I.23: Mantenere basso il numero degli argomenti di una funzione](#Ri-nargs)
-* [I.24: Evitare parametri adiacenti non correlati dello stesso tipo](#Ri-unrelated)
+* [I.24: Evitare parametri adiacenti dello stesso tipo quando cambiare l'ordine degli argomenti modificherebbe il significato](#Ri-unrelated)
 * [I.25: Preferire le classi astratte come interfacce alle gerarchie di classi](#Ri-abstract)
 * [I.26: Se si vuole un cross-compiler ABI, si usi un sottoinsieme in stile C](#Ri-abi)
 * [I.27: Per una libreria ABI stabile, si consideri l'idioma Pimpl](#Ri-pimpl)
@@ -1993,7 +1993,7 @@ Ci sono funzioni che vengono meglio espresse con quattro parametri singoli, ma n
 * Avvisare quando una funzione dichiara due iteratori (compresi i puntatori) dello stesso tipo anziché un range o una view.
 * (Non imponibile) Questa è una linea-guida filosofica che è impossibile da controllare direttamente.
 
-### <a name="Ri-unrelated"></a>I.24: Evitare parametri adiacenti non correlati dello stesso tipo
+### <a name="Ri-unrelated"></a>I.24: Evitare parametri adiacenti dello stesso tipo quando cambiare l'ordine degli argomenti modificherebbe il significato
 
 ##### Motivo
 
@@ -6457,7 +6457,7 @@ Sommario delle regole di progettazione per le classi di una gerarchia:
 * [C.136: Utilizzare l'ereditarietà multipla per rappresentare l'unione degli attributi di un'implementazione](#Rh-mi-implementation)
 * [C.137: Usare basi `virtual` per evitare troppe classi base generali](#Rh-vbase)
 * [C.138: Creare un set di overload per una classe derivata e le sue basi con `using`](#Rh-using)
-* [C.139: Usare `final` con parsimonia](#Rh-final)
+* [C.139: Usare `final` sulle classi con parsimonia](#Rh-final)
 * [C.140: Non fornire argomenti di default diversi a una funzione virtuale e a una sovrapposta [overrider]](#Rh-virtual-default-arg)
 
 Sommario delle regole per l'accesso a oggetti in una gerarchia:
@@ -6702,6 +6702,10 @@ Vogliamo eliminare due particolari classi di errori:
 
 * **virtual implicito**: il programmatore voleva che la funzione fosse implicitamente virtuale ed è così (ma chi legge il codice non può saperlo); o il programmatore voleva che la funzione fosse implicitamente virtuale ma non lo è (p.es., a causa di una subdola discrepanza nell'elenco dei parametri); o il programmatore non voleva che la funzione fosse virtuale ma lo è (perché capita che abbia la stessa firma della funzione virtuale nella classe base)
 * **override implicito**: il programmatore voleva che la funzione fosse implicitamente una sovrascrittura [overrider] e lo è (ma i lettori del codice non possono saperlo); o il programmatore voleva che la funzione fosse implicitamente una sovrascrittura [overrider] ma non lo è (p.es., a causa di una subdola discrepanza nell'elenco dei parametri); o il programmatore non voleva che la funzione fosse una sovrascrittura [overrider] ma lo è (perché capita che abbia la stessa firma di una funzione virtuale nella classe base -- da notare che questo problema sorge indipendentemente dal fatto che la funzione sia esplicitamente dichiarata virtuale, perché il programmatore  potrebbe aver voluto creare o una nuova funzione virtuale o una nuova funzione non-virtuale)
+
+Nota: Su una classe definita come `final`, non importa se si inserisce `override` o `final` su una singola funzione virtuale.
+
+Note: Usare `final` sulle funzioni con parsimonia. Non riguarda necessariamente l'ottimizzazione e preclude un'ulteriore overriding.
 
 ##### Imposizione
 
@@ -7236,11 +7240,11 @@ Per le basi variadiche, il C++17 ha introdotto una forma variadica della dichiar
 
 Diagnosticare l'hiding dei nomi
 
-### <a name="Rh-final"></a>C.139: Usare `final` con parsimonia
+### <a name="Rh-final"></a>C.139: Usare `final` sulle classi con parsimonia
 
 ##### Motivo
 
-Fermare una gerarchia con `final` è raramente necessario per ragioni logiche e può danneggiare l'estensibilità di una gerarchia.
+'Tappare' una gerarchia con classi `final` è raramente necessario per motivi logici e può risultare dannoso per lestensibilità della gerarchia.
 
 ##### Esempio, cattivo
 
@@ -7273,7 +7277,7 @@ Tuttavia, gli abusi sono (o almeno sono stati) molto più comuni.
 
 ##### Imposizione
 
-Segnalare l'uso di `final`.
+Segnalare l'uso di `final` sulle classi.
 
 
 ### <a name="Rh-virtual-default-arg"></a>C.140: Non fornire argomenti di default diversi a una funzione virtuale e a una sovrapposta [overrider]
@@ -9159,7 +9163,7 @@ Qualsiasi tipo (compreso il template primario e la specializzazione) che sovracc
 * Se è copiabile, è riconosciuto come uno `shared_ptr` reference-counted [a conteggio dei riferimenti].
 * Se non è copiabile, lo si riconosce come un `unique_ptr` unico.
 
-##### Esempio
+##### Esempio, cattivo
 
     // usa il intrusive_ptr delle Boost
     #include <boost/intrusive_ptr.hpp>
@@ -11165,8 +11169,10 @@ Preferire, invece, mettere il codice comune in una funzione helper comune -- e t
 
         template<class T>           // good, deduce se T è const o non-const
         static auto get_bar_impl(T& t) -> decltype(t.get_bar())
-            { /* la complessa logica attorno alla quale si ottiene un riferimento a my_bar forse const */ }
+            { /* la complessa logica attorno alla quale si ottiene un riferimento a my_bar, forse const */ }
     };
+Nota: Non eseguire grandi lavori indipendenti all'interno di un template, questo porta ad un aumento del codice. Per esempio, un ulteriore miglioramento sarebbe se tutte le parti di `get_bar_impl` potessero essere indipendenti e e fattorizzate in una funzione comune non-template, per una riduzione potenzialmente grande della dimensione del codice.
+
 ##### Eccezione
 
 Potrebbe essere necessario eliminare `const` chiamando funzioni con un incorretto `const`.
@@ -15805,6 +15811,46 @@ La statica aiuta la dinamica: Usare il polimorfismo statico per implementare din
 La dinamica aiuta la statica: Offre un'interfaccia generica, comoda e vincolata staticamente, ma internamente distribuisce dinamicamente, offrendo un layout uniforme dell'oggetto.
 Tra gli esempi c'è la cancellazione [erasure] del tipo come con il 'deleter' del `std::shared_ptr` (ma [non abusare della cancellazione del tipo [type erasure]](#Rt-erasure)).
 
+    #include <memory>
+
+    class Object {
+    public:
+        template<typename T>
+        Object(T&& obj)
+            : concept_(std::make_shared<ConcreteCommand<T>>(std::forward<T>(obj))) {}
+
+        int get_id() const { return concept_->get_id(); }
+
+    private:
+        struct Command {
+            virtual ~Command() {}
+            virtual int get_id() const = 0;
+        };
+
+        template<typename T>
+        struct ConcreteCommand final : Command {
+            ConcreteCommand(T&& obj) noexcept : object_(std::forward<T>(obj)) {}
+            int get_id() const final { return object_.get_id(); }
+
+        private:
+            T object_;
+        };
+
+        std::shared_ptr<Command> concept_;
+    };
+
+    class Bar {
+    public:
+        int get_id() const { return 1; }
+    };
+
+    struct Foo {
+    public:
+        int get_id() const { return 2; }
+    };
+
+    Object o(Bar{});
+    Object o2(Foo{});
 ##### Note
 
 In una classe template, le funzioni non-virtuali vengono istanziate solo se vengono utilizzate -- ma quelle virtuali vengono istanziate sempre.
