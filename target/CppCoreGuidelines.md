@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-3 Luglio 2020
+3 Agosto 2020
 
 
 Editori:
@@ -15195,25 +15195,27 @@ Questo può risultare caotico:
     {
         Gadget g1 = make_gadget(17);
         if (!g1.valid()) {
-                return {0, g1_error};
+            return {0, g1_error};
         }
 
-        Gadget g2 = make_gadget(17);
+        Gadget g2 = make_gadget(31);
         if (!g2.valid()) {
-                cleanup(g1);
-                return {0, g2_error};
+            cleanup(g1);
+            return {0, g2_error};
         }
 
         // ...
 
         if (all_foobar(g1, g2)) {
-            cleanup(g1);
             cleanup(g2);
+            cleanup(g1);
             return {0, foobar_error};
+        }
+
         // ...
 
-        cleanup(g1);
         cleanup(g2);
+        cleanup(g1);
         return {res, 0};
     }
 La simulazione del RAII può risultare complicata, specie nelle funzioni con più risorse e molteplici tipi di errori.
@@ -15222,31 +15224,35 @@ Una tecnica non rara consiste nel raccogliere la pulizia alla fine della funzion
     std::pair<int, error_indicator> user()
     {
         error_indicator err = 0;
+        int res = 0;
 
         Gadget g1 = make_gadget(17);
         if (!g1.valid()) {
-                err = g1_error;
-                goto exit;
+            err = g1_error;
+            goto g1_exit;
         }
 
         {
-        Gadget g2 = make_gadget(17);
-        if (!g2.valid()) {
+            Gadget g2 = make_gadget(31);
+            if (!g2.valid()) {
                 err = g2_error;
-                goto exit;
+                goto g2_exit;
+            }
+
+            if (all_foobar(g1, g2)) {
+                err = foobar_error;
+                goto g2_exit;
+            }
+
+            // ...
+
+        g2_exit:
+            if (g2.valid()) cleanup(g2);
         }
 
-        if (all_foobar(g1, g2)) {
-            err = foobar_error;
-            goto exit;
-        }
-        // ...
-        }
-
-    exit:
-      if (g1.valid()) cleanup(g1);
-      if (g2.valid()) cleanup(g2);
-      return {res, err};
+    g1_exit:
+        if (g1.valid()) cleanup(g1);
+        return {res, err};
     }
 Più grande è la funzione, più allettante diventa questa tecnica.
 `finally` può [semplificare un po'](#Re-finally).
@@ -18123,10 +18129,11 @@ Tuttavia, il consiglio è quello di utilizzare la forma virgolettata per include
 ##### Esempio
 
     // foo.cpp:
-    #include <string>                // Da una libreria standard, richiede la forma <>
+    #include <string>                // Dalla libreria standard, richiede la forma <>
     #include <some_library/common.h> // Un file non localmente relativo, incluso da un'altra libreria; usa la forma <>
     #include "foo.h"                 // Un file localmente relativo a foo.cpp nello stesso progetto, usa la forma ""
     #include "foo_utils/utils.h"     // Un file localmente relativo a foo.cpp nello stesso progetto, usa la forma ""
+    #include <component_b/bar.h>     // Un file nello stesso progetto localizzato tramite un path di ricerca, usa la forma <>
 ##### Note
 
 La mancata osservanza di ciò porta ad una diagnostica difficoltosa degli errori a causa del prelievo del file sbagliato dovuto ad un'errata indicazione del percorso di quanto si include. Per esempio, in un tipico caso in cui l'algoritmo di ricerca di `#include ""` può cercare un file dapprima posizionato in un percorso locale relativo, poi utilizzare questa forma per far riferimento ad un file non localmente relativo potrebbe significare che se un file dovesse mai esistere nel percorso locale relativo (p.es. il file principale è stato spostato in una nuova posizione), verrà trovato prima del del file include precedente e l'insieme degli include risulteranno modificati in modo inaspettato.
@@ -20660,7 +20667,7 @@ In questo raro caso, è possibile rendere pubblico e non-virtual il distruttore 
 
 In generale, tuttavia, evitare le classi di base concrete (cfr. Punto 35). Per esempio, la `unary_function` è un bundle-of-typedefs che non è mai stato concepito per essere istanziato da solo. Non ha davvero senso dargli un distruttore pubblico; un progetto migliore sarebbe quello di seguire il consiglio di questo punto e dargli un distruttore non-virtual protected.
 
-**Riferimenti**: [\[C++CS\]](#CplusplusCS) Item 50, [\[Cargill92\]](#Cargill92) pagg. 77-79, 207, [\[Cline99\]](#Cline99) §21.06, 21.12-13, [\[Henricson97\]](#Henricson97) pp. 110-114, [\[Koenig97\]](#Koenig97) Chapters 4, 11, [\[Meyers97\]](#Meyers97) §14, [\[Stroustrup00\]](#Stroustrup00) §12.4.2, [\[Sutter02\]](#Sutter02) §27, [\[Sutter04\]](#Sutter04) §18
+**Riferimenti**: [\[SuttAlex05\]](#SuttAlex05) Item 50, [\[Cargill92\]](#Cargill92) pp. 77-79, 207, [\[Cline99\]](#Cline99) §21.06, 21.12-13, [\[Henricson97\]](#Henricson97) pp. 110-114, [\[Koenig97\]](#Koenig97) Chapters 4, 11, [\[Meyers97\]](#Meyers97) §14, [\[Stroustrup00\]](#Stroustrup00) §12.4.2, [\[Sutter02\]](#Sutter02) §27, [\[Sutter04\]](#Sutter04) §18
 
 ### <a name="Sd-noexcept"></a>Discussione: Uso di noexcept
 
@@ -20747,7 +20754,7 @@ Fortunatamente, quando si rilascia una risorsa, il margine di errore è decisame
 
 Quando si utilizzano le eccezioni come meccanismo di gestione degli errori, documentare sempre questo comportamento dichiarando queste funzioni `noexcept`. (Si veda il Punto 75.)
 
-**Riferimenti**: [\[C++CS\]](#CplusplusCS) Item 51; [\[C++03\]](#Cplusplus03) §15.2(3), §17.4.4.8(3), [\[Meyers96\]](#Meyers96) §11, [\[Stroustrup00\]](#Stroustrup00) §14.4.7, §E.2-4, [\[Sutter00\]](#Sutter00) §8, §16, [\[Sutter02\]](#Sutter02) §18-19
+**Riferimenti**: [\[SuttAlex05\]](#SuttAlex05) Item 51; [\[C++03\]](#Cplusplus03) §15.2(3), §17.4.4.8(3), [\[Meyers96\]](#Meyers96) §11, [\[Stroustrup00\]](#Stroustrup00) §14.4.7, §E.2-4, [\[Sutter00\]](#Sutter00) §8, §16, [\[Sutter02\]](#Sutter02) §18-19
 
 ## <a name="Sd-consistent"></a>Definire la copia, lo spostamento e la distruzione in modo coerente
 
@@ -20831,7 +20838,7 @@ Preferire i membri speciali generati dal compilatore (compreso `=default`); solo
 In rari casi, le classi che hanno membri di tipi strani (come i riferimenti membro) non sono un'eccezione perché hanno una semantica di copia peculiare.
 In una classe che contiene un riferimento, è probabilmente necessario scrivere il costruttore copia e l'operatore di assegnazione, ma il distruttore predefinito fa già la cosa giusta. (Si noti che l'utilizzo di un riferimento membro è quasi sempre sbagliato).
 
-**Riferimenti**: [\[C++CS\]](#CplusplusCS) Item 52; [\[Cline99\]](#Cline99) §30.01-14, [\[Koenig97\]](#Koenig97) §4, [\[Stroustrup00\]](#Stroustrup00) §5.5, §10.4, [\[SuttHysl04b\]](#SuttHysl04b)
+**Riferimenti**: [\[SuttAlex05\]](#SuttAlex05) Item 52; [\[Cline99\]](#Cline99) §30.01-14, [\[Koenig97\]](#Koenig97) §4, [\[Stroustrup00\]](#Stroustrup00) §5.5, §10.4, [\[SuttHysl04b\]](#SuttHysl04b)
 
 Riepilogo delle regole sulla gestione delle risorse:
 
@@ -21253,8 +21260,6 @@ Oppure, si deciderà di non cambiare nulla e la voce verrà cancellata.
    \[Alexandrescu01]:  A. Alexandrescu. Modern C++ Design (Addison-Wesley, 2001).
 * <a name="Cplusplus03"></a>
    \[C++03]:           ISO/IEC 14882:2003(E), Programming Languages — C++ (updated ISO and ANSI C++ Standard including the contents of (C++98) plus errata corrections).
-* <a name="CplusplusCS"></a>
-   \[C++CS]:           ???
 * <a name="Cargill92"></a>
    \[Cargill92]:       T. Cargill. C++ Programming Style (Addison-Wesley, 1992).
 * <a name="Cline99"></a>
