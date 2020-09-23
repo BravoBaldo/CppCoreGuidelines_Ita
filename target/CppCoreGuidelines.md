@@ -15331,7 +15331,7 @@ Per esempio, si veda [Stroustrup94](#Stroustrup94).
 
 ##### Note
 
-Se non è possibile generare alcuna eccezione, si usa [`noexcept`](#Re-noexcept) o il suo equivalente `throw()`.
+Se non è possibile generare alcuna eccezione, si usa [`noexcept`](#Re-noexcept).
 
 ##### Imposizione
 
