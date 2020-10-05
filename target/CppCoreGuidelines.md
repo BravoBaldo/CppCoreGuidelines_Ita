@@ -1886,7 +1886,7 @@ Questo `draw2()` passa la stessa quantità di informazioni a `draw()`, ma rende 
 ##### Eccezione
 
 Usare `zstring` e `czstring` per rappresentare stringhe C-style e zero-terminated.
-Ma quando lo si fa, si usa `std::string_view` o `string_span` della [GSL](#S-gsl) per evitare errori di range.
+Ma quando lo si fa, si usa `std::string_view` o `span<char>` della [GSL](#S-gsl) per evitare errori di range.
 
 ##### Imposizione
 
@@ -2573,8 +2573,12 @@ Si veda anche [C.44](#Rc-default00).
 
 ##### Motivo
 
-Il passaggio di uno smart pointer trasferisce o condivide la proprietà e deve essere utilizzato solo quando si intende la semantica della proprietà (cfr. [R.30](#Rr-smartptrparam)).
+Il passaggio di uno smart pointer trasferisce o condivide la proprietà e deve essere utilizzato solo quando si intende la semantica della proprietà.
+Una funzione che non gestisce il ciclo di vita dovrebbe, invece, accettare dei puntatori semplici o dei riferimenti.
+
 Il passaggio tramite smart pointer limita l'uso di una funzione ai chiamanti che usano gli smart pointer.
+Una funzione che necessita di un `widget` dovrebbe essere in grado di accettare qualsiasi oggetto `widget`, non solo quelli la cui durata è gestita da un particolare tipo di smart pointer.
+
 Il passaggio di uno smart pointer shared (p.es., `std::shared_ptr`) implica un costo a run-time.
 
 ##### Esempio
@@ -2602,23 +2606,44 @@ Il passaggio di uno smart pointer shared (p.es., `std::shared_ptr`) implica un c
         use(*w); // usa solo w -- la durata [lifetime] non è per niente usata
         // ...
     };
-Si veda in seguito in [R.30](#Rr-smartptrparam).
 
+    // chiamante
+    shared_ptr<widget> my_widget = /* ... */;
+    f(my_widget);
+
+    widget stack_widget;
+    f(stack_widget); // errore
+##### Esempio, buono
+
+    // chiamato
+    void f(widget& w)
+    {
+        // ...
+        use(w);
+        // ...
+    };
+
+    // chiamante
+    shared_ptr<widget> my_widget = /* ... */;
+    f(*my_widget);
+
+    widget stack_widget;
+    f(stack_widget); // ok -- ora questo funziona
 ##### Note
 
 Possiamo intercettare staticamente i puntatori appesi [dangling], quindi non è necessario affidarsi alla gestione delle risorse per evitare violazioni di tali puntatori.
 
-**Si veda anche**:
-
-* [Preferire `T*` a `T&` quando "nessun argomento" è una valida opzione](#Rf-ptr-ref)
-* [Riepilogo delle regole sugli smart pointer](#Rr-summary-smartptrs)
-
 ##### Imposizione
 
-Segnalare un parametro di tipo smart pointer (un tipo che fa l'overload di `operator->` o di `operator*`) per cui non viene usata la semantica della proprietà; questo è
+* (Semplice) Avvisare se una funzione accetta come parametro un tipo di puntatore intelligente (che sovraccarica [overload] `operator->` o `operator*`) che è copiabile ma la funzione chiama solo uno tra: `operator*`, `operator->` o `get()`.
+   Suggerire, invece, di usare `T*` o `T&`.
+* Segnalare un parametro di tipo smart pointer (un tipo che sovraccarica [overload] `operator->` o `operator*`) che è copiabile/spostabile ma non viene mai copiato/spostato nel corpo della funzione, che non viene mai modificato, e che non viene passato ad un'altra funzione che potrebbe farlo. Questo vuol dire che non viene usata la semantica della proprietà [ownership].
+   Suggerire, invece, di usare `T*` o `T&`.
 
-* copiabile ma mai copiato/spostato [moved] o 'movable' ma mai spostato
-* e che non viene mai modificato né passato ad un'altra funzione che potrebbe farlo.
+**Si veda anche**:
+
+* [preferire `t*` a `t&` quando"nessun argomento" è una valida opzione](#rf-ptr-ref)
+* [riepilogo delle regole sugli smart pointer](#rr-summary-smartptrs)
 
 ### <a name="Rf-pure"></a>F.8: Preferire le funzioni pure
 
@@ -5307,8 +5332,8 @@ Una inizializzazione dichiara esplicitamente che viene eseguita l'inizializzazio
     };
 ##### Esempio, ancora migliore
 
-Invece di quei `const char*`s si potrebbe usare `gsl::string_span` o (in C++17) `std::string_view`
-come [un modo più generale di presentare gli argomenti ad una funzione](#Rstr-view):
+Invece di quei `const char*` si potrebbe usare `std::string_view` o `gsl::span<char>`
+del C++17 come [un modo più generale di presentare gli argomenti ad una funzione](#Rstr-view):
 
     class D {   // Good
         string s1;
@@ -7584,24 +7609,7 @@ Garantisce inoltre la sicurezza delle eccezioni in espressioni complesse.
 
 ### <a name="Rh-make_shared"></a>C.151: Usare `make_shared()` per costruire oggetti posseduti dagli `shared_ptr`
 
-##### Motivo
-
-`make_shared` fornisce un'istruzione più concisa della costruzione.
-Offre inoltre l'opportunità di eliminare un'allocazione separata per i conteggi dei riferimento, posizionando il conteggio di `shared_ptr` vicino al proprio oggetto.
-
-##### Esempio
-
-    void test()
-    {
-        // OK: ma ripetitivo; e allocazioni separate per Bar e i conteggi di shared_ptr
-        shared_ptr<Bar> p {new Bar{7}};
-
-        auto q = make_shared<Bar>(7);   // Meglio: nessuna ripetizione di Bar; un solo oggetto
-    }
-##### Imposizione
-
-* Segnalare l'uso ripetitivo di liste di specializzazioni di template `<Bar>`
-* Segnalare le variabili dichiarate per essere `shared_ptr<Bar>`
+Cfr. [R.22](#Rr-make_shared)
 
 ### <a name="Rh-array"></a>C.152: Mai assegnare un puntatore ad un array di oggetti di classi derivate a un puntatore alla sua classe base
 
@@ -8567,7 +8575,7 @@ Quando si ha a che fare con una risorsa che necessita la chiamata alla coppia di
 
 Si consideri:
 
-    void send(X* x, cstring_span destination)
+    void send(X* x, string_view destination)
     {
         auto port = open_port(destination);
         my_mutex.lock();
@@ -8585,7 +8593,7 @@ Inoltre, se una qualsiasi parte del codice segnalato con `...` genera un'eccezio
 
 Si consideri:
 
-    void send(unique_ptr<X> x, cstring_span destination)  // x possiede X
+    void send(unique_ptr<X> x, string_view destination)  // x possiede la X
     {
         Port port{destination};            // port possiede PortHandle
         lock_guard<mutex> guard{my_mutex}; // guard possiede il lock
@@ -8600,7 +8608,7 @@ Che cos'è `Port`? Un comodo involucro [wrapper] che incapsula la risorsa:
     class Port {
         PortHandle port;
     public:
-        Port(cstring_span destination) : port{open_port(destination)} { }
+        Port(string_view destination) : port{open_port(destination)} { }
         ~Port() { close_port(port); }
         operator PortHandle() { return port; }
 
@@ -9031,7 +9039,8 @@ Questo è più efficiente:
 
 ##### Motivo
 
-Se si crea prima un oggetto e poi lo si da ad un costruttore di uno `shared_ptr`, si farà (molto probabilmente) una ulteriore allocazione (e poi una de-allocazione) rispetto a quando si usa `make_shared()` perché i contatori dei riferimenti devono essere allocati separatamente dall'oggetto.
+`make_shared` fornisce un'istruzione più concisa della costruzione.
+Offre inoltre l'opportunità di eliminare un'allocazione separata per i conteggi dei riferimento, posizionando il conteggio di `shared_ptr` vicino al proprio oggetto.
 
 ##### Esempio
 
@@ -9106,50 +9115,7 @@ Si può "temporaneamente condividere la proprietà" semplicemente usando un altr
 
 ### <a name="Rr-smartptrparam"></a>R.30: Prendere gli smart pointer come parametri solo per esprimere esplicitamente la semantica della durata [lifetime]
 
-##### Motivo
-
-Passare un puntatore smart ad un `widget` è sbagliato se la funzione necessita del `widget`.
-Dovrebbe essere in grado di accettare qualsiasi oggetto `widget`, non solo quelli il cui ciclo di vita è gestito da un particolare tipo di puntatore smart.
-Una funzione che non gestisce il ciclo di vita dovrebbe, invece, accettare dei puntatori semplici o dei riferimenti.
-
-##### Esempio, cattivo
-
-    // chiamato
-    void f(shared_ptr<widget>& w)
-    {
-        // ...
-        use(*w); // usa solo w -- la durata [lifetime] non è per niente usata
-        // ...
-    };
-
-    // chiamante
-    shared_ptr<widget> my_widget = /* ... */;
-    f(my_widget);
-
-    widget stack_widget;
-    f(stack_widget); // errore
-##### Esempio, buono
-
-    // chiamato
-    void f(widget& w)
-    {
-        // ...
-        use(w);
-        // ...
-    };
-
-    // chiamante
-    shared_ptr<widget> my_widget = /* ... */;
-    f(*my_widget);
-
-    widget stack_widget;
-    f(stack_widget); // ok -- ora questo funziona
-##### Imposizione
-
-* (Semplice) Avvisare se una funzione accetta come parametro un tipo di puntatore intelligente (che sovraccarica [overload] `operator->` o `operator*`) che è copiabile ma la funzione chiama solo uno tra: `operator*`, `operator->` o `get()`.
-   Suggerire, invece, di usare `T*` o `T&`.
-* Segnalare un parametro di tipo smart pointer (un tipo che sovraccarica [overload] `operator->` o `operator*`) che è copiabile/spostabile ma non viene mai copiato/spostato nel corpo della funzione, che non viene mai modificato, e che non viene passato ad un'altra funzione che potrebbe farlo. Questo vuol dire che non viene usata la semantica della proprietà [ownership].
-   Suggerire, invece, di usare `T*` o `T&`.
+Cfr. [F.7](#Rf-smart).
 
 ### <a name="Rr-smart"></a>R.31: Se si hanno smart pointer non-`std`, seguire il modello base di `std`
 
@@ -9423,7 +9389,7 @@ Regole sull'aritmetica:
 * [ES.102: Usare i tipi con segno per l'aritmetica](#Res-signed)
 * [ES.103: Evitare l'overflow](#Res-overflow)
 * [ES.104: Evitare l'underflow](#Res-underflow)
-* [ES.105: Evitare la divisione per zero](#Res-zero)
+* [ES.105: Non dividere per lo zero intero](#Res-zero)
 * [ES.106: Non tentare di evitare i valori negativi utilizzando `unsigned`](#Res-nonnegative)
 * [ES.107: Non usare `unsigned` per l'indicizzazione, preferire `gsl::index`](#Res-subscripts)
 
@@ -11021,13 +10987,13 @@ Se non c'è, forse dovrebbe esserci, piuttosto che applicare una correzione loca
 
 I cast sono necessari in un linguaggio di programmazione di sistemi.  Ad esempio, come altrimenti si potrebbe ottenere l'indirizzo del registro di un dispositivo in un puntatore?  Tuttavia, dei cast se ne abusa gravemente, nonché sono una delle principali fonti di errori.
 
-##### Note
-
 Se si sente la necessità di parecchi cast, potrebbe essere un fondamentale problema progettuale.
 
-##### Eccezione
+Il [profilo del tipo](#Pro-type-reinterpretcast) vieta il `reinterpret_cast` e i cast C-style.
 
-I cast a `(void)` è il modo Standard per disattivare i warning `[[nodiscard]]`. Se si chiama una funzione con un return `[[nodiscard]]` e si vuole deliberatamente scartare [discard] il risultato, si rifletta bene sul fatto che sia effettivamente una buona idea (solitamente c'è un buon motivo per cui l'autore della funzione o del tipo restituito ha usato `[[nodiscard]]`), ma se si ritiene ancora che sia appropriato e se il revisore del codice è d'accordo, si può scrivere `(void)` per disabilitare il warning.
+Mai eseguire il cast a `(void)` per ignorare un valore di ritorno `[[nodiscard]]`.
+Se si vuole deliberatamente scartare un tale risultato, ci si rifletta bene sul fatto che potrebbe essere una pessima idea (solitamente c'è un buon motivo per cui l'autore della funzione o del tipo restituito ha usato `[[nodiscard]]`).
+Se si pensa ancora che sia appropriato e si abbia il consenso del revisore del codice, si usa `std::ignore =` per disattivare il warning in modo semplice, portatile e facile da ritrovare con grep.
 
 ##### Alternative
 
@@ -11036,14 +11002,14 @@ I cast sono ampiamente (ab) usati. Il C++ moderno ha delle regole e dei costrutt
 * Nell'uso dei template
 * Nell'uso di `std::variant`
 * Nell'affidarsi a conversioni implicite ben definite e sicure tra i i tipi di puntatori
+* Usare `std::ignore =" per ignorare i valori`[[nodiscard]]`.
 
 ##### Imposizione
 
-* Forzare l'eliminazione dei cast in stile C, tranne quando si esegue il cast del ritorno di una funzione `[[nodiscard]]` a `void`.
-* Segnalare se ci sono molti cast di stile funzionale (c'è un ovvio problema nella quantificazione di 'molti').
-* Il [profilo del tipo](#Pro-type-reinterpretcast) vieta il `reinterpret_cast`.
-* Mettere in guardia contro i [cast di identità](#Pro-type-identitycast) tra puntatori, dove i tipi di origine e quelli di destinazione sono gli stessi (#Pro-type-identitycast).
-* Avvisare se un cast di un puntatore potrebbe essere [implicito](#Pro-type-implicitpointercast).
+* Segnalare tutti i cast C-style, compresi quelli a `void`.
+* Segnalare II cast in stile funzione utilizzando `Type(value)`. Utilizzare, invece, `Type{value}` che non è restrittivo. (Cfr. [ES.64](#Res-construct).)
+* Segnalare i [cast identici](#Pro-type-identitycast) tra tipi puntatori, dove i tipi dei sorgenti e dei destinatari sono gli stessi (#Pro-type-identitycast).
+* Segnalare il cast esplicito di un puntatore che potrebbe essere [implicito](#Pro-type-implicitpointercast).
 
 ### <a name="Res-casts-named"></a>ES.49: Se si deve usare un cast, si utilizzi un "named cast"
 
@@ -11096,7 +11062,8 @@ Ciò rende chiaro che la conversione del tipo era prevista e impedisce anche le 
 
 ##### Imposizione
 
-* Segnalare i cast in stile C e i cast funzionali.
+* Segnalare tutti i cast C-style, compresi quelli a `void`.
+* Segnalare II cast in stile funzione utilizzando `Type(value)`. Utilizzare, invece, `Type{value}` che non è restrittivo. (Cfr. [ES.64](#Res-construct).)
 * Il [profilo del tipo](#Pro-type-reinterpretcast) vieta il `reinterpret_cast`.
 * Il [profilo del tipo](#Pro-type-arithmeticcast) mette in guardia sull'uso di uno `static_cast` tra i tipi aritmetici.
 
@@ -11168,7 +11135,7 @@ Preferire, invece, mettere il codice comune in una funzione helper comune -- e t
         Bar my_bar;
 
         template<class T>           // good, deduce se T è const o non-const
-        static auto get_bar_impl(T& t) -> decltype(t.get_bar())
+        static auto& get_bar_impl(T& t)
             { /* la complessa logica attorno alla quale si ottiene un riferimento a my_bar, forse const */ }
     };
 Nota: Non eseguire grandi lavori indipendenti all'interno di un template, questo porta ad un aumento del codice. Per esempio, un ulteriore miglioramento sarebbe se tutte le parti di `get_bar_impl` potessero essere indipendenti e e fattorizzate in una funzione comune non-template, per una riduzione potenzialmente grande della dimensione del codice.
@@ -12482,7 +12449,7 @@ Usare i tipi unsigned se si vuole veramente l'aritmetica modulare.
 
 ???
 
-### <a name="Res-zero"></a>ES.105: Evitare la divisione per zero
+### <a name="Res-zero"></a>ES.105: Non dividere per lo zero intero
 
 ##### Motivo
 
@@ -12494,24 +12461,24 @@ Questo vale anche per `%`.
 
 ##### Esempio, cattivo
 
-    double divide(int a, int b)
+    int divide(int a, int b)
     {
         // BAD, si dovrebbe controllare (p.es., in una precondizione)
         return a / b;
     }
 ##### Esempio, buono
 
-    double divide(int a, int b)
+    int divide(int a, int b)
     {
         // good, fatto tramite una precondizione (e da sostituire con i contratti appena saranno introdotti nel C++)
         Expects(b != 0);
         return a / b;
     }
 
-    double divide(int a, int b)
+    double divide(double a, double b)
     {
-        // good, fatto tramite un check
-        return b ? a / b : quiet_NaN<double>();
+        // good, risolto utilizzando il double
+        return a / b;
     }
 **Alternativa**: Per le applicazioni critiche dove possono capitare degli overhead, usare un tipo intero [range-checked] e/o un floating-point.
 
@@ -18467,7 +18434,7 @@ Definire invece le funzioni di inizializzazione, copia e confronto di default ap
 
 La gestione del testo è un enorme argomento.
 La `std::string` non lo copre tutto.
-Questa sezione cerca principalmente di chiarire la relazione di `std::string` con `char*`, `zstring`, `string_view` e `gsl::string_span`.
+Questa sezione cerca principalmente di chiarire la relazione di `std::string` con `char*`, `zstring`, `string_view` e `gsl::span<char>`.
 Sulla questione importante dell'insieme dei caratteri non-ASCII e sulle codifiche (p.es., `wchar_t`, Unicode e UTF-8) se ne parlerà altrove.
 
 **Si veda anche**: [espressioni regolari](#SS-regex)
@@ -18478,13 +18445,13 @@ Non si considera ???
 Sommario sulle stringhe:
 
 * [SL.str.1: Usare `std::string` per avere sequenze di caratteri](#Rstr-string)
-* [SL.str.2: Usare `std::string_view` o `gsl::string_span` per riferirsi alle sequenze di caratteri](#Rstr-view)
+* [SL.str.2: Usare `std::string_view` o `gsl::span<char>` per riferirsi alle sequenze di caratteri](#Rstr-view)
 * [SL.str.3: Usare `zstring` o `czstring` per riferirsi a sequenze di caratteri in stile C, "zero-terminated"](#Rstr-zstring)
 * [SL.str.4: Usare `char*` per riferirsi ad un singolo carattere](#Rstr-char*)
 * [SL.str.5: Usare `std::byte` per riferirsi ai valori dei byte che non necessariamente rappresentano caratteri](#Rstr-byte)
 
 * [SL.str.10: Usare `std::string` quando c'è bisogno di eseguire operazioni sulle stringhe dipendenti dalla nazionalità](#Rstr-locale)
-* [SL.str.11: Usare `gsl::string_span` anziché `std::string_view` quando si deve mutare una stringa](#Rstr-span)
+* [SL.str.11: Usare `gsl::span<char>` anziché `std::string_view` quando si deve mutare una stringa](#Rstr-span)
 * [SL.str.12: Usare il suffisso `s` per le stringhe letterali intese come `string` della libreria standard](#Rstr-s)
 
 **Si veda anche**:
@@ -18513,15 +18480,6 @@ Si noti come `>>` e `!=` siano disponibili per `string` (come esempio di operazi
 Nel C++17, si può usare `string_view` come argomento, anziché `const string&` per dare una maggiore flessibilità ai chiamanti:
 
     vector<string> read_until(string_view terminator)   // C++17
-    {
-        vector<string> res;
-        for (string s; cin >> s && s != terminator; ) // legge una word
-            res.push_back(s);
-        return res;
-    }
-La `gsl::string_span` è l'alternativa corrente che offre la maggior parte dei vantaggi di `std::string_view` per esempi semplici:
-
-    vector<string> read_until(string_span terminator)
     {
         vector<string> res;
         for (string s; cin >> s && s != terminator; ) // legge una word
@@ -18557,17 +18515,17 @@ Non dare per scontato che `string` sia più lenta delle tecniche a basso livello
 
 ???
 
-### <a name="Rstr-view"></a>SL.str.2: Usare `std::string_view` o `gsl::string_span` per riferirsi alle sequenze di caratteri
+### <a name="Rstr-view"></a>SL.str.2: Usare `std::string_view` o `gsl::span<char>` per riferirsi alle sequenze di caratteri
 
 ##### Motivo
 
-`std::string_view` e `gsl::string_span` forniscono un accesso semplice e (potenzialmente) sicuro alle sequenze di caratteri indipendentemente da come queste siano allocate e memorizzate.
+`std::string_view` e `gsl::span<char>` forniscono un accesso semplice e (potenzialmente) sicuro alle sequenze di caratteri indipendentemente da come queste siano allocate e memorizzate.
 
 ##### Esempio
 
-    vector<string> read_until(string_span terminator);
+    vector<string> read_until(string_view terminator);
 
-    void user(zstring p, const string& s, string_span ss)
+    void user(zstring p, const string& s, string_view ss)
     {
         auto v1 = read_until(p);
         auto v2 = read_until(s);
@@ -18643,7 +18601,7 @@ L'array `arr` non è una stringa C-style perché non è terminata con zero [zero
 
 ##### Alternativa
 
-Si vedano [`zstring`](#Rstr-zstring), [`string`](#Rstr-string) e [`string_span`](#Rstr-view).
+Si vedano [`zstring`](#Rstr-zstring), [`string`](#Rstr-string) e [`string_view`](#Rstr-view).
 
 ##### Imposizione
 
@@ -18684,7 +18642,7 @@ C++17
 
 ???
 
-### <a name="Rstr-span"></a>SL.str.11: Usare `gsl::string_span` anziché `std::string_view` quando si deve mutare una stringa
+### <a name="Rstr-span"></a>SL.str.11: Usare `gsl::span<char>` anziché `std::string_view` quando si deve mutare una stringa
 
 ##### Motivo
 
@@ -19523,7 +19481,8 @@ Riepilogo del profilo sulla sicurezza dei tipi [type safety]:
    <a name="Pro-type-implicitpointercast">d. </a>Non eseguire il cast tra i tipi di puntatore quando la conversione potrebbe essere implicita; Una versione rigorosa di [Evitare i cast](#Res-casts).
 * <a name="Pro-type-downcast"></a>Type.2: Non usare `static_cast` per il [downcast]: [Usare, invece, `dynamic_cast`](#Rh-dynamic_cast).
 * <a name="Pro-type-constcast"></a>Type.3: Non usare `const_cast` per eliminare il `const` (cioè per niente): [Non eliminare const](#Res-casts-const).
-* <a name="Pro-type-cstylecast"></a>Type.4: Non usare cast `(T)espressione` in stile C o il funzionale `T(espressione)`: Preferire la [costruzione](#Res-construct) o i [[named cast]](#Res-casts-named).
+* <a name="Pro-type-cstylecast"></a>Type.4: Non usare cast `(T)expression` in stile C o quelli funzionali `T(expression)`:
+   Preferire la [costruzione](#Res-construct), i [[named cast]](#Res-casts-named) oppure `T{expression}`.
 * <a name="Pro-type-init"></a>Type.5: Non usare una variabile prima che sia stata inizializzata: [inizializzare sempre](#Res-always).
 * <a name="Pro-type-memberinit"></a>Type.6: Inizializzare sempre una variabile membro: [inizializzare sempre](#Res-always), forse utilizzando i [costruttori di default](#Rc-default0) o gli [gli inizializzatori membro di default](#Rc-in-class-initializer).
 * <a name="Pro-type-unon"></a>Type.7: Evitare le semplici [naked] union: [Usare, invece, `variant`](#Ru-naked).
@@ -19652,8 +19611,6 @@ Se qualcosa si suppone che non possa esser `nullptr`, lo si affermi così:
 
 * `span<T>`       // `[p:p+n)`, costruttore da `{p, q}` e `{p, n}`; `T` è il tipo del puntatore
 * `span_p<T>`     // `{p, predicate}` `[p:q)` dove `q` è il primo elemento per cui `predicate(*p)` è vero
-* `string_span`   // `span<char>`
-* `cstring_span`  // `span<const char>`
 
 Uno `span<T>` si riferisce a zero o più `T` mutabili a meno che `T` sia un tipo `const`.
 
@@ -20414,9 +20371,9 @@ Perché si vogliono usare immediatamente e perché sono provvisori in quanto ver
 
 No. La GSL esiste solo per fornire alcuni tipi e alias che attualmente non sono presenti nella libreria standard. Se il comitato decide sulle versioni standardizzate (di questi o di altri tipi che soddisfano le stessa necessità), si possono rimuovere dalla GSL.
 
-### <a name="Faq-gsl-string-view"></a>FAQ.55: Se si stanno usando i tipi standard quando sono disponibili, perché la `string_span` della GSL è diversa dalla `string_view` del [Library Fundamentals 1 Technical Specification and C++17 Working Paper]? Perché non usare semplicemente la `string_view` approvata dal comitato?
+### <a name="Faq-gsl-string-view"></a>FAQ.55: Se si stanno usando i tipi standard quando sono disponibili, perché la `span<char>` della GSL è diversa dalla `string_view` del [Library Fundamentals 1 Technical Specification and C++17 Working Paper]? Perché non usare semplicemente la `string_view` approvata dal comitato?
 
-L'opinione sulla tassonomia delle viste per la Libreria Standard C++ è stato che "view" significa "read-only", e "span" indica "read/write". La `string_view`, a sola lettura [read-only], è stata la prima di questi componenti a completare il processo della standardizzazione, mentre `span` e `string_span` stanno, al momento, completando l'iter per la standardizzazione.
+L'opinione sulla tassonomia delle viste per la Libreria Standard C++ è stato che "view" significa "read-only", e "span" indica "read/write". Se c'è bisogno solamente di visualizzare a sola lettura dei caratteri che non richiede il controllo dei limiti [bounds-checking] e si sta utilizzando il C++17, si usa `std::string_view`. Altrimenti, se c'è bisogno di una visualizzazione per leggere e scrivere che non richieda il controllo dei limiti [bounds-checking] e si usa il C++20, si usa `std::span<char>`. Altrimenti si usa `gsl::span<char>`.
 
 ### <a name="Faq-gsl-owner"></a>FAQ.56: L'`owner` [proprietario] è lo stesso `observer_ptr` proposto?
 
@@ -20916,7 +20873,7 @@ Meglio:
 Un checker deve considerare sospetti tutti i "puntatori semplici".
 Probabilmente un checker deve far riferimento ad un elenco delle risorse fornito da un umano.
 Come inizio [starters], sappiamo dei contenitori della libreria standard, `string` e smart pointer.
-L'utilizzo di `span` e `string_span` dovrebbe aiutare molto (non sono handle di risorse).
+L'utilizzo di `span` e `string_view` dovrebbe aiutare molto (non sono handle di risorse).
 
 ### <a name="Cr-raw"></a>Discussione: Un puntatore "semplice" o un riferimento non è mai un handle di una risorsa
 
