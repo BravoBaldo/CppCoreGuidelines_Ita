@@ -7579,33 +7579,7 @@ Evitare perdite [leak] di risorse.
 
 ### <a name="Rh-make_unique"></a>C.150: Usare `make_unique()` per costruire oggetti posseduti dagli `unique_ptr`
 
-##### Motivo
-
-`make_unique` fornisce una dichiarazione più concisa della costruzione.
-Garantisce inoltre la sicurezza delle eccezioni in espressioni complesse.
-
-##### Esempio
-
-    unique_ptr<Foo> p {new Foo{7}};    // OK: ma ripetitivo
-
-    auto q = make_unique<Foo>(7);      // Meglio: nessuna ripetizione di Foo
-
-    // Non è exception-safe: il compilatore potrebbe intercalare i calcoli degli argomenti nel seguente modo:
-    //
-    // 1. alloca memoria per Foo,
-    // 2. costruisce Foo,
-    // 3. chiama bar,
-    // 4. costruisce unique_ptr<Foo>.
-    //
-    // Se bar va in errore, Foo non verrà distrutto e la memoria allocata per esso verrà persa [leak].
-    f(unique_ptr<Foo>(new Foo()), bar());
-
-    // Exception-safe: le chiamate a funzioni non sono mai intercalate.
-    f(make_unique<Foo>(), bar());
-##### Imposizione
-
-* Segnalare l'uso ripetitivo di liste di specializzazioni di template `<Foo>`
-* Segnalare le variabili dichiarate per essere `unique_ptr<Foo>`
+Cfr. [R.23](#Rr-make_unique)
 
 ### <a name="Rh-make_shared"></a>C.151: Usare `make_shared()` per costruire oggetti posseduti dagli `shared_ptr`
 
@@ -9058,12 +9032,14 @@ La versione `make_shared()` indica `X` una sola volta, quindi è solitamente pi�
 
 ##### Motivo
 
-Per comodità e coerenza con lo `shared_ptr`.
+`make_unique` fornisce una dichiarazione più concisa della costruzione.
+Garantisce inoltre la sicurezza delle eccezioni in espressioni complesse.
 
-##### Note
+##### Esempio
 
-`make_unique()` è del C++14, ma ampiamente disponibile (oltre che semplice da scrivere).
+    unique_ptr<Foo> p {new Foo{7}};    // OK: ma ripetitivo
 
+    auto q = make_unique<Foo>(7);      // Meglio: Foo non si ripete
 ##### Imposizione
 
 (Semplice) Avvisare se uno `unique_ptr` è costruito partendo dal risultato di un `new` anziché da `make_unique`.
