@@ -373,7 +373,14 @@ Non limitiamo il nostro commento nelle sezioni **Imposizione** alle cose che sap
 I tool che implementano queste regole devono rispettare la sintassi seguente per sopprimere esplicitamente una regola:
 
     [[gsl::suppress(tag)]]
-dove "tag" è il nome identificativo [anchor name] dell'elemento in cui appare la regola di "Imposizione" (p.es., per [C.134](#Rh-public) è "Rh-public"), il nome di un profilo gruppo-di-regole ("type", "bounds" o "lifetime"), o una specifica regola di un profilo ([type.4](#Pro-type-cstylecast) o [bounds.2](#Pro-bounds-arrayindex)).
+e facoltativamente con un messaggio (seguendo la solita sintassi degli attributi dello standard C++11):
+
+    [[gsl::suppress(tag, justification: "message")]]
+dove
+
+- `tag` è il nome di appoggio dell'elemento in cui compare la regola di Imposizione [Enforcement] (p.es., per [C.134](#Rh-public) è "Rh-public"), il nome di un profilo di un gruppo-di-regole ("type", "bounds", o "lifetime"), o una specifica regola di un profilo ([type.4](#Pro-type-cstylecast), o [bounds.2](#Pro-bounds-arrayindex))
+
+- `"message"` è una stringa letterale
 
 ## <a name="SS-struct"></a>In.struct: La struttura di questo documento
 
@@ -2631,7 +2638,7 @@ Il passaggio di uno smart pointer shared (p.es., `std::shared_ptr`) implica un c
     f(stack_widget); // ok -- ora questo funziona
 ##### Note
 
-Possiamo intercettare staticamente i puntatori appesi [dangling], quindi non è necessario affidarsi alla gestione delle risorse per evitare violazioni di tali puntatori.
+Si possono catturare molti casi comuni di puntatori 'appesi [dangling] staticamente (cfr. [profilo di sicurezza sul ciclo-di-vita [lifetime safety]](#SS-lifetime)). Gli argomenti delle funzioni vivono naturalmente per tutta la durata della chiamata alla funzione e quindi hanno meno problemi di durata.
 
 ##### Imposizione
 
@@ -6084,7 +6091,7 @@ Fornire una funzione `swap` non-membro nello stesso namespace per il proprio tip
     }
 ##### Imposizione
 
-* (Semplice) Una classe senza funzioni virtuali dovrebbe avere una funzione membro `swap` dichiarata.
+* I tipi di valori non-banalmente-copiabili dovrebbero fornire una funzione membro swap o un overload per lo swap generico.
 * (Semplice) Quando una classe ha una funzione membro `swap`, dovrebbe essere dichiarata `noexcept`.
 
 ### <a name="Rc-swap-fail"></a>C.84: Una funzione `swap` non può fallire
@@ -19262,7 +19269,7 @@ Sezioni sui riferimenti:
 * [GCC Coding Conventions](https://gcc.gnu.org/codingconventions.html).
    C++03 e (ragionevolmente) un po' datate.
 * [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
-   Orientata al C++03 e (anche) al codice più vecchio. Qui, gli esperti di Google, stanno collaborando attivamente per contribuire a migliorare queste Linee-guida e, si spera, per unire gli sforzi in modo che queste possano costituire un moderno insieme comune che potrebbero anche raccomandare.
+   Orientato al C++17 e (anche) al codice più vecchio. Qui, gli esperti di Google, stanno collaborando attivamente per contribuire a migliorare queste Linee-guida e, si spera, per unire gli sforzi in modo che queste possano costituire un moderno insieme comune che potrebbero anche raccomandare.
 * [JSF++: JOINT STRIKE FIGHTER AIR VEHICLE C++ CODING STANDARDS](http://www.stroustrup.com/JSF-AV-rules.pdf).
    Documento Numero 2RDU00001 Rev C. Dicembre 2005.
    Per il software per il controllo di aerei.
@@ -19274,7 +19281,7 @@ Sezioni sui riferimenti:
    Non deve sorprendere che ci sia qualche somiglianza con queste linee-guida perché Bjarne Stroustrup è stato uno degli autori della JSF++.
    Raccomandata, ma si noti che ha un focus molto specifico.
 * [MISRA C++ 2008: Linee-guida per l'uso del linguaggio C++ in sistemi critici](https://www.misra.org.uk/Buyonline/tabid/58/Default.aspx).
-* [Mozilla Portability Guide](https://developer.mozilla.org/en-US/docs/Mozilla/C%2B%2B_Portability_Guide).
+* [Utilizzo del C++ nel Codice di Mozilla](https://firefox-source-docs.mozilla.org/code-quality/coding-style/using_cxx_in_firefox_code.html).
    Come indica il nome, si pone lo scopo della portabilità tra molti (vecchi) compilatori.
    In quanto tale, è restrittivo.
 * [Geosoft.no: C++ Programming Style Guidelines](http://geosoft.no/development/cppstyle.html).
