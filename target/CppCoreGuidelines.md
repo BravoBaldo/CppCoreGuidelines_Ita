@@ -3271,7 +3271,7 @@ A volte avere `nullptr`, anziché indicare "nessun oggetto", è utile, ma in cas
     }
 ##### Note
 
-È possibile, ma non un C++ valido, costruire un riferimento che sia essenzialmente un `nullptr` (p.es., `T* p = nullptr; T& r = (T&)*p;`).
+È possibile, ma non è un valido C++,  costruire un riferimento che sia essenzialmente un `nullptr` (p.es., `T* p = nullptr; T& r = *p;`).
 Questo errore è molto raro.
 
 ##### Note
