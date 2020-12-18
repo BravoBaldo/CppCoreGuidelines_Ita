@@ -378,9 +378,9 @@ e facoltativamente con un messaggio (seguendo la solita sintassi degli attributi
     [[gsl::suppress(tag, justification: "message")]]
 dove
 
-- `tag` è il nome di appoggio dell'elemento in cui compare la regola di Imposizione [Enforcement] (p.es., per [C.134](#Rh-public) è "Rh-public"), il nome di un profilo di un gruppo-di-regole ("type", "bounds", o "lifetime"), o una specifica regola di un profilo ([type.4](#Pro-type-cstylecast), o [bounds.2](#Pro-bounds-arrayindex))
+* `tag` è il nome di appoggio dell'elemento in cui compare la regola di Imposizione [Enforcement] (p.es., per [C.134](#Rh-public) è "Rh-public"), il nome di un profilo di un gruppo-di-regole ("type", "bounds", o "lifetime"), o una specifica regola di un profilo ([type.4](#Pro-type-cstylecast), o [bounds.2](#Pro-bounds-arrayindex))
 
-- `"message"` è una stringa letterale
+* `"message"` è una stringa letterale
 
 ## <a name="SS-struct"></a>In.struct: La struttura di questo documento
 
@@ -10985,7 +10985,7 @@ I cast sono ampiamente (ab) usati. Il C++ moderno ha delle regole e dei costrutt
 * Nell'uso dei template
 * Nell'uso di `std::variant`
 * Nell'affidarsi a conversioni implicite ben definite e sicure tra i i tipi di puntatori
-* Usare `std::ignore =" per ignorare i valori`[[nodiscard]]`.
+* Usare `std::ignore =` per ignorare i valori `[[nodiscard]]`.
 
 ##### Imposizione
 
