@@ -14,4 +14,4 @@ Si veda anche: F:\Dati\OmegaT\Pandoc
 	3b) remove all '</li>'
 	3c) insert '<br/>' between the 2 lists
 	3d) move all replacing tag <InsertSideBarHere/> in "Shell.html"
-	4d) save as "CppCoreGuidelinesIta.html"
+	4d) save as "CppCoreGuidelines_Ita.html"
