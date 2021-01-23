@@ -9300,6 +9300,7 @@ Regole generali:
 
 * [ES.1: Preferire la libreria standard alle altre librerie e al "codice artigianale"](#Res-lib)
 * [ES.2: Preferire astrazioni adatte all'uso diretto delle funzionalità del linguaggio](#Res-abstr)
+* [ES.3: Non ripetersi, evitare codice ridondante](#Res-DRY)
 
 Regole sulle dichiarazioni:
 
@@ -9438,6 +9439,43 @@ Una volta aggiunto il controllo per l'overflow e la gestione degli errori questo
 ##### Imposizione
 
 Non facile. ??? Cercare loop disordinati, nidificati, funzioni lunghe, assenza di chiamate a funzioni, mancanza dell'utilizzo dei tipi non-built-in. Complessità ciclomatica?
+
+### <a name="Res-DRY"></a>ES.3: Non ripetersi, evitare codice ridondante
+
+Il codice duplicato o altrimenti ridondante oscura le intenzioni, rende più difficile la comprensione della logica e rende più difficile la manutenzione, oltre ad altri problemi. Spesso deriva dalla programmazione taglia-e-incolla.
+
+Usare gli algoritmi standard dove appropriato, anziché scrivere una propria implementazione.
+
+**Vedere anche **: [SL.1](#Rsl-lib), [ES.11](#Res-auto)
+
+##### Esempio
+
+    void func(bool flag)    // Bad, duplicated code.
+    {
+        if (flag) {
+            x();
+            y();
+        }
+        else {
+            x();
+            z();
+        }
+    }
+
+    void func(bool flag)    // Better, no duplicated code.
+    {
+        x();
+
+        if (flag)
+            y();
+        else
+            z();
+    }
+
+##### Imposizione
+
+* Usare un analizzatore statico. Intercetterà almeno alcuni costrutti ridondanti.
+* Revisione del codice
 
 ## ES.dcl: Dichiarazioni
 
@@ -13231,12 +13269,11 @@ I concetti dell'applicazione sono più facili da immaginare.
 
 ##### Esempio
 
-    void some_fun()
+    void some_fun(const std::string& msg)
     {
-        std::string msg, msg2;
-        std::thread publisher([&] { msg = "Hello"; });       // bad: meno espressivo
-                                                             //      e più soggetto a errori
-        auto pubtask = std::async([&] { msg2 = "Hello"; });  // OK
+        std::thread publisher([=] { std::cout << msg; });      // bad: meno espressiva
+                                                               //      e più soggetto a errori
+        auto pubtask = std::async([=] { std::cout << msg; });  // OK
         // ...
         publisher.join();
     }
@@ -16934,9 +16971,9 @@ Quando diventerà ampiamente disponibile il `concept`, tali alternative si potra
     template<typename T, typename U>
     void f(T t, U u)
     {
-        T v1(x);    // v1 è una funzione o una variabile?
-        T v2 {x};   // variabile
-        auto x = T(u);  // costruzione o cast?
+        T v1(T(u));    // errore: oops, v1 è una funzione non una variabile
+        T v2{u};       // chiaro: ovviamente una variabile
+        auto x = T(u); // poco chiaro: costruzione o cast?
     }
 
     f(1, "asdf"); // bad: il cast da const char* a int
@@ -17894,7 +17931,7 @@ e M funzioni ciascuna contenente un `using namespace X` con N righe di codice in
 
 ##### Note
 
-[Non scrivere `using namespace` in un file header](#Rs-using-directive).
+[Non scrivere `using namespace` nello scope globale in un file header](#Rs-using-directive).
 
 ##### Imposizione
 
