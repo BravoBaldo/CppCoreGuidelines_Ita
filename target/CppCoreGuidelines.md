@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-3 Agosto 2020
+28 Gennaio 2021
 
 
 Editori:
@@ -1188,8 +1188,8 @@ Riepilogo delle regole sulle interfacce:
 * [I.13: Non passare un array come singolo puntatore](#Ri-array)
 * [I.22: Evitare complesse inizializzazioni di oggetti globali](#Ri-global-init)
 * [I.23: Mantenere basso il numero degli argomenti di una funzione](#Ri-nargs)
-* [I.24: Evitare parametri adiacenti dello stesso tipo quando cambiare l'ordine degli argomenti modificherebbe il significato](#Ri-unrelated)
-* [I.25: Preferire le classi astratte come interfacce alle gerarchie di classi](#Ri-abstract)
+* [I.24: Evitare parametri adiacenti che possono essere invocati dagli stessi argomenti in qualsiasi ordine con un diverso significato](#Ri-unrelated)
+* [I.25:  Preferire classi astratte vuote come interfacce alle gerarchie di classi](#Ri-abstract)
 * [I.26: Se si vuole un cross-compiler ABI, si usi un sottoinsieme in stile C](#Ri-abi)
 * [I.27: Per una libreria ABI stabile, si consideri l'idioma Pimpl](#Ri-pimpl)
 * [I.30: Incapsulare le violazioni alla regola](#Ri-encapsulate)
@@ -2000,7 +2000,7 @@ Ci sono funzioni che vengono meglio espresse con quattro parametri singoli, ma n
 * Avvisare quando una funzione dichiara due iteratori (compresi i puntatori) dello stesso tipo anziché un range o una view.
 * (Non imponibile) Questa è una linea-guida filosofica che è impossibile da controllare direttamente.
 
-### <a name="Ri-unrelated"></a>I.24: Evitare parametri adiacenti dello stesso tipo quando cambiare l'ordine degli argomenti modificherebbe il significato
+### <a name="Ri-unrelated"></a>I.24: Evitare parametri adiacenti che possono essere invocati dagli stessi argomenti in qualsiasi ordine con un diverso significato
 
 ##### Motivo
 
@@ -2042,11 +2042,11 @@ Questo tende a renderne chiare le invocazioni ai futuri lettori, poiché i param
 
 (Semplice) Sollevare un warning se due parametri consecutivi condividono lo stesso tipo.
 
-### <a name="Ri-abstract"></a>I.25: Preferire le classi astratte come interfacce alle gerarchie di classi
+### <a name="Ri-abstract"></a>I.25: Preferire classi astratte vuote come interfacce alle gerarchie di classi
 
 ##### Motivo
 
-Le classi astratte hanno maggiori probabilità di essere stabili rispetto alle classi base con uno stato.
+Le classi astratte vuote (non hanno dati membri non-statici) hanno maggiori probabilità di essere stabili rispetto alle classi base con uno stato.
 
 ##### Esempio, cattivo
 
@@ -2063,7 +2063,7 @@ Si sapeva che `Shape` sarebbe comparso da qualche parte :-)
         vector<Point> outline;
         Color col;
     };
-Ciò costringerà ogni classe derivata a calcolare un centro, anche se non è un'operazione banale e se il centro non viene mai utilizzato. Similmente, non tutte le `Shape` hanno un `Color`, e molte `Shape` vengono meglio rappresentate senza un contorno definito come una sequenza di `Point`. Le classi astratte sono state inventate per scoraggiare gli utenti dallo scrivere tali classi:
+Ciò costringerà ogni classe derivata a calcolare un centro, anche se non è un'operazione banale e se il centro non viene mai utilizzato. Similmente, non tutte le `Shape` hanno un `Color`, e molte `Shape` vengono meglio rappresentate senza un contorno definito come una sequenza di `Point`. Usare una classe astratta è meglio:
 
     class Shape {    // meglio: Shape è un'interfaccia pura
     public:
@@ -2884,6 +2884,8 @@ Se ci sono più valori da restituire, si [usa una tupla](#Rf-out-multi) o un sim
 ##### Note
 
 Una `struct` di molti (singolarmente economici per il move) elementi potrebbe risultare costosa per il move.
+
+##### Note
 
 Non è consigliabile restituire un valore `const`.
 Un consiglio così vecchio è ormai obsoleto; non aggiunge valore e interferisce con la semantica di move.
@@ -8467,7 +8469,7 @@ Il default è più facile da leggere e da scrivere.
 
     // ....
 
-    enum flags : char { /* ... */ };
+    enum Flags : char { /* ... */ };
 
 ##### Imposizione
 
