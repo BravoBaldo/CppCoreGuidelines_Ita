@@ -2038,9 +2038,15 @@ Definire una `struct` come il tipo del parametro e denominare adeguatamente i ca
     void initialize(SystemParams p);
 Questo tende a renderne chiare le invocazioni ai futuri lettori, poiché i parametri vengono spesso compilati per nome dal lato della chiamata.
 
-##### Imposizione
+##### Nota
 
-(Semplice) Sollevare un warning se due parametri consecutivi condividono lo stesso tipo.
+Solo il progettista dell'interfaccia può affrontare adeguatamente la fonte delle violazioni di questa linea guida.
+
+##### Strategia di applicazione
+
+(Semplice) Sollevare un warning se due parametri consecutivi condividono lo stesso tipo
+
+Stiamo ancora cercando un'applicazione meno semplice.
 
 ### <a name="Ri-abstract"></a>I.25: Preferire classi astratte vuote come interfacce alle gerarchie di classi
 
