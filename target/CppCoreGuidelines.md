@@ -2216,7 +2216,7 @@ Regole di definizione di una funzione:
 * [F.3: Le funzioni devono essere brevi e semplici](#Rf-single)
 * [F.4: Se una funzione potrebbe essere valutata in fase di compilazione, la si dichiara `constexpr`](#Rf-constexpr)
 * [F.5: Se una funzione è molto piccola e time-critical, la si dichiara inline](#Rf-inline)
-* [F.6: Se una funzione potrebbe andare in errore [throw], la si dichiara `noexcept`](#Rf-noexcept)
+* [F.6: Se la funzione non deve sollevare errori, dichiararla `noexcept`](#Rf-noexcept)
 * [F.7: Per un uso generale, si prendono gli argomenti `T*` o `T&` anziché gli smart pointer](#Rf-smart)
 * [F.8: Preferire le funzioni pure](#Rf-pure)
 * [F.9: I parametri inutilizzati devono essere senza nome](#Rf-unused)
@@ -2508,7 +2508,7 @@ Il compilatore genera un errore se viene chiamata una funzione non-`constexpr` d
 Alcuni ottimizzatori riescono a mettere inline senza tale suggerimento del programmatore, ma è meglio non farci affidamento.
 Misurare! Negli ultimi 40 anni circa, ci sono stati promessi compilatori che mettessero inline meglio degli umani senza alcun suggerimento.
 Stiamo ancora aspettando.
-Specificando `inline` si invoglia il compilatore a fare un lavoro migliore.
+Specificando inline (esplicitamente, o implicitamente quando si scrivono funzioni membro nella definizione di una classe) si invoglia il compilatore a fare un lavoro migliore.
 
 ##### Esempio
 
@@ -4410,26 +4410,24 @@ Se non si vuole generare una funzione di default, la si sopprime con `=delete`.
 
 ##### Esempio, buono
 
-Quando un distruttore dev'essere dichiarato solo per renderlo `virtual`, può essere definito come di default. Per evitare la soppressione di operazioni [move] implicite, queste devono essere anche dichiarate, poi, per evitare che la classe diventi [move-only] (e non copiabile), si devono dichiarare le operazioni di copia:
+Quando un distruttore dev'essere dichiarato solo per renderlo `virtual`, può essere definito come di default.
 
     class AbstractBase {
     public:
-      virtual ~AbstractBase() = default;
-      AbstractBase(const AbstractBase&) = default;
-      AbstractBase& operator=(const AbstractBase&) = default;
-      AbstractBase(AbstractBase&&) = default;
-      AbstractBase& operator=(AbstractBase&&) = default;
+        virtual ~AbstractBase() = default;
+        // ...
     };
-In alternativa per evitare lo [slicing] come per la [C.67](#Rc-copy-virtual), si possono cancellare le operazioni di copia e [move]:
+Per evitare lo [slicing] come per la [C.67](#Rc-copy-virtual), si esegue un `=delete` delle operazioni di copia e spostamento e si aggiunge un `clone`:
 
     class ClonableBase {
     public:
-      virtual unique_ptr<ClonableBase> clone() const;
-      virtual ~ClonableBase() = default;
-      ClonableBase(const ClonableBase&) = delete;
-      ClonableBase& operator=(const ClonableBase&) = delete;
-      ClonableBase(ClonableBase&&) = delete;
-      ClonableBase& operator=(ClonableBase&&) = delete;
+        virtual unique_ptr<ClonableBase> clone() const;
+        virtual ~ClonableBase() = default;
+        ClonableBase(const ClonableBase&) = delete;
+        ClonableBase& operator=(const ClonableBase&) = delete;
+        ClonableBase(ClonableBase&&) = delete;
+        ClonableBase& operator=(ClonableBase&&) = delete;
+        // ... altri costruttori e funzioni ...
     };
 Qui, definire solo le operazioni di [move] o solo quelle di copia, avrebbe lo stesso effetto, ma affermare esplicitamente l'intento per ciascun membro speciale, lo rende più palese al lettore.
 
@@ -16829,10 +16827,15 @@ In genere, la soluzione consiste nel rendere non locale quella che sarebbe stata
 Alcuni hanno trovato l'idea che il `Link` non venga più nascosto nel terrificante elenco, quindi chiamiamo tale tecnica
 [SCARY](http://www.open-std.org/jtc1/sc22/WG21/docs/papers/2009/n2911.pdf) [terrificante]. Da quel documento accademico: "L'acronimo SCARY descrive assegnazioni e inizializzazioni che Sembrano sbagliate (apparendo vincolate [Constrained] da parametri generici in conflitto), ma in realtà [Actually] funzionano con la giusta [Right] implementazione (non vincolata dal [bY] conflitto a causa di dipendenze minimizzate)".
 
+##### Note
+
+Questo vale anche per le lambda che non dipendono da tutti i parametri template.
+
 ##### Imposizione
 
-* Segnalare i tipi membro che non dipendono da ogni argomento template
-* Segnalare le funzioni membro che non dipendono da ogni argomento template
+* Segnalare i tipi membro che non dipendono da ogni parametro template
+* Segnalare le funzioni membro che non dipendono da ogni parametro template
+* Segnalare le lambda o le variabili template che non dipendono da ogni parametro template
 
 ### <a name="Rt-nondependent"></a>T.62: Porre i membri della classe template non-dipendenti in una classe base non-template
 
