@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-28 Gennaio 2021
+11 Marzo 2021
 
 
 Editori:
@@ -566,20 +566,20 @@ In generale molto difficile.
 
 Questo è un insieme di linee-guida per la scrittura secondo il C++ Standard ISO.
 
-##### Note
+##### Nota
 
 Esistono ambienti in cui sono necessarie estensioni, ad esempio per accedere alle risorse di sistema.
 In questi casi, localizzare l'uso delle estensioni necessarie e controllarne l'uso con le Coding Guidelines non-core.  Se possibile, creare interfacce che incapsulino le estensioni in modo che possano essere disattivate e compilate su sistemi che non supportano tali estensioni.
 
 Le estensioni spesso non hanno una semantica rigorosamente definita.  Anche le estensioni comuni o implementate da più compilatori potrebbero avere comportamenti leggermente diversi e un diverso comportamento del caso limite come diretta conseguenza del *non* avere una definizione standard rigorosa.  Con un sufficiente uso di una di queste estensioni, ci si dovrà aspettare un impatto sulla portabilità.
 
-##### Note
+##### Nota
 
 L'uso di un C++ ISO valido non ne garantisce la portabilità (per non parlare della correttezza).
 Evitare la dipendenza dai comportamenti indefiniti (p.es., [ordine di valutazione indefinito](#Res-order))
 ed essere consapevoli dei costrutti con significato definito dall'implementazione (p.es., `sizeof(int)`).
 
-##### Note
+##### Nota
 
 Esistono ambienti in cui sono necessarie restrizioni sull'uso del linguaggio C++ standard e o delle funzionalità di libreria, p.es., per evitare l'allocazione dinamica della memoria come richiesto dagli standard del software di controllo degli aerei.
 In questi casi, controllarne l'(ab)uso con un'estensione a queste "Coding Guidelines" personalizzate per lo specifico ambiente.
@@ -621,11 +621,11 @@ Un programmatore dovrebbe avere familiarità con
 * [La Libreria Standard del C++ ISO](#S-stdlib)
 * Qualunque libreria fondamentale si usi nel progetto corrente
 
-##### Note
+##### Nota
 
 Formula alternativa: dire cosa dovrebbe essere fatto, anziché solamente come lo si dovrebbe fare.
 
-##### Note
+##### Nota
 
 Alcuni costrutti del linguaggio esprimono le intenzioni meglio di altri.
 
@@ -660,7 +660,7 @@ Sfortunatamente, ciò non è possibile. Le aree problematiche sono:
 * errori dei range
 * Conversioni con riduzione [narrowing conversions]
 
-##### Note
+##### Nota
 
 Queste aree sono fonte di gravi problemi (p.es., crash e violazioni della sicurezza).
 Cerchiamo di fornire tecniche alternative.
@@ -723,7 +723,7 @@ Meglio
 
 Lasciare errori difficili-da-rilevare in un programma espone a crash e risultati sbagliati.
 
-##### Note
+##### Nota
 
 Idealmente, si rilevano tutti gli errori (quelli che non sono errori logici del programmatore) in fase di compilazione o di esecuzione. È impossibile rilevare tutti gli errori in fase di compilazione e spesso non è conveniente rilevare tutti gli altri errori in fase di esecuzione. Tuttavia, si dovrebbe cercare di scrivere programmi che in linea di principio possano essere controllati, con sufficienti risorse (programmi di analisi, controlli a run-time, risorse-macchina, tempo).
 
@@ -959,14 +959,14 @@ Preferire il [RAII](#Rr-raii):
     }
 **Si veda anche**: [la sezione Gestione delle risorse](#S-resource)
 
-##### Note
+##### Nota
 
 Un leak è colloquialmente "qualsiasi cosa che non viene pulito". La classificazione più importante è "tutto ciò che non può più essere ripulito". Per esempio, allocare un oggetto sull'heap e poi perdere l'ultimo puntatore che punta a tale allocazione.
 Questa regola non dovrebbe essere presa come obbligatoria, perché tutte le allocazioni di oggetti di lunga durata devono essere restituite alla chiusura del programma.
 Per esempio, affidarsi al cleanup garantito dal sistema, come la chiusura del file o la deallocazione della memoria all'arresto del processo, può semplificare il codice.
 Tuttavia, fare affidamento su astrazioni che ripuliscono implicitamente può essere altrettanto semplice e spesso più sicuro.
 
-##### Note
+##### Nota
 
 Imporre [il profilo di sicurezza a tutto il ciclo di vita](#SS-lifetime) elimina i leak.
 Se combinato con la sicurezza delle risorse fornita dal [RAII](#Rr-raii), elimina la necessità di "garbage collection" (non generando garbage [immondizia]).
@@ -986,7 +986,7 @@ Combinarlo con l'applicazione dei [profili di tipo e bound](#SS-force) ottenendo
 
 Questo è il C++.
 
-##### Note
+##### Nota
 
 Il tempo e lo spazio spesi bene per raggiungere un obiettivo (p.es., rapidità nello sviluppo, sicurezza delle risorse, o semplificazione dei test) non vengono persi.
 "Un altro vantaggio della ricerca dell'efficienza è che il processo costringe a comprendere il problema in modo più approfondito". - Alex Stepanov
@@ -1039,7 +1039,7 @@ Ci sono molti altri bug prestazionali e complicazioni gratuite.
 Questo è in effetti un esempio di un codice di produzione.
 Possiamo vedere che nelle nostre condizioni abbiamo `i < strlen(s)`. Questa espressione verrà valutata su ogni iterazione del ciclo, il che significa che `strlen` deve scorrere la stringa in ogni ciclo per scoprirne la lunghezza. Mentre il contenuto della stringa cambia, si presume che `toLower` non ne influenzerà la lunghezza, quindi è meglio memorizzare nella cache la lunghezza all'esterno del ciclo e non sostenere il costo di ogni iterazione.
 
-##### Note
+##### Nota
 
 Un singolo esempio di spreco è raramente significativo e, laddove lo fosse, viene in genere facilmente eliminato da un esperto.
 Tuttavia, gli sprechi diffusi su tutto il codice possono diventare facilmente significativi e gli esperti non sono sempre disponibili come si vorrebbe.
@@ -1097,7 +1097,7 @@ Invece, si potrebbe usare `vector`:
         // ... controlla che x sia valido ...
         v.push_back(x);
     }
-##### Note
+##### Nota
 
 Le librerie standard e la GSL sono esempi di questa filosofia.
 Ad esempio, invece di fare confusione con le matrici, le union, i cast, i problemi coi cicli di vita, `gsl::owner`, ecc.,
@@ -1122,7 +1122,7 @@ In genere abbiamo cose migliori da fare rispetto a svolgere ripetutamente attivi
 
 Far girare un analizzatore statico per verificare che il codice segua le linee-guida che si desidera che seguano.
 
-##### Note
+##### Nota
 
 Cfr.
 
@@ -1132,7 +1132,7 @@ Cfr.
 
 Esistono molti altri tipi di strumenti, come repository di sorgenti, tool per la compilazione, ecc., ma questi vanno oltre lo scopo di queste linee-guida.
 
-##### Note
+##### Nota
 
 Fare attenzione a non dipendere da catene di tool troppo elaborati o troppo specializzati.
 Potrebbero rendere il codice non-portabile.
@@ -1154,14 +1154,14 @@ Pertanto, se esiste una libreria adatta per il dominio dell'applicazione, utiliz
 A meno che non si sia un esperto di algoritmi di ordinamento e si abbia un sacco di tempo, è più probabile che sia corretto e che funzioni più velocemente di qualsiasi cosa si scriva per un'applicazione specifica.
 È necessario un motivo per non utilizzare la libreria standard (o qualsiasi libreria di base utilizzata dall'applicazione) piuttosto che un motivo per utilizzarla.
 
-##### Note
+##### Nota
 
 Per default usare
 
 * La [ISO C++ Standard Library](#S-stdlib)
 * Le [Guidelines Support Library](#S-gsl)
 
-##### Note
+##### Nota
 
 Se non esiste una libreria ben progettata, ben documentata e ben supportata per un dominio importante, forse si dovrebbe progettarla e implementarla, per poi utilizzarla.
 
@@ -1277,11 +1277,11 @@ Si noti che è possibile avere un'inizializzazione indefinita anche per oggetti 
 
 Un oggetto globale spesso è meglio di un singleton.
 
-##### Note
+##### Nota
 
 Le costanti globali sono utili.
 
-##### Note
+##### Nota
 
 La regola contro le variabili globali si applica anche alle variabili  nello scope del namespace.
 
@@ -1293,13 +1293,13 @@ Ogni puntatore o riferimento a dati mutabili è un potenziale conflitto.
 
 L'uso di puntatori o riferimenti globali per accedere e modificare i dati non-costanti e, in caso contrario, non-globali, non è un'alternativa migliore alle variabili globali non-costanti poiché ciò non risolve il problema delle dipendenze nascoste o delle potenziali condizioni di conflitti dei dati.
 
-##### Note
+##### Nota
 
 Non è possibile avere una condizione di conflitto su dati immutabili.
 
 **Riferimenti**: Si vedano le [regole per chiamate a funzioni](#SS-call).
 
-##### Note
+##### Nota
 
 La regola è "evitare", non "non usare". Naturalmente ci saranno (rare) eccezioni, come `cin`, `cout`, e `cerr`.
 
@@ -1323,7 +1323,7 @@ I singleton sono fondamentalmente complicati oggetti globali sotto mentite spogl
 Esistono molte varianti dell'idea di singleton.
 Questo è parte del problema.
 
-##### Note
+##### Nota
 
 Se non si desidera modificare un oggetto globale, dichiararlo `const` o `constexpr`.
 
@@ -1496,12 +1496,12 @@ Idealmente, quell'`Expects(x >= 0)` dovrebbe far parte dell'interfaccia di `sqrt
 
 **Riferimenti**: `Expects()` è descritto nella [GSL](#S-gsl).
 
-##### Note
+##### Nota
 
 Preferire una specifica formale dei requisiti, come `Expects(p);`.
 Se ciò non è possibile, utilizzare il testo inglese nei commenti, ad esempio `// the sequence [p:q) is ordered using<`.
 
-##### Note
+##### Nota
 
 La maggior parte delle funzioni membro ha come precondizione alcune invarianti della classe.
 Tale invariante è stabilito da un costruttore e deve essere ristabilito all'uscita da ogni funzione membro chiamata dall'esterno della classe.
@@ -1527,21 +1527,21 @@ Per chiarire che la condizione è una precondizione e per abilitare l'uso del to
         if (height <= 0 || width <= 0) my_error();   // criptico
         // ...
     }
-##### Note
+##### Nota
 
 Le precondizioni si possono stabilire in molti modi, inclusi i commenti, istruzioni `if`, e `assert()`.
 Questo può rendere arduo distinguerle dal normale codice, difficile da aggiornarle, difficile da gestirle con tool, e potrebbero avere la semantica sbagliata (si vuol sempre abortire in debug e mai controllare durante l'esecuzione in produzione?).
 
-##### Note
+##### Nota
 
 Le precondizioni dovrebbero far parte dell'interfaccia anziché far parte dell'implementazione, ma non c'è ancora il supporto del linguaggio per farlo.
 Appena sarà disponibile il supporto del linguaggio (p.es., cfr. [contract proposal](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf)) adotteremo la versione standard delle precondizioni, delle postcondizioni e delle asserzioni.
 
-##### Note
+##### Nota
 
 `Expects()` si può usare anche per controllare una condizione in mezzo ad un algoritmo.
 
-##### Note
+##### Nota
 
 No, l'uso di `unsigned` non è un buon modo per bypassare il problema per [assicurarsi che il valore sia non-negativo](#Res-nonnegative).
 
@@ -1590,11 +1590,11 @@ Non è stata dichiarata alcuna postcondizione che il buffer dev'essere ripulito 
         memset(buffer, 0, sizeof(buffer));
         Ensures(buffer[0] == 0);
     }
-##### Note
+##### Nota
 
 Le postcondizioni sono spesso dichiarate in modo informale in un commento che indica lo scopo di una funzione; si può usare `Ensures()` per renderlo più sistematico, visibile e verificabile.
 
-##### Note
+##### Nota
 
 Le postcondizioni sono particolarmente importanti quando si riferiscono a qualcosa che non si riflette direttamente in un risultato restituito.
 
@@ -1626,7 +1626,7 @@ Meglio ancora, usare il [RAII](#Rr-raii) per assicurarsi che la postcondizione (
         lock_guard<mutex> _ {m};
         // ...
     }
-##### Note
+##### Nota
 
 Idealmente, le postcondizioni sono indicate nell'interfaccia/dichiarazione in modo che gli utenti possano facilmente vederle.
 Nell'interfaccia è possibile specificare solo le postcondizioni relative agli utenti.
@@ -1651,14 +1651,14 @@ Per chiarire che la condizione è una postcondizione e per consentire l'uso di t
         memset(buffer, 0, MAX);
         Ensures(buffer[0] == 0);
     }
-##### Note
+##### Nota
 
 Le postcondizioni possono essere dichiarate in molti modi, inclusi i commenti, istruzioni `if` e `assert()`.
 Questo può rendere arduo distinguerle dal normale codice, difficile da aggiornarle, difficile da gestirle con tool e potrebbero avere la semantica sbagliata.
 
 **Alternativa**: Le post-condizioni di tipo "questa risorsa dev'essere rilasciata" si esprimono meglio col [RAII](#Rr-raii).
 
-##### Note
+##### Nota
 
 Idealmente, questo `Ensures` dovrebbe far parte dell'interfaccia, ma ciò non è facile da fare.
 Per ora, lo si inserisce nella definizione (corpo della funzione).
@@ -1684,7 +1684,7 @@ Usare lo stile C++20 della specifica dei requisiti. Per esempio:
     {
         // ...
     }
-##### Note
+##### Nota
 
 Presto (nel C++20), tutti i compilatori saranno in grado di controllare le clausole `requires` una volta rimosso il `//`.
 I concetti sono supportati nel GCC 6.1 e successivi.
@@ -1709,7 +1709,7 @@ Questa è una delle principali fonti di errori.
     template<class F, class ...Args>
     // buono: genera system_error se non è in grado di avviare un nuovo thread
     explicit thread(F&& f, Args&&... args);
-##### Note
+##### Nota
 
 Che cos'è un errore?
 
@@ -1741,7 +1741,7 @@ A partire da C++17 si può usare la funzionalità delle "structured bindings" pe
         // ... gestisce l'errore o esce ...
     }
     // ... usa val ...
-##### Note
+##### Nota
 
 Non consideriamo le "prestazioni" un motivo valido per non usare le eccezioni.
 
@@ -1800,7 +1800,7 @@ Cioè, il suo valore deve subire un `delete` o dev'essere trasferito ad un altro
 
 `owner` viene utilizzato in modo simile nell'implementazione degli handle delle risorse.
 
-##### Note
+##### Nota
 
 Si presume che ogni oggetto passato come semplice puntatore (o iteratore) sia proprietà del chiamante, in modo che il suo ciclo di vita sia gestito dal chiamante. In altri termini: le API che trasferiscono la proprietà sono relativamente rare rispetto alle API che passano puntatori, quindi il default è "nessun trasferimento della proprietà".
 
@@ -1830,11 +1830,11 @@ Per migliorare le prestazioni evitando controlli ridondanti per `nullptr`.
     int length(const char* p);            // si deve supporre che p possa essere nullptr
 Dichiarando l'intento nel sorgente, gli implementatori e i tool possono eseguire una diagnostica migliore, come la ricerca di alcune classi di errore con l'analisi statica ed eseguire delle ottimizzazioni quali la rimozione di branch e test nulli.
 
-##### Note
+##### Nota
 
 `not_null` è definito nella [Guidelines Support Library](#S-gsl).
 
-##### Note
+##### Nota
 
 L'assunzione che il puntatore a `char` punti ad una stringa C-style (una stringa di caratteri terminata con zero) era ancora implicita ed una potenziale sorgente di confusione e di errori. Usare `czstring` preferendola a `const char*`.
 
@@ -1922,7 +1922,7 @@ Una inizializzazione complessa può portare ad un ordine indefinito di esecuzion
 Poiché `x` e `y` stanno in unità di traduzione diverse, l'ordine delle chiamate a `f()` e `g()` non è definito; si accederà ad un `const` non inizializzato.
 Ciò dimostra che il problema dell'ordine di inizializzazione per gli oggetti globali  (scope del namespace) non è limitato alle *variabili* globali.
 
-##### Note
+##### Nota
 
 I problemi sull'ordine di inizializzazione diventano particolarmente difficili da gestire nel codice concorrente.
 Di solito è meglio evitare del tutto gli oggetti globali (scope del namespace).
@@ -1986,7 +1986,7 @@ con
     void f(gsl::span<int> some_ints);              // GOOD: sicuro, controllo dei limiti
 Qui, l'utilizzo di un'astrazione presenta vantaggi in termini di sicurezza e robustezza e riduce naturalmente anche il numero dei parametri.
 
-##### Note
+##### Nota
 
 Quanti parametri sono troppi? Provare ad usarne meno di quattro (4) parametri.
 Ci sono funzioni che vengono meglio espresse con quattro parametri singoli, ma non di più.
@@ -2095,7 +2095,7 @@ Compilatori diversi implementano layout binari diversi per le classi, la gestion
 
 Su alcune piattaforme stanno emergendo delle ABI comuni (Application Binary Interface) [Interfacce Binarie di Applicazioni] che liberano dalle restrizioni più draconiane (rigorose).
 
-##### Note
+##### Nota
 
 Se si usa un solo compilatore, si può usare pienamente il C++ nelle interfacce. Ciò potrebbe richiedere la ricompilazione dopo un aggiornamento a una nuova versione del compilatore.
 
@@ -2290,7 +2290,7 @@ Legge, scrive (su un `ostream` fisso), scrive i messaggi di errore (su un `ostre
 Non c'è nulla da riutilizzare, le operazioni separate logicamente sono mischiate e le variabili locali restano visibili dopo l'uso.
 Per un piccolo esempio, questo sembra OK, ma se l'operazione di input, quella di output e la gestione degli errori fossero state più complicate, il groviglio potrebbe diventare difficile da capire.
 
-##### Note
+##### Nota
 
 Se si scrive una lambda non banale che potenzialmente si possa utilizzare in più posti, le si dà un nome e la si assegna ad una variabile (di solito non locale).
 
@@ -2437,12 +2437,12 @@ Si può riscrivere:
             return func1_tau(-val, flag1, flag2);
         return 0.;
     }
-##### Note
+##### Nota
 
 "Non rientra nello schermo" è spesso una buona definizione pratica di "troppo grande".
 Le funzioni tra una e cinque righe dovrebbero considerarsi la norma.
 
-##### Note
+##### Nota
 
 Suddividere le grandi funzioni in funzioni più piccole e con nomi significativi.
 Le funzioni piccole e semplici si mettono facilmente inline laddove il costo di una call è significativo.
@@ -2474,7 +2474,7 @@ Il famoso o famigerato fattoriale:
 Questo è C++14.
 Per il C++11, si usa una formulazione ricorsiva di `fac()`.
 
-##### Note
+##### Nota
 
 `constexpr` non garantisce la valutazione in fase di compilazione; garantisce solo che la funzione può essere valutata al momento della compilazione per degli argomenti costanti se il programmatore lo richiede o se il compilatore decide di farlo per ottimizzare.
 
@@ -2487,12 +2487,12 @@ Per il C++11, si usa una formulazione ricorsiva di `fac()`.
         int m3 = min(-1, v);            // valutazione durante l'esecuzione
         constexpr int m4 = min(-1, v);  // errore: non si può valutare durante la compilazione
     }
-##### Note
+##### Nota
 
 Non cercare di rendere tutte le funzioni `constexpr`.
 La maggior parte dei calcoli viene fatta meglio durante l'esecuzione.
 
-##### Note
+##### Nota
 
 Qualsiasi API che potrebbe eventualmente dipendere da una configurazione a run-time di alto livello o da logiche aziendali non dovrebbe essere `constexpr`. Tale personalizzazione non può essere valutata dal compilatore, e qualsiasi funzione `constexpr` che dipenda da quell'API dovrebbe essere riscritta o non dev'essere `constexpr`.
 
@@ -2518,11 +2518,11 @@ Specificando inline (esplicitamente, o implicitamente quando si scrivono funzion
 Non mettere `inline` una funzione in quella che dovrebbe essere un'interfaccia stabile a meno di non essere certi che non cambierà.
 Una funzione inline è parte dell'ABI [Application Binary Interface].
 
-##### Note
+##### Nota
 
 `constexpr` implica `inline`.
 
-##### Note
+##### Nota
 
 Le funzioni membro definite nella classe sono per default `inline`.
 
@@ -2545,7 +2545,7 @@ Se non si suppone che venga generata un'eccezione, non si può assumere che il p
 Si inserisce `noexcept` su tutte le funzioni scritte totalmente in C o un qualsiasi altro linguaggio che non gestisca le eccezioni.
 La C++ Standard Library lo fa implicitamente per tutte le funzioni nella C Standard Library.
 
-##### Note
+##### Nota
 
 Le funzioni `constexpr` possono andare in errore quando vengono valutate a runtime, quindi potrebbe essere necessario un `noexcept` condizionale per alcune di esse.
 
@@ -2563,7 +2563,7 @@ Si può usare `noexcept` anche su funzioni che possono sbagliare:
 Se `collect()` esaurisce la memoria, il programma va in crash.
 A meno che il programma non sia concepito per sopravvivere all'esaurimento della memoria, questa potrebbe essere la cosa giusta da fare; `terminate()` potrebbe generare delle adeguate informazioni sugli errori (ma con la memoria esaurita è difficile fare qualcosa di intelligente).
 
-##### Note
+##### Nota
 
 Si deve essere consapevoli dell'ambiente di esecuzione in cui gira il proprio codice quando si decide di dichiarare una funzione `noexcept`, specialmente per i problemi causati dagli errori e dalle allocazioni.  Un codice per essere perfettamente generale (come la libreria standard ed il codice di altre utility simili) deve supportare ambienti dove un'eccezione `bad_alloc` potrebbe essere gestita in modo significativo..
 Tuttavia, la maggior parte dei programmi e degli ambienti di esecuzione non è in grado di gestire in modo significativo un errore di allocazione e, in quei casi, l'interruzione del programma è la risposta più pulita e semplice a un errore di allocazione.  Se si sa che il codice non possa rispondere ad un errore di allocazione, potrebbe essere opportuno aggiungere `noexcept` anche alle funzioni che allocano.
@@ -2572,7 +2572,7 @@ In altri termini: Nella maggior parte dei programmi, la maggior parte delle funz
 
 `noexcept` è più utile (e chiaramente più corretta) per le funzioni a basso livello usate di frequente.
 
-##### Note
+##### Nota
 
 I distruttori, le funzioni `swap`, le operazioni move, e i costruttori di default non dovrebbero mai sollevare eccezioni.
 Si veda anche [C.44](#Rc-default00).
@@ -2642,7 +2642,7 @@ Il passaggio di uno smart pointer shared (p.es., `std::shared_ptr`) implica un c
 
     widget stack_widget;
     f(stack_widget); // ok -- ora questo funziona
-##### Note
+##### Nota
 
 Si possono catturare molti casi comuni di puntatori 'appesi [dangling] staticamente (cfr. [profilo di sicurezza sul ciclo-di-vita [lifetime safety]](#SS-lifetime)). Gli argomenti delle funzioni vivono naturalmente per tutta la durata della chiamata alla funzione e quindi hanno meno problemi di durata.
 
@@ -2682,7 +2682,7 @@ Soppressione dei warning sui parametri inutilizzati.
 ##### Esempio
 
     X* find(map<Blob>& m, const string& s, Hint);   // c'era una volta un hint utilizzato
-##### Note
+##### Nota
 
 La possibilità di avere parametri senza nome è stata introdotta all'inizio del 1980 per risolvere questo problema.
 
@@ -2790,7 +2790,7 @@ Ciò chiarisce ai chiamanti che si presuppone che l'oggetto verrà modificato.
 ##### Esempio
 
     void update(Record& r);  // presume che update scriva in r
-##### Note
+##### Nota
 
 Un argomento `T&` può passare informazioni ad una funzione così come estrarne.
 Quindi `T&` potrebbe essere un parametro-in-out. Questo di per sé può essere un problema e una fonte di errori:
@@ -2887,11 +2887,11 @@ Se ci sono più valori da restituire, si [usa una tupla](#Rf-out-multi) o un sim
 
     // Male: mette i puntatori agli elementi col valore x come in-out
     void find_all(const vector<int>&, vector<const int*>& out, int x);
-##### Note
+##### Nota
 
 Una `struct` di molti (singolarmente economici per il move) elementi potrebbe risultare costosa per il move.
 
-##### Note
+##### Nota
 
 Non è consigliabile restituire un valore `const`.
 Un consiglio così vecchio è ormai obsoleto; non aggiunge valore e interferisce con la semantica di move.
@@ -3006,7 +3006,7 @@ Si ritiene che sia notevolmente meno elegante e con prestazioni significativamen
 Per una lettura veramente rigorosa di questa regola (F.21), l'eccezione non è realmente un'eccezione perché si basa su parametri in-out, anziché su parametri di out citati nella regola.
 Tuttavia, si preferisce essere espliciti, piuttosto che criptici.
 
-##### Note
+##### Nota
 
 In molti casi, potrebbe essere utile restituire un tipo specifico definito dall'utente.
 Per esempio:
@@ -3037,7 +3037,7 @@ Un altro esempio, si usa uno specifico tipo lungo le righe di `variant<T, error_
 Leggibilità: chiarisce il significato di un semplice puntatore.
 Consente un significativo supporto di tool.
 
-##### Note
+##### Nota
 
 Nel tradizionale codice C e C++, si usa un semplice `T*` per molti scopi e molto diversi, come:
 
@@ -3070,7 +3070,7 @@ Meglio
         cout << s; // OK
         delete q;  // OK
     }
-##### Note
+##### Nota
 
 `owner<T*>` rappresenta la proprietà [ownership], `zstring` rappresenta una stringa C-style.
 
@@ -3106,11 +3106,11 @@ Quando si chiama `length(p)` si deve prima verificare se `p` sia `nullptr`? L'im
 
     // l'implementatore di length() deve presumere che p == nullptr se possibile
     int length(Record* p);
-##### Note
+##### Nota
 
 Si presume che un `not_null<T*>` non sia `nullptr`; un `T*` potrebbe essere il `nullptr`; entrambi si possono rappresentare in memoria come un `T*` (quindi non è implicito alcun overhead a run-time).
 
-##### Note
+##### Nota
 
 `not_null` non è solo per i puntatori nativi [built-in]. Funziona con `unique_ptr`, `shared_ptr` ed altri tipi di puntatori.
 
@@ -3133,7 +3133,7 @@ Intervalli informali/non-espliciti sono fonte di errori.
     vector<X> vec;
     // ...
     auto p = find({vec.begin(), vec.end()}, X{});  // cerca X{} in vec
-##### Note
+##### Nota
 
 Gli intervalli sono estremamente comuni nel codice C++. In genere, sono impliciti e il loro corretto utilizzo è molto difficile da garantire.
 In particolare, data una coppia di argomenti `(p, n)` che designa un array `[p:p+n)`,
@@ -3158,7 +3158,7 @@ Uno `span` rappresenta un intervallo di elementi, ma come si possono manipolare 
         // estrae i puntatori (potenzialmente controllato)
         std::sort(&s[0], &s[s.size() / 2]);
     }
-##### Note
+##### Nota
 
 Un oggetto `span<T>` non possiede i suoi elementi ed è così piccolo che si può passare per valore.
 
@@ -3191,7 +3191,7 @@ Quando si chiama `length(s)` si deve controllare prima se `s` è `nullptr`? L'im
 
     // è compito del chiamante assicurarsi che p != nullptr
     int length(not_null<zstring> p);
-##### Note
+##### Nota
 
 `zstring` non rappresenta la proprietà [ownership].
 
@@ -3218,7 +3218,7 @@ L'uso di `unique_ptr` è il modo più economico per passare un puntatore in modo
         // ...
         }
     }
-##### Note
+##### Nota
 
 Bisogna passare un puntatore anziché un oggetto  se quello che si sta trasferendo è un oggetto di una gerarchia di classi che deve essere usato attraverso un'interfaccia (classe base).
 
@@ -3243,7 +3243,7 @@ L'uso dello `std::shared_ptr` è il modo standard per rappresentare la propriet�
 
     // scollega [detach] i thread
     // l'ultimo thread per finire cancella l'immagine
-##### Note
+##### Nota
 
 Preferire un `unique_ptr` rispetto a uno `shared_ptr` se non c'è mai più di un solo proprietario per volta.
 `shared_ptr` è per la proprietà condivisa [shared].
@@ -3277,12 +3277,12 @@ A volte avere `nullptr`, anziché indicare "nessun oggetto", è utile, ma in cas
     {
         // r fa riferimento ad un vector<int>; nessun controllo necessario
     }
-##### Note
+##### Nota
 
 È possibile, ma non è un valido C++,  costruire un riferimento che sia essenzialmente un `nullptr` (p.es., `T* p = nullptr; T& r = *p;`).
 Questo errore è molto raro.
 
-##### Note
+##### Nota
 
 Se si preferisce la notazione del puntatore (`->` e/o `*` rispetto a `.`), `not_null<T*>` fornisce le stesse garanzie di `T&`.
 
@@ -3309,12 +3309,12 @@ Restituire un `T*` per trasferire la proprietà è un uso improprio.
 Se non è `nullptr`, il puntatore restituito da `find` indica un `Node` contenente `s`.
 È importante sottolineare che ciò non implica un trasferimento della proprietà dell'oggetto puntato al chiamante.
 
-##### Note
+##### Nota
 
 Le posizioni possono anche essere trasferite da iteratori, indici e riferimenti.
 Un riferimento è spesso un'alternativa superiore ad un puntatore [se non c'è bisogno di usare `nullptr`](#Rf-ptr-ref) o [se l'oggetto a cui si fa riferimento non deve cambiare](???).
 
-##### Note
+##### Nota
 
 Non restituire un puntatore a qualcosa che non rientra nello scope del chiamante; cfr. [F.43](#Rf-dangle).
 
@@ -3370,7 +3370,7 @@ C'era da aspettarselo in quanto la chiamata a `g()` riutilizza lo spazio abbando
 
 Fortunatamente, la maggior parte (tutti?) i moderni compilatori intercettano ed avvisano se capita questo semplice caso.
 
-##### Note
+##### Nota
 
 Questo vale anche per i riferimenti:
 
@@ -3380,7 +3380,7 @@ Questo vale anche per i riferimenti:
         // ...
         return x;  // Bad: restituisce il riferimento ad un oggetto che sta per essere distrutto
     }
-##### Note
+##### Nota
 
 Questo vale solo per le variabili locali non-`static`.
 Tutte le variabili `static` sono (come indica il nome) allocate staticamente, quindi i puntatori ad esse non possono essere 'appesi'.
@@ -3411,11 +3411,11 @@ Non tutti gli esempi di perdita [leaking] di un puntatore ad una variabile local
 Qui si riesce a leggere la locazione abbandonata dalla chiamata a `f`.
 Il puntatore memorizzato in `glob` potrebbe essere utilizzato molto più tardi provocando problemi imprevedibili.
 
-##### Note
+##### Nota
 
 L'indirizzo di una variabile locale si può "restituire"/persa: con un comando return, con un parametro di out `T&`, come membro di un oggetto restituito, come elemento di un array restituito ed in altri modi.
 
-##### Note
+##### Nota
 
 Esempi simili si possono costruire "appendendo" [leaking] un puntatore da uno scope più interno verso uno più esterno; tali esempi vengono gestiti in modo equivalente ai [leak] dei puntatori uscendo da una funzione.
 
@@ -3523,7 +3523,7 @@ Dichiarare il `main` (l'unico `main` globale di un programma) `void` limita la p
         {
             std::cout << "Questo è il modo per farlo\n";
         }
-##### Note
+##### Nota
 
 Ne parliamo solo a causa della persistenza di questo errore nella comunità.
 
@@ -3538,7 +3538,7 @@ Ne parliamo solo a causa della persistenza di questo errore nella comunità.
 
 La convenzione per gli operatori di overload (specie sui tipi di valore) è per `operator=(const T&)` per eseguire l'assegnazione e poi ritornare (non-`const`) `*this`.  Ciò garantisce la coerenza con i tipi della libreria standard e segue il principio "fa come fanno gli int".
 
-##### Note
+##### Nota
 
 Storicamente c'erano alcune indicazioni per fare in modo che l'operatore di assegnazione restituisse `const T&`.
 Questo principalmente per evitare il codice nella forma di `(a = b) = c` -- tale codice non è abbastanza comune da giustificare la violazione della coerenza con i tipi standard.
@@ -3628,7 +3628,7 @@ I default degli argomenti forniscono semplicemente delle interfacce alternative 
 Non esiste alcuna garanzia che un insieme di funzioni sovraccaricate [overloaded] implementino tutte la stessa semantica.
 L'uso degli argomenti con default può evitare la replica del codice.
 
-##### Note
+##### Nota
 
 È possibile scegliere tra utilizzare l'argomento di default e l'overloading quando le alternative vengono da un set di argomenti con gli stessi tipi.
 Per esempio:
@@ -3664,7 +3664,7 @@ La considerazione sull'efficienza è che la maggior parte dei tipi sono più eco
 
 La considerazione sulla correttezza è che molte chiamate hanno degli effetti collaterali sull'oggetto originale dal lato del chiamante (si veda l'esempio sotto). Questo si evita col passaggio per valore.
 
-##### Note
+##### Nota
 
 Sfortunatamente, non esiste un modo semplice per acquisire per riferimento a `const` per ottenere l'efficienza di una chiamata locale ma per prevenire anche gli effetti collaterali.
 
@@ -3751,7 +3751,7 @@ Puntatori e riferimenti a locali non dovrebbero sopravvivere al loro scope. Le l
             // ...
         }
     };
-##### Note
+##### Nota
 
 Questo è oggetto di un'attiva discussione nella standardizzazione e potrebbe essere oggetto di una futura versione dello standard aggiungendo una nuova modalità di cattura o forse modificando il significato di `[=]`. Per ora, siate espliciti.
 
@@ -3795,7 +3795,7 @@ Questo è alquanto fragile perché non può essere imposta la sicurezza nel ling
 * argomenti `variant`
 * `initializer_list` (omogenea)
 
-##### Note
+##### Nota
 
 La dichiarazione di un parametro `...` talvolta è utile nelle tecniche che non implicano il passaggio dell'argomento corrente, in particolare per dichiarare le funzioni "acchiappa-tutto [take-anything]" i modo da disabilitare "tutto il resto" in un insieme di overload o per esprimere il caso 'onnicomprensivo' [catchall] in un metaprogramma template.
 
@@ -3841,11 +3841,11 @@ Se i dati sono correlati (per motivi di fondo), tale fatto dovrebbe riflettersi 
 
     void draw(int x, int y, int x2, int y2);  // BAD: relazioni implicite non necessarie
     void draw(Point from, Point to);          // meglio
-##### Note
+##### Nota
 
 Una semplice classe, senza funzioni virtuali, non implica né un aumento di spazio né di tempo.
 
-##### Note
+##### Nota
 
 Dal punto di vista del linguaggio `class` e `struct` differiscono solo per la visibilità di default dei loro membri.
 
@@ -3862,7 +3862,7 @@ Facilità di comprensione.
 L'uso di `class` avvisa il programmatore della necessità di un invariante.
 Questa è un'utile convenzione.
 
-##### Note
+##### Nota
 
 Un invariante, è una condizione logica per i membri di un oggetto che un costruttore deve stabilire, affinché le funzioni membro pubbliche la possano assumere.
 Dopo aver stabilito l'invariante (in genere in un costruttore), ogni funzione membro può essere chiamata per l'oggetto.
@@ -3888,7 +3888,7 @@ ma:
         Month m;
         char d;    // day [giorno]
     };
-##### Note
+##### Nota
 
 Se una classe ha dati `privati`, un utente non può completamente inizializzare un oggetto senza l'uso di un costruttore.
 Quindi, chi definisce la classe fornirà un costruttore e deve specificarne il significato.
@@ -3927,7 +3927,7 @@ Una distinzione esplicita tra interfaccia e implementazione migliora la leggibil
     };
 Ad esempio, ora possiamo cambiare la rappresentazione di una `Date` senza influire sui suoi utenti (è tuttavia probabile che si debba ricompilare).
 
-##### Note
+##### Nota
 
 Ovviamente, usare una classe in questo modo per rappresentare la distinzione tra l'interfaccia e l'implementazione, non è l'unica maniera.
 Per esempio, possiamo usare un set di dichiarazioni di funzioni indipendenti in un namespace, una classe base astratta o una funzione template con i "concetti" per rappresentare un'interfaccia.
@@ -3955,7 +3955,7 @@ Meno accoppiamento c'è con le funzioni membro, meno funzioni ci saranno che pos
     bool operator==(Date, Date);
 Le "funzioni helper" non hanno bisogno dell'accesso diretto alla rappresentazione di una `Date`.
 
-##### Note
+##### Nota
 
 Questa regola diventa ancora migliore se il C++ adotta la ["uniform function call [chiamata a funzione uniforme]"](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0251r0.pdf).
 
@@ -4016,7 +4016,7 @@ Posizionandole nello stesso namespace della classe, si rende palese la loro rela
         Date next_weekday(Date);
         // ...
     }
-##### Note
+##### Nota
 
 Ciò è particolarmente importante per gli [operatori overloaded](#Ro-namespace).
 
@@ -4065,7 +4065,7 @@ I dati sono sparpagliati in più parti nella dichiarazione della classe.
 Le diverse parti di dati hanno un diverso accesso.
 Tutto ciò riduce la leggibilità e complica la manutenzione.
 
-##### Note
+##### Nota
 
 In una classe è preferibile piazzare prima l'interfaccia, [cfr. NL.16](#Rl-order).
 
@@ -4110,7 +4110,7 @@ Per esempio:
         double magnitude;
         double unit;    // 1 sono i metri, 1000 i chilometri, 0.001 i millimetri, ecc.
     };
-##### Note
+##### Nota
 
 Se non è possibile determinare facilmente l'insieme degli utenti diretti di un insieme di variabili, il tipo o l'utilizzo di tale insieme non può essere (facilmente) cambiato/migliorato.
 Questo è generalmente il caso dei i dati `public` e `protected`.
@@ -4147,11 +4147,11 @@ Ad esempio, ad una classe derivata potrebbe essere consentito di saltare un cont
         int r2 = x.do_bar(2);   // errore: vuole bypassare il controllo
         // ...
     }
-##### Note
+##### Nota
 
 I dati [`protected` sono una cattiva idea](#Rh-protected).
 
-##### Note
+##### Nota
 
 Preferire un ordine con prima i membri `public` poi i membri `protected` e infine quelli `private` [cfr.](#Rl-order).
 
@@ -4208,11 +4208,11 @@ Un tipo concreto è fondamentalmente più semplice di una gerarchia: più facile
 Se una classe può far parte di una gerarchia, se ne devono modificare gli oggetti (nel codice reale se non necessariamente nei piccoli esempi) tramite i puntatori o i riferimenti.
 Ciò implica più uso della memoria, più allocazioni e deallocazioni e più lavoro a run-time per eseguire le indirezioni risultanti.
 
-##### Note
+##### Nota
 
 I tipi concreti si possono allocare sullo stack e possono essere membri di altre classi.
 
-##### Note
+##### Nota
 
 L'uso dell'indirezione è fondamentale per le interfacce polimorfiche a run-time.
 L'overhead non è l'allocazione/deallocazione (questo è solo il caso più comune).
@@ -4249,7 +4249,7 @@ I tipi regolari sono più facili da capire e discutere dei tipi non regolari (l'
     if (b1 == b2) error("No!");
 In particolare, se un tipo concreto ha un'assegnazione, gli si dia anche un operatore di uguaglianza in modo che `a = b` implichi `a == b`.
 
-##### Note
+##### Nota
 
 Gli handle per le risorse che non possono essere clonate, p.es., uno `scoped_lock` per un `mutex`, assomigliano ai tipi concreti in quanto molto spesso sono allocati sullo stack.
 Tuttavia, oggetti di questo tipo solitamente non possono essere copiati (invece, si possono in genere spostare), quindi non possono essere `regolari`; mentre tendono ad essere `semiregolari`.
@@ -4359,7 +4359,7 @@ Tuttavia, un programmatore può disabilitare o sostituire questi default.
     Named_map nm2 {nm};  // costruttore copia
 Dato che `std::map` e `string` hanno entrambe funzioni speciali, non c'è bisogno di altro.
 
-##### Note
+##### Nota
 
 Questa è conosciuta come "la regola dello zero".
 
@@ -4399,11 +4399,11 @@ Quindi appena uno di questi viene dichiarato, dovrebbero essere dichiarati tutti
     }
 Dato che era necessaria una "attenzione speciale" per il distruttore (qui, per de-allocare), la probabilità che l'assegnazione di copia e spostamento (entrambi distruggono implicitamente un oggetto) siano corrette, è bassa (qui, ci sarebbe una doppia cancellazione).
 
-##### Note
+##### Nota
 
 Questa è nota come "la regola del cinque".
 
-##### Note
+##### Nota
 
 Se si vuole un'implementazione di default (mentre se ne definisce l'altra), si scriva `=default` per mostrare che lo si sta facendo intenzionalmente per questa funzione.
 Se non si vuole generare una funzione di default, la si sopprime con `=delete`.
@@ -4431,15 +4431,15 @@ Per evitare lo [slicing] come per la [C.67](#Rc-copy-virtual), si esegue un `=de
     };
 Qui, definire solo le operazioni di [move] o solo quelle di copia, avrebbe lo stesso effetto, ma affermare esplicitamente l'intento per ciascun membro speciale, lo rende più palese al lettore.
 
-##### Note
+##### Nota
 
 I compilatori applicano gran parte di questa regola e, idealmente, avvertono di qualsiasi violazione.
 
-##### Note
+##### Nota
 
 Affidarsi ad un'operazione di copia, generata implicitamente, in una classe con un distruttore, è deprecato.
 
-##### Note
+##### Nota
 
 La scrittura di queste funzioni può essere soggetta ad errori.
 Notare i tipi dei loro argomenti:
@@ -4526,7 +4526,7 @@ Definire un distruttore non di default solo se una classe deve eseguire del codi
     } // l'azione è fatta qui
 Lo scopo di `final_action` è quello di ottenere l'esecuzione di un pezzo di codice (solitamente una lambda) al momento della distruzione.
 
-##### Note
+##### Nota
 
 Ci sono  due categorie generali di classi che richiedono un distruttore definito dall'utente:
 
@@ -4546,7 +4546,7 @@ Ci sono  due categorie generali di classi che richiedono un distruttore definito
     };
 Il distruttore di default lo fa meglio, più efficientemente e non può andare in errore.
 
-##### Note
+##### Nota
 
 Se il distruttore di default è necessario, ma la sua generazione è stata soppressa (p.es., definendo un costruttore di spostamento), si usa `=default`.
 
@@ -4560,7 +4560,7 @@ Si cercano delle probabili "risorse implicite", come puntatori e riferimenti. Si
 
 Prevenire i [leak] delle risorse, specialmente in caso di errore.
 
-##### Note
+##### Nota
 
 Per le risorse rappresentate come classi con un completo set di operazioni di default, ciò avviene automaticamente.
 
@@ -4580,7 +4580,7 @@ Nella `X`, `ifstream` chiude implicitamente qualsiasi file che potrebbe aver ape
     };
 `X2` potrebbe generare un [leak] da un handle del file.
 
-##### Note
+##### Nota
 
 Che dire di un socket che non viene chiuso? Un distruttore o un'operazione di chiusura o pulizia [non dovrebbe mai fallire](#Rc-dtor-fail).
 Se tuttavia capita, c'è un problema che non ha una soluzione completamente valida.
@@ -4590,7 +4590,7 @@ A peggiorare il problema, molte operazioni di "chiusura/rilascio" non si possono
 In molti hanno cercato di risolvere questo problema, ma non è nota alcuna soluzione generale.
 Se possibile, considerare la mancata chiusura/pulizia un errore progettuale fondamentale e terminare.
 
-##### Note
+##### Nota
 
 Una classe può contenere puntatori e riferimenti a oggetti che non possiede.
 Ovviamente, tali oggetti non dovrebbero subire un `delete` da parte del distruttore della classe.
@@ -4615,7 +4615,7 @@ C'è tantissimo codice che non è specifico sulla proprietà [ownership].
 ##### Esempio
 
     ???
-##### Note
+##### Nota
 
 Se `T*` o `T&` sono proprietari, si contrassegnano con `owning`. Se `T*` non è proprietario, si prenda in considerazione di contrassegnarlo con `ptr`.
 Ciò aiuterà la documentazione e l'analisi.
@@ -4680,11 +4680,11 @@ L'operazione copia di default eseguirà soltanto la copia di `p1.p` in `p2.p` po
     {
         auto p2 = p1;   // OK: nessuna distruzione doppia
     }
-##### Note
+##### Nota
 
 Spesso il modo più semplice per avere un distruttore è quello di sostituire il puntatore con uno smart pointer (p.es., `std::unique_ptr`) e lasciare che il compilatore ne organizzi opportunamente la distruzione implicita.
 
-##### Note
+##### Nota
 
 Perché non richiedere semplicemente che tutti i puntatori proprietari siano "smart pointer"?
 Ciò a volte richiederebbe modifiche non banali al codice e potrebbe influire sulle ABI.
@@ -4725,12 +4725,12 @@ Cfr. [questo nella sezione Discussione](#Sd-dtor).
         unique_ptr<Base> p = make_unique<D>();
         // ...
     } // la distruzione di p chiama ~Base(), non ~D(), che 'perde' [leak] D::s e forse anche altro
-##### Note
+##### Nota
 
 Una funzione virtuale definisce un'interfaccia per le classi derivate che possono essere utilizzate senza guardare le classi derivate.
 Se l'interfaccia consente la distruzione, dovrebbe essere sicuro farlo.
 
-##### Note
+##### Nota
 
 Un distruttore deve essere non-private altrimenti se ne impedirà l'uso, per esempio:
 
@@ -4774,7 +4774,7 @@ La libreria standard richiede che tutte le classi con cui ha a che fare abbiano 
         if (cannot_release_a_resource) terminate();
         // ...
     }
-##### Note
+##### Nota
 
 In molti hanno cercato di escogitare uno schema infallibile per affrontare i fallimenti nei distruttori.
 Nessuno è riuscito a elaborare uno schema generale.
@@ -4784,11 +4784,11 @@ Cfr. [discussione](#Sd-never-fail).
 A peggiorare il problema, molte operazioni di "chiusura/rilascio" non si possono rieseguire.
 Se possibile, considerare la mancata chiusura/pulizia un errore progettuale fondamentale e terminare.
 
-##### Note
+##### Nota
 
 Dichiarare un distruttore `noexcept`. Ciò garantirà il normale completamento o la terminazione del programma.
 
-##### Note
+##### Nota
 
 Se una risorsa non può essere rilasciata e il programma non deve fallire, si provi a segnalare l'errore al resto del sistema in qualche modo (forse anche modificando qualche stato globale e sperando che qualcosa si accorga e sia in grado di provvedere).
 Bisogna essere pienamente consapevoli del fatto che questa tecnica è particolare e soggetta a errori.
@@ -4796,7 +4796,7 @@ Si consideri l'esempio: "la mia connessione non si chiuderà".
 Probabilmente c'è un problema all'altra estremità della connessione e solo un pezzo di codice responsabile di entrambe le estremità della connessione può gestire correttamente il problema.
 Il distruttore potrebbe inviare un messaggio (in qualche modo) alla parte responsabile del sistema, assumere di aver chiuso la connessione e tornare normalmente.
 
-##### Note
+##### Nota
 
 Se un distruttore usa operazioni che potrebbero non riuscire, può rilevare le eccezioni e, in qualche caso, completare comunque correttamente (p.es., utilizzando un meccanismo diverso da quello che è andato in errore).
 
@@ -4810,7 +4810,7 @@ Se un distruttore usa operazioni che potrebbero non riuscire, può rilevare le e
 
 [Un distruttore non deve fallire](#Rc-dtor-fail). Se un distruttore tenta di uscire con un'eccezione, si tratta di un errore di progettazione e sarebbe meglio che il programma terminasse.
 
-##### Note
+##### Nota
 
 Un distruttore (sia "user-defined" che generato dal compilatore) è implicitamente dichiarato `noexcept` (indipendentemente dal codice) se tutti i membri della sua classe hanno distruttori `noexcept`. Segnando esplicitamente i distruttori con `noexcept`, un autore si tutela dal fatto che il distruttore possa diventare implicitamente `noexcept(false)` aggiungendo o modificando un membro della classe.
 
@@ -4825,7 +4825,7 @@ Non tutti i distruttori sono noexcept per default; un membro che possa lanciare 
     };
 Quindi, in caso di dubbio, dichiarare un distruttore noexcept.
 
-##### Note
+##### Nota
 
 Perché non dichiarare quindi tutti i distruttori noexcept?
 Perché in molti casi questo -- specialmente nei casi semplici -- potrebbe generare disordine.
@@ -4859,7 +4859,7 @@ Ecco a cosa servono i costruttori.
     };
 Spesso è una buona idea esprimere l'invariante come una `Ensures<` sul costruttore.
 
-##### Note
+##### Nota
 
 Un costruttore può essere utilizzato per comodità anche se una classe non ha un invariante. Per esempio:
 
@@ -4872,7 +4872,7 @@ Un costruttore può essere utilizzato per comodità anche se una classe non ha u
 
     Rec r1 {7};
     Rec r2 {"Foo bar"};
-##### Note
+##### Nota
 
 La regola della lista di inizializzatori del C++11 elimina la necessità di molti costruttori. Per esempio:
 
@@ -4930,7 +4930,7 @@ Se una classe non può convenientemente costruire un oggetto valido, [si usa una
 * (Semplice) Ogni costruttore dovrebbe inizializzare ogni variabile membro (o esplicitamente, tramite una chiamata a un costruttore [delegating], o con la costruzione di default).
 * (Ignoto) Se un costruttore ha un contratto `Ensures`, provare a vedere se vale come post-condizione.
 
-##### Note
+##### Nota
 
 Se un costruttore acquisisce una risorsa (per creare un oggetto valido), tale risorsa deve essere [rilasciata dal distruttore](#Rc-dtor-release).
 L'idioma dell'avere dei costruttori che acquisiscono risorse e distruttori che le rilasciano è detto [RAII](#Rr-raii) ("Resource Acquisition Is Initialization").
@@ -4997,7 +4997,7 @@ Lasciare un oggetto invalido vuol dire andarsi a cercare i problemi.
         }
         // ...
     }
-##### Note
+##### Nota
 
 Per una definizione di una variabile (p-es., sullo stack o come membro di un altro oggetto) non esiste alcuna esplicita chiamata a funzione da cui si possa restituire un codice d'errore.
 Lasciarsi dietro un oggetto invalido e affidarsi agli utilizzatori che verifichino costantemente la funzione `is_valid()` prima di usarlo è noioso, soggetto a errori ed inefficiente.
@@ -5012,7 +5012,7 @@ Lì deve essere utilizzata la tecnica `is_valid()`. In tali casi, controllare `i
 Se si è tentati di usare qualche semantica [idiom] di "inizializzazione post-costruttore" o "inizializzazione a due fasi", si desista.
 Se proprio si deve fare, si cerchi tra le [funzioni factory](#Rc-factory).
 
-##### Note
+##### Nota
 
 Uno dei motivi per cui le persone hanno usato le funzioni `init()` anziché inizializzare direttamente nel costruttore è stato quello di evitare la replicazione del codice.
 [I costruttori delegating](#Rc-delegating) e [l'inizializzazione di default dei membri](#Rc-in-class-initializer) lo fanno meglio.
@@ -5029,7 +5029,7 @@ Un'altra ragione è stata quella di ritardare l'inizializzazione finché non fos
 Molti linguaggi e strutture di librerie si affidano ai costruttori di default per inizializzare i propri elementi, p.es. `T a[10]` e `std::vector<T> v(10)`.
 Un costruttore di default spesso semplifica il compito di definire uno [stato di spostato](#???) adatto per un tipo che sia anche copiabile.
 
-##### Note
+##### Nota
 
 Un [tipo di valore](#SS-concrete) è una classe copiabile (e solitamente anche confrontabile).
 È strettamente correlato alla nozione di tipo Regolare da [EoP](http://elementsofprogramming.com/) e [the Palo Alto TR](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf).
@@ -5064,7 +5064,7 @@ Tuttavia, la maggior parte delle classi `Date` realistiche hanno una "data inizi
     };
 
     vector<Date> vd1(1000);
-##### Note
+##### Nota
 
 Una classe con membri che abbiano tutti costruttori di default, ottiene implicitamente un costruttore di default:
 
@@ -5237,7 +5237,7 @@ Se si vuole veramente una conversione implicita da parte dell'argomento del cost
     Complex z = 10.7;   // conversione attesa
 **Si veda anche**: [Discussione sulle conversioni implicite](#Ro-conversion)
 
-##### Note
+##### Nota
 
 I costruttori copia e [move] non devono essere creati con `explicit` perché non eseguono conversioni. I costruttori 'explicit' di copia/[move] rendono difficile il passaggio e la restituzione per valore.
 
@@ -5360,7 +5360,7 @@ del C++17 come [un modo più generale di presentare gli argomenti ad una funzion
 
 Se lo stato di un oggetto di una classe base deve dipendere dallo stato di una parte derivata dell'oggetto, bisogna usare una funzione virtuale (o equivalente) minimizzando la finestra di opportunità per abusare di un oggetto costruito male.
 
-##### Note
+##### Nota
 
 Il tipo restituito dalla factory dovrebbe normalmente essere `unique_ptr` per default; se si condividono alcuni utilizzi, il chiamante può `spostare` lo `unique_ptr` in uno `shared_ptr`. Tuttavia, se l'autore della factory sa che tutti gli usi dell'oggetto restituito saranno condivisi, restituisce `shared_ptr` ed usa `make_shared` nel body per risparmiare un'allocazione.
 
@@ -5417,7 +5417,7 @@ Il tipo restituito dalla factory dovrebbe normalmente essere `unique_ptr` per de
 `make_shared` richiede che il costruttore sia pubblico. Richiedendo un `Token` protetto, il costruttore non può più essere chiamato pubblicamente, quindi si evita che un oggetto non completamente costruito se ne vada libero.
 Fornendo la funzione factory `create()`, si rende conveniente la costruzione (nel [free store]).
 
-##### Note
+##### Nota
 
 Le funzioni factory convenzionali vengono allocate nel [free store], anziché sullo stack o in un oggetto che lo racchiude.
 
@@ -5532,7 +5532,7 @@ I tipi possono essere definiti per lo spostamento per motivi logici o prestazion
 
     a = b;    // assegna un lvalue: copia
     a = f();  // assegna un rvalue: potenzialmente uno spostamento
-##### Note
+##### Nota
 
 La tecnica di implementazione dello `swap` offre la [garanzia forte](#Abrahams01).
 
@@ -5635,7 +5635,7 @@ Dopo una copia `x` e `y` possono essere oggetti indipendenti (semantica del valo
     if (x != y) throw Bad{};
     x.modify();
     if (x != y) throw Bad{};  // presuppone la semantica del puntatore
-##### Note
+##### Nota
 
 Preferire la semantica del valore a meno che non si stia costruendo uno "smart pointer". La semantica del valore è la più semplice su cui ragionare ed è quella che si aspettano le strutture della libreria standard.
 
@@ -5656,7 +5656,7 @@ I contenitori della libreria standard gestiscono l'auto-assegnazione con eleganz
     std::vector<int> v = {3, 1, 4, 1, 5, 9};
     v = v;
     // il valore di v resta {3, 1, 4, 1, 5, 9}
-##### Note
+##### Nota
 
 L'assegnazione di default generata dai membri che gestiscono correttamente l'auto-assegnazione gestisce correttamente l'auto-assegnazione.
 
@@ -5669,7 +5669,7 @@ L'assegnazione di default generata dai membri che gestiscono correttamente l'aut
     Bar b;
     // ...
     b = b;   // corretto ed efficiente
-##### Note
+##### Nota
 
 È possibile gestire l'auto-assegnazione testandola esplicitamente, ma spesso è più rapido e più elegante farlo senza un test (p.es., [utilizzando `swap`](#Rc-swap)).
 
@@ -5758,7 +5758,7 @@ Dopo `y = std::move(x)` il valore di `y` dovrebbe essere il valore che aveva `x`
         X y = std::move(x);
         x = X{};   // OK
     } // OK: x può essere distrutto
-##### Note
+##### Nota
 
 Idealmente, quello rimosso dovrebbe avere il valore di default del tipo.
 Accertarsene, a meno che non ci sia una ragione eccezionalmente buona per non farlo.
@@ -5767,7 +5767,7 @@ Lo standard richiede solo che l'oggetto da cui si è rimosso il valore possa ess
 Spesso è possibile fare facilmente ed economicamente meglio: La libreria standard presuppone che sia possibile assegnare ad un oggetto da cui si è rimosso il valore.
 Lasciare sempre l'oggetto da cui si è rimosso il valore in uno stato valido (necessariamente specificato).
 
-##### Note
+##### Nota
 
 A meno che non ci sia una ragione eccezionalmente forte per non farlo, fare in modo che `x = std::move(y); y = z;` funzioni con la semantica convenzionale.
 
@@ -5800,11 +5800,11 @@ Se `x = x` cambia il valore di `x`, si resterà sorpresi e capiteranno brutti er
     }
 L'obiezione dell'uno-su-un-milione rispetto al test `if (this == &a) return *this;` della discussione sull'[auto-assegnazione](#Rc-copy-self) è ancor più rilevante per l'auto-spostamento.
 
-##### Note
+##### Nota
 
 Non è noto un modo generale per evitare che dopo un test `if (this == &a) return *this;` per un assegnazione con spostamento si abbia ancora una risposta corretta (ovvero, dopo `x = x` il valore di `x` resta invariato).
 
-##### Note
+##### Nota
 
 Lo standard ISO garantisce solo uno stato "valido ma non specificato" per i contenitori della standard-library. Sembra che questo non sia stato un problema nei 10 anni di utilizzo sperimentale ed in produzione. Si prega di contattare gli editori se si trova un contro esempio. La regola qui è più cautelativa ed insiste sulla completa sicurezza.
 
@@ -5911,7 +5911,7 @@ Una *classe polimorfica* è una classe che definisce o eredita almeno una funzio
 
     D d;
     f(d);
-##### Note
+##### Nota
 
 Se è necessario creare copie complete [deep] di oggetti polimorfici, si usano le funzioni `clone()`: cfr. [C.130](#Rh-copy).
 
@@ -6060,7 +6060,7 @@ Si noti che chiamare una specifica funzione qualificata esplicitamente non è un
 
 **Si veda anche** [funzioni factory](#Rc-factory) per come ottenere l'effetto di una chiamata a una funzione di una classe derivata senza rischiare il comportamento indefinito.
 
-##### Note
+##### Nota
 
 Non c'è nulla di intrinsecamente sbagliato nel chiamare funzioni virtuali da costruttori o distruttori.
 La semantica di tali chiamate è "type safe".
@@ -6160,12 +6160,12 @@ Il trattamento asimmetrico degli operandi è inatteso e fonte di errori dove son
     };
 Il confronto di `B` accetta le conversioni per il secondo operando, ma non per il primo.
 
-##### Note
+##### Nota
 
 Se una classe è in uno stato di errore, come, per il `double`, il `NaN` , c'è la tentazione di fare un confronto con lo stato erroneo.
 L'alternativa consiste nel fare in  modo che due stati erronei risultino uguali, mentre il confronto tra uno stato valido ed uno erroneo risulti falso.
 
-##### Note
+##### Nota
 
 Questa regola si applica a tutti i soliti operatori di confronto: `!=`, `<`, `<=`, `>`, e `>=`.
 
@@ -6212,7 +6212,7 @@ Il confronto di `B` accetta le conversioni per il secondo operando, ma non per i
     b2 == d;   // confronta name e number, ignora i character di d2 e di d
 Naturalmente ci sono modi per far funzionare `==` in una gerarchia, ma gli approcci improvvisati non sono scalabili
 
-##### Note
+##### Nota
 
 Questa regola si applica a tutti i soliti operatori di confronto: `!=`, `<`, `<=`, `>`, e `>=`.
 
@@ -6317,7 +6317,7 @@ Riepilogo delle regole sui contenitori:
 
 I contenitori della STL sono familiari alla maggior parte dei programmatori C++ e hanno un design fondamentalmente solido.
 
-##### Note
+##### Nota
 
 Esistono, ovviamente, altri stili di progettazione e talvolta si discostano dallo stile della libreria standard, ma in assenza di un solido motivo per differenziarsi, è più semplice e più facile sia per gli implementatori che per gli utenti seguire lo standard.
 
@@ -6375,7 +6375,7 @@ Qui sono stati aggiunti degli speciali costruttori per `std::vector`.
 Gli oggetti regolari sono più semplici da immaginare e gestire di quelli irregolari.
 Familiarità.
 
-##### Note
+##### Nota
 
 Se ha senso, si crea un contenitore `Regolare` (il concetto).
 In particolare, ci si assicuri che un oggetto risulti uguale a se stesso da un'operazione di confronto.
@@ -6688,7 +6688,7 @@ Una classe con una funzione virtuale è solitamente (e in generale) utilizzata t
         unique_ptr<B> p = make_unique<D>();
         // ...
     } // comportamento non definito, potrebbe chiamare solo B::~B e perdere [leak] la stringa
-##### Note
+##### Nota
 
 Ci sono persone che non seguono questa regola perché intendono usare una classe solo attraverso un `shared_ptr`: `std::shared_ptr<B> p = std::make_shared<D>(args);` Qui, lo shared pointer si occuperà della cancellazione e quindi non avverrà alcun [leak] derivante da un inappropriato `delete` della base. Le persone che lo fanno in modo coerente possono ottenere un falso positivo, ma la regola è importante -- cosa succede se ne viene allocato uno utilizzando `make_unique`? Non è sicuro a meno che l'autore di `B` assicuri che non possa mai essere utilizzato in modo improprio, ad esempio rendendo privati tutti i costruttori e fornendo una funzione factory per imporre l'allocazione con `make_shared`.
 
@@ -6758,7 +6758,7 @@ Note: Usare `final` sulle funzioni con parsimonia. Non riguarda necessariamente 
 L'implementazione dei dettagli in un'interfaccia la rendono fragile; vale a dire, obbliga i suoi utenti a dover ricompilare dopo aver modificato l'implementazione.
 I dati in una classe base aumentano la complessità dell'implementazione della base e possono portare alla replicazione del codice.
 
-##### Note
+##### Nota
 
 Definizione:
 
@@ -6946,11 +6946,11 @@ La gerarchia di implementazione può essere utilizzata direttamente, piuttosto c
     }
 Ciò può essere utile quando la classe di implementazione non ha membri nell'interfaccia astratta o se l'uso diretto di un membro offre un'opportunità di ottimizzazione (p.es., se una funzione membro dell'implementazione è `final`)
 
-##### Note
+##### Nota
 
 Un'altra tecnica (correlata) per separare l'interfaccia e l'implementazione è la [Pimpl [Pointer to implementation]](#Ri-pimpl).
 
-##### Note
+##### Nota
 
 Spesso c'è da scegliere tra l'offrire funzionalità comuni come funzioni della classe base (implementate) e funzioni a sé stanti (in un namespace di implementazione).
 Le classi base forniscono una notazione più breve ed un più facile accesso ai dati condivisi (nella classe base) al costo di avere le funzionalità disponibili solo agli utenti della gerarchia.
@@ -7014,7 +7014,7 @@ Si consideri di trasformare tale classe in una `struct` -- ovvero, un gruppo di 
     };
 Si noti che è possibile inserire degli inizializzatori di default sulle variabili membro: [C.49: Nei costruttori preferire l'inizializzazione alle assegnazioni](#Rc-initialize).
 
-##### Note
+##### Nota
 
 La chiave di questa regola è se la semantica del getter/setter è banale. Anche se non è una definizione completa di "banale", si consideri se ci potrebbero essere delle differenze, oltre alla sintassi, se il getter/setter fosse invece un dato membro pubblico. Esempi di semantiche non-banali sarebbero: mantenere una classe invariante o convertire tra un tipo interno e un tipo dell'interfaccia.
 
@@ -7075,14 +7075,14 @@ Capita spesso, che non sia possibile esaminare l'insieme completo delle classi, 
 Non c'è alcuna invariante imposta per i dati protected; è molto simile ad un insieme di variabili globali.
 I dati protected sono di fatto diventati globali in moltissimi sorgenti.
 
-##### Note
+##### Nota
 
 Spesso i dati protected sembrano allettanti per consentire innumerevoli miglioramenti tramite la derivazione.
 Spesso, quello che si ottiene sono modifiche ed errori inaspettati.
 [Preferire dati `private`](#Rc-private) con un'invariante ben specificato e ben rispettato.
 In alternativa, e spesso è meglio, [tenere i dati all'esterno di qualsiasi classe usata come interfaccia](#Rh-abstract).
 
-##### Note
+##### Nota
 
 La funzione membro protected può andar bene.
 
@@ -7140,11 +7140,11 @@ Specialmente per suddividere le interfacce monolitiche in "aspetti" del comporta
 `istream` fornisce l'interfaccia per le operazioni di input; `ostream` fornisce l'interfaccia per le operazioni di output.
 `iostream` fornisce l'unione delle interfacce di `istream` e `ostream` e la sincronizzazione necessaria affinché ci siano entrambe su un unico flusso.
 
-##### Note
+##### Nota
 
 Questo è un uso molto comune dell'eredità perché è comune la necessità di avere più interfacce diverse per un'implementazione e tali interfacce risultano spesso non facilmente o naturalmente organizzate in una gerarchia con un'unica radice.
 
-##### Note
+##### Nota
 
 Tali interfacce sono tipicamente classi astratte.
 
@@ -7167,7 +7167,7 @@ Se le operazioni sono virtuali, l'uso dell'ereditarietà è necessario, se non s
 `istream` fornisce l'interfaccia per le operazioni di input (ed alcuni dati); `ostream` fornisce l'interfaccia per le operazioni di output (ed alcuni dati).
 `iostream` fornisce l'unione delle interfacce di `istream` e `ostream` e la sincronizzazione necessaria affinché ci siano entrambe su un unico flusso.
 
-##### Note
+##### Nota
 
 Questo è un uso relativamente raro perché l'implementazione può spesso essere organizzata in una gerarchia con un'unica radice.
 
@@ -7217,14 +7217,14 @@ Per evitare che tutti i dati condivisi vengano inseriti in un'unica classe base.
 Avere `Utility` a fattor comune ha senso se molte classi derivate condividono significativi "dettagli implementativi".
 
 
-##### Note
+##### Nota
 
 Ovviamente, l'esempio è troppo "teorico", ma è difficile trovare un *piccolo* esempio realistico.
 `Interface` è la radice di una [gerarchia di interfaccia](#Rh-abstract)
 e `Utility`  è la radice di una [gerarchia di implementazione](#Rh-kind).
 Questo è un [esempio leggermente più realistico](https://www.quora.com/What-are-the-uses-and-advantages-of-virtual-base-class-in-C%2B%2B/answer/Lance-Diduck) con una spiegazione.
 
-##### Note
+##### Nota
 
 Spesso, la linearizzazione di una gerarchia costituisce una soluzione migliore.
 
@@ -7264,7 +7264,7 @@ Senza una dichiarazione 'using', le funzioni membro nella classe derivata nascon
         int f(int i) override { std::cout << "f(int): "; return i + 1; }
         using B::f; // espone f(double)
     };
-##### Note
+##### Nota
 
 Questo problema riguarda sia le funzioni membro virtuali che quelle non virtuali
 
@@ -7292,18 +7292,18 @@ Diagnosticare l'hiding dei nomi
     class My_widget final : public Widget { /* ... */ };
 
     class My_improved_widget : public My_widget { /* ... */ };  // errore: non lo si può fare
-##### Note
+##### Nota
 
 Non tutte le classi sono pensate per essere classi base.
 La maggior parte delle classi della standard-library ne sono esempi (p.es., `std::vector` e `std::string` non sono progettate per derivarle).
 Questa regola riguarda l'utilizzo di `final` sulle classi con funzioni virtuali pensate per essere interfacce per una gerarchia di classi.
 
-##### Note
+##### Nota
 
 Fermare una singola funzione virtuale con `final` va incontro ad errori in quanto `final` può facilmente essere bypassato quando si definisce/sovrascrive un insieme di funzioni.
 Fortunatamente, il compilatore rileva questi errori: Non è possibile ri-dichiarare/ri-aprire un membro `final` in una classe derivata.
 
-##### Note
+##### Nota
 
 Le richieste di miglioramenti delle prestazioni da `final` devono essere motivate.
 Troppo spesso, tali affermazioni si basano su congetture o esperienze con altri linguaggi.
@@ -7444,13 +7444,13 @@ L'uso degli altri cast può violare la sicurezza sul tipo e causare l'accesso de
         user2(&b);  // bad errore
         user3(&b);  // OK *se* il programmatore ha il diritto di controllo su some_condition
     }
-##### Note
+##### Nota
 
 Come per altri cast, di `dynamic_cast` se ne è abusato.
 [Preferire le funzioni virtuali al casting](#Rh-use-virtual).
 Preferire il [polimorfismo statico](#???) alla navigazione nella gerarchia dove possibile (non è necessaria alcuna risoluzione a run-time) ed è ragionevolmente conveniente.
 
-##### Note
+##### Nota
 
 Alcune persone usano `dynamic_cast` dove sarebbe più appropriato un `typeid`; il `dynamic_cast` è un "tipo di operazione" generale per scoprire l'interfaccia migliore per un oggetto, mentre il `typeid` è un'operazione "dammi il tipo esatto di questo oggetto" operazione per scoprire l'effettivo tipo di un oggetto.
 Quest'ultima è un'operazione intrinsecamente più semplice che dovrebbe essere più veloce.
@@ -7675,7 +7675,7 @@ Qui viene mantenuta la semantica convenzionale: [Le copie sono uguali](#SS-copy)
 ##### Esempio, cattivo
 
     X operator+(X a, X b) { return a.v - b.v; }   // bad: fa sì che + sottragga
-##### Note
+##### Nota
 
 Gli operatori non-membri devono essere definiti friend o definiti nello [stesso namespace dei loro operandi](#Ro-namespace).
 [Gli operatori binari dovrebbero trattare i loro operandi in modo equivalente](#Ro-symmetric).
@@ -7741,7 +7741,7 @@ Le due operazioni sono fondamentalmente diverse (e non correlate), quindi è ben
 Le due operazioni continuano ad essere diverse (e non correlate) ma i nomi sono stati ridotti al minimo (comune), aprendo la strada alla confusione.
 Fortunatamente, il sistema dei tipi rileverà molti di questi errori.
 
-##### Note
+##### Nota
 
 Porre particolare attenzione ai nomi comuni e popolari, come `open`, `move`, `+`, e `==`.
 
@@ -7755,7 +7755,7 @@ Porre particolare attenzione ai nomi comuni e popolari, come `open`, `move`, `+`
 
 Le conversioni implicite possono essere essenziali (p.es., da `double` a `int`) ma spesso causano sorprese (p.es., da `String` a stringhe C-style).
 
-##### Note
+##### Nota
 
 Preferire le conversioni con un nome esplicito finché non appare una seria esigenza.
 Per "seria esigenza" si intende un motivo fondamentale e frequente nel dominio dell'applicazione (come una conversione di numeri interi in numeri complessi). Non introdurre conversioni implicite (tramite operatori di conversione o costruttori non-`espliciti`) solo per una minima comodità.
@@ -7860,7 +7860,7 @@ Molte parti della semantica del C++ ne presuppongono il significato di default.
         Ptr operator&() { return Ptr{this}; }
         // ...
     };
-##### Note
+##### Nota
 
 Se si "pasticcia" con l'operatore `&` ci si assicuri che la sua definizione abbia dei significati corrispondenti per `->`, `[]`, `*`, e `.` sul tipo di risultato.
 Si noti che l'operatore `.` al momento non può essere sovraccaricato, quindi un sistema perfetto è impossibile.
@@ -7893,7 +7893,7 @@ Di per sé, `cout_my_class` sarebbe OK, ma non è utilizzabile/componibile col c
     My_class var { /* ... */ };
     // ...
     cout << "var = " << var << '\n';
-##### Note
+##### Nota
 
 Ci sono convenzioni forti e resistenti per il significato della maggior parte degli operatori, come ad esempio
 
@@ -7953,7 +7953,7 @@ Qui , il significato di `!s` differisce tra `N` e `M`.
 Ciò può risultare molto confuso.
 Eliminando la definizione di `namespace M` la confusione si trasforma nella possibilità di commettere un errore.
 
-##### Note
+##### Nota
 
 Se un operatore binario è definito per due tipi definiti diversamente in diversi namespace, non si può seguire questa regola.
 Per esempio:
@@ -8242,7 +8242,7 @@ Se si vogliono vedere i byte di un `int`, si usa un (named) cast:
     }
 Accedere al risultato di un `reinterpret_cast` per un tipo diverso degli oggetti dichiarati è un comportamento definito (anche se `reinterpret_cast` è sconsigliato), ma almeno si può vedere che succede qualcosa di strano.
 
-##### Note
+##### Nota
 
 Sfortunatamente, le `union`i vengono comunemente usate per il "type punning".
 Non si considera "a volte funziona come previsto" un argomento conclusivo.
@@ -8319,7 +8319,7 @@ Un'enumerazione mostra la correlazione degli enumeratori e può essere un tipo c
 
     enum class Web_color { red = 0xFF0000, green = 0x00FF00, blue = 0x0000FF };
 
-##### Note
+##### Nota
 
 Lo switch con una enumerazione è una cosa comune ed il compilatore può mettere in guardia da insoliti valori delle label di un case. Per esempio:
 
@@ -8463,7 +8463,7 @@ Il default è più facile da leggere e da scrivere.
     enum class Web_color : int32_t { red   = 0xFF0000,
                                      green = 0x00FF00,
                                      blue  = 0x0000FF };  // il [tipo sottostante] è ridondante
-##### Note
+##### Nota
 
 È necessario specificare il [tipo sottostante] nelle dichiarazioni "forward" [in avanti] delle enumerazioni:
 
@@ -8603,7 +8603,7 @@ Che cos'è `Port`? Un comodo involucro [wrapper] che incapsula la risorsa:
         Port(const Port&) = delete;
         Port& operator=(const Port&) = delete;
     };
-##### Note
+##### Nota
 
 Laddove una risorsa abbia "strani comportamenti" perché non è rappresentata come una classe con un distruttore, la si racchiude in una classe o si usa [`finally`](#Re-finally)
 
@@ -8638,7 +8638,7 @@ Si usi invece `span`.
 Le stringhe C-style vengono passate come singoli puntatori a sequenze di caratteri terminanti con zero.
 Si usi `zstring` invece di `char*` per indicare che ci si affida a questa convenzione.
 
-##### Note
+##### Nota
 
 Attualmente molte delle volte che si usa un puntatore ad un singolo elemento si potrebbe usare un riferimento.
 Tuttavia, dove `nullptr` è un valore possibile, un riferimento potrebbe non essere un'alternativa ragionevole.
@@ -8697,7 +8697,7 @@ Per esempio, le comuni implementazioni di `vector` hanno un puntatore proprietar
 Molte ABI (ed essenzialmente tutte le interfacce al codice C) usano i `T*`, alcuni di questi sono proprietari.
 Alcune interfacce non possono essere semplicemente annotate con `owner` perché devono restare compilabili come C (anche se questo sarebbe un raro buon uso per una macro, che si espanderebbe in `owner` solo in C++).
 
-##### Note
+##### Nota
 
 `owner<T*>` non ha una semantica di default oltre a `T*`. Esso può essere utilizzato senza modificare alcun codice utilizzandolo e senza influire sulle ABI.
 È semplicemente un indicatore per programmatori e strumenti di analisi.
@@ -8728,11 +8728,11 @@ Oltre a subire del problema del [leak](#???), ciò aggiunge un'allocazione spuri
         // ...
         return g;
     }
-##### Note
+##### Nota
 
 Questa regola si applica alle funzioni factory.
 
-##### Note
+##### Nota
 
 Se è richiesta la semantica dei puntatori (p. es., perché il tipo restituito deve far riferimento ad una classe base della gerarchia (un'interfaccia)), restituire uno "smart pointer."
 
@@ -8853,7 +8853,7 @@ Segnalare l'uso esplicito di `malloc` o `free`.
 Il puntatore restituito da `new` dovrebbe appartenere ad un gestore di risorse (che potrebbe chiamare `delete`).
 Se il puntatore restituito da `new` viene assegnato ad un semplice puntatore, l'oggetto può generare un leak.
 
-##### Note
+##### Nota
 
 In un programma di grandi dimensioni, un semplice `delete` (ovvero un `delete` nel codice dell'applicazione, anziché nella parte di codice dedicata alla gestione delle risorse) è un probabile bug: se si hanno N `delete`, come si può essere sicuri che non ne servano N+1 o N-1?
 Il bug potrebbe essere latente: potrebbe emergere solo durante la manutenzione.
@@ -8958,7 +8958,7 @@ Altrimenti si ottengono operazioni disaccoppiate e caos.
         void operator delete(void*);
         // ...
     };
-##### Note
+##### Nota
 
 Se si vuole che non venga de-allocata la memoria, si aggiunge `=delete` all'operazione di de-allocazione.
 Non lasciarla senza dichiarazione.
@@ -9092,7 +9092,7 @@ Gli `shared_ptr` si basano sul conteggio degli utilizzi e sull'uso dei conteggi 
     private:
       std::weak_ptr<foo> back_reference_;
     };
-##### Note
+##### Nota
 
 ??? (HS [Herb Sutter]: Molte persone dicono "interrompere cicli", mentre io penso che "proprietà condivisa [shared ownership] temporanea" sia più pertinente).
 ???(BS [Bjarne Stroustrup]: Interrompere cicli è quello che si deve fare; condividere temporaneamente la proprietà è come farlo.
@@ -9162,7 +9162,7 @@ Usando `unique_ptr` in questo modo si documenta e si rafforza il trasferimento d
 
 Usando `unique_ptr` in questo modo si documenta e si rafforza la semantica del ricollocamento [reseating] della chiamata.
 
-##### Note
+##### Nota
 
 "reseat" (ricollocare) significa "fare in modo che un puntatore o un puntatore intelligente si riferiscano a un oggetto diverso".
 
@@ -9202,7 +9202,7 @@ Ciò rende esplicita la condivisione della proprietà della funzione.
 
 Ciò rende esplicito il ricollocamento [reseat] della funzione.
 
-##### Note
+##### Nota
 
 Eseguire un "reseat" [ricollocamento] significa "fare in modo che un puntatore o un puntatore intelligente si riferiscano a un oggetto diverso".
 
@@ -9247,7 +9247,7 @@ Le funzioni dovrebbero preferire di passare i puntatori semplici e i riferimenti
 Nella parte iniziale dell'albero delle chiamate, dove si ottiene il puntatore semplice o il riferimento da un puntatore intelligente, che mantiene in vita l'oggetto.
 È necessario assicurarsi che il puntatore intelligente non possa essere inavvertitamente ripristinato o riassegnato nel resto della catena delle chiamate.
 
-##### Note
+##### Nota
 
 Per fare ciò, a volte è necessario tenere una copia locale di un puntatore intelligente, che mantiene saldamente in vita l'oggetto per la durata della funzione e della sequenza delle chiamate.
 
@@ -9702,7 +9702,7 @@ Tali nomi sono comunemente usati per le macro. Quindi, i nomi `TUTTO_IN_MAIUSCOL
         // ...
     // ...
     }
-##### Note
+##### Nota
 
 Non usare il `TUTTO_IN_MAIUSCOLO` per le costanti solo perché le macro venivano usate per le costanti.
 
@@ -9788,7 +9788,7 @@ Evitare `auto` per gli elenchi di inizializzatori e nei casi in cui si conosce e
 
     auto lst = { 1, 2, 3 };   // lst è una lista per l'inizializzazione
     auto x{1};   // x is an int (in C++17; initializer_list in C++11)
-##### Note
+##### Nota
 
 Quando i concetti diventano disponibili, possiamo (e dovremmo) essere più specifici sul tipo che si sta deducendo:
 
@@ -9830,7 +9830,7 @@ Se questa è una grande istruzione `if`, è facile trascurare il fatto che una n
 Questa è una nota fonte di bug.
 Talvolta tale riutilizzo di un nome in uno scope interno è detto "shadowing".
 
-##### Note
+##### Nota
 
 Lo shadowing è un problema principalmente quando le funzioni sono troppo grandi e troppo complesse.
 
@@ -9914,7 +9914,7 @@ No, `i = 7` non inizializza `i`; lo assegna. Inoltre, `i` può essere letta nell
         string s;    // OK: inizializzato col default
         // ...
     }
-##### Note
+##### Nota
 
 La regola *inizializzare sempre* è deliberatamente più forte della regola del linguaggio *un oggetto deve essere inizializzato prima di essere usato*.
 Quest'ultima regola, più rilassata, rileva i bug tecnici, ma:
@@ -9976,7 +9976,7 @@ L'uso di un valore che rappresenta il "non-inizializzato" è un sintomo di un pr
     }
 Ora il compilatore non può nemmeno semplicemente rilevare un usato-prima-della-assegnazione. Inoltre, abbiamo introdotto una complessità nello spazio degli stati per il widget: quali operazioni sono valide su un widget `uninit` e quali no?
 
-##### Note
+##### Nota
 
 L'inizializzazione complessa è stata popolare per decenni con i programmatori più abili.
 È stata anche una delle principali fonti di errori e complessità.
@@ -10036,7 +10036,7 @@ Nel caso non raro in cui gli oggetti dell'input e le operazioni di input sono se
 Un buon ottimizzatore dovrebbe conoscere le operazioni di input ed eliminare l'operazione ridondante.
 
 
-##### Note
+##### Nota
 
 A volte, una lambda può essere utilizzata come inizializzatore per evitare una variabile non inizializzata:
 
@@ -10139,7 +10139,7 @@ Per i contenitori, esiste una tradizione sull'uso di `{...}` per un elenco di el
 
     vector<int> v3(1, 2);  // vettore di 1 elemento con il valore 2
     vector<int> v4{1, 2};  // vettore di 2 elementi con i valori 1 e 2
-##### Note
+##### Nota
 
 Gli inizializzatori `{}` non consentono le conversioni "narrowing" (e questo di solito è una cosa buona) e permettono i costruttori espliciti (il che va bene, si sta inizializzando intenzionalmente una nuova variabile).
 
@@ -10148,7 +10148,7 @@ Gli inizializzatori `{}` non consentono le conversioni "narrowing" (e questo di 
     int x {7.9};   // errore: narrowing
     int y = 7.9;   // OK: y diventa 7. Si spera in un warning del compilatore
     int z = gsl::narrow_cast<int>(7.9);  // OK: è richiesto
-##### Note
+##### Nota
 
 L'inizializzazione `{}` si può usare per quasi tutte le inizializzazioni; non le altre forme di inizializzazione:
 
@@ -10163,7 +10163,7 @@ L'inizializzazione `{}` si può usare per quasi tutte le inizializzazioni; non l
     };
 Per questo motivo, l'inizializzazione `{}` è spesso chiamata "inizializzazione uniforme" (sebbene purtroppo siano rimaste alcune irregolarità).
 
-##### Note
+##### Nota
 
 L'inizializzazione di una variabile dichiarata usando `auto` con un singolo valore, ad esempio, `{v}`, ha avuto risultati a sorpresa fino al C++17.
 Le regole del C++17 sono meno aleatorie:
@@ -10176,7 +10176,7 @@ Le regole del C++17 sono meno aleatorie:
 Usare `={...}` se si vuole veramente una `initializer_list<T>`
 
     auto fib10 = {1, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 è una lista
-##### Note
+##### Nota
 
 `={}` dà un'inizializzazione copia mentre `{}` dà un'inizializzazione diretta.
 Similmente alla stessa distinzione tra l'inizializzazione-copia e l'inizializzazione-diretta, ciò può portare a delle sorprese.
@@ -10265,7 +10265,7 @@ Leggibilità e sicurezza.
         for (i = 0; i < 20; ++i) { /* ... */ }
         for (i = 0; i < 200; ++i) { /* ... */ } // bad: i è stata riciclata
     }
-##### Note
+##### Nota
 
 Come ottimizzazione, si potrebbe voler ri-utilizzare un buffer come un block-note, ma anche in questo caso si preferisca limitare lo 'scope' della variabile il più possibile e si faccia attenzione a non provocare bug dai dati lasciati in un buffer riciclato in quanto questa è una comune sorgente di bug sulla sicurezza.
 
@@ -10306,7 +10306,7 @@ Non vengono confusi con le estensioni non-standard degli array nativi [built-in]
         int a2[m];   // errore: non è C++ ISO
         // ...
     }
-##### Note
+##### Nota
 
 La definizione di `a1` è C++ legale e c'è sempre stata.
 C'è molto codice come questo.
@@ -10372,13 +10372,13 @@ Le macro complicano gli strumenti di building.
     #define Case break; case   /* BAD */
 Questa macro dall'aspetto innocuo trasforma un singolo `c` minuscolo anziché `C` in un brutto bug sul controllo del flusso.
 
-##### Note
+##### Nota
 
 Questa regola non vieta l'uso delle macro per il "controllo della configurazione" usato negli `#ifdef`, ecc.
 
 In futuro, è probabile che i moduli eliminino la necessità di macro nel controllo della configurazione.
 
-##### Note
+##### Nota
 
 Questa regola ha lo scopo di scoraggiare anche l'uso di `#` per la "stringification" e di `##` per la concatenazione.
 Come è solito per le macro, ci sono usi "per lo più innocui", ma anche questi possono creare problemi a tool, come i 'completatori' automatici, gli analizzatori statici, e i debugger.
@@ -10470,7 +10470,7 @@ Le macro non obbediscono alle regole dello scope.
     #define MYCHAR        /* BAD, alla fine ci si scontrerà con qualche altro MYCHAR*/
 
     #define ZCORP_CHAR    /* Resta diabolico, ma meno prono a conflitti */
-##### Note
+##### Nota
 
 Evitare le macro se possibile: [ES.30](#Res-macros), [ES.31](#Res-macros2) e [ES.32](#Res-ALL_CAPS).
 Tuttavia, ci sono miliardi di righe di codice disseminate di macro e una lunga tradizione sull'uso e sull'abuso delle macro.
@@ -10547,7 +10547,7 @@ Richiede un codice disordinato per il-cast-e-pieno-di-macro per funzionare corre
         error(5, "oh", "no", nullptr); // Errore di compilazione! Non c'è bisogno del nullptr.
     }
 
-##### Note
+##### Nota
 
 Questo è fondamentalmente il modo in cui è implementato `printf`.
 
@@ -10594,11 +10594,11 @@ Le espressioni complicate sono soggette a errori.
     x = x++ + x++ + ++x;
 Alcune di queste espressioni sono incondizionatamente cattive (p.es., si basano su comportamenti indefiniti). Altre sono semplicemente così complicate e/o insolite che persino i bravi programmatori potrebbero fraintenderle o trascurare un problema nella fretta.
 
-##### Note
+##### Nota
 
 Il C++17 inasprisce le regole per l'ordine di valutazione (da sinistra a destra, tranne da destra a sinistra nelle assegnazioni, e l'ordine di valutazione degli argomenti della funzione non è specificato; [cfr. ES.43](#Res-order)), ma ciò non cambia il fatto che le espressioni complicate sono potenzialmente confuse.
 
-##### Note
+##### Nota
 
 Un programmatore dovrebbe conoscere e utilizzare le regole di base per le espressioni.
 
@@ -10641,7 +10641,7 @@ Evitare errori. Leggibilità. Non tutti ricordano a memoria la tabella degli ope
 Nota: Si raccomanda ai programmatori di prendere visione della tabella delle precedenze per le operazioni aritmetiche, quella delle operazioni logiche, ma si prenda in considerazione di mescolare le operazioni logiche bit a bit con gli altri operatori che necessitano delle parentesi.
 
     if ((a & flag) != 0)  // OK: funziona come previsto
-##### Note
+##### Nota
 
 Si dovrebbe essere abbastanza esperti da non aver bisogno delle parentesi per:
 
@@ -10660,7 +10660,7 @@ Si dovrebbe essere abbastanza esperti da non aver bisogno delle parentesi per:
 
 La gestione dei puntatori complicati è una delle principali fonti di errori.
 
-##### Note
+##### Nota
 
 Usare, invece, `gsl::span`.
 I puntatori dovrebbero [fare riferimento solo a singoli oggetti](#Ri-array).
@@ -10709,7 +10709,7 @@ L'accesso a un array con limiti noti che utilizza una costante come indice può 
 
         use(a.data(), 3);  // OK
     }
-##### Note
+##### Nota
 
 L'indicizzazione tramite una variabile è difficile da convalidare sia per i tool che per gli umani.
 `span` è un tipo sicuro, col controllo dei limiti [bounds-checked], per l'accesso ai dati degli array.
@@ -10794,7 +10794,7 @@ Usare un range-`for`:
         for (auto& e : arr)
              e = i++;
     }
-##### Note
+##### Nota
 
 I tool possono proporre una riscrittura degli accessi agli array che implichi, invece, l'uso di espressioni di indici dinamici `at()`:
 
@@ -10847,7 +10847,7 @@ Questa regola fa parte del [profilo di sicurezza dei limiti](#SS-bounds).
 Non si ha alcuna idea di cosa faccia questo codice. Portabilità.
 Anche se sembra fare qualcosa di ragionevole, potrebbe fare altro su un altro compilatore (p.es., la successiva release del proprio compilatore) o con un diverso settaggio dell'ottimizzatore.
 
-##### Note
+##### Nota
 
 Il C++17 inasprisce le regole per l'ordine di valutazione: da-sinistra-a-destra, tranne da destra a sinistra nelle assegnazioni, e l'ordine di valutazione degli argomenti della funzione non è specificato.
 
@@ -10868,7 +10868,7 @@ Può essere rilevato da un buon analizzatore.
 
 Perché quell'ordine non è specificato.
 
-##### Note
+##### Nota
 
 Il C++17 inasprisce le regole per l'ordine di valutazione, ma l'ordine di valutazione degli argomenti della funzione non è ancora specificato.
 
@@ -10939,7 +10939,7 @@ Un esempio chiave è il narrowing semplice:
         char c2 = y;   // bad: narrowing
         char c3 = d;   // bad: narrowing
     }
-##### Note
+##### Nota
 
 La libreria di supporto delle linee guida offre un'operazione `narrow_cast` per specificare che il narrowing è accettabile e un `narrow` ("narrow if") che genera un'eccezione se un troncamento butta via delle informazioni:
 
@@ -11003,7 +11003,7 @@ Io ho ottenuto
     3.29048e-321 666 666
 Sorpresi? Sono contento che il programma non vada in crash.
 
-##### Note
+##### Nota
 
 I programmatori che scrivono cast in genere presumono di sapere cosa stanno facendo o che scrivere un cast rende il programma "più facile da leggere".
 Infatti, spesso disabilitano le regole generali sull'uso dei valori.
@@ -11073,7 +11073,7 @@ I "named cast" sono:
 L'esempio è stato sintetizzato da un vero bug in cui `D` era derivato da `B`, ma qualcuno ha eseguito il refactorng della gerarchia.
 Il cast in stile C è pericoloso perché può fare qualsiasi tipo di conversione, privandoci di qualsiasi protezione dagli errori (ora e in futuro).
 
-##### Note
+##### Nota
 
 Invece, quando si converte senza perdita di informazioni (p.es. da `float` a `double` o da `int32` a `int64`), si può usare l'inizializzazione tra parenesi graffe.
 
@@ -11081,7 +11081,7 @@ Invece, quando si converte senza perdita di informazioni (p.es. da `float` a `do
     int64_t i {some_int32};
 Ciò rende chiaro che la conversione del tipo era prevista e impedisce anche le conversioni tra tipi che potrebbero comportare una perdita di precisione. (È un errore di compilazione tentare di inizializzare un `float` da un `double` in questo modo, per esempio).
 
-##### Note
+##### Nota
 
 `reinterpret_cast` può essere essenziale, ma gli usi essenziali (p.es., trasformare un indirizzo macchina in un puntatore) non sono sicuri:
 
@@ -11401,7 +11401,7 @@ Il linguaggio già sa che un valore restituito è un oggetto temporaneo che può
 
 La gestione diretta delle risorse nel codice di un'applicazione è soggetta ad errori ed è noiosa.
 
-##### Note
+##### Nota
 
 Questa è anche nota come la regola del "Nessun semplice [naked] `new`!"
 
@@ -11435,7 +11435,7 @@ Questo è ciò che richiede il linguaggio e gli errori possono portare ad errori
         // ...
         delete p;   // errore: basta il delete dell'oggetto p, anziché il delete dell'array p[]
     }
-##### Note
+##### Nota
 
 Questo esempio non solo viola la [regola di nessun `new` [naked]](#Res-new) come nel precedente esempio, ma presenta molti altri problemi.
 
@@ -11459,7 +11459,7 @@ Il risultato è indefinito.
         if (&a1[5] < &a2[7]) {}       // bad: indefinito
         if (0 < &a1[5] - &a2[7]) {}   // bad: indefinito
     }
-##### Note
+##### Nota
 
 Questo esempio presenta molti più problemi.
 
@@ -11545,18 +11545,18 @@ Per i tipi nativi, la notazione per la costruzione protegge dal narrowing e dall
     }
 Le conversioni intere in/da puntatori sono implementazioni definite quando si usano le notazioni `T(e)` o `(T)e`, e non sono portabili tra le piattaforme con dimensioni diverse degli interi e dei puntatori.
 
-##### Note
+##### Nota
 
 [Evitare i cast](#Res-casts) (conversione esplicita del tipo) e, se lo si deve fare, [preferire i "named cast"](#Res-casts-named).
 
-##### Note
+##### Nota
 
 Se non è ambiguo, la `T` può essere lasciata fuori da `T{e}`.
 
     complex<double> f(complex<double>);
 
     auto z = f({2*pi, 1});
-##### Note
+##### Nota
 
 La notazione della costruzione è la più generale [notazione dell'inizializzatore](#Res-list).
 
@@ -11603,7 +11603,7 @@ Segnalare i cast di tipo C `(T)e` e in stile funzionale `T(e)`.
 
 Dereferenziare un puntatore non valido, come `nullptr`, è un comportamento indefinito, che di solito porta ad arresti anomali immediati, risultati errati o corruzione della memoria.
 
-##### Note
+##### Nota
 
 Questa è una regola ovvia e ben conosciuta del linguaggio, ma può essere ben difficile da seguire.
 Sono necessari un buon stile di codifica, una libreria di supporto e l'analisi statica per eliminare le violazioni senza un ulteriore lavoro.
@@ -11802,7 +11802,7 @@ n umano o un buon analizzatore statico potrebbe determinare che non ci sono effe
 
 In genere è meglio evitare di "scombussolare la variabile del loop" nel suo body.
 
-##### Note
+##### Nota
 
 Non usare costose copie della variabile del loop in un ciclo range-`for`:
 
@@ -11909,7 +11909,7 @@ La condizione per terminare sta alla fine (dove non si può ignorare) e la condi
         cin >> x;
         // ...
     } while (x < 0);
-##### Note
+##### Nota
 
 Sì, ci sono buoni esempi in cui un'istruzione `do` risulta una soluzione chiara, ma anche molti errori.
 
@@ -12024,7 +12024,7 @@ Spesso, un ciclo che usa il `continue` può essere equivalentemente e chiarament
             /* fa qualcosa con item */
         }
     }
-##### Note
+##### Nota
 
 Se è davvero necessario interrompere un loop, un `break` è in generale la migliore delle alternative al [modificare la variabile del loop](#Res-loop-counter) o al [`goto`](#Res-goto):
 
@@ -12087,7 +12087,7 @@ In rari casi se si ritiene opportuno il proseguimento implicito, si dev'essere e
         display_error_window();
         break;
     }
-##### Note
+##### Nota
 
 ##### Imposizione
 
@@ -12180,7 +12180,7 @@ Questo dichiara un oggetto `lock` senza nome che esce immediatamente dallo scope
 Non è un errore insolito.
 In particolare, questo esempio può portare a conflitti difficili da trovare.
 
-##### Note
+##### Nota
 
 Gli argomenti di funzioni senza nome vanno bene.
 
@@ -12270,7 +12270,7 @@ Per esempio:
     for (string s; cin >> s; ) v.push_back(s);
 Ciò richiama, di `istream`, `operator bool()`.
 
-##### Note
+##### Nota
 
 Il confronto esplicito di un numero intero con `0` non è generalmente ridondante.
 Il motivo è che (al contrario di puntatori e dei booleani) un numero intero ha spesso più di due valori ragionevoli.
@@ -12298,7 +12298,7 @@ Essere prolisso scrivendo
     if(strcmp(p1, p2) != 0) { ... }   // sono, le due stringhe in stile C, uguali? (errore!)
 non basterebbe a salvare la situazione.
 
-##### Note
+##### Nota
 
 La condizione opposta viene espressa più facilmente con una negazione:
 
@@ -12330,7 +12330,7 @@ Evitare risultati errati.
     cout << x * y << '\n';  // risultato unsigned, probabilmente 4294967275
 È più difficile individuare il problema in esempi più realistici.
 
-##### Note
+##### Nota
 
 Sfortunatamente, il C++ usa interi con segno per gli indici degli array e la libreria standard usa interi senza segno per gli indici dei contenitori.
 Questo preclude la coerenza. Usare `gsl::index` per gli indici; [cfr. ES.107](#Res-subscripts).
@@ -12351,7 +12351,7 @@ I tipi senza segno supportano la gestione dei bit senza le sorprese del bit del 
 
     unsigned char x = 0b1010'1010;
     unsigned char y = ~x;   // y == 0b0101'0101;
-##### Note
+##### Nota
 
 I tipi senza segno possono anche essere utili per l'aritmetica del modulo.
 Tuttavia, se si vuole l'aritmetica modulare, si aggiungano i commenti necessari, evidenziando il comportamento 'arrotolato', in quanto questo codice può meravigliare alcuni programmatori.
@@ -12482,7 +12482,7 @@ Usare i tipi unsigned se si vuole veramente l'aritmetica modulare.
 
 Il risultato è indefinito e probabilmente si ha un crash.
 
-##### Note
+##### Nota
 
 Questo vale anche per `%`.
 
@@ -12564,7 +12564,7 @@ Per esempio
 
     int r1 = f(2);
     int r2 = f(-2);  // throws
-##### Note
+##### Nota
 
 ???
 
@@ -12606,7 +12606,7 @@ Per evitare le insidie ​​con `auto` e `int`.
         cout << vec[i] << '\n';
     for (gsl::index i = vec.size()-1; i >= 0; i -= 2)          // ok
         cout << vec[i] << '\n';
-##### Note
+##### Nota
 
 L'array nativo usa indici signed.
 I container della libreria standard usano indici unsigned.
@@ -12677,7 +12677,7 @@ Riepilogo sulle regole per le prestazioni:
 
 Se non è necessaria alcuna ottimizzazione, i principali risultati corrisponderanno a più errori e costi di manutenzione più elevati.
 
-##### Note
+##### Nota
 
 Alcuni ottimizzano per abitudine o perché è divertente.
 
@@ -12697,7 +12697,7 @@ Il codice ottimizzato in modo elaborato è in genere più grande e più difficil
 
 L'ottimizzazione di una parte non critica per le prestazioni di un programma non ha alcun effetto sulle prestazioni del sistema.
 
-##### Note
+##### Nota
 
 Se il proprio programma trascorre la maggior parte del tempo ad aspettare il web o un essere umano, l'ottimizzazione del calcolo in memoria è probabilmente inutile.
 
@@ -12728,7 +12728,7 @@ Il codice semplice può essere molto veloce. Gli ottimizzatori a volte fanno mer
         uint64_t& quad_word = *reinterpret_cast<uint64_t*>(&v[i]);
         quad_word = ~quad_word;
     }
-##### Note
+##### Nota
 
 ???
 
@@ -12740,7 +12740,7 @@ Il codice semplice può essere molto veloce. Gli ottimizzatori a volte fanno mer
 
 Il codice di basso livello talvolta inibisce le ottimizzazioni. Gli ottimizzatori a volte fanno meraviglie con un codice di alto livello.
 
-##### Note
+##### Nota
 
 ???
 
@@ -12753,11 +12753,11 @@ Il codice di basso livello talvolta inibisce le ottimizzazioni. Gli ottimizzator
 Quello delle performance è un campo disseminato di falsi miti e folclore.
 I moderni hardware ed ottimizzatori sfidano ingenui assunti; anche gli esperti vengono regolarmente sorpresi.
 
-##### Note
+##### Nota
 
 Ottenere buone misurazioni delle prestazioni può risultare difficile e richiedere strumenti specializzati.
 
-##### Note
+##### Nota
 
 Alcuni semplici micro-benchmark che usano il `time` di Unix o il `<chrono>` della libreria standard possono aiutare a dissipare i miti più ovvi.
 Se non si riesce a misurare accuratamente tutto il sistema, si provi almeno a misurare alcune delle operazioni e algoritmi chiave.
@@ -12814,7 +12814,7 @@ Per completare l'interfaccia, è necessaria una seconda versione che accetti un 
     void sort(Sortable& c, Predicate<Value_type<Sortable>> p);
 Le specifiche della libreria standard per `sort` offrono queste due versioni, ma la semantica è espressa in inglese, anziché nel codice utilizzando i concetti.
 
-##### Note
+##### Nota
 
 Si dice che l'ottimizzazione prematura sia [la fonte di tutti i mali](#Rper-Knuth), ma questo non è un motivo per disdegnare le prestazioni.
 Non è mai prematuro considerare ciò che rende un progetto migliorabile e migliorare le prestazioni è un miglioramento comunemente desiderato.
@@ -12869,29 +12869,29 @@ Ovviamente, queste tre interfacce sono implementate con lo stesso codice di base
 Sono semplicemente tre modi per presentare agli utenti l'algoritmo di ricerca binaria di base, che vanno da quelle che restituiscono le informazioni più semplici ("semplifica le cose semplici!") a quelle più complete, ma non sempre necessarie, ("non nascondere informazioni utili").
 Naturalmente, la creazione di un tale set di interfacce richiede esperienza e conoscenza del dominio.
 
-##### Note
+##### Nota
 
 Non creare banalmente l'interfaccia in modo che corrisponda alla prima implementazione e al primo caso d'uso a cui si pensa.
 Una volta completata l'implementazione iniziale, la si esamini; una volta distribuita, sarà difficile porre rimedio agli errori.
 
-##### Note
+##### Nota
 
 Una necessità di efficienza non implica una necessità di [codice a basso-livello](#Rper-low).
 Un codice di alto livello non implica lentezza e prolissità.
 
-##### Note
+##### Nota
 
 Le cose hanno dei costi.
 Non si dev'essere paranoici sui costi (i moderni computer sono veramente molto veloci), ma si deve avere un'idea approssimativa dell'ordine di grandezza del costo di quello che si usa.
 Per esempio, avere idea del costo di un accesso alla memoria, una chiamata a una funzione, il confronto tra stringhe, una chiamata di sistema, una accesso al disco, e un messaggio tramite la rete.
 
-##### Note
+##### Nota
 
 Se si riesce a pensare a una sola implementazione, probabilmente non si ha qualcosa per cui poter escogitare un'interfaccia stabile.
 Forse, è solo un dettaglio implementativo - non tutte le parti del codice hanno bisogno di un'interfaccia stabile - ma ci si prenda una pausa e si facciano delle considerazioni.
 Una domanda che può essere utile è "quale interfaccia sarebbe necessaria se questa operazione dovesse essere implementata usando più thread? essere vettorizzata?"
 
-##### Note
+##### Nota
 
 Questa regola non contraddice la regola [Non ottimizzare prematuramente](#Rper-Knuth).
 Essa la completa e incoraggia gli sviluppatori a permettere una successiva - appropriata e non-prematura - ottimizzazione, se e dove necessario.
@@ -12971,7 +12971,7 @@ Si supponga che `Scoped` e `On_heap` abbiano delle interfacce utente compatibili
 Qui si calcola il tipo ottimale da utilizzare in fase di compilazione.
 Esistono tecniche simili per selezionare la funzione ottimale da chiamare.
 
-##### Note
+##### Nota
 
 L'ideale {non} è il tentare di eseguire tutto durante la compilazione.
 Ovviamente, la maggior parte dei calcoli dipende dagli input, quindi non si possono spostare al tempo della compilazione, ma al di là di questo vincolo logico c'è il fatto che un calcolo complesso in fase di compilazione può aumentare seriamente i tempi di compilazione e complicare il debug.
@@ -13077,6 +13077,7 @@ Riepilogo delle regole sul parallelismo e la concorrenza:
 **Si veda anche**:
 
 * [CP.con: Concorrenza](#SScp-con)
+* [CP.coro: Coroutine](#SScp-coro)
 * [CP.par: Parallelismo](#SScp-par)
 * [CP.mess: Passaggio dei messaggi](#SScp-mess)
 * [CP.vec: Vettorizzazione](#SScp-vec)
@@ -13095,10 +13096,10 @@ Tuttavia, nel tempo, pezzi di codice possono apparire in luoghi inaspettati.
 
 ##### Esempio, cattivo
 
-    double cached_computation(double x)
+    double cached_computation(int x)
     {
         // bad: questi static provocano conflitti [data race] se usati in multi-thread
-        static double cached_x = 0.0;
+        static int cached_x = 0.0;
         static double cached_result = COMPUTATION_OF_ZERO;
 
         if (cached_x != x) {
@@ -13112,10 +13113,10 @@ Sebbene `cached_computation` funziona perfettamente in un ambiente single-thread
 ##### Esempio, buono
 
     struct ComputationCache {
-        double cached_x = 0.0;
+        int cached_x = 0;
         double cached_result = COMPUTATION_OF_ZERO;
 
-        double compute(double x) {
+        double compute(int x) {
             if (cached_x != x) {
                 cached_x = x;
                 cached_result = computation(x);
@@ -13150,7 +13151,7 @@ Pertanto, il codice che non dovrebbe mai essere eseguito in un ambiente multi-th
 
 Se non lo si fa, niente garantisce il funzionamento e persistono dei subdoli errori.
 
-##### Note
+##### Nota
 
 In breve, se due thread possono accedere contemporaneamente allo stesso oggetto (senza sincronizzazione), e almeno uno scrive (eseguendo un'operazione non-`const`), si ha un conflitto [data race].
 Per ulteriori informazioni su come utilizzare bene la sincronizzazione per eliminare i conflitti, si consulti un buon libro sulla concorrenza.
@@ -13254,7 +13255,7 @@ Meno condivisione si fa, minori possibilità si hanno di aspettare per un lock (
 Senza quelle `const`, si dovrebbe rivedere ogni funzione richiamata in modo asincrono per un potenziale conflitto su `surface_readings`.
 Rendere `surface_readings` per essere `const` (rispetto a questa funzione) consente il ragionamento utilizzando solo il corpo della funzione.
 
-##### Note
+##### Nota
 
 I dati immutabili si possono condividere in modo sicuro ed efficientemente.
 Non è necessario alcun lock: Non si può avere un conflitto su una costante.
@@ -13283,7 +13284,7 @@ I concetti dell'applicazione sono più facili da immaginare.
         // ...
         publisher.join();
     }
-##### Note
+##### Nota
 
 Ad eccezione di `async()`, le funzioni della libreria standard sono low-level, machine-oriented, a livello di thread-e-lock.
 Questa è un fondamento necessario, ma si deve cercare di aumentare il livello di astrazione: per produttività, per affidabilità e per prestazione.
@@ -13346,7 +13347,7 @@ Subdoli errori di concorrenza possono avere effetti drammaticamente negativi, tr
 ##### Esempio
 
     ???
-##### Note
+##### Nota
 
 La sicurezza del thread è impegnativa, spesso ha la meglio sui programmatori esperti: gli strumenti costituiscono una importante strategia per mitigare tali rischi.
 Ci sono molti tool "in giro", sia commerciali che open-source, sia tool per la ricerca che per la produzione.
@@ -13466,7 +13467,7 @@ o (meglio, ma solo in C++17):
     scoped_lock<mutex, mutex> lck2(m2, m1);
 Qui, quelli che hanno scritto `thread1` e `thread2` non sono ancora d'accordo sull'ordine dei `mutex`, ma l'ordine non importa più.
 
-##### Note
+##### Nota
 
 Nel codice reale, i `mutex` hanno raramente un nome per rammentare convenientemente al programmatore una relazione e un ordine di acquisizione previsti.
 Nel codice reale, i `mutex` non sempre sono convenientemente acquisiti su righe consecutive.
@@ -13598,11 +13599,11 @@ Con "bad" si intende che un `thread` potrebbe usare un puntatore dopo che l'ogge
 Il fatto che i `thread` vengano eseguiti contemporaneamente, qui non influisce sulla durata e la proprietà [ownership];
 questi `thread` possono essere visti come un unico oggetto funzione chiamato da `some_fct`.
 
-##### Note
+##### Nota
 
 Anche gli oggetti con una durata nello storage statico possono dare problemi se usati dai thread [detached]: se il thread continua fino alla fine del programma, potrebbe stare in esecuzione contemporaneamente alla distruzione di oggetti statici, e quindi l'accesso a tali oggetti potrebbe sollevare un conflitto [race].
 
-##### Note
+##### Nota
 
 Questa regola è ridondante se [non si esegue il `detach()`](#Rconc-detached_thread) e si [usa `gsl::joining_thread`](#Rconc-joining_thread).
 Tuttavia, la conversione del codice per seguire tali linee-guida potrebbe essere difficile e persino impossibile per le librerie di terze parti.
@@ -13653,12 +13654,12 @@ I thread staccati [detached] sono difficili da monitorare.
         t1.join();
         t2.join();
     }  // resta un brutto bug
-##### Note
+##### Nota
 
 Creare i "thread immortali" globali, racchiuderli in uno scope, o sull'heap [free store] anziché eseguire il `detach()`.
 [Non eseguire il `detach`](#Rconc-detached_thread).
 
-##### Note
+##### Nota
 
 A causa del vecchio codice e delle librerie di terze parti che usano `std::thread`, questa regola può essere difficile da applicare.
 
@@ -13725,7 +13726,7 @@ Segnalare i `detach()`.
 Copiare una piccola quantità di dati è più economico da copiare e da accedervi rispetto alla condivisione mediante un meccanismo di lock.
 La copia offre naturalmente una proprietà [ownership] esclusiva (semplifica il codice) ed elimina la possibilità di conflitti.
 
-##### Note
+##### Nota
 
 Definire esattamente "piccola quantità" è impossibile.
 
@@ -13759,7 +13760,7 @@ Se i thread non sono correlati (ovvero, non si sa se stanno nello stesso scope o
 ##### Esempio
 
     ???
-##### Note
+##### Nota
 
 * Un oggetto statico (p.es. un globale) si può condividere perché non è posseduto nel senso che qualche thread è responsabile della sua cancellazione.
 * Un oggetto nel [free store] che non viene mail cancellato può essere condiviso.
@@ -13828,7 +13829,7 @@ Invece, si potrebbe avere una serie di thread di lavoro pre-creati che elaborano
         joining_thread w3 {worker};
         joining_thread w4 {worker};
     }
-##### Note
+##### Nota
 
 Se il proprio sistema ha un buon [thread pool], lo si usi.
 Se il proprio sistema ha una buona [message queue], la si usi.
@@ -13996,6 +13997,69 @@ Si veda la [WG21 proposal](http://wg21.link/p0290) per aggiungere un `synchroniz
 ??? Possibile?
 
 
+## <a name="SScp-coro"></a>CP.coro: Coroutine
+
+Questa sezione si concentra sugli usi delle coroutine.
+
+Riepilogo delle regole delle Coroutine:
+
+* [CP.51: Non utilizzare lambda [capturing] che sono coroutine](#Rcoro-capture)
+
+### <a name="Rcoro-capture"></a>CP.51: Non utilizzare lambda [capturing] che sono coroutine
+
+##### Motivo
+
+Gli schemi d'uso corretti con le normali lambda sono pericolosi con le lambda coroutine. Il modello ovvio di cattura delle variabili risulterà accedere alla memoria liberata dopo il primo punto di sospensione, che per i puntatori intelligenti con contatori dei riferimenti e i tipi dei valori.
+
+Una lambda si traduce in un oggetto [closure] con uno storage, spesso sullo stack, che ad un certo punto uscirà dallo scope.  Quando l'oggetto [closure] esce dallo scope usciranno anche le acquisizioni [captures].  Le normali lambda a questo punto hanno terminato l'esecuzione, quindi non è un problema.  Le lambda coroutine possono riprendere da una sospensione dopo che l'oggetto [closure] è stato distrutto e a quel punto tutte le acquisizioni [captures] accederanno alla memoria dopo-che-è-stata-liberata.
+
+##### Esempio, Cattivo
+
+    int value = get_value();
+    std::shared_ptr<Foo> sharedFoo = get_foo();
+    {
+      const auto lambda = [value, sharedFoo]() -> std::future<void>
+      {
+        co_await something();
+        // "sharedFoo" e "value" sono già state distrutte
+        // il puntatore "shared" non ha ottenuto nulla
+      };
+      lambda();
+    } // ora l'oggetto closure lambda è fuori dallo scope
+##### Esempio, Migliore
+
+    int value = get_value();
+    std::shared_ptr<Foo> sharedFoo = get_foo();
+    {
+      // prende un parametro per-valore anziché come una acquisizione [capture]
+      const auto lambda = [](auto sharedFoo, auto value) -> std::future<void>
+      {
+        co_await something();
+        // a questo punto sharedFoo e value sono ancora valide
+      };
+      lambda(sharedFoo, value);
+    } // ora l'oggetto closure lambda è fuori dallo scope
+##### Esempio, Ottimale
+
+Usa una funzione per le coroutine.
+
+    std::future<void> Class::do_something(int value, std::shared_ptr<Foo> sharedFoo)
+    {
+      co_await something();
+      // a questo punto sharedFoo e value sono ancora valide
+    }
+
+    void SomeOtherFunction()
+    {
+      int value = get_value();
+      std::shared_ptr<Foo> sharedFoo = get_foo();
+      do_something(value, sharedFoo);
+    }
+##### Imposizione
+
+Segnalare una lambda che è coroutine ed ha una lista capture non vuota.
+
+
 ## <a name="SScp-par"></a>CP.par: Parallelismo
 
 Con "parallelismo" ci si riferisce all'esecuzione di un'attività (più o meno) simultaneamente ("in parallelo con") ad altri elementi di dati.
@@ -14038,7 +14102,7 @@ Non c'è un lock esplicito e vengono gestiti semplicemente sia il corretto (valo
 ##### Esempio
 
     ???
-##### Note
+##### Nota
 
 ???
 
@@ -14073,7 +14137,7 @@ Simile alla [R.12](#Rr-immediate-alloc), che dice di evitare i puntatori semplic
             // gestire qui l'eccezione
         }
     }
-##### Note
+##### Nota
 
 Sfortunatamente, `std::async` non è perfetto. Per esempio, non usa un pool di thread, il che significa che potrebbe non riuscire a causa dell'esaurimento delle risorse, anziché accodare i task da utilizzare in seguito. Tuttavia, anche se non puoi usare `std::async`, si dovrebbe preferire la scrittura di una propria funzione factory  `future`-returning, anziché usare le [raw promise].
 
@@ -14174,7 +14238,7 @@ Si legga a proposito di "ABA problem".
 
 Le [variabili atomiche](#???) possono essere utilizzate in modo semplice e sicuro, purché si utilizzi il modello di memoria coerente sequenzialmente (memory_order_seq_cst), che è il default.
 
-##### Note
+##### Nota
 
 Meccanismi di concorrenza di livello superiore, come i `thread` e i `mutex` vengono implementati con la programmazione lock-free.
 
@@ -14188,7 +14252,7 @@ Meccanismi di concorrenza di livello superiore, come i `thread` e i `mutex` veng
 Le interfacce hardware di basso livello utilizzate nella programmazione lock-free sono tra le più difficili da implementare correttamente e tra le aree in cui si verificano i problemi più subdoli sulla portabilità.
 Se si sta seguendo una programmazione lock-free per le prestazioni, si devono controllare le regressioni.
 
-##### Note
+##### Nota
 
 Il riordino delle istruzioni (statico e dinamico) ci rende difficile pensare in modo efficace a questo livello (specie se si usano modelli di memoria rilassati [relaxed memory models]).
 L'esperienza, i modelli (semi)formali e il [model checking] possono servire.
@@ -14337,7 +14401,7 @@ Per esempio, leggendo `clock` due volte si hanno spesso due valori diversi, quin
     long t2 = clock;
 `clock` è `const` perché il programma non dovrebbe tentare di scrivere in `clock`.
 
-##### Note
+##### Nota
 
 A meno che non si stia scrivendo il codice a livello più basso per gestire direttamente l'hardware, si consideri `volatile` una funzionalità esoterica che è meglio evitare.
 
@@ -14367,7 +14431,7 @@ Lo stesso vale quasi altrettanto fortemente per le variabili membro, per lo stes
         volatile int i = 0; // sospetto, variabile membro volatile
         // ecc.
     };
-##### Note
+##### Nota
 
 In C++, diversamente da altri linguaggi, `volatile` non ha [niente a che fare con la sincronizzazione](#Rconc-volatile).
 
@@ -14468,7 +14532,7 @@ Il costruttore `File_handle` potrebbe essere definito in questo modo:
         if (!f)
             throw runtime_error{"File_handle: could not open " + name + " as " + mode};
     }
-##### Note
+##### Nota
 
 Si dice spesso che le eccezioni siano destinate a segnalare eventi e fallimenti eccezionali.
 Tuttavia, è un po 'circolare perché "cos'è eccezionale?" Esempi:
@@ -14481,7 +14545,7 @@ Tuttavia, è un po 'circolare perché "cos'è eccezionale?" Esempi:
 Al contrario, la conclusione di un normale ciclo non è eccezionale.
 A meno che il loop non fosse destinato a essere infinito, la terminazione è normale e prevista.
 
-##### Note
+##### Nota
 
 Non usare un `throw` come un semplice modo alternativo per tornare da una funzione.
 
@@ -14493,7 +14557,7 @@ Alcuni sistemi, come quelli fortemente real-time richiedono la garanzia che un'a
 
 **Si veda anche**: [discussione](#Sd-noexcept)
 
-##### Note
+##### Nota
 
 Prima di decidere che non ci si può permettere o che non piace la gestione degli errori basata sulle eccezioni, si dia uno sguardo alle [alternative](#Re-no-throw-raii); queste hanno le loro complessità e i loro problemi.
 Inoltre, per quanto possibile, effettuare delle misure prima di fare affermazioni sull'efficienza.
@@ -14532,7 +14596,7 @@ Cercare i valori "persi [leaked]" delle istruzioni `catch`.
 
 Per usare un oggetto esso deve essere in uno stato valido (definito formalmente o informalmente da un invariante) e per recuperare da un errore ogni oggetto non distrutto deve essere in uno stato valido.
 
-##### Note
+##### Nota
 
 Un [invariante](#Rc-struct) è una condizione logica per i membri di un oggetto che un costruttore deve stabilire affinché sia assunto dalle funzioni membro pubbliche.
 
@@ -14629,11 +14693,11 @@ A meno che non sia davvero necessaria la semantica del puntatore, utilizzare un 
     }
 È ancora più semplice e sicuro e spesso è più efficiente.
 
-##### Note
+##### Nota
 
 Se non c'è alcun gestore delle risorse ovvio e per qualche motivo non è possibile definire un appropriato oggetto/handle, come ultima risorsa, le azioni di ripulitura [cleanup] possono essere rappresentate da un oggetto [`final_action`](#Re-finally).
 
-##### Note
+##### Nota
 
 Ma cosa si fa se si sta scrivendo un programma in cui non è possibile usare le eccezioni?
 Primo confutare quest'assunto; ci sono molti falsi miti contro le eccezioni.
@@ -14705,7 +14769,7 @@ Per rendere la gestione degli errori sistematica, solida ed efficiente.
 Qui, si sa che `compute` non solleverà eccezioni perché è composta da operazioni che non generano errori.
 Affermando che `compute` è `noexcept`, si informa compilatore e i lettori umani che si può semplificare la comprensione e la gestione di `compute`.
 
-##### Note
+##### Nota
 
 Molte funzioni della libreria standard sono `noexcept` comprese tutte quelle "ereditate" dalla Libreria Standard del C.
 
@@ -14719,7 +14783,7 @@ Molte funzioni della libreria standard sono `noexcept` comprese tutte quelle "er
 Qui il `noexcept` indica che non si è disposti o non si è in grado di gestire la situazione in cui non si può costruire il `vector` locale.
 Cioè, si considera l'esaurimento della memoria un grave errore di progettazione (al pari dei guasti hardware), quindi si è disposti a bloccare il programma se capita.
 
-##### Note
+##### Nota
 
 Non usare le tradizionali [specifiche delle eccezioni [exception-specification]](#Re-specifications).
 
@@ -14758,7 +14822,7 @@ Un'altra soluzione (spesso migliore) sarebbe quella di utilizzare una variabile 
         vector<int> v(7);
         // ...
     }
-##### Note
+##### Nota
 
 Se si hanno "cose" locali che richiedono la pulizia [cleanup], ma non sono rappresentate da un oggetto con un distruttore, tale pulizia dev'essere fatta anche prima di un `throw`.
 A volte, [`finally()`](#Re-finally) può rendere questa sistematicamente pulizia un po' più gestibile.
@@ -14809,7 +14873,7 @@ A volte, [`finally()`](#Re-finally) può rendere questa sistematicamente pulizia
             // ...
         }
     }
-##### Note
+##### Nota
 
 Le classi della libreria standard derivate da `exception` devono essere utilizzate solo come classi base o per le eccezioni che richiedono solo una "generica". Come i tipi [built-in], il loro uso potrebbe collidere con gli usi altrui.
 
@@ -14864,7 +14928,7 @@ o - generalmente ancor meglio  - un riferimento `const`:
     catch (const exception& e) { /* ... */ }
 La maggior parte dei gestori non modificano la propria eccezione e in generale [si consiglia l'uso di `const`](#Res-const).
 
-##### Note
+##### Nota
 
 Per rilanciare [rethrow] un'eccezione rilevata usare `throw;` non `throw e;`. Utilizzando `throw e;` si genererebbe una nuova copia di `e` ([sliced] nel tipo statico `std::exception`) anziché ri-sollevare l'eccezione originale di tipo `std::runtime_error`. (Ma si tengano in mente [Non cercare di catturare tutte le eccezioni da tutte le funzioni](#Re-not-always) e [Minimizzare l'uso di `try`/`catch`](#Re-catch) espliciti).
 
@@ -14889,7 +14953,7 @@ Non sappiamo come scrivere programmi affidabili se un distruttore, uno swap, o u
             // ...
         }
     };
-##### Note
+##### Nota
 
 Molti hanno provato a scrivere codice affidabile violando questa regola per esempio, come una connessione di rete che si "rifiuta di chiudersi".
 Per quanto ne sappiamo, nessuno ha trovato un modo generale per farlo.
@@ -14897,11 +14961,11 @@ Occasionalmente, per esempi molto specifici, è possibile cavarsela impostando u
 Per esempio, si potrebbe mettere un socket che non vuole chiudersi in una lista dei "socket cattivi", per poi esaminare la lista con una regolare scansione dello stato del sistema.
 Ogni esempio visto a questo proposito è soggetto a errori, specializzato e spesso bacato.
 
-##### Note
+##### Nota
 
 La libreria standard presuppone che i distruttori, le funzioni di deallocazione (p.es., `operator delete`), e `swap` non emettano errori [throw]. Se lo fanno, gli invarianti basilari della libreria standard vengono infranti.
 
-##### Note
+##### Nota
 
 Le funzioni di de-allocazione, compreso `operator delete`, devono essere `noexcept`. Le funzioni `swap` devono essere `noexcept`.
 La maggior parte dei distruttori sono implicitamente `noexcept` per default.
@@ -14994,13 +15058,13 @@ Meglio:
         auto _ = finally([p] { free(p); });
         // ...
     }
-##### Note
+##### Nota
 
 `finally` non è disordinato come `try`/`catch`, ma resta una soluzione ad-hoc.
 Preferire [oggetti per la gestione delle risorse](#Re-raii).
 Considerare `finally` come ultima risorsa.
 
-##### Note
+##### Nota
 
 L'uso di `finally` è un'alternativa sistematica e ragionevolmente pulita rispetto alla vecchia tecnica [`goto exit;`](#Re-no-throw-codes) per gestire la pulizia [cleanup] dove la gestione delle risorse non è sistematica.
 
@@ -15014,7 +15078,7 @@ Euristica: Rilevare `goto exit;`
 
 Anche senza eccezioni, il [RAII](#Re-raii) è solitamente il modo migliore e più sistematico per gestire le risorse.
 
-##### Note
+##### Nota
 
 La gestione degli errori con le eccezioni è il solo modo completo e sistematico per gestire errori non-locali nel C++.
 In particolare, la segnalazione non-intrusiva del fallimento della costruzione di un oggetto richiede un'eccezione.
@@ -15070,7 +15134,7 @@ Se non si può recuperare per bene, si può almeno uscire prima di fare troppi u
 
 **Si veda anche**: [Simulare il RAII](#Re-no-throw-raii)
 
-##### Note
+##### Nota
 
 Se non si può essere sistematici sulla gestione degli errori, si consideri il "crash" come risposta a tutti gli errori che non si possono gestire localmente.
 Cioè, se non è possibile riprendersi da un errore nel contesto della funzione che l'ha rilevato, si chiama `abort()`, `quick_exit()`, o una funzione simile che attiverà qualche tipo di riavvio del sistema.
@@ -15109,7 +15173,7 @@ L'uso sistematico di qualsiasi strategia per la gestione degli errori minimizza 
 
 **Si veda anche**: [Simulare il RAII](#Re-no-throw-raii)
 
-##### Note
+##### Nota
 
 Ci sono diversi problemi da affrontare:
 
@@ -15280,7 +15344,7 @@ Quando è stata l'ultima volta che si è testato il valore di ritorno di `printf
         if (!p) last_err = -1;     // errore se si esaurisce la memoria
         // ...
     }
-##### Note
+##### Nota
 
 La gestione degli errori in stile C è basata sulla variabile globale `errno`, quindi è essenzialmente impossibile evitare completamente questo stile.
 
@@ -15317,12 +15381,12 @@ Se `use()` fa parte di una libreria, potrebbe non essere possibile aggiornarla p
 
 La politica di far propagare le eccezioni fino a raggiungere una funzione potenzialmente in grado di gestirla si è dimostrata valida nel corso degli anni.
 
-##### Note
+##### Nota
 
 No. Non sarebbe stato meglio se le specifiche delle eccezioni sarebbero state imposte staticamente.
 Per esempio, si veda [Stroustrup94](#Stroustrup94).
 
-##### Note
+##### Nota
 
 Se non è possibile generare alcuna eccezione, si usa [`noexcept`](#Re-noexcept).
 
@@ -15415,13 +15479,13 @@ Ciò fornisce una dichiarazione più precisa dello scopo del progetto, una migli
     {
         int x = pt.getx();          // ERRORE, non compila perché getx non è stato segnato come const
     }
-##### Note
+##### Nota
 
 Non è intrinsecamente un male passare un puntatore o un riferimento come non-`const`, ma dovrebbe essere fatto solo quando si suppone che la funzione chiamata modifichi l'oggetto.
 Chi legge il codice deve presumere che una funzione che prende un "semplice" `T*` o `T&`, modificherà l'oggetto a cui ci si riferisce.
 Se non lo fa per adesso, potrebbe farlo in seguito senza obbligare la ricompilazione.
 
-##### Note
+##### Nota
 
 Ci sono dei sorgenti/librerie che propongono funzioni che dichiarano un `T*` anche se quelle funzioni non modificano quel `T`.
 Questo è un problema per chi modernizza il codice.
@@ -15437,7 +15501,7 @@ Esempio:
     void f(const int* p) { f(const_cast<int*>(p)); } // wrapper
 Si noti che la soluzione del wrapper è una patch che si dovrebbe usare solo quando la dichiarazione di `f()` non può essere modificata, p.es. perché sta in una libreria che non può essere modificata.
 
-##### Note
+##### Nota
 
 Una funzione membro `const` può modificare il valore di un oggetto che sia `mutable` o a cui si acceda con un puntatore membro.
 Un uso comune è mantenere una cache anziché eseguire ripetutamente un calcolo complicato.
@@ -15478,11 +15542,11 @@ Per evitare che una funzione chiamata cambi valore inaspettatamente.
 
     void f(char* p);        // f modifica *p? (supponendo che lo faccia)
     void g(const char* p);  // g non modifica *p
-##### Note
+##### Nota
 
 Non è intrinsecamente un male passare un puntatore o un riferimento come non-`const`, ma dovrebbe essere fatto solo quando si suppone che la funzione chiamata modifichi l'oggetto.
 
-##### Note
+##### Nota
 
 [Non eseguire il cast di `const`](#Res-casts-const).
 
@@ -15526,7 +15590,7 @@ Migliori prestazioni, miglior controllo in fase di compilazione, valutazione gar
     double x = f(2);            // possibile la valutazione a run-time
     const double y = f(2);      // possibile la valutazione a run-time
     constexpr double z = f(2);  // errore a meno che f(2) non si possa valutare durante la compilazione
-##### Note
+##### Nota
 
 Cfr. F.4.
 
@@ -15686,16 +15750,16 @@ Questo non è un requisito minimo, ma fornisce all'implementatore degli algoritm
 
 Per ulteriore generalità e riusabilità, si potrebbe anche usare un più generale concetto di `Container` o di `Range` anziché affidarsi ad un solo contenitore, `vector`.
 
-##### Note
+##### Nota
 
 Se si definisce un modello per avere solo e solamente le operazioni richieste per una particolare implementazione di un singolo algoritmo (p.es., si richiede solo `+=` anziché anche `=` e `+`), si hanno dei manutentori troppo vincolati.
 Lo scopo è quello di minimizzare i requisiti sugli argomenti template, ma i requisiti assolutamente minimali di un'implementazione raramente costituiscono un concetto significativo.
 
-##### Note
+##### Nota
 
 I template si possono usare per esprimere praticamente qualsiasi cosa (sono Turing equivalenti), ma lo scopo della programmazione generica (che si realizza con i template) è quello di generalizzare efficientemente operazioni e/o algoritmi per un insieme di tipi con proprietà semantiche simili.
 
-##### Note
+##### Nota
 
 I `requires` nei commenti sono utilizzi dei `concetti`.
 I "Concetti" sono definiti in una Specifica Tecnica ISO: [concetti](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
@@ -15725,7 +15789,7 @@ Questa è la base della STL. Un singolo algoritmo `find` funziona facilmente con
     {
         // ...
     }
-##### Note
+##### Nota
 
 Non usare un template a meno che non si abbia una reale necessità per più di un tipo di argomento template.
 Non essere eccessivamente concisi.
@@ -15849,7 +15913,7 @@ Tra gli esempi c'è la cancellazione [erasure] del tipo come con il 'deleter' de
 
     Object o(Bar{});
     Object o2(Foo{});
-##### Note
+##### Nota
 
 In una classe template, le funzioni non-virtuali vengono istanziate solo se vengono utilizzate -- ma quelle virtuali vengono istanziate sempre.
 Questo può gonfiare la dimensione del codice, e potrebbe vincolare eccessivamente un tipo generico istanziando funzionalità che non saranno mai necessarie.
@@ -15920,7 +15984,7 @@ o equivalentemente e più succintamente:
     {
         // ...
     }
-##### Note
+##### Nota
 
 I "concetti" vengono definiti in una "Technical Specification" ISO: [concetti](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
 Una bozza di un insieme di concetti della libreria standard si può trovare in un altro TS ISO: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
@@ -15935,7 +15999,7 @@ Se si usa il GCC 6.1 o successivi, si possono de-commentare:
     {
         // ...
     }
-##### Note
+##### Nota
 
 Il semplice `typename` (o `auto`) è il concetto meno vincolante.
 Dovrebbe essere usato solo raramente quando non si può supporre altro che "è un tipo".
@@ -15953,7 +16017,7 @@ Segnalare i tipi di argomenti template senza concetti
 
 I concetti "standard" (come quelli forniti dalle [GSL](#S-gsl) e la [TS "Ranges"](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf), e si spera presto dallo stesso standard ISO) evitano la fatica di idearsi i propri concetti, sono progettati meglio di quanto si farebbe in proprio frettolosamente, migliorando l'interoperabilità.
 
-##### Note
+##### Nota
 
 A meno che non si stia creando una nuova libreria generica, la maggior parte dei concetti necessari sarà già stata definita dalla libreria standard.
 
@@ -15969,11 +16033,11 @@ Questo `Ordered_container` è abbastanza plausibile, ma è molto simile al conce
 È meglio e più semplice usare semplicemente `Sortable`:
 
     void sort(Sortable& s);   // meglio
-##### Note
+##### Nota
 
 L'insieme dei concetti "standard" si sta evolvendo nell'avvicinarsi ad uno standard ISO che includa i concetti.
 
-##### Note
+##### Nota
 
 Progettare un concetto utile è impegnativo.
 
@@ -16019,7 +16083,7 @@ Per dire che "`T` è `Sortable [Ordinabile]`":
     void sort(Sortable&);      // Il migliore (supponendo il supporto per i concetti): "Il parametro è Sortable"
 Le versioni più brevi si adattano meglio al nostro modo di parlare. Si noti che per molti template non è necessario usare la parola-chiave `template`.
 
-##### Note
+##### Nota
 
 I "concetti" vengono definiti in una "Technical Specification" ISO: [concetti](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
 Una bozza di un insieme di concetti della libreria standard si può trovare in un altro TS ISO: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
@@ -16067,7 +16131,7 @@ I concetti hanno lo scopo di esprimere nozioni semantiche, come in "un numero", 
 Forse era prevista la concatenazione. Più probabilmente, è stato un incidente. Definire il meno in modo equivalente farebbe accettare un insieme di tipi notevolmente diversi.
 Questo `Addable` viola la regola matematica che supponga che l'addizione sia commutativa: `a+b == b+a`.
 
-##### Note
+##### Nota
 
 La capacità di specificare una semantica significativa è una caratteristica distintiva di un vero concetto, al contrario di un vincolo sintattico.
 
@@ -16093,7 +16157,7 @@ La capacità di specificare una semantica significativa è una caratteristica di
     string xx = "7";
     string yy = "9";
     auto zz = algo(xx, yy);   // errore: string non è un Number
-##### Note
+##### Nota
 
 I concetti con più operazioni hanno una probabilità molto più bassa di abbinare accidentalmente un tipo rispetto a un concetto a singola-operazione.
 
@@ -16111,7 +16175,7 @@ Facilità di comprensione.
 Migliorata interoperabilità.
 Aiuta gli implementatori e i manutentori.
 
-##### Note
+##### Nota
 
 Questa è una specifica variante della regola generale [un concetto deve avere un senso semantico](#Rt-low).
 
@@ -16126,7 +16190,7 @@ Esempi di set completi sono
 * `Aritmetica`: `+`, `-`, `*`, `/`, `+=`, `-=`, `*=`, `/=`
 * `Comparabile`: `<`, `>`, `<=`, `>=`, `==`, `!=`
 
-##### Note
+##### Nota
 
 Questa regola si applica a prescindere dal fatto che si utilizzi il supporto diretto del linguaggio per i concetti.
 È una regola di progettazione generale che si applica anche ai non-template:
@@ -16209,20 +16273,20 @@ La specifica della semantica è un potente strumento di progettazione.
             {a * b} -> T;
             {a / b} -> T;
         }
-##### Note
+##### Nota
 
 Questo è un assioma in senso matematico: qualcosa che può essere assunto senza prove.
 In generale, gli assiomi non sono dimostrabili, e quando c'è una prova va spesso oltre le capacità di un compilatore.
 Un assioma potrebbe non essere generale, ma chi scrive il template potrebbe presumere che valga per tutti gli input effettivamente utilizzati (simile a una pre-condizione).
 
-##### Note
+##### Nota
 
 In questo contesto gli assiomi sono espressioni Booleane.
 Per gli esempi si veda [Palo Alto TR](#S-references).
 Attualmente, il C++ non supporta gli assiomi (nemmeno la TS ISO "Concepts"), quindi ci si dovrà accontentare a lungo dei commenti.
 Appena sarà disponibile il supporto del linguaggio, si potranno rimuovere le `//` davanti all'assioma
 
-##### Note
+##### Nota
 
 I  concetti GSL hanno una semantica ben definita; si veda la TR "Palo Alto" e la TS "Ranges".
 
@@ -16295,7 +16359,7 @@ Avvolgere una classe [tag] in un concetto porta ad una semplice espressione di q
     concept bool Contiguous_iter = RA_iter<I> && Contiguous<I>;
 Il programmatore (in una libreria) deve definire adeguatamente `is_contiguous` (un [trait]).
 
-##### Note
+##### Nota
 
 I traits possono essere classi di traits o traits di tipi.
 Questi possono essere quelli definiti dall'utente o quelli della libreria standard.
@@ -16338,7 +16402,7 @@ Il compilatore sceglierà il modello non vincolato solo quando `C<T>` non è sod
     void f() = delete;
 Il compilatore selezionerà l'overload ed emetterà l'errore appropriato.
 
-##### Note
+##### Nota
 
 I vincoli complementari sono purtroppo comuni nel codice di `enable_if`:
 
@@ -16350,7 +16414,7 @@ I vincoli complementari sono purtroppo comuni nel codice di `enable_if`:
     enable_if<C<T>, void>
     f();
 
-##### Note
+##### Nota
 
 I requisiti complementari su uno dei requisiti sono talvolta (erroneamente) considerati gestibili.
 Tuttavia, per due o più requisiti, il numero di definizioni richieste può aumentare in modo esponenziale (2,4,8,16,...):
@@ -16421,11 +16485,11 @@ Naturalmente, si possono generalizzare quelle funzioni con `auto` o (quando e do
 
     auto y1 = find_if(v, [](Ordered x) { return x > 7; }); // richiede un tipo ordinato
     auto z1 = find_if(v, [](auto x) { return x > 7; });    // si spera che il tipo abbia un >
-##### Note
+##### Nota
 
 Le lambda generano oggetti funzione.
 
-##### Note
+##### Nota
 
 L'argomento delle prestazioni dipende dalla tecnologia del compilatore e di quella dell'ottimizzatore.
 
@@ -16464,7 +16528,7 @@ Questo dovrebbe essere riscritto in:
 Dopotutto, non esiste nulla in `Sortable` che richiede il supporto di `iostream`.
 D'altra parte, nell'idea fondamentale dell'ordinamento non c'è nulla che dica qualcosa sul debug.
 
-##### Note
+##### Nota
 
 Se si chiede che ogni operazione utilizzata venga elencata tra i requisiti, l'interfaccia diventa instabile: Ogni volta che cambiano le strutture di debug, la raccolta dei dati utilizzati, il supporto dei test, la segnalazione degli errori, ecc., si dovrebbe cambiare il template e si dovrebbe ricompilare ogni utilizzo del template.
 Questo è poco gestibile e, in alcuni ambienti, impossibile.
@@ -16476,7 +16540,7 @@ Questo, lo si considera un utile compromesso.
 
 Si noti che anche l'utilizzo di nomi non locali e non dipendenti (come `debug` e `cerr`) introduce dipendenze dal contesto che possono portare a errori "misteriosi".
 
-##### Note
+##### Nota
 
 Può essere difficile decidere quali proprietà di un tipo sono essenziali e quali no.
 
@@ -16525,7 +16589,7 @@ Ciò evita all'utente di `Value_type` il dover conoscere la tecnica usata per im
         Value_type<T> x;
         // ...
     }
-##### Note
+##### Nota
 
 Un uso semplice e comune potrebbe essere espresso: "[Wrap traits]!"
 
@@ -16569,7 +16633,7 @@ Scrivere esplicitamente i tipi degli argomenti template può risultare noioso e 
     auto t2 = make_tuple(1, "Ophelia"s, 3.14);         // meglio; tipo dedotto
 Si noti l'uso del suffisso `s` per assicurarsi che la stringa sia una `std::string`, anziché una stringa in stile C.
 
-##### Note
+##### Nota
 
 Dato che si può banalmente scrivere una funzione `make_T`, lo stesso potrebbe fare il compilatore. Pertanto, le funzioni `make_T` potrebbero, in futuro, diventare ridondanti.
 
@@ -16579,7 +16643,7 @@ A volte non c'è un buon modo per dedurre gli argomenti template e, a volte, si 
 
     vector<double> v = { 1, 2, 3, 7.9, 15.99 };
     list<Record*> lst;
-##### Note
+##### Nota
 
 Si noti che il C++17 renderà ridondante questa regola consentendo agli argomenti del modello di essere dedotti direttamente dagli argomenti del costruttore: [Deduzione del parametro template per i costruttori (Rev. 3)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0091r1.html).
 Per esempio:
@@ -16613,7 +16677,7 @@ La maggior parte utilizza comunque questo supporto.
     X x {1};    // va bene
     X y = x;      // va bene
     std::vector<X> v(10); // errore: nessun costruttore di default
-##### Note
+##### Nota
 
 Semiregolare richiede il costruttore di default.
 
@@ -16654,12 +16718,12 @@ Ora l'`==` in `Bad` è stato progettato per causare problemi, ma nel codice real
 Il problema è che `v.size()` restituisce un intero `unsigned` in modo che sia necessaria una conversione per chiamare il `==` locale; l'`==` in `Bad` non richiede alcuna conversione.
 I tipi realistici, come gli iteratori nella libreria standard si possono realizzare per mostrare simili tendenze anti-sociali.
 
-##### Note
+##### Nota
 
 Se un template senza vincoli è definito nello stesso namespace del tipo, tale template senza vincoli si può trovare per l'ADL (come avvenuto nell'esempio).
 Questo, è molto evidente.
 
-##### Note
+##### Nota
 
 Questa regola non dovrebbe essere necessaria, ma il comitato non può accettare di escludere template non vincolati da ADL.
 
@@ -16693,7 +16757,7 @@ Perché è il meglio che possiamo fare senza il supporto diretto del concetto.
     {
         // ...
     }
-##### Note
+##### Nota
 
 Attenzione ai [vincoli complementari](#Rt-not).
 Il falso [overloading] del concetto utilizzando `enable_if` a volte costringe ad usare questa tecnica di progettazione soggetta a errori.
@@ -16718,7 +16782,7 @@ La cancellazione del tipo [type erasure] comporta un ulteriore livello di indire
 ???
 
 
-##### Note
+##### Nota
 
 
 ## <a name="SS-temp-def"></a>T.def: Definizioni dei template
@@ -16753,11 +16817,11 @@ Facilita la creazione di tool.
             TT var = 7;            // dipendenza potenzialmente sorprendente: quale TT?
         }
     }
-##### Note
+##### Nota
 
 I template solitamente appaiono nei file header quindi le loro dipendenze dal contesto sono più vulnerabili all'ordine degli `#include` che alle funzioni nei file `.cpp`.
 
-##### Note
+##### Nota
 
 Avere un template che opera solo sui suoi argomenti sarebbe un modo per ridurre il numero delle dipendenze al minimo, ma sarebbe generalmente ingestibile.
 Per esempio, gli algoritmi solitamente usano altri algoritmi ed invocano operazioni che non operano esclusivamente su argomenti.
@@ -16827,7 +16891,7 @@ In genere, la soluzione consiste nel rendere non locale quella che sarebbe stata
 Alcuni hanno trovato l'idea che il `Link` non venga più nascosto nel terrificante elenco, quindi chiamiamo tale tecnica
 [SCARY](http://www.open-std.org/jtc1/sc22/WG21/docs/papers/2009/n2911.pdf) [terrificante]. Da quel documento accademico: "L'acronimo SCARY descrive assegnazioni e inizializzazioni che Sembrano sbagliate (apparendo vincolate [Constrained] da parametri generici in conflitto), ma in realtà [Actually] funzionano con la giusta [Right] implementazione (non vincolata dal [bY] conflitto a causa di dipendenze minimizzate)".
 
-##### Note
+##### Nota
 
 Questo vale anche per le lambda che non dipendono da tutti i parametri template.
 
@@ -16863,7 +16927,7 @@ Consentire ai membri della classe base di essere utilizzati senza specificare gl
     public:
         // ...
     };
-##### Note
+##### Nota
 
 Una versione più generale di questa regola sarebbe "Se un membro template della classe dipende solo da N parametri template su M, lo si mette in una classe base con solo N parametri". Per N == 1, si ha una scelta di una classe base di una classe nello scope circostante come in [T.61](#Rt-scary).
 
@@ -16885,7 +16949,7 @@ La specializzazione offre un potente meccanismo per fornire implementazioni alte
     ??? string specialization (==)
 
     ??? representation specialization ?
-##### Note
+##### Nota
 
 ???
 
@@ -16937,7 +17001,7 @@ Questa è una versione semplificata di `std::copy` (viene ignorata la possibilit
     }
 Questa è una tecnica generale e potente per la selezione dell'algoritmo in fase di compilazione.
 
-##### Note
+##### Nota
 
 Quando diventerà ampiamente disponibile il `concept`, tali alternative si potranno distinguere direttamente:
 
@@ -17028,7 +17092,7 @@ Ci sono tre modi principali per consentire al codice chiamante di personalizzare
     }
 Un [trait] è solitamente un alias di un tipo per calcolare un tipo, una funzione `constexpr` che calcola un valore, o un tradizionale template di [traits] per essere specializzato sul tipo dell'utente.
 
-##### Note
+##### Nota
 
 Se si intende chiamare la propria funzione `helper(t)` con un valore `t` che dipende da un tipo di parametro template, si mette in un namespace `::detail` e si qualifica la chiamata come `detail::helper(t);`.
 Una chiamata non qualificata diventa un punto di personalizzazione in cui ogni funzione `helper` si può chiamare nel namespace dei tipi `t`; ciò può provocare problemi come [invocare involontariamente funzioni template non vincolate](#Rt-visible).
@@ -17075,7 +17139,7 @@ Lo stesso per `vector<string>::sort()`.
 A meno che queste due funzioni non vengano chiamate, questo è codice inutile [code bloat].
 Si immagini cosa farebbe ad una gerarchia di classi con decine di classi derivate con molte istanze.
 
-##### Note
+##### Nota
 
 In molti casi si può fornire un'interfaccia stabile evitando di parametrizzare una base; cfr. ["base stabile"](#Rt-abi) e [OO e GP](#Rt-generic-oo)
 
@@ -17158,7 +17222,7 @@ E, in generale, le implementazioni devono occuparsi del link dinamico.
         template<class T>
         virtual bool intersect(T* p);   // errore: il template non può essere virtuale
     };
-##### Note
+##### Nota
 
 C'è bisogno di una regola perché le persone continuano a chiederlo
 
@@ -17305,7 +17369,7 @@ Usare, invece, i concetti. Ma si veda [Come emulare i concetti se il linguaggio 
     ??? good
 **Alternativa**: Se il risultato è un valore, anziché un tipo, usare una funzione [`constexpr`](#Rt-fct).
 
-##### Note
+##### Nota
 
 Se si ritiene di dover nascondere la meta-programmazione dei template nelle macro, probabilmente si è andati oltre.
 
@@ -17325,7 +17389,7 @@ I casi d'uso che richiedono i concetti (p.es. l'overloading basato sui concetti)
     template<typename Iter>
         /*requires*/ enable_if<forward_iterator<Iter>, void>
     advance(Iter p, int n) { assert(n >= 0); while (n--) ++p;}
-##### Note
+##### Nota
 
 Tale codice risulta molto più semplice usando i concetti:
 
@@ -17342,7 +17406,7 @@ Tale codice risulta molto più semplice usando i concetti:
 
 La meta-programmazione template è l'unico modo ad essere supportato direttamente, ed è quasi il modo principale, per generare tipi in fase di compilazione.
 
-##### Note
+##### Nota
 
 Le tecniche "trait" sono per lo più sostituite dagli alias dei template per calcolare i tipi e dalle funzioni `constexpr` per calcolare i valori.
 
@@ -17360,7 +17424,7 @@ Le tecniche "trait" sono per lo più sostituite dagli alias dei template per cal
 Una funzione è il modo più ovvio e conveniente per esprimere il calcolo di un valore.
 Spesso una funzione `constexpr` implica un minor tempo di compilazione rispetto alle alternative.
 
-##### Note
+##### Nota
 
 Le tecniche "trait" sono per lo più sostituite dagli alias dei template per calcolare i tipi e dalle funzioni `constexpr` per calcolare i valori.
 
@@ -17457,7 +17521,7 @@ O forse (se si preferisce evitare il nome implicito legato a n):
     auto x = find_if(vr.begin(), vr.end(),
         [](const Rec& r) { return cmp_to_n(r.name); }
     );
-##### Note
+##### Nota
 
 Se funzioni, lambda o operatori.
 
@@ -17721,7 +17785,7 @@ Riepilogo delle regole sui file sorgenti:
 È una convenzione di vecchia data.
 Ma la coerenza è più importante, quindi se il progetto utilizza qualcos'altro, lo si segua.
 
-##### Note
+##### Nota
 
 Questa convenzione riflette un modello di uso comune: Gli header vengono molto spesso condivisi col C per compilare sia come C++ che C, che tipicamente usa `.h`, ed è più facile dare un nome a tutti gli header `.h` anziché avere diverse estensioni solo per quegli header che si intendono usare col C. D'altra parte, i file delle di implementazione vengono raramente condivisi col C e quindi dovrebbero generalmente essere distinti dai file `.c`, quindi normalmente è meglio dare un nome a tutti i file C++ dell'implementazione con qualcos'altro (come `.cpp`).
 
@@ -17836,11 +17900,11 @@ Ridurre le dipendenze dal contesto ed aumentare la leggibilità.
 
     #include <algorithm>
     #include <string>
-##### Note
+##### Nota
 
 Questo vale sia per i file `.h` che i `.cpp`.
 
-##### Note
+##### Nota
 
 C'è una discussione per isolare il codice dalle dichiarazioni e le macro nei file header `#include`ndo degli header *dopo* il codice che si vuol proteggere (come nell'esempio etichettato come "cattivo").
 Tuttavia
@@ -17932,7 +17996,7 @@ L'utilizzo di `using namespace std;` lascia il programmatore la possibilità di 
     }
 Tuttavia, questo non favorisce particolarmente una soluzione dei conflitti senza errori e quelli che usano `using namespace std` si suppone che sappiano di `std` e di questo rischio.
 
-##### Note
+##### Nota
 
 Un file `.cpp` è una forma di scope locale.
 C'è poca differenza nelle probabilità di conflitti sui nomi tra
@@ -17940,7 +18004,7 @@ un `.cpp` di N-righe contenente `using namespace X`,
 una funzione di N-righe contenente `using namespace X`,
 e M funzioni ciascuna contenente un `using namespace X` con N righe di codice in totale.
 
-##### Note
+##### Nota
 
 [Non scrivere `using namespace` nello scope globale in un file header](#Rs-using-directive).
 
@@ -17969,7 +18033,7 @@ Facendolo si elimina la capacità di chi `#include` di chiarire efficacemente e 
     {
         copy(/*...*/);    // ora si ha l'overload di local ::copy e di std::copy, potrebbe esserci ambiguità
     }
-##### Note
+##### Nota
 
 Un'eccezione è `using namespace std::literals;`. Questo è necessario per usare le stringhe letterali nei file header e date [le regole](http://eel.is/c++draft/over.literal) - gli utenti sono tenuti a dare un nome ai propri UDL `operator""_x` - non collideranno con la libreria standard.
 
@@ -17997,7 +18061,7 @@ Assicurarsi di includere anche una chiave ed un buon differenziatore, come il no
 
 Segnalare i `.h` senza le protezioni degli `#include`.
 
-##### Note
+##### Nota
 
 Alcune implementazioni offrono delle estensioni come `#pragma once` come alternative alle protezioni degli include.
 Questo non è standard e non è portabile.  Esso inietta la semantica del filesystem della macchina host nel proprio programma, oltre a legarsi ad un fornitore.
@@ -18009,7 +18073,7 @@ La raccomandazione è quella di scrivere in C++ ISO: Cfr. [regola P.2](#Rp-Cplus
 
 La ciclicità complica la comprensione e rallenta la compilazione. Esse, inoltre, complicano la conversione per l'uso dei moduli supportati dal linguaggio (quando saranno disponibili).
 
-##### Note
+##### Nota
 
 Eliminare le ciclicità; non limitarsi ad interromperli con le protezioni degli `#include`.
 
@@ -18069,7 +18133,7 @@ La soluzione è scrivere esplicitamente `#include <string>`:
             // ...
         }
     }
-##### Note
+##### Nota
 
 Alcuni header esistono precisamente per raggruppare un insieme di dichiarazioni coerenti provenienti da vari header.
 Per esempio:
@@ -18103,11 +18167,11 @@ Evitare che i clienti di un header ne debbano gestire le dipendenze.
 
     #include "helpers.h"
     // helpers.h dipende da std::string ed include <string>
-##### Note
+##### Nota
 
 La mancata osservanza di ciò comporta errori difficili da diagnosticare per i clienti di un header.
 
-##### Note
+##### Nota
 
 Un header dovrebbe includere tutte le sue dipendenze. Prestare attenzione all'utilizzo dei path relativi poiché le implementazioni C++ differiscono sul loro significato.
 
@@ -18131,7 +18195,7 @@ Tuttavia, il consiglio è quello di utilizzare la forma virgolettata per include
     #include "foo.h"                 // Un file localmente relativo a foo.cpp nello stesso progetto, usa la forma ""
     #include "foo_utils/utils.h"     // Un file localmente relativo a foo.cpp nello stesso progetto, usa la forma ""
     #include <component_b/bar.h>     // Un file nello stesso progetto localizzato tramite un path di ricerca, usa la forma <>
-##### Note
+##### Nota
 
 La mancata osservanza di ciò porta ad una diagnostica difficoltosa degli errori a causa del prelievo del file sbagliato dovuto ad un'errata indicazione del percorso di quanto si include. Per esempio, in un tipico caso in cui l'algoritmo di ricerca di `#include ""` potrebbe cercare un file dapprima posizionato in un percorso locale relativo, poi utilizzare questa forma per far riferimento ad un file non localmente relativo potrebbe significare che se un file dovesse mai esistere nel percorso locale relativo (p.es. il file principale è stato spostato in una nuova posizione), verrà trovato prima del del file include precedente e l'insieme degli include risulteranno modificati in modo inaspettato.
 
@@ -18248,7 +18312,7 @@ Possibile, ma disordinata e suscettibile di causare problemi con le piattaforme.
 
 Perché, ovviamente, infrangere questa regola può portare a comportamenti indefiniti, corruzione della memoria e tutti i tipi di altri pessimi errori.
 
-##### Note
+##### Nota
 
 Questa è una meta-regola semi-filosofica, che necessita di molte regole concrete a supporto.
 È necessaria come un ombrello per regole più specifiche.
@@ -18289,11 +18353,11 @@ Per un array a lunghezza variabile, si usa `std::vector`, che può inoltre modif
     delete[] v;                         // BAD, delete manuale
 
     std::vector<int> w(initial_size);   // ok
-##### Note
+##### Nota
 
 Usare `gsl::span` per i riferimenti non proprietari in un contenitore [container].
 
-##### Note
+##### Nota
 
 Il confronto delle prestazioni tra un array a dimensione fissa allocato sullo stack rispetto ad un `vector` con gli elementi sull'heap [free store] è falsato.
 Si potrebbe anche confrontare uno `std::array` sullo stack rispetto all'accesso al risultato di un `malloc()` tramite un puntatore.
@@ -18318,7 +18382,7 @@ Solitamente è necessario aggiungere e togliere elementi dal contenitore, quindi
 
 Anche quando altri contenitori sembrano più adatti, come la `map` per una velocità di ricerca O(log N) o una `list` per l'efficienza delle inserzioni nel mezzo, un `vector` funzionerà ancora meglio dei contenitori con una dimensione fino a pochi KB.
 
-##### Note
+##### Nota
 
 La `string` non dev'essere usata come contenitore per caratteri singoli. Una `string` è una stringa di testo; se si vuole un contenitore di caratteri, invece si usa `vector</*char_type*/>` o `array</*char_type*/>`.
 
@@ -18330,7 +18394,7 @@ Se si ha una buona ragione per usare un altro contenitore, lo si usi. Per esempi
 
 * Se si vuole un contenitore per una ricerca in stile dizionario che garantisca ricerche O(K) o O(log N), con un contenitore più grande (più che qualche KB) e si dovranno eseguire frequenti inserimenti per cui la gestione dello spazio aggiuntivo [overhead] di un `vector` ordinato non è fattibile, tendere, invece, all'uso di `unordered_map` o `map`.
 
-##### Note
+##### Nota
 
 Per inizializzare un vettore con un certo numero di elementi, usare l'inizializzazione `()`.
 Per inizializzare un vettore con una lista di elementi, usare l'inizializzazione `{}`.
@@ -18349,7 +18413,7 @@ Per inizializzare un vettore con una lista di elementi, usare l'inizializzazione
 
 Leggere o scrivere oltre un intervallo allocato di elementi solitamente porta a brutti errori, risultati sbagliati, crash e violazioni sulla sicurezza.
 
-##### Note
+##### Nota
 
 Le funzioni della libreria standard che si applicano a sequenze [range] di elementi hanno tutte (o potrebbero avere) uno spazio extra di sicurezza [bounds-safe overloads] che prende lo `span`.
 I tipi standard come `vector` si possono modificare per eseguire dei controlli sui limiti [bounds-check] sotto il profilo dei limiti (in modo compatibile, ad esempio aggiungendo i contratti [contract]), o usati con `at()`.
@@ -18420,7 +18484,7 @@ Questa regola fa parte del [profilo dei limiti [bounds profile]](#SS-bounds).
 
 In questo modo si ingarbuglia la semantica degli oggetti (p.es., sovrascrivendo un `vptr`).
 
-##### Note
+##### Nota
 
 Allo stesso modo per (w)memset, (w)memcpy, (w)memmove, e (w)memcmp
 
@@ -18537,7 +18601,7 @@ Abbiamo capito bene?
 Il chiamante si ricorderà di eseguire il `free()` per il puntatore restituito?
 Questo codice supererà un test sulla sicurezza?
 
-##### Note
+##### Nota
 
 Non dare per scontato che `string` sia più lenta delle tecniche a basso livello senza fare delle misure e si ricordi che non in tutto il codice sono importanti le prestazioni.
 [Non ottimizzare prematuramente](#Rper-Knuth)
@@ -18563,7 +18627,7 @@ Non dare per scontato che `string` sia più lenta delle tecniche a basso livello
         auto v3 = read_until(ss);
         // ...
     }
-##### Note
+##### Nota
 
 `std::string_view` (C++17) è a sola lettura.
 
@@ -18588,15 +18652,15 @@ Tutto quello che si sa è che si suppone essere o il nullptr o che punta ad alme
     void f1(zstring s);     //  s è una stringa C-style o il nullptr
     void f1(czstring s);    // s è una stringa C-style costante o il nullptr
     void f1(std::byte* s);  // s è un puntatore a un byte (C++17)
-##### Note
+##### Nota
 
 Non convertire una stringa C-style in `string` senza motivo.
 
-##### Note
+##### Nota
 
 Come ogni altro "puntatore semplice [plain]", una `zstring` non dovrebbe rappresentare la proprietà [ownership].
 
-##### Note
+##### Nota
 
 Ci sono miliardi di righe di codice C++ "in giro", la maggior parte usa `char*` e `const char*` senza documentarne l'intenzione.
 Queste vengono usate in un'ampia varietà di modi, come per rappresentare la proprietà [ownership] e come puntatori generici alla memoria (invece di `void*`).
@@ -18647,7 +18711,7 @@ L'uso di `char*` per rappresentare un puntatore a qualcosa che non è necessaria
 ##### Esempio
 
     ???
-##### Note
+##### Nota
 
 C++17
 
@@ -18665,7 +18729,7 @@ C++17
 ##### Esempio
 
     ???
-##### Note
+##### Nota
 
 ???
 
@@ -18683,7 +18747,7 @@ C++17
 
 ???
 
-##### Note
+##### Nota
 
 ???
 
@@ -18833,12 +18897,12 @@ Questo rallentamento è significativo rispetto all'output in stile `printf`.
 
     cout << "Hello, World!" << endl;    // due operazioni di output ed un flush
     cout << "Hello, World!\n";          // una operazione di output e nessun flush
-##### Note
+##### Nota
 
 Per l'interazione `cin`/`cout` (e le equivalenti), non c'è alcun motivo per eseguire il flush; viene fatto automaticamente.
 Durante la scrittura in un file, c'è raramente bisogno di eseguire il `flush`.
 
-##### Note
+##### Nota
 
 A parte il problema (occasionalmente importante) della performance, la scelta tra `'\n'` e `endl` è quasi soltanto estetica.
 
@@ -18898,7 +18962,7 @@ L'isolamento del codice meno stabile ne facilita le unità di test, migliora l'i
 
 ##### Motivo
 
-##### Note
+##### Nota
 
 Una libreria è una collezione di dichiarazioni e definizioni mantenute, documentate e raggruppate assieme.
 Una libreria può essere un set di header (una "header-only library") o un insieme di header più un insieme di file oggetto.
@@ -18912,7 +18976,7 @@ Una libreria può essere un set di header (una "header-only library") o un insie
 * Una ciclicità complica il processo di compilazione.
 * Le ciclicità sono difficili da capire e potrebbero introdurre indeterminismo (comportamento non specificato).
 
-##### Note
+##### Nota
 
 Una libreria può contenere riferimenti ciclici nella definizione dei propri componenti.
 Per esempio:
@@ -19790,7 +19854,7 @@ Il codice dice ciò che viene fatto non ciò che si vorrebbe fosse fatto. Spesso
     {
         // ... qualche riga di codice non semplicissime ...
     }
-##### Note
+##### Nota
 
 Se il commento e il codice non coincidono, è probabile che siano entrambi sbagliati.
 
@@ -19800,7 +19864,7 @@ Se il commento e il codice non coincidono, è probabile che siano entrambi sbagl
 
 La verbosità rallenta la comprensione e rende il codice più difficile da leggere sparpagliandolo nel file di origine.
 
-##### Note
+##### Nota
 
 Usare un inglese chiaro.
 Si potrebbe scrivere in un ottimo danese, ma molti programmatori non lo capirebbero; i manutentori del codice potrebbero non essere danesi.
@@ -19823,7 +19887,7 @@ Leggibilità. Evitare "errori stupidi".
     for (i = 0; i < max; ++i); // in attesa che avvenga un bug
     if (i == j)
         return i;
-##### Note
+##### Nota
 
 Solitamente è una buona idea indentare sempre l'istruzione dopo `if (...)`, `for (...)`, e `while (...)`:
 
@@ -19857,7 +19921,7 @@ Ridurre al minimo le conversioni involontarie.
 
     print(1);              // chiaro, corrispondenza automatica del tipo
     print("xyzzy");        // chiaro, corrispondenza automatica del tipo
-##### Note
+##### Nota
 
 I nomi con i tipi codificati sono prolissi e criptici.
 
@@ -19866,7 +19930,7 @@ I nomi con i tipi codificati sono prolissi e criptici.
     printi  // stampa un int
 L'esigenza di tecniche come la notazione ungherese per codificare un tipo è stata necessaria nei linguaggi non tipizzati, ma risulta generalmente inutile e molto dannosa in un linguaggio fortemente tipizzato come il C++, perché le annotazioni non vengono aggiornate (i commenti sono come le verruche: marciscono) e interferiscono con il buon uso del linguaggio (utilizzare, invece, lo stesso nome e risolvere con l'[overload]).
 
-##### Note
+##### Nota
 
 Certi stili usano prefissi molto generali (non specifici del tipo) per denotare l'uso generale di una variabile.
 
@@ -19880,7 +19944,7 @@ Certi stili usano prefissi molto generali (non specifici del tipo) per denotare 
     //       solo per dire genericamente "questo è l conteggio di qualcosa"
 Ciò non è dannoso e non rientra in questa linea-guida poiché non codifica il tipo.
 
-##### Note
+##### Nota
 
 Certi stili distinguono tra variabili membro, locali e globali.
 
@@ -19890,7 +19954,7 @@ Certi stili distinguono tra variabili membro, locali e globali.
     };
 Ciò non è dannoso e non rientra in questa linea-guida poiché non codifica il tipo.
 
-##### Note
+##### Nota
 
 Come il C++, alcuni stili fanno distinzione tra i tipi e i non tipi.
 Per esempio, mettendo in maiuscolo i nomi dei tipi ma non i nomi delle funzioni e delle variabili.
@@ -19928,7 +19992,7 @@ Usare `p` per un puntatore e `x` per una variabile in virgola mobile è una conv
 
 **Motivazione**: La coerenza e lo stile della nomenclatura aumentano la leggibilità.
 
-##### Note
+##### Nota
 
 Esistono molti stili e quando si utilizzano più librerie, non è possibile seguire tutte le diverse convenzioni.
 Scegliere uno "stile proprio", ma lasciare le librerie "importate" col loro stile originale.
@@ -19963,7 +20027,7 @@ CamelCase: mette in maiuscolo l'iniziale di ogni parola in un identificatore mul
 
 Alcune convenzioni mettono in maiuscolo la prima lettera, altre non lo fanno.
 
-##### Note
+##### Nota
 
 Cercare di essere coerenti con l'uso di acronimi e sulle lunghezze degli identificatori:
 
@@ -19986,7 +20050,7 @@ Per evitare di confondere le macro con nomi che obbediscono alle regole sullo sc
         const int SIZE{1000};  // Bad, usare 'size', invece
         int v[SIZE];
     }
-##### Note
+##### Nota
 
 Questa regola si applica alle costanti simboliche non-macro:
 
@@ -20002,7 +20066,7 @@ Questa regola si applica alle costanti simboliche non-macro:
 
 L'utilizzo degli underscore per separare le parti dei nomi è lo stile originale del C e del C++ ed è usato nella Libreria Standard del C++.
 
-##### Note
+##### Nota
 
 Questa è regola è un default valido solo se si può scegliere.
 Spesso, non si può scegliere e si deve seguire, per [coerenza](#Rl-name), uno stile prestabilito.
@@ -20044,7 +20108,7 @@ Usare suffissi letterali dove è necessario chiarire
     auto hello = "Hello!"s; // una std::string
     auto world = "world";   // una stringa C-style
     auto interval = 100ms;  // using <chrono>
-##### Note
+##### Nota
 
 I letterali non devono essere sparpagliati per tutto il codice come ["costanti magiche"](#Res-magic), ma è comunque una buona idea renderli leggibili dove sono definiti.
 È facile sbagliare con una lunga stringa di interi.
@@ -20075,14 +20139,14 @@ Troppi spazi ingrossano il testo e distraggono.
     {
         // ...
     }
-##### Note
+##### Nota
 
 Alcuni IDE hanno le proprie opinioni e aggiungono spazi inopportuni.
 
 Questa è una raccomandazione per [quando non si hanno vincoli o idee migliori](#S-naming).
 Questa regola è stata aggiunta dopo molte richieste di regolamentazione.
 
-##### Note
+##### Nota
 
 Sono ben accetti gli spazi ben posizionati come un aiuto significativo alla leggibilità. Non esagerare.
 
@@ -20151,7 +20215,7 @@ Segnalare le discrepanze dall'ordinamento suggerito. Ci sarà un sacco di vecchi
 
 Questo è il layout originale del C e del C++. Conserva bene la spaziatura verticale. Distingue bene i diversi costrutti del linguaggio (come le funzioni e le classi).
 
-##### Note
+##### Nota
 
 Nel contesto del C++, questo stile viene spesso chiamato "Stroustrup".
 
@@ -20195,19 +20259,19 @@ Questa regola è stata aggiunta dopo molte richieste di regolamentazione.
     }
 Si noti lo spazio tra l'`if` e la `(`
 
-##### Note
+##### Nota
 
 Usare righe diverse per ciascuna istruzione, le graffe di un `if`, e il body di un `for`.
 
-##### Note
+##### Nota
 
 La `{` di una `class`e o di una `struct`, *non* sta su una riga a sé, ma la `{` per una funzione, sì.
 
-##### Note
+##### Nota
 
 Iniziali in maiuscolo per i nomi dei tipi [user-defined] per distinguerli dai tipi della libreria standard.
 
-##### Note
+##### Nota
 
 Non mettere le iniziali delle funzioni in maiuscolo.
 
@@ -20227,7 +20291,7 @@ L'uso negli argomenti delle espressioni non vale per i riferimenti.
     T& operator[](size_t);   // OK
     T &operator[](size_t);   // sembra strano
     T & operator[](size_t);   // indeciso
-##### Note
+##### Nota
 
 Questa è una raccomandazione per [quando non si hanno vincoli o idee migliori](#S-naming).
 Questa regola è stata aggiunta dopo molte richieste di regolamentazione.
@@ -20277,7 +20341,7 @@ Facile.
 Leggibilità.
 Ridurre al minimo la confusione con la sintassi del dichiaratore.
 
-##### Note
+##### Nota
 
 Per i dettagli si veda [ES.10](#Res-name-one).
 
@@ -20293,7 +20357,7 @@ Per i dettagli si veda [ES.10](#Res-name-one).
     void f(void);   // bad
 
     void g();       // meglio
-##### Note
+##### Nota
 
 Anche Dennis Ritchie ritenne che `void f(void)` fosse un abominio.
 Si poteva giustificare questo abominio in C quando i prototipi delle funzioni erano rari quindi vietare questo:
@@ -20316,7 +20380,7 @@ Coerenza in tantissimo codice esistente.
 
     const int *const p = nullptr;   // OK, da puntatore costante a int costante
     int const *const p = nullptr;   // bad, da puntatore costante a int costante
-##### Note
+##### Nota
 
 Sappiamo bene che si potrebbero portare esempi "cattivi" più logici di quelli contrassegnati  con "OK", ma questi confondono più gente, specialmente i principianti che si affidano al materiale didattico fatto con uno stile OK molto più comune e convenzionale.
 
@@ -20620,7 +20684,7 @@ In casi più rari, come le classi di sistema [policy], la classe viene usata com
 
     template<class Policy>
     class customizable : Policy { /* ... */ }; // nota: ereditarietà di private
-##### Note
+##### Nota
 
 Questa semplice linea-guida illustra un problema sottile e riguarda gli usi moderni dell'ereditarietà e dei principi di progettazione object-oriented .
 
@@ -20716,7 +20780,7 @@ Non consentire mai la segnalazione di un errore da un distruttore, da una funzio
        std::vector<Nefarious> vec(10);   // questa riga può eseguire std::terminate()
    La libreria standard proibisce l'esecuzione del [throw] in tutti i distruttori che usa. Non si possono memorizzare oggetti `Nefarious` nei contenitori standard o usarli con qualsiasi altra parte della libreria standard.
 
-##### Note
+##### Nota
 
 Queste sono funzioni chiave che non devono fallire perché sono necessarie per le due operazioni principali nella programmazione transazionale: eseguire il ripristino del lavoro se si verificano problemi durante l'elaborazione e "committare" il lavoro se tutto è ok. Se non è possibile tornare indietro in modo sicuro utilizzando le operazioni "no-fail", è impossibile implementare il rollback "no-fail". Se non è possibile eseguire il commit sicuro dei cambiamenti di stato utilizzando un'operazione "no-fail" (in particolare, ma non solo, `swap`), è impossibile implementare il commit "no-fail".
 
@@ -20749,11 +20813,11 @@ Quando si utilizzano le eccezioni come meccanismo di gestione degli errori, docu
 
 ???
 
-##### Note
+##### Nota
 
 Se si definisce un costruttore copia, si deve anche definire un operatore di assegnazione copia.
 
-##### Note
+##### Nota
 
 Se si definisce un costruttore di spostamento [move], si deve anche definire un operatore di assegnazione move.
 
@@ -20809,7 +20873,7 @@ Se si definisce la copia e qualsiasi base o membro ha un tipo che definisce un'o
     }
 Se si definisce o un costruttore copia, un operatore di assegnazione copia o un distruttore, probabilmente è necessario definire gli altri.
 
-##### Note
+##### Nota
 
 Se si deve definire una di queste cinque funzioni, significa che serve qualcosa in più del comportamento di default -- e che le cinque sono asimmetricamente correlate. Ecco come:
 
@@ -20912,7 +20976,7 @@ L'utilizzo di `span` e `string_view` dovrebbe aiutare molto (non sono handle di 
 
 Essere in grado di distinguere i proprietari dalle viste.
 
-##### Note
+##### Nota
 
 Questo è indipendente da come si "scrive" il puntatore: `T*`, `T&`, `Ptr<T>` and `Range<T>` non sono proprietari [owner].
 
@@ -20992,7 +21056,7 @@ Fornire il controllo completo della durata della risorsa. Fornire un insieme coe
 ##### Esempio
 
     ??? Problemi con i puntatori
-##### Note
+##### Nota
 
 Se tutti i membri sono handle di risorse, affidarsi, ove possibile, alle operazioni speciali di default.
 
