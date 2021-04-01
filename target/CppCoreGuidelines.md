@@ -4174,6 +4174,7 @@ Riepilogo delle regole sui tipi concreti:
 
 * [C.10: Preferire i tipi concreti alle gerarchie di classi](#Rc-concrete)
 * [C.11: Rendere concreti i tipi regolari](#Rc-regular)
+* [C.12: Non creare dati membro `const` o riferimenti](#Rc-constref)
 
 ### <a name="Rc-concrete"></a>C.10: Preferire i tipi concreti alle gerarchie di classi
 
@@ -4258,6 +4259,26 @@ Spesso, questi tipi vengono definiti "move-only types" [tipi di solo spostamento
 ##### Imposizione
 
 ???
+
+
+### <a name="Rc-constref"></a>C.12: Non creare dati membro `const` o riferimenti
+
+##### Motivo
+
+Non sono utili e rendono i tipi difficili da usare rendendoli non copiabili o parzialmente non copiabili per subdoli motivi.
+
+##### Esempio; cattivo
+
+    class bad {
+        const int i;    // bad
+        string& s;      // bad
+        // ...
+    };
+##### Imposizione
+
+Segnalare un dato membro che sia `const`, `&` o `&&`.
+
+
 
 ## <a name="S-ctor"></a>C.ctor: Costruttori, assegnazioni e distruttori
 
@@ -5705,7 +5726,7 @@ Si consideri:
 
 (Semplice) Gli operatori di assegnazione non devono avere lo schema `if (this == &a) return *this;` ???
 
-### <a name="Rc-move-assignment"></a>C.63: Rendere l'assegnazione di spostamento [move] non-`virtual`, prendere il parametro con `&&`, e restituire con non-`const &`
+### <a name="Rc-move-assignment"></a>C.63: Rendere l'assegnazione di spostamento non-`virtual`e, prendere il parametro con `&&`, e restituire non-`const&`
 
 ##### Motivo
 
@@ -6214,11 +6235,11 @@ Naturalmente ci sono modi per far funzionare `==` in una gerarchia, ma gli appro
 
 ##### Nota
 
-Questa regola si applica a tutti i soliti operatori di confronto: `!=`, `<`, `<=`, `>`, e `>=`.
+Questa regola si applica a tutti i soliti operatori di confronto: `!=`, `<`, `<=`, `>`, `>=` e  `<=>`.
 
 ##### Imposizione
 
-* Segnalare un `operator==()` virtuale; lo stesso per altri operatori di confronto: `!=`, `<`, `<=`, `>`, e `>=`.
+* Segnalare un `operator==()` virtuale; lo stesso per altri operatori di confronto: `!=`, `<`, `<=`, `>`, `>=` e `<=>`.
 
 ### <a name="Rc-hash"></a>C.89: Rendere un `hash` `noexcept`
 
@@ -7897,7 +7918,7 @@ Di per sé, `cout_my_class` sarebbe OK, ma non è utilizzabile/componibile col c
 
 Ci sono convenzioni forti e resistenti per il significato della maggior parte degli operatori, come ad esempio
 
-* confronti (`==`, `!=`, `<`, `<=`, `>`, e `>=`),
+* confronti (`==`, `!=`, `<`, `<=`, `>`, `>=` e  `<=>`),
 * operazioni aritmetiche (`+`, `-`, `*`, `/`, e `%`)
 * operazioni di accesso (`.`, `->`, `*` unario, e `[]`)
 * assegnazione (`=`)
@@ -18238,6 +18259,20 @@ Un test dovrebbe identificare gli header referenziati tramite `""` che dovrebber
 Niente all'esterno può dipendere da un'entità in un namespace annidato senza nome.
 Considerare di mettere ogni definizione in un file sorgente dell'implementazione, in un namespace senza nome, a meno che non definisca un'entità "esterna/esportata".
 
+##### Esempio; cattivo
+
+    static int f();
+    int g();
+    static bool h();
+    int k();
+##### Esempio; buono
+
+    namespace {
+        int f();
+        bool h();
+    }
+    int g();
+    int k();
 ##### Esempio
 
 Una classe API e i suoi membri non possono stare in un namespace anonimo; ma ogni classe "helper" o funzione definita in un file sorgente dell'implementazione deve stare nello scope di un namespace senza nome.
@@ -19743,7 +19778,7 @@ Si veda [the contract proposal](http://www.open-std.org/jtc1/sc22/wg21/docs/pape
 
 * `finally`        // `finally(f)` crea una `final_action{f}` con un distruttore che invoca `f`
 * `narrow_cast`    // `narrow_cast<T>(x)` è `static_cast<T>(x)`
-* `narrow`         // `narrow<T>(x)` è `static_cast<T>(x)` se `static_cast<T>(x) == x` o solleva [throw] l'errore `narrowing_error`
+* `narrow`         // `narrow<T>(x)` è `static_cast<T>(x)` se `static_cast<T>(x) == x` senza alcun passaggio signed/unsigned  [signedness], o genera un `narrowing_error` (p. es., `narrow<unsigned>(-42)` solleva un errore)
 * `[[implicit]]`   // "Marker" da mettere sui costruttori ad argomento singolo per crearli espressamente non-espliciti.
 * `move_owner`     // `p = move_owner(q)` significa `p = q` ma ???
 * `joining_thread` // una versione in stile RAII di `std::thread` che esegue il join.
