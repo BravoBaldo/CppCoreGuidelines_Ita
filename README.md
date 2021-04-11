@@ -1,6 +1,6 @@
 # CppCoreGuidelines_Ita
-Italian translation of CppCoreGuidelines and some handling tool
-
+Italian translation of CppCoreGuidelines.
+Traduzione italiana delle CppCoreGuidelines.
 
 ## HTML version formatted for browsing in Italian:
 

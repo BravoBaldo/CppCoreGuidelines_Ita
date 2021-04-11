@@ -2259,6 +2259,7 @@ Altre regole sulle funzioni:
 * [F.53: Evitare l'acquisizione per riferimento nelle lambda che non si useranno localmente, compresi quelli restituiti, memorizzati nell'heap o passati da un altro thread](#Rf-value-capture)
 * [F.54: Se si acquisisce `this`, se ne acquisiscono esplicitamente tutte le variabili (senza acquisirne i default)](#Rf-this-capture)
 * [F.55: Non usare gli argomenti `va_arg`](#F-varargs)
+* [F.56: Evitare inutili condizioni di annidamento](#F-nesting)
 
 Le funzioni hanno forti somiglianze con le lambda e gli oggetti funzione.
 
@@ -3803,6 +3804,71 @@ La dichiarazione di un parametro `...` talvolta è utile nelle tecniche che non 
 
 * Emette una diagnostica per l'uso di `va_list`, `va_start` o `va_arg`.
 * Emette una diagnostica per il passaggio di un argomento ad un parametro vararg di una funzione che non offre un overload per un tipo più specifico nella posizione del vararg. Per correggere: Utilizzare una funzione diversa o `[[suppress(types)]]`.
+
+
+### <a name="F-nesting"></a>F.56: Evitare inutili condizioni di annidamento
+
+##### Motivo
+
+Un limitato annidamento delle condizioni rende il codice più facile da seguire. Ne rende anche più chiaro o scopo.
+Sforzarsi nel porre il codice essenziale nello scope più esterno, a meno che questo non nasconda l'intento del codice).
+
+##### Esempio
+
+Utilizza una [guard-clause] per gestire casi eccezionali e tornare prima.
+
+    // Bad: Troppi annidamenti
+    void foo() {
+        ...
+        if (x) {
+            computeImportantThings(x);
+        }
+    }
+
+    // Bad: rimane un else ridondante.
+    void foo() {
+        ...
+        if (!x) {
+            return;
+        }
+        else {
+            computeImportantThings(x);
+        }
+    }
+
+    // Buono: torna prima, nessun else ridondante
+    void foo() {
+        ...
+        if (!x)
+            return;
+
+        computeImportantThings(x);
+    }
+##### Esempio
+
+    // Bad: Annidamento non necessario delle condizioni
+    void foo() {
+        ...
+        if (x) {
+            if (y) {
+                computeImportantThings(x);
+            }
+        }
+    }
+
+    // Buono: Condizioni raccolte + return anticipato
+    void foo() {
+        ...
+        if (!(x && y))
+            return;
+
+        computeImportantThings(x);
+    }
+##### Imposizione
+
+Segnalare un `else` ridondante.
+Segnalare una funzione il cui corpo è semplicemente un'istruzione condizionale che racchiude un blocco.
+
 
 # <a name="S-class"></a>C: Classi e gerarchie di classi
 
@@ -5947,7 +6013,7 @@ Le classi che rappresentano oggetti eccezioni devono sia essere polimorfiche che
 
 ## C.other: Altre regole sulle operazioni di default
 
-Oltre alle operazioni per le quali il linguaggio offre implementazioni di default, ci sono alcune operazioni che sono così fondamentali che necessitano di regole per la loro definizione: confronti, `swap`, e `hash`.
+Oltre alle operazioni per le quali il linguaggio offre implementazioni di default, ci sono alcune operazioni talmente fondamentali che necessitano di regole specifiche per la loro definizione: confronti, `swap`, e `hash`.
 
 ### <a name="Rc-eqdefault"></a>C.80: Utilizzare `=default` se si deve essere espliciti sull'uso della semantica del default
 
@@ -6157,7 +6223,7 @@ Se uno `swap` tenta di uscire con un'eccezione, si tratta di un errore di proget
 ##### Motivo
 
 Il trattamento asimmetrico degli operandi è inatteso e fonte di errori dove sono possibili delle conversioni.
-`==` è un'operazione fondamentale e i programmatori dovrebbero essere in grado di usarla senza paura di fallire.
+`==` è un'operazione fondamentale e i programmatori dovrebbero essere in grado di usarla senza paura di sbagliare.
 
 ##### Esempio
 
