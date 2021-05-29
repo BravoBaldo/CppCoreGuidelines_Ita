@@ -548,7 +548,7 @@ Un approccio migliore deve essere esplicito sul significato del double (nuova ve
     change_speed(Speed s);    // meglio: il significato di s è specificato
     // ...
     change_speed(2.3);        // errore: nessuna unità
-    change_speed(23m / 10s);  // metri al secondo
+    change_speed(23_m / 10s);  // metri al secondo
 Avremmo potuto accettare un semplice `double` (senza unità di misura) come delta, ma sarebbe stato soggetto a errori.
 Se avessimo voluto sia la velocità assoluta che i delta, avremmo definito un tipo `Delta`.
 
@@ -1679,7 +1679,7 @@ Rendere l'interfaccia esattamente specificata e controllabile durante la compila
 Usare lo stile C++20 della specifica dei requisiti. Per esempio:
 
     template<typename Iter, typename Val>
-    // requires InputIterator<Iter> && EqualityComparable<ValueType<Iter>>, Val>
+    // richiede InputIterator<Iter> && EqualityComparable<ValueType<Iter>, Val>
     Iter find(Iter first, Iter last, Val v)
     {
         // ...
@@ -6768,6 +6768,7 @@ Una classe con una funzione virtuale è solitamente (e in generale) utilizzata t
     // bad: derivato da una classe senza un distruttore virtuale
     struct D : B {
         string s {"default"};
+        // ...
     };
 
     void use()
@@ -7699,10 +7700,10 @@ Indicizzando [Subscripting] il puntatore base risultante porterà ad accedere ad
     void use(B*);
 
     D a[] = {{1, 2}, {3, 4}, {5, 6}};
-    B* p = a;     // bad: a decade in &a[0] che viene convertito in un B*
-    p[1].x = 7;   // sovrascrive  D[0].y
+    B* p = a;     // bad: un decadimento in &a[0] che viene convertito in un B*
+    p[1].x = 7;   // sovrascrive a[0].y
 
-    use(a);       // bad: a decade in &a[0] che viene convertito in un B*
+    use(a);       // bad: un decadimento in &a[0] che viene convertito in un B*
 ##### Imposizione
 
 * Segnalare tutte le combinazioni di decadimenti e basi di array in conversioni derivate.
@@ -8327,7 +8328,7 @@ Se si vogliono vedere i byte di un `int`, si usa un (named) cast:
         cout << p[0] << '\n';     // OK; meglio
         // ...
     }
-Accedere al risultato di un `reinterpret_cast` per un tipo diverso degli oggetti dichiarati è un comportamento definito (anche se `reinterpret_cast` è sconsigliato), ma almeno si può vedere che succede qualcosa di strano.
+Accedere al risultato di un `reinterpret_cast` per un tipo diverso degli oggetti dichiarati è un comportamento definito. (L'uso di `reinterpret_cast` è sconsigliato, ma almeno si può vedere che succede qualcosa di strano.
 
 ##### Nota
 
@@ -8424,7 +8425,7 @@ Questi `switch` con case mancanti sono spesso il risultato di un enumeratore agg
 ##### Imposizione
 
 * Segnalare le istruzioni `switch` dove i `case` non gestiscono tutti gli enumeratori di una enumerazione.
-* Segnalare le istruzioni `switch` dove i `case` gestiscono alcuni enumeratori di una enumerazione ma senza alcun caso di `default`.
+* Segnalare le istruzioni `switch` dove i `case` gestiscono alcuni enumeratori di una enumerazione ma non c'è alcun caso di `default`.
 
 
 ### <a name="Renum-class"></a>Enum.3: Preferire la class enum alle "semplici" enum
@@ -11880,10 +11881,8 @@ Leggibilità. Prevenzione degli errori. Efficienza.
         cout << f(v, &v[i]) << '\n';
 
     for (gsl::index i = 0; i < v.size(); ++i) { // nel body si scombussola la variabile del loop: non può essere un range-for
-        if (i % 2 == 0)
-            continue;   // salta gli elementi pari
-        else
-            cout << v[i] << '\n';
+        if (i % 2 != 0)
+            cout << v[i] << '\n'; // in output gli elementi dispari
     }
 n umano o un buon analizzatore statico potrebbe determinare che non ci sono effetti collaterali su `v` in `f(v, &v[i])` in modo che si possa riscrivere il loop.
 
@@ -12876,7 +12875,7 @@ Ciò implica un lavoro aggiuntivo per il programmatore, soggetto a errori e si p
     // 100 blocchi di memoria di sizeof(double) cominciando
     // dall'indirizzo data usando l'ordine definito da compare_doubles
     qsort(data, 100, sizeof(double), compare_doubles);
-Dal punto di vista della progettazione dell'interfaccia c'è che `qsort` getta via informazioni utili.
+Dal punto di vista della progettazione dell'interfaccia, `qsort` getta via informazioni utili.
 
 Si può fare di meglio (nel C++98)
 
@@ -13060,7 +13059,7 @@ Esistono tecniche simili per selezionare la funzione ottimale da chiamare.
 
 ##### Nota
 
-L'ideale {non} è il tentare di eseguire tutto durante la compilazione.
+L'ideale *non* è il tentare di eseguire tutto durante la compilazione.
 Ovviamente, la maggior parte dei calcoli dipende dagli input, quindi non si possono spostare al tempo della compilazione, ma al di là di questo vincolo logico c'è il fatto che un calcolo complesso in fase di compilazione può aumentare seriamente i tempi di compilazione e complicare il debug.
 È anche possibile che si rallenti il codice mediante il calcolo in fase di compilazione.
 Questo è certamente raro, ma suddividendo un calcolo generico in diversi sotto-calcoli ottimizzati è possibile rendere meno efficace la cache delle istruzioni.
@@ -13324,14 +13323,14 @@ Meno condivisione si fa, minori possibilità si hanno di aspettare per un lock (
 ##### Esempio
 
     bool validate(const vector<Reading>&);
-    Graph<Temp_node> temperature_gradiants(const vector<Reading>&);
+    Graph<Temp_node> temperature_gradients(const vector<Reading>&);
     Image altitude_map(const vector<Reading>&);
     // ...
 
     void process_readings(const vector<Reading>& surface_readings)
     {
         auto h1 = async([&] { if (!validate(surface_readings)) throw Invalid_data{}; });
-        auto h2 = async([&] { return temperature_gradiants(surface_readings); });
+        auto h2 = async([&] { return temperature_gradients(surface_readings); });
         auto h3 = async([&] { return altitude_map(surface_readings); });
         // ...
         h1.get();
@@ -13375,7 +13374,7 @@ I concetti dell'applicazione sono più facili da immaginare.
 
 Ad eccezione di `async()`, le funzioni della libreria standard sono low-level, machine-oriented, a livello di thread-e-lock.
 Questa è un fondamento necessario, ma si deve cercare di aumentare il livello di astrazione: per produttività, per affidabilità e per prestazione.
-Questo è un potente argomento per usare librerie a più alto livello, più orientate alle applicazioni (possibilmente, basate sulle funzioni della libreria standard).
+Questo è un potente argomento per usare librerie a più alto livello, più orientate alle applicazioni (se possibile, basate sulle funzioni della libreria standard).
 
 ##### Imposizione
 
@@ -13429,7 +13428,7 @@ Usare un `mutex` per esempi più complicati.
 ### <a name="Rconc-tools"></a>CP.9: Quando possibile utilizzare i tool per validare il proprio codice concorrente
 
 L'esperienza dimostra che il codice concorrente è estremamente difficile da scrivere correttamente e che il controllo in fase di compilazione, quelli a run-time, ed i test sono meno efficaci nel trovare gli errori sulla concorrenza rispetto a quelli che cercano errori nel codice sequenziale.
-Subdoli errori di concorrenza possono avere effetti drammaticamente negativi, tra cui la corruzione della memoria e i deadlock.
+Subdoli errori di concorrenza possono avere effetti drammaticamente negativi, tra cui la corruzione della memoria, deadlock e vulnerabilità della sicurezza.
 
 ##### Esempio
 
@@ -13447,7 +13446,7 @@ Sfortunatamente le esigenze e i vincoli delle persone differiscono in modo così
 
 * strumenti di imposizione [enforcement] dinamica: Il [Thread Sanitizer](http://clang.llvm.org/docs/ThreadSanitizer.html) di Clang (aka TSAN) è un potente esempio di strumenti dinamici: esso cambia la compilazione e l'esecuzione del proprio programma aggiungendo un conteggio sull'accesso della memoria, identificando assolutamente i conflitti in una data esecuzione del codice binario.
    Il suo costo è sia in memoria (5-10x nella maggior parte dei casi) che in rallentamento della CPU (2-20x).
-   Gli strumenti dinamici come questi sono migliori quando vengono applicati ai test di integrazione, [canary pushes], o unit di test che operano su thread multipli.
+   Gli strumenti dinamici come questi sono migliori quando vengono applicati ai test di integrazione, ai "canary pushes", o unit di test che operano su thread multipli.
    Il carico di lavoro è importante: Quando TSAN identifica un problema, si tratta sempre di un vero e proprio confitto [data race],
    ma può identificare solo i conflitti visti in una data esecuzione.
 
@@ -13558,6 +13557,8 @@ Qui, quelli che hanno scritto `thread1` e `thread2` non sono ancora d'accordo su
 
 Nel codice reale, i `mutex` hanno raramente un nome per rammentare convenientemente al programmatore una relazione e un ordine di acquisizione previsti.
 Nel codice reale, i `mutex` non sempre sono convenientemente acquisiti su righe consecutive.
+
+##### Nota
 
 Nel C++17 è possibile scrivere semplicemente
 
@@ -13810,7 +13811,7 @@ Segnalare i `detach()`.
 
 ##### Motivo
 
-Copiare una piccola quantità di dati è più economico da copiare e da accedervi rispetto alla condivisione mediante un meccanismo di lock.
+Una piccola quantità di dati è più economica da copiare e da accedervi rispetto alla condivisione mediante un meccanismo di locking.
 La copia offre naturalmente una proprietà [ownership] esclusiva (semplifica il codice) ed elimina la possibilità di conflitti.
 
 ##### Nota
@@ -14355,7 +14356,7 @@ Ci sono regole rigide per i test che coprono qualsiasi cambiamento nell'hardware
 
 ##### Motivo
 
-Ad eccezione di quelli atomici e di alcuni altri pattern standard, la programmazione lock-free è veramente un argomento per soli esperti.
+Ad eccezione di quelli atomici e di alcuni altri pattern standard, la programmazione senza lock "lock-free" è veramente un argomento per soli esperti.
 Si deve diventare esperti prima di cimentarsi in codice lock-free utilizzabile da altri.
 
 ##### Riferimenti
@@ -14911,7 +14912,7 @@ Un'altra soluzione (spesso migliore) sarebbe quella di utilizzare una variabile 
     }
 ##### Nota
 
-Se si hanno "cose" locali che richiedono la pulizia [cleanup], ma non sono rappresentate da un oggetto con un distruttore, tale pulizia dev'essere fatta anche prima di un `throw`.
+Se si ha una "cosa" locale che richiede la pulizia [cleanup], ma non è rappresentata da un oggetto con un distruttore, tale pulizia dev'essere fatta anche prima di un `throw`.
 A volte, [`finally()`](#Re-finally) può rendere questa sistematicamente pulizia un po' più gestibile.
 
 ### <a name="Re-exception-types"></a>E.14: Usare tipi appositamente progettati o [user-defined] come eccezioni (non i tipi [built-in])
@@ -15205,7 +15206,7 @@ Se non si possono generare eccezioni, si può simulare questo stile RAII della g
         // ...
         return 0;   // zero indica "buono"
     }
-Il problema è, ovviamente, che ora il chiamante deve ricordarsi di controllare il valore di ritorno.
+Il problema è, ovviamente, che ora il chiamante deve ricordarsi di controllare il valore di ritorno. Per invogliare a farlo, si consideri l'aggiunta di un `[[nodiscard]]`.
 
 **Si veda anche**: [Discussione](#Sd-???)
 
@@ -15458,7 +15459,7 @@ Le specifiche delle eccezioni [exception specification] indeboliscono la gestion
 Se `f()` solleva un'eccezione diversa da `X` e da `Y` viene richiamato il gestore degli imprevisti, che per default termina.
 Questo va bene, ma mettiamo che si sia verificato che questo non avvenga e `f` viene modificato per sollevare una nuova eccezione `Z`, ci si ritrova con un crash tra le mani a meno di non cambiare `use()` (e ri-testare il tutto).
 Il problema è che `f()` potrebbe stare in una libreria di cui non si ha il controllo e la nuova eccezione è qualcosa con cui `use()` non può farci nulla o a cui non è in qualche modo interessata.
-Si può cambiare `use()` per passarle `Z`, ma poi si dovranno modificare i chiamanti di `use()`.
+Si può cambiare `use()` per passarle `Z`, ma probabilmente sarà necessario modificare i chiamanti di `use()`.
 E questo diventa subito ingestibile.
 In alternative, si può aggiungere un `try`-`catch` a `use()` per mappare `Z` in un'eccezione accettabile.
 Anche questo, diventa presto ingestibile.
@@ -15487,7 +15488,7 @@ Segnalare ogni specifica di eccezione [exception specification].
 
 Le istruzioni `catch` vengono valutate nell'ordine con cui appaiono e un'istruzione può nasconderne altre.
 
-##### Esempio
+##### Esempio, cattivo
 
     void f()
     {
@@ -15535,12 +15536,12 @@ Si previene una modifica del valore accidentale o difficile da notare .
     for (int i : c) cout << i << '\n';          // BAD: solo lettura
 ##### Eccezione
 
-Gli argomenti delle funzioni vengono cambiati raramente, ma altrettanto raramente dichiarati const.
-Per evitare confusione ed un sacco di falsi positivi, non imporre questa regola agli argomenti delle funzioni.
+I parametri della funzione passati per valore vengono raramente cambiati, ma altrettanto raramente dichiarati `const`.
+Per evitare confusione ed un sacco di falsi positivi, non imporre questa regola ai parametri delle funzioni.
 
     void f(const char* const p); // pedante
-    void g(const int i);        // pedante
-Si noti che il parametro della funzione è una variabile locale, quindi le sue modifiche sono locali.
+    void g(const int i) { ... }  // pedante
+Si noti che un parametro della funzione è una variabile locale, quindi le sue modifiche sono locali.
 
 ##### Imposizione
 
@@ -15639,7 +15640,7 @@ Non è intrinsecamente un male passare un puntatore o un riferimento come non-`c
 
 ##### Imposizione
 
-* Segnalare la funzione che non modifica un oggetto passato per puntatore o riferimento non-`const`
+* Segnalare una funzione che non modifica un oggetto passato per puntatore o riferimento non-`const`
 * Segnalare una funzione che (utilizzando il cast) modifica un oggetto passato per puntatore o riferimento `const`
 
 ### <a name="Rconst-const"></a>Con.4: Utilizzare `const` per definire oggetti con valori che non cambiano dopo la costruzione
@@ -16074,7 +16075,7 @@ o equivalentemente e più succintamente:
 ##### Nota
 
 I "concetti" vengono definiti in una "Technical Specification" ISO: [concetti](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
-Una bozza di un insieme di concetti della libreria standard si può trovare in un altro TS ISO: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
+Una bozza di un insieme di concetti della libreria standard si può trovare in un altro TS ISO: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf).
 I concetti sono supportati nel GCC 6.1 e successivi.
 Di conseguenza, si commenta l'uso dei concetti negli esempi; cioè vengono usati  solo come commenti formalizzati.
 Se si usa il GCC 6.1 o successivi, si possono de-commentare:
@@ -16173,7 +16174,7 @@ Le versioni più brevi si adattano meglio al nostro modo di parlare. Si noti che
 ##### Nota
 
 I "concetti" vengono definiti in una "Technical Specification" ISO: [concetti](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf).
-Una bozza di un insieme di concetti della libreria standard si può trovare in un altro TS ISO: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf)
+Una bozza di un insieme di concetti della libreria standard si può trovare in un altro TS ISO: [ranges](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/n4569.pdf).
 I concetti sono supportati nel GCC 6.1 e successivi.
 Di conseguenza, si commenta l'uso dei concetti negli esempi; cioè vengono usati  solo come commenti formalizzati.
 Se si usa un compilatore che supporta i concetti (p.es., GCC 6.1 o successivi), si può rimuovere il `//`.
@@ -16220,7 +16221,7 @@ Questo `Addable` viola la regola matematica che supponga che l'addizione sia com
 
 ##### Nota
 
-La capacità di specificare una semantica significativa è una caratteristica distintiva di un vero concetto, al contrario di un vincolo sintattico.
+La capacità di specificare semantiche significative è una caratteristica distintiva di un vero concetto, al contrario di un vincolo sintattico.
 
 ##### Esempio (utilizzando la TS "concepts")
 
@@ -16251,7 +16252,7 @@ I concetti con più operazioni hanno una probabilità molto più bassa di abbina
 ##### Imposizione
 
 * Segnalare i `concept` a singola-operazione utilizzati al di fuori della definizione di altri `concept`.
-* Segnalare gli usi di `enable_if` che sembrano simulare `concept` a singola-operazione.
+* Segnalare gli usi di `enable_if` che sembrano simulare `concept` mono-operazione.
 
 
 ### <a name="Rt-complete"></a>T.21: Richiedere un set completo di operazioni per un concetto
@@ -16389,7 +16390,7 @@ Un insieme incompleto di vincoli può essere ancora utilissimo:
         touch(p);
         detach(p);
     }
-Quindi un `Balancer` deve fornire almeno tre operazioni su un albero `Node`, ma non si è ancora pronti a specificare una semantica dettagliata perché un nuovo tipo di albero bilanciato potrebbe richiedere più operazioni e la semantica generale precisa per tutti i nodi è difficile da definire nelle prime fasi della progettazione.
+Quindi un `Balancer` deve fornire almeno queste operazioni su un albero `Node`, ma non si è ancora pronti a specificare una semantica dettagliata perché un nuovo tipo di albero bilanciato potrebbe richiedere più operazioni e la semantica generale precisa per tutti i nodi è difficile da definire nelle prime fasi della progettazione.
 
 Un "concept" incompleto o senza una semantica ben specificata può ancora essere utile.
 Per esempio, consente alcuni controlli durante la sperimentazione iniziale.
@@ -16487,7 +16488,7 @@ Il compilatore sceglierà il modello non vincolato solo quando `C<T>` non è sod
 
     template<typename T>
     void f() = delete;
-Il compilatore selezionerà l'overload ed emetterà l'errore appropriato.
+Il compilatore selezionerà l'overload, o emetterà l'errore appropriato.
 
 ##### Nota
 
@@ -16503,7 +16504,7 @@ I vincoli complementari sono purtroppo comuni nel codice di `enable_if`:
 
 ##### Nota
 
-I requisiti complementari su uno dei requisiti sono talvolta (erroneamente) considerati gestibili.
+I requisiti complementari su un requisito sono talvolta (erroneamente) considerati gestibili.
 Tuttavia, per due o più requisiti, il numero di definizioni richieste può aumentare in modo esponenziale (2,4,8,16,...):
 
     C1<T> && C2<T>
@@ -18201,7 +18202,7 @@ Evitare di diventare accidentalmente dipendenti dai dettagli dell'implementazion
             // ...
         }
     }
-`<iostream>` espone la definizione di `std::string` ("perché?" sembra un quiz divertente), ma non è necessario farlo, quindi include transitivamente tutto l'header di `<string>`, da cui la nota domanda del principiante "perché `getline(cin,s);` non funziona?" o anche delle eventuali "`string`he non si possono confrontare con `==`).
+`<iostream>` espone la definizione di `std::string` ("perché?" sembra un quiz divertente), ma non è necessario farlo, quindi include transitivamente tutto l'header di `<string>`, da cui la nota domanda del principiante "perché `getline(cin,s);` non funziona?" o anche delle eventuali "`string`he non si possono confrontare con `==`").
 
 La soluzione è scrivere esplicitamente `#include <string>`:
 
@@ -18290,7 +18291,7 @@ I creatori delle librerie dovrebbero mettere i loro header in una cartella e far
 
 ##### Imposizione
 
-Un test dovrebbe identificare gli header referenziati tramite `""` che dovrebbero invece essere referenziati con `<>`.
+Un test dovrebbe individuare se gli header referenziati tramite `""` possono invece essere referenziati con `<>`.
 
 ### <a name="Rs-namespace"></a>SF.20: Usare i `namespace` per esprimere le strutture logiche
 
@@ -19160,7 +19161,7 @@ In particolare, la regola del return-unico rende più difficile concentrare il c
     {
         if (x < 0)
             return "negative";
-        else if (x > 0)
+        if (x > 0)
             return "positive";
         return "zero";
     }
@@ -19237,7 +19238,7 @@ Si considerino le principali obiezioni una per una
    Rispetto a che?
    Durante il confronto, assicurarsi che venga gestita la stessa serie di errori e che siano gestiti in modo equivalente.
    In particolare, non confrontare un programma che termina immediatamente al primo errore con un programma
-   che pulisce accuratamente le risorse prima di tener traccia di un errore.
+   che pulisce accuratamente le risorse prima di 'loggare' un errore.
    Sì, alcuni sistemi hanno implementazioni di gestione delle eccezioni scadenti; a volte, tali implementazioni ci obbligano a utilizzare altri approcci per la gestione degli errori, ma questo non è un problema fondamentale per le eccezioni.
    Quando si utilizza un argomento di efficienza - in qualsiasi contesto - fare attenzione a disporre di dati validi che forniscano effettivamente informazioni sul problema in esame.
 * Le eccezioni portano a leak e ad errori.
@@ -19248,7 +19249,8 @@ Si considerino le principali obiezioni una per una
 * Le prestazioni delle eccezioni non sono prevedibili.
    Se ci si trova in un sistema fortemente real-time in cui è necessario garantire il completamento di un'attività in un determinato tempo, sono necessari dei tool per avallare queste necessità.
    Per quanto si sa, tali tool non sono disponibili (almeno non per la maggior parte dei programmatori).
-* il supporto a run-time per la gestione delle eccezioni occupa troppo spazio Questo può essere il caso di piccoli sistemi (di solito sistemi embedded).
+* Il supporto a run-time della gestione delle eccezioni occupa troppo spazio
+    Questo può accadere nel caso di piccoli sistemi (di solito quelli embedded).
    Tuttavia, prima di abbandonare le eccezioni, considerare quanto spazio richiederebbe una gestione coerente degli errori utilizzando i codici di errore e quanto costerebbe la mancata rilevazione di un errore.
 
 Molti, forse la maggior parte, dei problemi con le eccezioni derivano da esigenze storiche di interagire con un codice vecchio e disordinato.
@@ -19302,7 +19304,7 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
     {
         int mx;
         int my;
-        char * data;
+        int * data;
     public:
         // il problema principale: il costruttore non costruisce completamente
         Picture(int x, int y)
@@ -19331,7 +19333,7 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
             if (data) {
                 return false;
             }
-            data = (char*) malloc(mx*my*sizeof(int));   // altro errore: possesso di raw * e malloc
+            data = (int*) malloc(mx*my*sizeof(int));   // altro errore: possesso di raw * e malloc
             return data != nullptr;
         }
 
@@ -19355,7 +19357,7 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
     {
         int mx;
         int my;
-        vector<char> data;
+        vector<int> data;
 
         static int check_size(int size)
         {
@@ -19777,7 +19779,7 @@ Questi tipi consentono all'utente di distinguere tra puntatori proprietari e non
 
 Queste "viste" non sono mai proprietarie.
 
-I riferimenti non sono mai proprietari (cfr. [R.4](#Rr-ref). Nota: I riferimenti hanno molte opportunità di sopravvivere agli oggetti cui si riferiscono (restituendo una variabile locale per riferimento, mantenendo un riferimento ad un elemento di un vettore che ha subito un `push_back`, un [binding] a `std::max(x, y + 1)`, ecc. Il profilo "Lifetime safety" punta a risolvere tali problemi, ma anche così `owner<T&>` non ha senso e se ne scoraggia l'uso.
+I riferimenti non sono mai proprietari (cfr. [R.4](#Rr-ref)). Nota: I riferimenti hanno molte opportunità di sopravvivere agli oggetti cui si riferiscono (restituendo una variabile locale per riferimento, mantenendo un riferimento ad un elemento di un vettore che ha subito un `push_back`, un [binding] a `std::max(x, y + 1)`, ecc.) Il profilo "Lifetime safety" punta a risolvere tali problemi, ma anche così `owner<T&>` non ha senso e se ne scoraggia l'uso.
 
 I nomi sono principalmente nello stile della libreria standard ISO (minuscole e underscore):
 
@@ -19834,7 +19836,7 @@ Usare `not_null<zstring>` per stringhe "C-style" che non possono essere `nullptr
 
 * `Expects`     // asserzione di precondizione. Attualmente posto nel corpo delle funzioni. In seguito, dovrebbe essere spostato nelle dichiarazioni.
    // `Expects(p)` termina  il programma a meno che `p == true`
-   // `Expect` è sotto il controllo di alcune opzioni (imposizione, messaggio di errore, alternative all'uscita del programma)
+   // `Expects` è sotto il controllo di alcune opzioni (imposizione, messaggio di errore, alternative all'uscita del programma)
 * `Ensures`     // asserzione di post-condizione. Attualmente posto nel corpo delle funzioni. In seguito, dovrebbe essere spostato nelle dichiarazioni.
 
 Attualmente queste asserzioni sono macro (che schifo!) e devono apparire (solamente) nelle definizioni delle funzioni in attesa delle decisioni del comitato sullo standard a proposito della sintassi dei contratti e delle asserzioni.
@@ -20304,7 +20306,7 @@ Evitare blocchi multipli di dichiarazioni di un tipo accesso (p.es., `public`) s
         // ...
     };
 L'utilizzo di macro per dichiarare gruppi di membri spesso porta alla violazione di eventuali regole di ordinamento.
-Tuttavia, le macro nascondono comunque ciò che viene espresso.
+Tuttavia, l'utilizzo di macro nasconde comunque ciò che viene espresso.
 
 ##### Imposizione
 
@@ -20995,7 +20997,7 @@ In una classe che contiene un riferimento, è probabilmente necessario scrivere 
 Riepilogo delle regole sulla gestione delle risorse:
 
 * [Fornire una robusta sicurezza alle risorse; cioè, mai perdere [leak] niente che si ritenga possa essere una risorsa](#Cr-safety)
-* [Mai generare un'eccezione [throw] mentre si tiene una risorsa non di proprietà di un handle](#Cr-never)
+* [Mai restituire o generare un'eccezione [throw] mentre si tiene una risorsa non di proprietà di un handle](#Cr-never)
 * [Un puntatore "semplice" o un riferimento non è mai un handle di una risorsa](#Cr-raw)
 * [Non lasciare mai che un puntatore sopravviva all'oggetto a cui punta](#Cr-outlive)
 * [Usare i template per esprimere i contenitori (ed altri gestori di risorse)](#Cr-templates)
@@ -21029,7 +21031,7 @@ Questa classe è un gestore di risorsa. Gestisce il ciclo di vita delle `T`. Per
 
 La tecnica base per evitare i leak consiste nell'avere ogni risorsa posseduta da un gestore della risorsa con un distruttore adatto. Un "checker" potrebbe trovare dei "semplici `new`". Dato un elenco di funzioni di allocazione in stile C (p.es., `fopen()`), un "checker" potrebbe anche trovare usi che non sono gestiti da un handle della risorsa. In generale, i "puntatori semplici" si possono vedere con sospetto, segnalati e/o analizzati. Un elenco completo delle risorse non può essere generato senza un input umano (la definizione di "una risorsa" è necessariamente troppo generale), ma si può "parametrizzare" un tool con un elenco di risorse.
 
-### <a name="Cr-never"></a>Discussione: Mai generare un'eccezione [throw] mentre si tiene una risorsa non di proprietà di un handle
+### <a name="Cr-never"></a>Discussione: Mai restituire o generare un'eccezione [throw] mentre si tiene una risorsa non di proprietà di un handle
 
 ##### Motivo
 
