@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-11 Marzo 2021
+17 Giugno 2021
 
 
 Editori:
@@ -2911,7 +2911,7 @@ L'argomento contrario è che impedisce (molto di frequente) l'uso della semantic
 
 ##### Eccezioni
 
-* Per i tipi [non-value], come i tipi nella gerarchia ereditaria, si restituisce un oggetto con `unique_ptr` o con `shared_ptr`.
+* Per i tipi "non-concreti", come quelli in una gerarchia di ereditarietà, si restituisce un oggetto con `unique_ptr` o con `shared_ptr`.
 * Se un tipo è costoso da spostare (p.es., `array<BigPOD>`), si consideri di allocarlo nel [free store] e restituirne un handle (p.es., `unique_ptr`), o passandolo in un riferimento ad un oggetto destinazione non-`const` da riempire (da usarsi come parametro di uscita).
 * Per riutilizzare un oggetto che porta il suo contenuto (p.es., `std::string`, `std::vector`) attraverso più chiamate alla funzione in un loop interno: lo si [tratta come un parametro in/out e lo si passa per riferimento](#Rf-out-multi).
 
@@ -3537,7 +3537,7 @@ Ne parliamo solo a causa della persistenza di questo errore nella comunità.
 
 ##### Motivo
 
-La convenzione per gli operatori di overload (specie sui tipi di valore) è per `operator=(const T&)` per eseguire l'assegnazione e poi ritornare (non-`const`) `*this`.  Ciò garantisce la coerenza con i tipi della libreria standard e segue il principio "fa come fanno gli int".
+La convenzione per gli operatori di overload (specie sui tipi concreti) è per `operator=(const T&)` per eseguire l'assegnazione e poi ritornare (non-`const`) `*this`.  Ciò garantisce la coerenza con i tipi della libreria standard e segue il principio "fa come fanno gli int".
 
 ##### Nota
 
@@ -4228,25 +4228,18 @@ Preferire un ordine con prima i membri `public` poi i membri `protected` e infin
 
 ## <a name="SS-concrete"></a>C.concrete: Tipi concreti
 
-L'ideale per una classe è essere un tipo regolare.
-Questo vuol dire più o meno "funzionare come un `int`". Un tipo [concrete] è il più semplice tipo di classe.
-Un valore di un tipo regolare può essere copiato e il risultato di una copia è un oggetto indipendente con lo stesso valore dell'originale.
-Se un tipo concreto ha sia `=` che `==`, da `a = b` dovrebbe risultare che `a == b` sia `true`.
-Le classi concrete senza assegnazione ed uguaglianza possono essere definite, ma sono (e dovrebbero essere) rare.
-I tipi predefiniti del C++ sono regolari, così come le classi della libreria standard, come `string`, `vector` e `map`.
-I tipi concreti vengono spesso definiti tipi di valore per distinguerli dai tipi utilizzati come parte di una gerarchia
-
 Riepilogo delle regole sui tipi concreti:
 
 * [C.10: Preferire i tipi concreti alle gerarchie di classi](#Rc-concrete)
 * [C.11: Rendere concreti i tipi regolari](#Rc-regular)
 * [C.12: Non creare dati membro `const` o riferimenti](#Rc-constref)
 
+
 ### <a name="Rc-concrete"></a>C.10: Preferire i tipi concreti alle gerarchie di classi
 
 ##### Motivo
 
-Un tipo concreto è fondamentalmente più semplice di una gerarchia: più facile da progettare, più facile da implementare, più facile da usare, più facile da ragionarci, più piccolo e più veloce.
+Un tipo concreto è fondamentalmente più semplice di un tipo in una classe: più facile da progettare, più facile da implementare, più facile da usare, più facile da ragionarci, più piccolo e più veloce.
 È necessario un motivo (caso d'uso) per usare una gerarchia.
 
 ##### Esempio
@@ -4272,7 +4265,7 @@ Un tipo concreto è fondamentalmente più semplice di una gerarchia: più facile
         auto p22 = p21->clone();                // fa una copia
         // ...
     }
-Se una classe può far parte di una gerarchia, se ne devono modificare gli oggetti (nel codice reale se non necessariamente nei piccoli esempi) tramite i puntatori o i riferimenti.
+Se una classe fa parte di una gerarchia, se ne devono modificare gli oggetti (nel codice reale se non necessariamente nei piccoli esempi) tramite i puntatori o i riferimenti.
 Ciò implica più uso della memoria, più allocazioni e deallocazioni e più lavoro a run-time per eseguire le indirezioni risultanti.
 
 ##### Nota
@@ -4291,11 +4284,14 @@ Questo viene fatto laddove l'allocazione dinamica è proibita (p.es. hard-real-t
 
 ???
 
+
 ### <a name="Rc-regular"></a>C.11: Rendere concreti i tipi regolari
 
 ##### Motivo
 
 I tipi regolari sono più facili da capire e discutere dei tipi non regolari (l'irregolarità richiede uno sforzo aggiuntivo per capirli e usarli).
+
+I tipi nativi del C++ sono regolari, così come lo sono le classi della libreria standard come `string`, `vector` e `map`. Le classi concrete senza assegnazione ed uguaglianza possono essere definite, ma sono (e dovrebbero essere) rare.
 
 ##### Esempio
 
@@ -4314,13 +4310,15 @@ I tipi regolari sono più facili da capire e discutere dei tipi non regolari (l'
     if (!(b1 == b2)) error("impossible!");
     b2.name = "the other bundle";
     if (b1 == b2) error("No!");
-In particolare, se un tipo concreto ha un'assegnazione, gli si dia anche un operatore di uguaglianza in modo che `a = b` implichi `a == b`.
+In particolare, se un tipo concreto è copiabile, è preferibile dargli anche un operatore di confronto per l'uguaglianza in modo da essere certi che `a = b` implica che `a == b`.
 
 ##### Nota
 
-Gli handle per le risorse che non possono essere clonate, p.es., uno `scoped_lock` per un `mutex`, assomigliano ai tipi concreti in quanto molto spesso sono allocati sullo stack.
-Tuttavia, oggetti di questo tipo solitamente non possono essere copiati (invece, si possono in genere spostare), quindi non possono essere `regolari`; mentre tendono ad essere `semiregolari`.
-Spesso, questi tipi vengono definiti "move-only types" [tipi di solo spostamento].
+Per le struct destinate ad essere condivise col codice C, la definizione di `operator==` potrebbe non essere fattibile.
+
+##### Nota
+
+Gli handle per le risorse che non si possono clonare, p.es., uno `scoped_lock` per un `mutex`, sono tipi concreti ma solitamente non possono essere copiati (mentre, di solito, possono essere spostati), quindi non possono essere regolari; tendono, invece, ad essere "move-only".
 
 ##### Imposizione
 
@@ -4340,6 +4338,12 @@ Non sono utili e rendono i tipi difficili da usare rendendoli non copiabili o pa
         string& s;      // bad
         // ...
     };
+I dati membro `const` e `&` rendono questa classe "only-sort-of-copyable" -- costruibile per copia ma non assegnabile per copia.
+
+##### Nota
+
+Se è necessario che un membro punti a qualcosa, usare un puntatore (semplice o smart e `gsl::not_null` se non dev'essere null) anziché un riferimento.
+
 ##### Imposizione
 
 Segnalare un dato membro che sia `const`, `&` o `&&`.
@@ -4386,7 +4390,7 @@ Regole del costruttore:
 * [C.40: Definire un costruttore se una classe ha un invariante](#Rc-ctor)
 * [C.41: Un costruttore dovrebbe creare un oggetto completamente inizializzato](#Rc-complete)
 * [C.42: Se un costruttore non è in grado di costruire un oggetto valido, generare un'eccezione](#Rc-throw)
-* [C.43: Accertarsi che una classe copiabile (tipo valore) abbia un costruttore di default](#Rc-default0)
+* [C.43: Accertarsi che una classe copiabile abbia un costruttore di default](#Rc-default0)
 * [C.44: È preferibile che i costruttori di default siano semplici e che non sollevino errori [non-throwing]](#Rc-default00)
 * [C.45: Non definire un costruttore di default che inizializza solamente i dati membri; usare, invece, gli inizializzatori dei membri](#Rc-default)
 * [C.46: Per default, dichiarare costruttori ad argomento singolo con `explicit`](#Rc-explicit)
@@ -4406,7 +4410,7 @@ Regole di copia e spostamento [move]:
 * [C.64: Un'operazione di [move] dovrebbe spostare e lasciare il sorgente in uno stato valido](#Rc-move-semantic)
 * [C.65: Rendere l'assegnazione con spostamento sicura per l'auto-assegnazione](#Rc-move-self)
 * [C.66: Creare le operazioni di [move] come `noexcept`](#Rc-move-noexcept)
-* [C.67: Una classe polimorfica dovrebbe sopprimere la copia](#Rc-copy-virtual)
+* [C.67: Una classe polimorfica dovrebbe sopprimere la copia/spostamento public](#Rc-copy-virtual)
 
 Altre regole sulle operazioni di default:
 
@@ -4484,7 +4488,7 @@ Quindi appena uno di questi viene dichiarato, dovrebbero essere dichiarati tutti
         x = y;   // l'assegnazione di default
         // ...
     }
-Dato che era necessaria una "attenzione speciale" per il distruttore (qui, per de-allocare), la probabilità che l'assegnazione di copia e spostamento (entrambi distruggono implicitamente un oggetto) siano corrette, è bassa (qui, ci sarebbe una doppia cancellazione).
+Dato che era necessaria una "attenzione speciale" per il distruttore (qui, per de-allocare), la probabilità che gli operatori di assegnazione di copia e spostamento, definiti entrambi implicitamente, siano corretti, è bassa (qui, ci sarebbe una doppia cancellazione).
 
 ##### Nota
 
@@ -4504,12 +4508,13 @@ Quando un distruttore dev'essere dichiarato solo per renderlo `virtual`, può es
         virtual ~AbstractBase() = default;
         // ...
     };
-Per evitare lo [slicing] come per la [C.67](#Rc-copy-virtual), si esegue un `=delete` delle operazioni di copia e spostamento e si aggiunge un `clone`:
+Per evitare lo slicing come per la [C.67](#Rc-copy-virtual), rendere protect le operazioni di copia e spostamento oppure con  `=delete` e aggiungendo un `clone`:
 
     class ClonableBase {
     public:
         virtual unique_ptr<ClonableBase> clone() const;
         virtual ~ClonableBase() = default;
+        CloneableBase() = default;
         ClonableBase(const ClonableBase&) = delete;
         ClonableBase& operator=(const ClonableBase&) = delete;
         ClonableBase(ClonableBase&&) = delete;
@@ -5109,17 +5114,14 @@ Un'altra ragione è stata quella di ritardare l'inizializzazione finché non fos
 
 ???
 
-### <a name="Rc-default0"></a>C.43: Accertarsi che una classe copiabile (tipo valore) abbia un costruttore di default
+### <a name="Rc-default0"></a>C.43: Accertarsi che una classe copiabile abbia un costruttore di default
 
 ##### Motivo
 
+Ovvero, assicurarsi che se una classe concreta è copiabile, soddisfi anche il resto di "semi-regolare".
+
 Molti linguaggi e strutture di librerie si affidano ai costruttori di default per inizializzare i propri elementi, p.es. `T a[10]` e `std::vector<T> v(10)`.
 Un costruttore di default spesso semplifica il compito di definire uno [stato di spostato](#???) adatto per un tipo che sia anche copiabile.
-
-##### Nota
-
-Un [tipo di valore](#SS-concrete) è una classe copiabile (e solitamente anche confrontabile).
-È strettamente correlato alla nozione di tipo Regolare da [EoP](http://elementsofprogramming.com/) e [the Palo Alto TR](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf).
 
 ##### Esempio
 
@@ -5188,9 +5190,9 @@ Assumendo che si voglia un'inizializzazione, un'inizializzazione esplicita di de
 
 Le classi che non hanno una ragionevole costruzione di default sono solitamente anche non copiabili, quindi non rientrano in questa linea-guida.
 
-Per esempio, una classe base non è un tipo di valore (le classi base non devono essere copiabili) e quindi non hanno necessariamente bisogno di un costruttore di default:
+Per esempio, una classe base non dovrebbe essere copiabile e quindi non necessita obbligatoriamente di un costruttore di default:
 
-    // Shape è una classe base astratta, non un tipo di valore copiabile.
+    // Shape è una classe base astratta, non un tipo copiabile.
     // Potrebbe o meno essere necessario un costruttore di default.
     struct Shape {
         virtual void draw() = 0;
@@ -5200,13 +5202,13 @@ Per esempio, una classe base non è un tipo di valore (le classi base non devono
     };
 Una classe che deve acquisire una risorsa fornita dal chiamante durante la costruzione spesso non può avere un costruttore di default, ma non rientra in questa linea-guida poiché tale classe di solito non è comunque copiabile:
 
-    // std::lock_guard non è un tipo di valore copiabile.
+    // std::lock_guard non è un tipo copiabile.
     // Non ha un costruttore di default.
     lock_guard g {mx};  // protegge il mutex mx
     lock_guard g2;      // errore: non protegge niente
 Una classe che ha uno "stato speciale" che deve essere gestito separatamente dagli altri stati dalle funzioni membro o dagli utenti provoca un lavoro extra (e molto probabilmente più errori). Tale tipo può naturalmente usare lo stato speciale come valore costruito di default, indipendentemente dal fatto che sia o meno copiabile:
 
-    // std::ofstream non è un tipo di valore copiabile.
+    // std::ofstream non è un tipo copiabile.
     // Capita di avere un costruttore di default
     // che segue uno stato speciale "non aperto".
     ofstream out {"Foobar"};
@@ -5589,7 +5591,7 @@ Assicurarsi che ogni membro della classe derivata venga inizializzato.
 
 ## <a name="SS-copy"></a>C.copy: Copia e spostamento
 
-I tipi di valori dovrebbero generalmente essere copiabili, ma non le interfacce in una gerarchia di classi.
+I tipi concreti dovrebbero generalmente essere copiabili, ma non le interfacce in una gerarchia di classi.
 Gli handle delle risorse potrebbero o meno essere copiabili.
 I tipi possono essere definiti per lo spostamento per motivi logici o prestazionali.
 
@@ -5948,11 +5950,13 @@ Questo `Vector2` non è solo inefficiente, ma dato che la copia di un vettore ri
 
 (Semplice) Un'operazione di spostamento deve essere contrassegnata con `noexcept`.
 
-### <a name="Rc-copy-virtual"></a>C.67: Una classe polimorfica dovrebbe sopprimere la copia
+### <a name="Rc-copy-virtual"></a>C.67: Una classe polimorfica dovrebbe sopprimere la copia/spostamento public
 
 ##### Motivo
 
 Una *classe polimorfica* è una classe che definisce o eredita almeno una funzione virtuale. È probabile che verrà usata come classe base per altre classi derivate con un comportamento polimorfico. Se viene accidentalmente passata per valore, col costruttore copia e le assegnazioni generate implicitamente, si rischia di 'spaccare': verrà copiata solo la porzione base dell'oggetto derivato, e il comportamento polimorfico risulterà corrotto.
+
+Se la classe non ha dati, imporre `=delete` alle funzioni di copia e spostamento. Altrimenti renderli protected.
 
 ##### Esempio, cattivo
 
@@ -5979,6 +5983,7 @@ Una *classe polimorfica* è una classe che definisce o eredita almeno una funzio
 
     class B { // GOOD: la classe polimorfica sopprime la copia
     public:
+        B() = default;
         B(const B&) = delete;
         B& operator=(const B&) = delete;
         virtual char m() { return 'B'; }
@@ -6008,7 +6013,7 @@ Le classi che rappresentano oggetti eccezioni devono sia essere polimorfiche che
 
 ##### Imposizione
 
-* Segnalare una classe polimorfica con un'operazione di copia non-cancellata.
+* Segnalare una classe polimorfica con un'operazione di copia public.
 * Segnalare un'assegnazione di oggetti di classi polimorfiche.
 
 ## C.other: Altre regole sulle operazioni di default
@@ -6184,7 +6189,7 @@ Fornire una funzione `swap` non-membro nello stesso namespace per il proprio tip
     }
 ##### Imposizione
 
-* I tipi di valori non-banalmente-copiabili dovrebbero fornire una funzione membro swap o un overload per lo swap generico.
+* I tipi non-banalmente-copiabili dovrebbero fornire una funzione membro swap o un overload per lo swap generico.
 * (Semplice) Quando una classe ha una funzione membro `swap`, dovrebbe essere dichiarata `noexcept`.
 
 ### <a name="Rc-swap-fail"></a>C.84: Una funzione `swap` non può fallire
@@ -6569,11 +6574,11 @@ Sommario delle regole per le gerarchie di classi:
 
 Sommario delle regole di progettazione per le classi di una gerarchia:
 
-* [C.126: Una classe astratta, solitamente, non necessita di un costruttore](#Rh-abstract-ctor)
+* [C.126: Una classe astratta, solitamente, non necessita di un costruttore scritto a mano](#Rh-abstract-ctor)
 * [C.127: Una classe con una funzione virtuale dovrebbe avere un distruttore virtuale o protected](#Rh-dtor)
 * [C.128: Le funzioni virtuali devono specificare esattamente un attributo tra `virtual`, `override` e `final`](#Rh-override)
 * [C.129: Quando si progetta una gerarchia di classi, distinguere tra ereditarietà dell'implementazione e ereditarietà dell'interfaccia](#Rh-kind)
-* [C.130: Per eseguire copie complete [deep] di classi polimorfiche preferire una funzione virtuale `clone` anziché un costruttore di copia/assegnazione](#Rh-copy)
+* [C.130: Per eseguire copie complete [deep] di classi polimorfiche preferire una funzione virtuale `clone` anziché un costruttore di copia/assegnazione public](#Rh-copy)
 * [C.131: Evitare getter e setter banali](#Rh-get)
 * [C.132: Non creare una funzione `virtual` senza motivo](#Rh-virtual)
 * [C.133: Evitare i dati `protected`](#Rh-protected)
@@ -6734,7 +6739,7 @@ Inoltre, si possono aggiornare `D1` e `D2` in modo che i file binari non siano c
     ???
 ## C.hierclass: Progettazioni di classi in una gerarchia:
 
-### <a name="Rh-abstract-ctor"></a>C.126: Una classe astratta, solitamente, non necessita di un costruttore
+### <a name="Rh-abstract-ctor"></a>C.126: Una classe astratta, solitamente, non necessita di un costruttore scritto a mano
 
 ##### Motivo
 
@@ -6742,7 +6747,20 @@ Una classe astratta in genere non ha dati da inizializzare in un costruttore.
 
 ##### Esempio
 
-    ???
+    class Shape {
+    public:
+        // in una classe base astratta non è necessario alcun costruttore scritto a mano dall'utente
+        virtual Point center() const = 0;    // virtuale puro
+        virtual void move(Point to) = 0;
+        // ... altre funzioni virtuali pure...
+        virtual ~Shape() {}                 // distruttore
+    };
+
+    class Circle : public Shape {
+    public:
+        Circle(Point p, int rad);           // costruttore nella classe derivata
+        Point center() const override { return x; }
+    };
 ##### Eccezione
 
 * Un costruttore di una classe base che, per esempio, registra un oggetto da qualche parte, potrebbe aver bisogno di un costruttore.
@@ -7049,7 +7067,7 @@ Le classi base forniscono una notazione più breve ed un più facile accesso ai 
 * ???
 
 
-### <a name="Rh-copy"></a>C.130: Per eseguire copie complete [deep] di classi polimorfiche preferire una funzione virtuale `clone` anziché un costruttore di copia/assegnazione
+### <a name="Rh-copy"></a>C.130: Per eseguire copie complete [deep] di classi polimorfiche preferire una funzione virtuale `clone` anziché un costruttore di copia/assegnazione public
 
 ##### Motivo
 
@@ -7060,8 +7078,8 @@ La copia di una classe polimorfica è sconsigliata a causa dei problemi di spacc
     class B {
     public:
         virtual owner<B*> clone() = 0;
+        B() = default;
         virtual ~B() = default;
-
         B(const B&) = delete;
         B& operator=(const B&) = delete;
     };
@@ -7880,7 +7898,7 @@ La stringa restituita da `ff()` viene distrutta prima che si possa utilizzare il
 
 ##### Imposizione
 
-Segnalare tutti gli operatori di conversione.
+Segnalare tutti gli operatori di conversione non espliciti.
 
 ### <a name="Ro-custom"></a>C.165: Utilizzare `using` per i punti di personalizzazione
 
@@ -10038,7 +10056,7 @@ Supponendo che vi sia una connessione logica tra `i` e `j`, tale connessione dov
 
     pair<widget, widget> make_related_widgets(bool x)
     {
-        return (x) ? {f1(), f2()} : {f3(), f4() };
+        return (x) ? {f1(), f2()} : {f3(), f4()};
     }
 
     auto [i, j] = make_related_widgets(cond);    // C++17
@@ -10964,9 +10982,8 @@ Il C++17 inasprisce le regole per l'ordine di valutazione, ma l'ordine di valuta
 
     int i = 0;
     f(++i, ++i);
-Molto probabilmente la chiamata sarà `f(0, 1)` o `f(1, 0)`, ma non si sa quale.
-Tecnicamente, il risultato è indefinito.
-Nel C++17, questo codice non ha un comportamento indefinito, ma non è ancora specificato quale argomento viene valutato per primo.
+Prima del C++17, il comportamento non era indefinito, quindi poteva essere qualsiasi cosa (p.es., `f(2, 2)`).
+Dal C++17, questo codice non ha più un comportamento indefinito, ma non è ancora specificato quale argomento viene valutato per primo. La chiamata sarà `f(1, 2)` o `f(2, 1)`, ma non si sa quale delle due.
 
 ##### Esempio
 
@@ -11479,7 +11496,7 @@ Il linguaggio già sa che un valore restituito è un oggetto temporaneo che può
 * Segnalare uno `std::move` dell'argomento passato ad un parametro, tranne quando il tipo del parametro è un riferimento rvalue `X&&` o il tipo è "move-only" ed il parametro viene passato per valore.
 * Segnalare quando `std::move` viene applicato ad un "forwarding" del riferimento (`T&&` dove `T` è un tipo di parametro template). Usare, invece, `std::forward`.
 * Segnalare quando `std::move` viene applicato ad un valore diverso da un riferimento rvalue a un non-const. (Un caso più generale della regola precedente per coprire i casi non-forwarding).
-* Segnalare quando `std::forward` viene applicato ad un riferimento rvalue (`X&&` dove `X` è un tipo concreto). Usare, invece, `std::move`.
+* Segnalare quando `std::forward` viene applicato ad un riferimento rvalue (`X&&` dove `X` è un tipo parametro non-template). Usare, invece, `std::move`.
 * Segnalare quando `std::forward` viene applicato ad un riferimento diverso dal forwarding. (Un caso più generale della regola precedente per coprire i casi non-moving).
 * Segnalare quando un oggetto viene potenzialmente spostato [moved] e la successiva operazione è un'operazione `const`; dovrebbe esserci prima un'operazione non-`const`, idealmente un'assegnazione, per resettare subito il valore dell'oggetto.
 
@@ -11866,7 +11883,7 @@ Leggibilità. Prevenzione degli errori. Efficienza.
 ##### Esempio
 
     for (gsl::index i = 0; i < v.size(); ++i)   // bad
-            cout << v[i] << '\n';
+        cout << v[i] << '\n';
 
     for (auto p = v.begin(); p != v.end(); ++p)   // bad
         cout << *p << '\n';
@@ -13309,7 +13326,7 @@ Ci sono altri modi per attenuare la possibilità di conflitti:
 
 * Evitare i dati globali
 * Evitare le variabili `static`
-* Usare più tipi di valori sullo stack (e non passare troppi puntatori in giro)
+* Usare più tipi concreti sullo stack (e non passare troppi puntatori)
 * Usare maggiormente dati immutabili (letterali, `constexpr`, e `const`)
 
 ### <a name="Rconc-data"></a>CP.3: Minimizzare la condivisione esplicita dei dati scrivibili
@@ -14097,7 +14114,7 @@ Riepilogo delle regole delle Coroutine:
 
 ##### Motivo
 
-Gli schemi d'uso corretti con le normali lambda sono pericolosi con le lambda coroutine. Il modello ovvio di cattura delle variabili risulterà accedere alla memoria liberata dopo il primo punto di sospensione, che per i puntatori intelligenti con contatori dei riferimenti e i tipi dei valori.
+Gli schemi d'uso corretti con le normali lambda sono pericolosi con le lambda coroutine. Lo schema ovvio di cattura delle variabili risulterà accedere alla memoria liberata dopo il primo punto di sospensione, che per i puntatori intelligenti con contatori dei riferimenti e tipi copiabili.
 
 Una lambda si traduce in un oggetto [closure] con uno storage, spesso sullo stack, che ad un certo punto uscirà dallo scope.  Quando l'oggetto [closure] esce dallo scope usciranno anche le acquisizioni [captures].  Le normali lambda a questo punto hanno terminato l'esecuzione, quindi non è un problema.  Le lambda coroutine possono riprendere da una sospensione dopo che l'oggetto [closure] è stato distrutto e a quel punto tutte le acquisizioni [captures] accederanno alla memoria dopo-che-è-stata-liberata.
 
@@ -15739,7 +15756,7 @@ Riepilogo delle regole sull'interfaccia dei template:
 * [T.42: Usare gli alias dei template per semplificare la notazione e nascondere i dettagli implementativi](#Rt-alias)
 * [T.43: Preferire `using` a `typedef` per definire gli alias](#Rt-using)
 * [T.44: Usare template di funzioni per dedurre i tipi degli argomenti della classe (dove fattibile)](#Rt-deduce)
-* [T.46: Richiedere che gli argomenti template siano almeno `Regolari` o `SemiRegolari`](#Rt-regular)
+* [T.46: Richiedere che gli argomenti template siano almeno semi-regolari](#Rt-regular)
 * [T.47: Evitare i template senza vincoli molto visibili con nomi comuni](#Rt-visible)
 * [T.48: Se il compilatore non supporta i concetti, simularli con `enable_if`](#Rt-concept-def)
 * [T.49: Dove possibile, evitare la [type-erasure]](#Rt-erasure)
@@ -16741,7 +16758,7 @@ Per esempio:
 
 Segnalare gli usi dove un tipo specializzato esplicitamente coincide con i tipi degli argomenti usati.
 
-### <a name="Rt-regular"></a>T.46: Richiedere che gli argomenti template siano almeno `Regolari` o `SemiRegolari`
+### <a name="Rt-regular"></a>T.46: Richiedere che gli argomenti template siano almeno semi-regolari
 
 ##### Motivo
 
@@ -16771,7 +16788,7 @@ Semiregolare richiede il costruttore di default.
 
 ##### Imposizione
 
-* Segnalare i tipi che non sono almeno `SemiRegolari`.
+* Segnalare i tipi usati come argomenti template che non siano almeno semi-regolari.
 
 ### <a name="Rt-visible"></a>T.47: Evitare i template senza vincoli molto visibili con nomi comuni
 
@@ -19372,7 +19389,7 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
             : mx(check_size(x))
             , my(check_size(y))
             // ora si sa che x e y sono dimensioni valide
-            , data(mx * my * sizeof(int)) // solleverà un'eccezione std::bad_alloc in caso di errore
+            , data(mx * my) // genererà un errore std::bad_alloc
         {
             // picture è pronta all'uso
         }
@@ -19673,10 +19690,11 @@ Un'implementazione di questo profilo deve riconoscere i seguenti schemi nel codi
 Riepilogo del profilo sulla sicurezza dei tipi [type safety]:
 
 * <a name="Pro-type-avoidcasts"></a>Type.1: [Evitare i cast](#Res-casts):
-   <a name="Pro-type-reinterpretcast">a. </a>Non usare `reinterpret_cast`; Una versione rigorosa di [Evitare i cast](#Res-casts) e [preferire i "named cast"](#Res-casts-named).
-   <a name="Pro-type-arithmeticcast">b. </a>Non usare `static_cast` per i tipi aritmetici; Una versione rigorosa di [Evitare i cast](#Res-casts) e [preferire i "named cast"](#Res-casts-named).
-   <a name="Pro-type-identitycast">c. </a>Non eseguire il cast tra tipi di puntatori in cui il tipo di origine e il tipo di destinazione sono uguali; Una versione rigorosa di [Evitare i cast](#Res-casts).
-   <a name="Pro-type-implicitpointercast">d. </a>Non eseguire il cast tra i tipi di puntatore quando la conversione potrebbe essere implicita; Una versione rigorosa di [Evitare i cast](#Res-casts).
+
+   1. <a name="Pro-type-reinterpretcast"></a>Non usare `reinterpret_cast`; Una versione rigorosa di [Evitare i cast](#Res-casts) e [preferire i cast nominati](#Res-casts-named).
+   2. <a name="Pro-type-arithmeticcast"></a>Non usare `static_cast` per i tipi aritmetici; Una versione rigorosa di  [Evitare i cast](#Res-casts) and [preferire i cast nominati](#Res-casts-named).
+   3. <a name="Pro-type-identitycast"></a>Non eseguire il cast tra tipi puntatori in cui il tipo di origine e quello di destinazione è lo stesso; Una versione rigorosa di [Evitare i cast](#Res-casts).
+   4. <a name="Pro-type-implicitpointercast"></a>Non eseguire il cast tra tipi puntatori quando la conversione potrebbe essere implicita; Una versione rigorosa di [Evitare i cast](#Res-casts).
 * <a name="Pro-type-downcast"></a>Type.2: Non usare `static_cast` per il [downcast]: [Usare, invece, `dynamic_cast`](#Rh-dynamic_cast).
 * <a name="Pro-type-constcast"></a>Type.3: Non usare `const_cast` per eliminare il `const` (cioè per niente): [Non eliminare const](#Res-casts-const).
 * <a name="Pro-type-cstylecast"></a>Type.4: Non usare cast `(T)expression` in stile C o quelli funzionali `T(expression)`:
@@ -19870,8 +19888,8 @@ La maggior parte dei concetti seguenti sono definiti nella [TS "Ranges"](http://
 * `Boolean`
 * `Integral`
 * `SignedIntegral`
-* `SemiRegular` // ??? Copiabile?
-* `Regular`
+* `SemiRegular` // in C++20, `std::semiregular`
+* `Regular`     // in C++20, `std::regular`
 * `TotallyOrdered`
 * `Function`
 * `RegularFunction`
@@ -21224,7 +21242,7 @@ Maggiori informazioni su molti argomenti riguardo al C++ si possono trovare sul 
 * *argomento*: un valore passato ad una funzione o a un template, in cui vi si accede tramite un parametro.
 * *array*: una sequenza omogenea di elementi, solitamente numerati, p.es., `[0:max)`.
 * *asserzione*: un'istruzione inserita in un programma per affermare (asserire) che qualcosa deve sempre essere vero in questo punto del programma.
-* *classe base*: una classe usata come base di una gerarchia di classi. In genere una classe base ha una o più funzioni virtuali.
+* *base class*: un tipo da cui si intende derivare (p.es., ha una funzione non-`final`), e gli oggetti di tale tipo si devono usare solo indirettamente (p.es., tramite puntatore). \[In termini rigorosi, "classe base" potrebbe essere definita come "qualcosa da cui derivare" ma stiamo specificando in termini di intenti del progettista della classe.\] Tipicamente una classe base ha una o più funzioni virtuali.
 * *bit*: l'unita elementare dell'informazione in un computer. Un bit può avere un valore di 0 o di 1.
 * *bug*: un errore in un programma.
 * *byte*: l'unità elementare di indirizzamento nella maggior parte dei computer. Solitamente, un byte contiene 8 bit.
@@ -21235,7 +21253,7 @@ Maggiori informazioni su molti argomenti riguardo al C++ si possono trovare sul 
    Talvolta la complessità è usata per indicare (semplicemente) una stima del numero di operazioni necessarie per eseguire un algoritmo.
 * *computazione*: l'esecuzione di un certo codice, solitamente prendendo qualche input e producendo qualche output.
 * *concetto*: (1) una nozione e un'idea; (2) un insieme di requisiti, solitamente per l'argomento di un template.
-* *classe concreta*: una classe per la quale gli oggetti possono essere creati usando la solita sintassi della costruzione (p.es., sullo stack) e l'oggetto risultante si comporta in modo molto simile ad un `int` per quanto riguarda la copia, il confronto, e simili (al contrario di una classe base in una gerarchia).
+* *tipo concreto*: un tipo che non è una classe base, e gli oggetti di tale tipo sono destinati ad essere utilizzati direttamente (non solo tramite puntatore/indirezione), la sua dimensione è nota, può solitamente essere allocato ovunque decida il programmatore (p.es., staticamente o sullo stack).
 * *costante*: un valore che non può essere cambiato (in un determinato scope); non mutabile.
 * *costruttore*: un'operazione che inizializza ("costruisce") un oggetto.
    In genere un costruttore stabilisce un invariante e spesso acquisisce le risorse necessarie per un oggetto per essere usate (che vengono poi generalmente rilasciate da un distruttore).
@@ -21289,6 +21307,7 @@ Maggiori informazioni su molti argomenti riguardo al C++ si possono trovare sul 
 * *letterale [literal]*: una notazione che indica direttamente un valore, così come 12 indica il valore intero di "dodici".
 * *ciclo [loop]*: un pezzo di codice eseguito ripetutamente; in C++, solitamente un'istruzione "for" o un'istruzione `while`.
 * *spostamento [move]*: un'operazione ce trasferisce un valore da un oggetto ad un altro lasciandosi dietro un valore che rappresenti il "vuoto". Si veda anche la copia.
+* *tipo move-only*: un tipo concreto spostabile ma non copiabile.
 * *mutabile [mutable]*: modificabile; l'opposto di immutabile, costante e invariabile.
 * *oggetto*: (1) una regione di memoria inizializzata di un tipo noto che contiene un valore di quel tipo; (2) una regione di memoria.
 * *codice oggetto*: l'output di un compilatore inteso come input per un linker (affinché il linker produca codice eseguibile).
@@ -21315,14 +21334,14 @@ Maggiori informazioni su molti argomenti riguardo al C++ si possono trovare sul 
 * *ricorsione*: l'azione di una funzione che chiama se stessa; cfr. iterazione.
 * *riferimento*: (1) un valore che descrive la locazione di un oggetto di un certo tipo nella memoria; (2) una variabile che contiene tale valore.
 * *espressione regolare*: una notazione per i pattern in stringhe di caratteri.
-* *regolare*: un tipo che si comporta come i tipi nativi come `int` e che può essere confrontato con `==`.
-   In particolare, un oggetto di un tipo regolare può essere copiato, e il risultato della copia è un oggetto separato che risulta uguale al primo se si confrontano. Si veda anche *tipo semi-regolare*.
+* *regolare*: un tipo semi-regolare che sia confrontabile per l'uguaglianza (vedere il concetto `std::regular`). Dopo una copia, l'oggetto copiato risulta uguale all'oggetto originale, se confrontato. Un tipo regolare si comporta come i tipi nativi come `int` ed è confrontabile con `==`.
+   In particolare, un oggetto di un tipo regolare può essere copiato, e il risultato della copia è un oggetto separato che risulta uguale al primo se si confrontano. Vedere anche *tipo semi-regolare*.
 * *requisito*: (1) una descrizione del comportamento desiderato di un programma o di parte di un programma; (2) una descrizione delle assunzioni che una funzione o un template fa sui suoi argomenti.
 * *risorsa*: qualcosa che viene acquisito e che deve poi essere rilasciato, come un handle di file, un lock o della memoria. Si veda anche handle, proprietario [owner].
 * *arrotondamento*: conversione di un valore al valore matematicamente più vicino di un tipo meno preciso.
 * *RTTI*: Run-Time Type Information. ???
 * *scope*: la regione del testo di un programma (il codice sorgente) entro cui si può far riferimento ad un nome.
-* *semi-regolare*: un tipo che si comporta quasi come i tipi nativi come `int`, ma forse senza un operatore `==`. Si veda anche *tipo regolare*.
+* *semi-regolare*: un tipo concreto che sia copiabile (oltre che spostabile) e costruibile per default (vedere il concetto `std::semiregular`). Il risultato di una copia è un oggetto indipendente con lo stesso valore dell'originale. Un tipo semi-regolare funziona quasi come un tipo nativo come `int`, ma possibilmente senza un operatore `==`. Vedere anche *tipo regolare*.
 * *sequenza*: elementi che si possono scorrere con un ordine lineare.
 * *software*: una raccolta di pezzi di codice e dati correlati; spesso usato in modo intercambiabile con programma.
 * *codice sorgente*: il codice prodotto da un programmatore e (in linea di principio) leggibile da altri programmatori.
@@ -21346,6 +21365,7 @@ Maggiori informazioni su molti argomenti riguardo al C++ si possono trovare sul 
 * *unità*: (1) una misura standard che dà significato ad un valore (p.es., km per una distanza); (2) una parte distinta (p.es. con un nome) di un tutto più grande.
 * *caso d'uso*: uno specifico uso (solitamente semplice) di un programma per testarne il funzionamento e mostrarne lo scopo.
 * *valore*: un insieme di bit nella memoria interpretati secondo un tipo.
+* *tipo valore*: un termine che qualcuno usa per indicare un tipo regolare o semi-regolare.
 * *variabile*: un oggetto di un certo tipo con un nome; contiene un valore a meno che non sia non-inizializzato.
 * *funzione virtuale*: una funzione membro che può essere sovrascritta in una classe derivata.
 * *word*: una unità base di memoria in un computer, spesso l'unità usata per contenere un intero.
