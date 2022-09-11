@@ -15,7 +15,7 @@ Molte delle linee-guida usano l'header unico della Guidelines Support Library. U
 
 ## Background e scopo
 
-Lo scopo delle linee-guida è quello di aiutare le persone ad usare il C++ moderno in modo efficace. Per "C++ moderno" intendiamo C++11, C++14, e C++17. In altre parole, come vorreste che fosse il vostro codice tra 5 anni, dato che potete iniziare ora? E tra 10 anni?
+Lo scopo delle linee-guida è quello di aiutare le persone ad usare il C++ moderno in modo efficace. Per "C++ moderno" si intende il C++11 e versioni successive. In altre parole, come vorreste che fosse il vostro codice tra 5 anni, dato che potete iniziare ora? E tra 10 anni?
 
 Le linee-guida si concentrano sulle questioni di livello relativamente più alto, come le interfacce, la gestione delle risorse, la gestione della memorie e la concorrenza. Queste regole riguardano l'applicazione dell'architettura e il design della libreria. Seguire le regole porterà ad un codice staticamente type-safe, senza leak [perdite] di risorse, e che intercetta molti più errori logici di programmazione di quanto avvenga nel normale codice oggi. E girerà velocemente -- ci si può permettere di fare le cose nel modo giusto.
 
