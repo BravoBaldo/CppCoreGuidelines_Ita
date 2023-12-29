@@ -1,7 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-13 Luglio 2022
-
+12 Ottobre 2023
 
 Editori:
 
@@ -49,7 +48,7 @@ Si può [leggere una spiegazione dello scopo e sulla struttura di questa Guida](
 * [T: Template e programmazione generica](#S-templates)
 * [CPL: Programmazione C-style](#S-cpl)
 * [SF: File sorgenti](#S-source)
-* [SL: La Libreria Standard](#S-stdlib)
+* [SL: La Libreria Standard](#sl-the-standard-library)
 
 Sezioni di supporto:
 
@@ -57,7 +56,7 @@ Sezioni di supporto:
 * [NR: Non-Regole e falsi miti](#S-not)
 * [RF: Riferimenti](#S-references)
 * [Pro: Profili](#S-profile)
-* [GSL: Libreria di Supporto alle Linee-guida [Guidelines Support Library]](#S-gsl)
+* [GSL: Libreria di Supporto alle Linee-guida [Guidelines Support Library]](#gsl-guidelines-support-library)
 * [NL: Suggerimenti per la nomenclatura e il layout](#S-naming)
 * [FAQ: Risposte a domande frequenti](#S-faq)
 * [Appendice A: Librerie](#S-libraries)
@@ -248,7 +247,7 @@ Tutti i programmatori C++. Tra cui [i programmatori che potrebbero prendere in c
 
 ## <a name="SS-aims"></a>In.aims: Obiettivi
 
-Lo scopo delle linee-guida è quello di aiutare gli sviluppatori ad adottare il C++ moderno (attualmente il C++17) e per ottenere uno stile più uniforme nel codice.
+Lo scopo delle linee-guida è quello di aiutare gli sviluppatori ad adottare il C++ moderno (attualmente il C++20 e C++17) e per ottenere uno stile più uniforme nel codice.
 
 Non ci si illude di vedere effettivamente applicate ognuna di queste regole a qualsiasi codice. L'aggiornamento dei vecchi sistemi è difficile. Tuttavia, si crede che un programma che usi una regola sia meno soggetto ad errori e più manutenibile di uno che non lo faccia. Spesso, le regole portano anche ad uno sviluppo iniziale più veloce/facile.
 Per quanto si sa, queste regole conducono ad un codice che funziona altrettanto bene, se non meglio, di quello più vecchio, con tecniche più convenzionali; sono pensate per seguire il principio dello "zero-overhead" ("quello che non si usa, non si paga" e "quando si usa bene un meccanismo di astrazione, si ottengono almeno le stesse buone prestazioni di quelle col codice scritto manualmente utilizzando i costrutti del linguaggio di livello più basso").
@@ -261,7 +260,7 @@ Ci si prenda il tempo necessario per capire le implicazioni di una regola di una
 
 Queste linee-guida sono progettate secondo il principio del "sottoinsieme di un insieme" ([Stroustrup05](#Stroustrup05)).
 Non definiscono semplicemente un sottoinsieme del C++ da usare (per affidabilità, prestazioni o altro).
-Esse, invece, raccomandano fermamente l'uso di alcune semplici "estensioni" ([componenti della libreria](#S-gsl)) che rendono ridondanti le funzionalità più soggette ad errori del C++, in modo che possano essere vietate (nel nostro set di regole).
+Esse, invece, raccomandano fermamente l'uso di alcune semplici "estensioni" ([componenti della libreria](#gsl-guidelines-support-library)) che rendono ridondanti le funzionalità più soggette ad errori del C++, in modo che possano essere vietate (nel nostro set di regole).
 
 Le regole enfatizzano la sicurezza del tipo statico e la sicurezza delle risorse.
 Per questo motivo, enfatizzano la possibilità di verificare i range, per evitare la de-referenziazione `nullptr`, per evitare il dangling [penzolamento] dei puntatori, e l'uso sistematico delle eccezioni (tramite il RAII).
@@ -438,7 +437,7 @@ Le fonti di informazioni consigliate sono disponibili nei [riferimenti](#S-refer
 * [T: Template e programmazione generica](#S-templates)
 * [CPL: Programmazione C-style](#S-cpl)
 * [SF: File sorgenti](#S-source)
-* [SL: La Libreria Standard](#S-stdlib)
+* [SL: La Libreria Standard](#sl-the-standard-library)
 
 Sezioni di supporto:
 
@@ -446,7 +445,7 @@ Sezioni di supporto:
 * [NR: Non-Regole e falsi miti](#S-not)
 * [RF: Riferimenti](#S-references)
 * [Pro: Profili](#S-profile)
-* [GSL: Libreria di Supporto alle Linee-guida [Guidelines Support Library]](#S-gsl)
+* [GSL: Libreria di Supporto alle Linee-guida [Guidelines Support Library]](#gsl-guidelines-support-library)
 * [NL: Suggerimenti per la nomenclatura e il layout](#S-naming)
 * [FAQ: Risposte a domande frequenti](#S-faq)
 * [Appendice A: Librerie](#S-libraries)
@@ -540,7 +539,7 @@ Una libreria ben progettata esprime l'intento (cosa si deve fare, piuttosto che 
 
 Un programmatore C++ dovrebbe conoscere le basi della libreria standard e usarla dove appropriato.
 Qualsiasi programmatore dovrebbe conoscere le basi delle librerie fondamentali del progetto su cui si sta lavorando e usarle in modo appropriato.
-Qualsiasi programmatore che utilizza queste linee-guida deve conoscere la [guidelines support library](#S-gsl) [Libreria di Supporto delle linee-guida] e usarla in modo appropriato.
+Qualsiasi programmatore che utilizza queste linee-guida deve conoscere la [guidelines support library](#gsl-guidelines-support-library) [Libreria di Supporto delle linee-guida] e usarla in modo appropriato.
 
 ##### Esempio
 
@@ -626,8 +625,8 @@ L'ultima variante chiarisce che non si è interessati all'ordine con cui vengono
 
 Un programmatore dovrebbe avere familiarità con
 
-* [La libreria di supporto alle linee-guida [Guidelines support library]](#S-gsl)
-* [La Libreria Standard del C++ ISO](#S-stdlib)
+* [La libreria di supporto alle linee-guida [Guidelines support library]](#gsl-guidelines-support-library)
+* [La Libreria Standard del C++ ISO](#sl-the-standard-library)
 * Qualunque libreria fondamentale si usi nel progetto corrente
 
 ##### Nota
@@ -642,7 +641,9 @@ Alcuni costrutti del linguaggio esprimono le intenzioni meglio di altri.
 
 Se due `int` sono pensati per rappresentare le coordinate di un punto 2D, lo si dica:
 
-    draw_line(int, int, int, int);  // oscuro
+    draw_line(int, int, int, int);  // obscure: (x1,y1,x2,y2)? (x,y,h,w)? ...?
+                                    // c'è bisogno di cercare nella documentazione
+
     draw_line(Point, Point);        // più chiaro
 
 ##### Imposizione
@@ -1002,7 +1003,7 @@ Combinarlo con l'applicazione dei [profili di tipo e limiti](#SS-force) ottenend
 
 * Cercare i puntatori: Classificarli in non-proprietari (il default) e proprietari [owner].
    Laddove possibile, sostituire i proprietari con handle di risorse della libreria standard (come nell'esempio precedente).
-   In alternativa, contrassegnare un proprietario come tale utilizzando `owner` dalla [GSL](#S-gsl).
+   In alternativa, contrassegnare un proprietario come tale utilizzando `owner` dalla [GSL](#gsl-guidelines-support-library).
 * Cercare i `new` e i `delete`
 * Cercare le funzioni note di allocazione delle risorse che restituiscono puntatori semplici (come `fopen`, `malloc`, e `strdup`)
 
@@ -1065,7 +1066,7 @@ Ci sono molti altri bug prestazionali e complicazioni gratuite.
     }
 
 Questo è in effetti un esempio di un codice di produzione.
-Possiamo vedere che nelle nostre condizioni abbiamo `i < strlen(s)`. Questa espressione verrà valutata su ogni iterazione del ciclo, il che significa che `strlen` deve scorrere la stringa in ogni ciclo per scoprirne la lunghezza. Mentre il contenuto della stringa cambia, si presume che `toLower` non ne influenzerà la lunghezza, quindi è meglio memorizzare nella cache la lunghezza all'esterno del ciclo e non sostenere il costo di ogni iterazione.
+Possiamo vedere che nelle nostre condizioni abbiamo `i < strlen(s)`. Questa espressione verrà valutata su ogni iterazione del ciclo, il che significa che `strlen` deve scorrere la stringa in ogni ciclo per scoprirne la lunghezza. Mentre il contenuto della stringa cambia, si presume che `tolower` non ne influenzerà la lunghezza, quindi è meglio memorizzare nella cache la lunghezza all'esterno del ciclo e non sostenere il costo a ogni iterazione.
 
 ##### Nota
 
@@ -1189,8 +1190,8 @@ A meno che non si sia un esperto di algoritmi di ordinamento e si abbia un sacco
 
 Per default usare
 
-* La [ISO C++ Standard Library](#S-stdlib)
-* La [Guidelines Support Library](#S-gsl)
+* La [ISO C++ Standard Library](#sl-the-standard-library)
+* La [Guidelines Support Library](#gsl-guidelines-support-library)
 
 ##### Nota
 
@@ -1261,7 +1262,7 @@ L'uso di un controllo-non-locale è potenzialmente confuso, ma regola solo i det
 
 Il reporting tramite variabili non locali  (p.es., `errno`) viene facilmente ignorato. Per esempio:
 
-    // da non fare: nessun test del valore di ritorno di printf
+    // da non fare: nessun test del valore di ritorno di fprintf
     fprintf(connection, "logging: %d %d %d\n", x, y, s);
 
 Cosa succede se la connessione si interrompe così che non si produca alcun output del log? Cfr. I.???.
@@ -1543,7 +1544,7 @@ Alcune precondizioni possono essere espresse come asserzioni. Per esempio:
 
 Idealmente, quell'`Expects(x >= 0)` dovrebbe far parte dell'interfaccia di `sqrt()` ma ciò non si fa facilmente. Per ora, lo si inserisce nella definizione (corpo della funzione).
 
-**Riferimenti**: `Expects()` è descritto nella [GSL](#S-gsl).
+**Riferimenti**: `Expects()` è descritto nella [GSL](#gsl-guidelines-support-library).
 
 ##### Nota
 
@@ -1846,7 +1847,7 @@ Si valuti di restituire il risultato per valore (si usa la semantica move se il 
 Tuttavia, è meno elegante e spesso meno efficiente rispetto al restituire l'oggetto stesso, quindi usare gli smart pointer solo se è necessaria la semantica del riferimento.
 
 **Alternativa**: Talvolta il codice pre-esistente non si può modificare a causa dei requisiti di compatibilità ABI o per mancanza di risorse.
-In tal caso, contrassegnare i puntatori proprietari utilizzando `owner` dalla [Guidelines Support Library](#S-gsl):
+In tal caso, contrassegnare i puntatori proprietari utilizzando `owner` dalla [Guidelines Support Library](#gsl-guidelines-support-library):
 
     owner<X*> compute(args)    // Ora è chiaro che la proprietà viene trasferita
     {
@@ -1893,7 +1894,7 @@ Dichiarando l'intento nel sorgente, gli implementatori e i tool possono eseguire
 
 ##### Nota
 
-`not_null` è definito nella [Guidelines Support Library](#S-gsl).
+`not_null` è definito nella [Guidelines Support Library](#gsl-guidelines-support-library).
 
 ##### Nota
 
@@ -1901,7 +1902,7 @@ L'assunzione che il puntatore a `char` punti ad una stringa C-style (una stringa
 
     // si può supporre che p non possa essere nullptr
     // si può supporre che p punti a una array di caratteri 'zero-terminated'
-    int length(not_null<zstring> p);
+    int length(not_null<czstring> p);
 
 Nota: `length()` è, ovviamente, uno `std::strlen()` in incognito.
 
@@ -1959,7 +1960,7 @@ Questo `draw2()` passa la stessa quantità di informazioni a `draw()`, ma rende 
 ##### Eccezione
 
 Usare `zstring` e `czstring` per rappresentare stringhe C-style e zero-terminated.
-Ma quando lo si fa, si usa `std::string_view` o `span<char>` della [GSL](#S-gsl) per evitare errori di range.
+Ma quando lo si fa, si usa `std::string_view` o `span<char>` della [GSL](#gsl-guidelines-support-library) per evitare errori di range.
 
 ##### Imposizione
 
@@ -2201,9 +2202,9 @@ interfaccia (widget.h)
         void draw(); // API pubblica che sarà inoltrata [forwarded] all'implementazione
         widget(int); // definito nel file dell'implementazione
         ~widget();   // definito nel file dell'implementazione, dove impl è un tipo completo
-        widget(widget&&); // definito nel file dell'implementazione
+        widget(widget&&) noexcept; // definito nel file dell'implementazione
         widget(const widget&) = delete;
-        widget& operator=(widget&&); // definito nel file dell'implementazione
+        widget& operator=(widget&&) noexcept; // definito nel file dell'implementazione
         widget& operator=(const widget&) = delete;
     };
 
@@ -2218,9 +2219,9 @@ implementazione (widget.cpp)
     };
     void widget::draw() { pimpl->draw(*this); }
     widget::widget(int n) : pimpl{std::make_unique<impl>(n)} {}
-    widget::widget(widget&&) = default;
+    widget::widget(widget&&) noexcept = default;
     widget::~widget() = default;
-    widget& widget::operator=(widget&&) = default;
+    widget& widget::operator=(widget&&) noexcept = default;
 
 ##### Note
 
@@ -2269,8 +2270,8 @@ Quindi, si scrive una classe
     public:
         enum Opt { from_line = 1 };
         Istream() { }
-        Istream(zstring p) : owned{true}, inp{new ifstream{p}} {}            // legge dal file
-        Istream(zstring p, Opt) : owned{true}, inp{new istringstream{p}} {}  // legge dalla riga di comando
+        Istream(czstring p) : owned{true}, inp{new ifstream{p}} {}            // legge dal file
+        Istream(czstring p, Opt) : owned{true}, inp{new istringstream{p}} {}  // legge dalla riga di comando
         ~Istream() { if (owned) delete inp; }
         operator istream&() { return *inp; }
     private:
@@ -2306,6 +2307,8 @@ Regole di definizione di una funzione:
 * [F.7: Per un uso generale, si prendono gli argomenti `T*` o `T&` anziché gli smart pointer](#Rf-smart)
 * [F.8: Preferire le funzioni pure](#Rf-pure)
 * [F.9: I parametri inutilizzati devono essere senza nome](#Rf-unused)
+* [F.10: Se un'operazione può essere riutilizzata, le si assegna un nome](#Rf-name)
+* [F.11: Usare una lambda anonima se c'è bisogno di un semplice oggetto funzione in un posto soltanto](#Rf-lambda)
 
 Regole per l'espressione del passaggio dei parametri:
 
@@ -2335,7 +2338,8 @@ Regole sulla semantica del passaggio dei parametri:
 * [F.45: Non restituire un `T&&`](#Rf-return-ref-ref)
 * [F.46: `int` è il tipo restituito da `main()`](#Rf-main)
 * [F.47: Restituire `T&` dagli operatori di assegnamento](#Rf-assignment-op)
-* [F.48: Non scrivere `return std::move(local)`](#Rf-return-move-local)
+* [F.48: Non restituire `std::move(local)`](#Rf-return-move-local)
+* [F.49: Non restituire `const T`](#Rf-return-const)
 
 Altre regole sulle funzioni:
 
@@ -2343,7 +2347,7 @@ Altre regole sulle funzioni:
 * [F.51: Potendo scegliere, si preferiscano gli argomenti con default rispetto all'overloading](#Rf-default-args)
 * [F.52: Preferire l'acquisizione per riferimento nelle lambda da usare localmente, compresi quelli passati  agli algoritmi](#Rf-reference-capture)
 * [F.53: Evitare l'acquisizione per riferimento nelle lambda che non si useranno localmente, compresi quelli restituiti, memorizzati nell'heap o passati da un altro thread](#Rf-value-capture)
-* [F.54: Se si acquisisce `this`, se ne acquisiscono esplicitamente tutte le variabili (senza acquisirne i default)](#Rf-this-capture)
+* [F.54: Quando si scrive una lambda che cattura `this` o qualsiasi dato membro di classe, non usare il "default capture" `[=]`](#Rf-this-capture)
 * [F.55: Non usare gli argomenti `va_arg`](#F-varargs)
 * [F.56: Evitare inutili condizioni di annidamento](#F-nesting)
 
@@ -2451,10 +2455,10 @@ Se fosse necessario, si potrebbero ulteriormente 'templatizzare `read()` e `prin
     auto read = [](auto& input, auto& value)    // meglio
     {
         input >> value;
-        // controllo per gli errori
+        // check per gli errori
     };
     
-    auto print(auto& output, const auto& value)
+    void print(auto& output, const auto& value)
     {
         output << value << "\n";
     }
@@ -2801,10 +2805,89 @@ Per esempio:
             // viene usato un hint solo se Value è di una certa dimensione
         }
     }
-
 ##### Imposizione
 
 Segnalare i nomi dei parametri inutilizzati.
+
+### <a name="Rf-name"></a>F.10: Se un'operazione può essere riutilizzata, le si assegna un nome
+
+##### Motivo
+
+Documentazione, leggibilità, possibilità di riutilizzo.
+
+##### Esempio
+
+    struct Rec {
+        string name;
+        string addr;
+        int id;         // identificatore unico
+    };
+    
+    bool same(const Rec& a, const Rec& b)
+    {
+        return a.id == b.id;
+    }
+    
+    vector<Rec*> find_id(const string& name);    // cerca tutti i record per "name"
+    
+    auto x = find_if(vr.begin(), vr.end(),
+        [&](Rec& r) {
+            if (r.name.size() != n.size()) return false; // il nome da confrontare è in n
+            for (int i = 0; i < r.name.size(); ++i)
+                if (tolower(r.name[i]) != tolower(n[i])) return false;
+            return true;
+        }
+    );
+Qui c'è una funzione nascosta (confronto "case insensitive" di stringhe), come spesso accade quando gli argomenti della lambda diventano grandi.
+
+    bool compare_insensitive(const string& a, const string& b)
+    {
+        if (a.size() != b.size()) return false;
+        for (int i = 0; i < a.size(); ++i) if (tolower(a[i]) != tolower(b[i])) return false;
+        return true;
+    }
+    
+    auto x = find_if(vr.begin(), vr.end(),
+        [&](Rec& r) { return compare_insensitive(r.name, n); }
+    );
+O forse (se si preferisce evitare il nome implicito legato a n):
+    auto cmp_to_n = [&n](const string& a) { return compare_insensitive(a, n); };
+    
+    auto x = find_if(vr.begin(), vr.end(),
+        [](const Rec& r) { return cmp_to_n(r.name); }
+    );
+##### Nota
+
+Se funzioni, lambda o operatori.
+
+##### Eccezione
+
+* Le lambda usate logicamente solo localmente, come un argomento di `for_each` e algoritmi simili per il controllo del flusso.
+* Le lambda come [inizializzatori](#???)
+
+##### Imposizione
+
+* (difficile) segnalare le lambda simili
+* ???
+
+### <a name="Rf-lambda"></a>F.11: Usare una lambda anonima se c'è bisogno di un semplice oggetto funzione in un posto soltanto
+
+##### Motivo
+
+Questo rende il codice conciso e offre una località migliore delle alternative.
+
+##### Esempio
+
+    auto earlyUsersEnd = std::remove_if(users.begin(), users.end(),
+                                        [](const User &a) { return a.id > 100; });
+
+##### Eccezione
+
+Dare un nome ad una lambda può essere utile per chiarezza anche se viene usata una sola volta.
+
+##### Imposizione
+
+* Cercare lambda identiche o quasi identiche (da sostituire con nomi di funzioni o nomi di lambda).
 
 ## <a name="SS-call"></a>F.call: Passaggio di parametri
 
@@ -2830,6 +2913,11 @@ Passaggio di parametri avanzato:
 Utilizzare le tecniche avanzate solo dopo averne dimostrato la necessità documentandola in un commento.
 
 Per il passaggio di sequenze di caratteri, cfr. [String](#SS-string).
+
+##### Eccezione
+
+Per esprimere la proprietà condivisa utilizzando i tipi `shared_ptr`, anziché seguire le linee guida F.16-21,
+seguire la [R.34](#Rr-sharedptrparam-owner), la [R.35](#Rr-sharedptrparam) e la [R.36](#Rr-sharedptrparam-const).
 
 ### <a name="Rf-in"></a>F.16: Per i parametri "in", si passano i tipi copiati 'a buon prezzo' per valore e gli altri per riferimento a `const`
 
@@ -2879,6 +2967,11 @@ Non esiste un (legittimo) "riferimento null". Se si necessita della nozione di u
    Suggerire di usare, invece, un riferimento a `const`.
 * (Semplice) ((Foundation)) Si emette un warning quando un parametro passato per riferimento a `const` ha una dimensione inferiore a `2 * sizeof(void*)`. Suggerire, invece, di passare per valore.
 * (Semplice) ((Foundation)) Si emette un warning quando un parametro passato per riferimento a `const`, subisce un `move`.
+
+##### Eccezione
+
+Per esprimere la proprietà condivisa utilizzando i tipi `shared_ptr`, seguire [R.34](#Rr-sharedptrparam-owner) o [R.36](#Rr-sharedptrparam-const),
+a seconda che la funzione accetti o meno incondizionatamente un riferimento all'argomento.
 
 ### <a name="Rf-inout"></a>F.17: I parametri "in-out", si passano per riferimento non-`const`
 
@@ -2955,6 +3048,9 @@ Per esempio:
     {
         // usa p ... forse std::move(p) altrove in seguito
     }   // p viene distrutto
+##### Eccezione
+
+Se il parametro "si-sposterà-da" è uno `shared_ptr` seguire [R.34](#Rr-sharedptrparam-owner) e passare `shared_ptr` per valore.
 
 ##### Imposizione
 
@@ -2972,17 +3068,27 @@ In quel caso, e solo in quel caso, si rende il parametro `TP&&` dove `TP` è un 
 
 ##### Esempio
 
+Di solito si inoltra l'intero parametro (o pacchetto di parametri, utilizzando `...`) esattamente una volta su ogni percorso di flusso di controllo statico:
+
     template<class F, class... Args>
     inline auto invoke(F f, Args&&... args)
     {
         return f(forward<Args>(args)...);
     }
+##### Esempio
     
-    ??? calls ???
+A volte si può inoltrare [forward] un parametro composito a pezzi, un sotto-oggetto per volta per ogni percorso di flusso di controllo statico:
 
+    template<class PairLike>
+    inline auto test(PairLike&& pairlike)
+    {
+        // ...
+        f1(some, args, and, forward<PairLike>(pairlike).first);           // forward .first
+        f2(and, forward<PairLike>(pairlike).second, in, another, call);   // forward .second
+    }
 ##### Imposizione
 
-* Si segnala una funzione che prende un parametro `TP&&` (dove `TP` è il nome di un parametro di tipo template) e ci fa qualsiasi cosa che non sia `std::forward` esattamente una volta su ogni percorso statico.
+* Si segnala una funzione che prende un parametro `TP&&` (dove `TP` è il nome di un parametro di tipo template) e ci fa qualsiasi cosa che non sia `std::forward` esattamente una sola volta su ogni percorso statico, o `std::forward`inviandolo più di una volta ma qualificato con un membro dati diverso esattamente una volta su ciascun percorso statico.
 
 ### <a name="Rf-out"></a>F.20: Per i valori "out", preferire i valori di ritorno ai parametri di output
 
@@ -3006,29 +3112,12 @@ Se ci sono più valori da restituire, si [usa una tupla](#Rf-out-multi) o un sim
 
 Una `struct` di molti (singolarmente economici per il move) elementi potrebbe risultare costosa per il move.
 
-##### Nota
 
-Non è consigliabile restituire un valore `const`.
-Un consiglio così vecchio è ormai obsoleto; non aggiunge valore e interferisce con la semantica di move.
-
-    const vector<int> fct();    // male: questo "const" è più un problema che altro
-    
-    void g(vector<int>& vx)
-    {
-        // ...
-        fct() = vx;   // impedito dal "const"
-        // ...
-        vx = fct(); // copia costosa: la semantica del move viene soppressa dal "const"
-        // ...
-    }
-
-L'argomento per aggiungere `const` ad un valore di ritorno è che impedisce (rarissimamente) accessi accidentali a un elemento temporaneo.
-L'argomento contrario è che impedisce (molto di frequente) l'uso della semantica di move.
 
 ##### Eccezioni
 
 * Per i tipi "non-concreti", come quelli in una gerarchia di ereditarietà, si restituisce un oggetto con `unique_ptr` o con `shared_ptr`.
-* Se un tipo è costoso da spostare (p.es., `array<BigPOD>`), si consideri di allocarlo nel [free store] e restituirne un handle (p.es., `unique_ptr`), o passandolo in un riferimento ad un oggetto destinazione non-`const` da riempire (da usarsi come parametro di uscita).
+* Se un tipo è costoso da spostare (p.es., `array<BigTrivial>`), si consideri di allocarlo nel [free store] e restituirne un handle (p.es., `unique_ptr`), o passandolo in un riferimento ad un oggetto destinazione non-`const` da riempire (da usarsi come parametro di uscita).
 * Per riutilizzare un oggetto che porta il suo contenuto (p.es., `std::string`, `std::vector`) attraverso più chiamate alla funzione in un loop interno: lo si [tratta come un parametro in/out e lo si passa per riferimento](#Rf-out-multi).
 
 ##### Esempio
@@ -3067,7 +3156,6 @@ L'ottimizzazione del valore di ritorno non gestisce il caso dell'assegnazione, m
 ##### Imposizione
 
 * Segnalare il riferimento a parametri non-`const` che non vengono letti prima di essere scritti e sono di un tipo economico da restituire; questi dovrebbero essere valori di ritorno in "out".
-* Segnalare la restituzione di un valore `const`. Per risolvere il problema: Rimuovere `const` nel restituire un valore non-`const`.
 
 ### <a name="Rf-out-multi"></a>F.21: Per il return di valori "out" multipli, preferire il ritorno di una struct o una tupla
 
@@ -3091,7 +3179,7 @@ Preferire l'uso di una struttura con un nome dove ci sono semantiche sul valore 
     tuple<int, string> f(const string& input)
     {
         // ...
-        return make_tuple(status, something());
+        return {status, something()};
     }
 
 La libreria standard del C++98 usava già questo stile, perché una `pair` è una `tuple` di due elementi.
@@ -3120,28 +3208,28 @@ In questi casi, passare l'oggetto per riferimento [`T&`](#Rf-inout) è solitamen
 Restituire esplicitamente un parametro in-out  ancora come valore di ritorno spesso non è necessario.
 Per esempio:
 
-    istream& operator>>(istream& is, string& s);    // molto simile a std::operator>>()
+    istream& operator>>(istream& in, string& s);    // much like std::operator>>()
     
-    for (string s; cin >> s; ) {
+    for (string s; in >> s; ) {
         // fa qualcosa con la riga
     }
 
-Qui, sia `s` che `cin` vengono usati come parametri in-out.
-Si passa `cin` per riferimento (non-`const`) per essere in grado di modificarne lo stato.
+Qui, sia `s` che `in` vengono usati come parametri in-out.
+Si passa `in` per riferimento (non-`const`)  per essere in grado di modificarne lo stato.
 Si passa `s` per evitare ripetute allocazioni.
 Riutilizzando `s` (passato per riferimento), si alloca nuova memoria solo quando è necessario espandere la capacità di `s`.
 Questa tecnica è talvolta detta schema di "out allocato-dal-chiamante" ed è particolarmente utile per i tipi, come `string` e `vector`, che eseguono allocazioni nel [free store].
 
 Per confrontare, se si passassero i valori in uscita come valori di ritorno, si farebbe qualcosa del genere:
 
-    pair<istream&, string> get_string(istream& is)  // non raccomandato
+    pair<istream&, string> get_string(istream& in)  // non raccomandato
     {
         string s;
-        is >> s;
-        return {is, s};
+        in >> s;
+        return {in, move(s)};
     }
     
-    for (auto p = get_string(cin); p.first; ) {
+    for (auto p = get_string(cin); p.first; p.second = get_string(p.first).second) {
         // fa qualcosa con p.second
     }
 
@@ -3169,6 +3257,26 @@ Per esempio:
 I super-generici `pair` e `tuple` si devono usare solo quando il valore restituito rappresenta entità indipendenti anziché un'astrazione.
 
 Un altro esempio, si usa uno specifico tipo lungo le righe di `variant<T, error_code>`, anziché usare la generica `tuple`.
+
+##### Nota
+
+Quando la tupla da restituire viene inizializzata da variabili locali costose da copiare, il `move` esplicito può essere utile per evitare la copia:
+
+    pair<LargeObject, LargeObject> f(const string& input)
+    {
+        LargeObject large1 = g(input);
+        LargeObject large2 = h(input);
+        // ...
+        return { move(large1), move(large2) }; // nessuna copia
+    }
+Alternativamente,
+
+    pair<LargeObject, LargeObject> f(const string& input)
+    {
+        // ...
+        return { g(input), h(input) }; // nessuna copia né spostamenti
+    }
+Si noti che questo è diverso da `return move(...)` dell'anti-pattern dall'[ES.56](#Res-move)
 
 ##### Imposizione
 
@@ -3256,7 +3364,7 @@ Meglio
 
 **Inoltre**: Si suppone che un `T*` ottenuto da uno smart pointer a `T` (p.es., `unique_ptr<T>`) punti ad un singolo elemento.
 
-**Si veda anche**: [Libreria di supporto](#S-gsl)
+**Si veda anche**: [Libreria di supporto](#gsl-guidelines-support-library)
 
 **Si veda anche**: [Non passare un array come singolo puntatore](#Ri-array)
 
@@ -3348,7 +3456,7 @@ Un oggetto `span<T>` non possiede i suoi elementi ed è così piccolo che si pu�
 
 Passare un oggetto `span` come argomento è esattamente tanto efficiente quanto passare, come argomenti, una coppia di puntatori o passare un puntatore ed un contatore intero.
 
-**Si veda anche**: [Libreria di supporto](#S-gsl)
+**Si veda anche**: [Libreria di supporto](#gsl-guidelines-support-library)
 
 ##### Imposizione
 
@@ -3381,7 +3489,7 @@ Quando si chiama `length(s)` si deve controllare prima se `s` è `nullptr`? L'im
 
 `zstring` non rappresenta la proprietà [ownership].
 
-**Si veda anche**: [Libreria di supporto](#S-gsl)
+**Si veda anche**: [Libreria di supporto](#gsl-guidelines-support-library)
 
 ### <a name="Rf-unique_ptr"></a>F.26: Utilizzare `unique_ptr<T>` per trasferire l'ownership dove è necessario un puntatore
 
@@ -3750,10 +3858,37 @@ Con la garanzia dell'elisione della copia [copy elision], ora si ottiene quasi s
       S result;
       return result;
     }
-
 ##### Imposizione
 
 Questo dovrebbe essere imposto con dei tool controllando l'espressione del return.
+
+### <a name="Rf-return-const"></a>F.49: Non restituire `const T`
+
+##### Motivo
+
+Non è consigliabile restituire un valore `const`.
+Un consiglio così vecchio è ormai obsoleto; non aggiunge valore e interferisce con la semantica di move.
+
+##### Esempio
+
+    const vector<int> fct();    // male: questo "const" è più un problema che altro
+    
+    void g(vector<int>& vx)
+    {
+        // ...
+        fct() = vx;   // impedito dal "const"
+        // ...
+        vx = fct(); // copia costosa: la semantica del move viene soppressa dal "const"
+        // ...
+    }
+L'argomento per aggiungere `const` ad un valore di ritorno è che impedisce (rarissimamente) accessi accidentali a un elemento temporaneo.
+L'argomento contrario è che impedisce (molto di frequente) l'uso della semantica di move.
+
+**Si veda anche**: [F.20, l'argomento generale sulla "restituzione" dei valori in output](#Rf-out)
+
+##### Imposizione
+
+* Segnalare la restituzione di un valore `const`. Per risolvere il problema: Rimuovere `const` nel restituire un valore non-`const`.
 
 
 ### <a name="Rf-capture-vs-overload"></a>F.50: Usare una lambda quando una funzione non va (per acquisire le variabili locali o scrivere una funzione locale)
@@ -3890,13 +4025,18 @@ Puntatori e riferimenti a locali non dovrebbero sopravvivere al loro scope. Le l
     // Poiché viene creata una copia di local, sarà
     // sempre disponibile per la chiamata.
     thread_pool.queue_work([=] { process(local); });
+##### Nota
+
+Se è necessario catturare un puntatore non locale, prendere in considerazione l'utilizzo di `unique_ptr`; questo gestisce sia il ciclo di vita che la sincronizzazione.
+
+Se deve essere catturato il puntatore `this`, considerare l'utilizzo della cattura di `[*this]`, che crea una copia dell'intero oggetto.
 
 ##### Imposizione
 
 * (Semplice) Emette un warning quando la 'capture-list' [lista dei parametri] contiene un riferimento ad una variabile definita localmente
 * (Complesso) Emette un warning quando la 'capture-list' contiene un riferimento ad una variabile dichiarata localmente e la lambda viene passata ad un contesto non-`const` e non-local
 
-### <a name="Rf-this-capture"></a>F.54: Se si acquisisce `this`, se ne acquisiscono esplicitamente tutte le variabili (senza acquisirne i default)
+### <a name="Rf-this-capture"></a>F.54: Quando si scrive una lambda che cattura `this` o un qualsiasi dato membro della classe, non usare il "default capture" `[=]`
 
 ##### Motivo
 
@@ -3932,11 +4072,11 @@ Puntatori e riferimenti a locali non dovrebbero sopravvivere al loro scope. Le l
 
 ##### Nota
 
-Questo è oggetto di un'attiva discussione nella standardizzazione e potrebbe essere oggetto di una futura versione dello standard aggiungendo una nuova modalità di cattura o forse modificando il significato di `[=]`. Per ora, siate espliciti.
+Se si intende catturare una copia di tutti i dati membri di classe, si consideri il C++17 `[*this]`.
 
 ##### Imposizione
 
-* Segnalare qualsiasi capture-list di lambda che specifica un'acquisizione di default e cattura anche `this` (esplicitamente o tramite acquisizione di default)
+* Segnalare qualsiasi capture-list di lambda che specifica un'acquisizione di `[=]` e cattura anche `this` (esplicitamente o tramite acquisizione di default e un uso di `this ` nel corpo)
 
 ### <a name="F-varargs"></a>F.55: Non usare gli argomenti `va_arg`
 
@@ -4216,7 +4356,7 @@ Questa regola diventa ancora migliore se il C++ adotta la ["uniform function cal
 Il linguaggio richiede che delle funzioni `virtual` siano membri, e non tutte le funzioni `virtual` accedono direttamente ai dati.
 In particolare, i membri di una classe astratta raramente lo fanno.
 
-Nota [multi-methods](https://parasol.tamu.edu/~yuriys/papers/OMM10.pdf).
+Nota [multi-methods](https://web.archive.org/web/20200605021759/https://parasol.tamu.edu/~yuriys/papers/OMM10.pdf).
 
 ##### Eccezione
 
@@ -4427,7 +4567,7 @@ Riepilogo delle regole sui tipi concreti:
 
 * [C.10: Preferire i tipi concreti alle gerarchie di classi](#Rc-concrete)
 * [C.11: Rendere concreti i tipi regolari](#Rc-regular)
-* [C.12: Non creare dati membro `const` o riferimenti](#Rc-constref)
+* [C.12: Non creare dati membro `const` o riferimenti in un tipo copiabile o spostabile [movable]](#Rc-constref)
 
 
 ### <a name="Rc-concrete"></a>C.10: Preferire i tipi concreti alle gerarchie di classi
@@ -4522,11 +4662,11 @@ Gli handle per le risorse che non si possono clonare, p.es., uno `scoped_lock` p
 ???
 
 
-### <a name="Rc-constref"></a>C.12: Non creare dati membro `const` o riferimenti
+### <a name="Rc-constref"></a>C.12: Non creare dati membro `const` o riferimenti in un tipo copiabile o spostabile [movable]
 
 ##### Motivo
 
-Non sono utili e rendono i tipi difficili da usare rendendoli non copiabili o parzialmente non copiabili per subdoli motivi.
+`const` e i membri dei dati di riferimento non sono utili in un tipo copiabile o spostabile e rendono tali tipi difficili da usare rendendoli almeno in parte non copiabili/non spostabili per ragioni subdole.
 
 ##### Esempio; cattivo
 
@@ -4544,7 +4684,7 @@ Se è necessario che un membro punti a qualcosa, usare un puntatore (semplice o 
 
 ##### Imposizione
 
-Segnalare un dato membro che sia `const`, `&` o `&&`.
+Segnalare un dato membro che sia `const`, `&` o `&&` in un tipo che ha un'operazione di copia o spostamento.
 
 
 
@@ -4656,7 +4796,7 @@ Questa è conosciuta come "la regola dello zero".
 ##### Imposizione
 
 (Non imponibile) Sebbene non imponibile, un buon analizzatore statico può rilevare schemi che segnalano un possibile miglioramento per soddisfare questa regola.
-Per esempio, una classe con una coppia (pointer, size) membro e un distruttore che esegue il `delete` del puntatore, probabilmente si potrebbe convertire in un `vector`.
+Ad esempio, una classe con una coppia di membri (pointer, size) e un distruttore che esegue il `delete` del puntatore, probabilmente si potrebbe convertire in un `vector`.
 
 ### <a name="Rc-five"></a>C.21: Se c'è la definizione o il `=delete` di qualsiasi funzione di copia, spostamento o distruzione, ci dev'essere la definizione o il `=delete` per tutte
 
@@ -4705,21 +4845,22 @@ Quando un distruttore dev'essere dichiarato solo per renderlo `virtual`, può es
 
     class AbstractBase {
     public:
+        virtual void foo() = 0;  // almeno un metodo astratto per rendere astratta la classe
         virtual ~AbstractBase() = default;
         // ...
     };
 
 Per evitare lo slicing come per la [C.67](#Rc-copy-virtual), rendere protect le operazioni di copia e spostamento oppure con  `=delete` e aggiungendo un `clone`:
 
-    class ClonableBase {
+    class CloneableBase {
     public:
-        virtual unique_ptr<ClonableBase> clone() const;
-        virtual ~ClonableBase() = default;
+        virtual unique_ptr<CloneableBase> clone() const;
+        virtual ~CloneableBase() = default;
         CloneableBase() = default;
-        ClonableBase(const ClonableBase&) = delete;
-        ClonableBase& operator=(const ClonableBase&) = delete;
-        ClonableBase(ClonableBase&&) = delete;
-        ClonableBase& operator=(ClonableBase&&) = delete;
+        CloneableBase(const CloneableBase&) = delete;
+        CloneableBase& operator=(const CloneableBase&) = delete;
+        CloneableBase(CloneableBase&&) = delete;
+        CloneableBase& operator=(CloneableBase&&) = delete;
         // ... altri costruttori e funzioni ...
     };
 
@@ -4735,7 +4876,7 @@ Affidarsi ad un'operazione di copia, generata implicitamente, in una classe con 
 
 ##### Nota
 
-La scrittura di queste funzioni può essere soggetta ad errori.
+La scrittura di queste funzioni può essere esposta ad errori.
 Notare i tipi dei loro argomenti:
 
     class X {
@@ -4744,8 +4885,8 @@ Notare i tipi dei loro argomenti:
         virtual ~X() = default;            // distruttore (virtuale se X deve essere una classe base)
         X(const X&) = default;             // costruttore copia
         X& operator=(const X&) = default;  // assegnazione copia
-        X(X&&) = default;                  // costruttore [move]
-        X& operator=(X&&) = default;       // assegnazione [move]
+        X(X&&) noexcept = default;            // costruttore [move]
+        X& operator=(X&&) noexcept = default; // assegnazione [move]
     };
 
 Un errore minore (come uno di ortografia, tralasciando un `const`, usando `&` anziché `&&` o tralasciando una funzione speciale ) può causare errori o warning.
@@ -4771,7 +4912,7 @@ Gli utenti resteranno sorpresi se la costruzione copia/[move] e l'assegnazione c
         shared_ptr<Impl> p;
     public:
         Silly(const Silly& a) : p(make_shared<Impl>()) { *p = *a.p; }   // copia completa [deep]
-        Silly& operator=(const Silly& a) { p = a.p; }   // copia superficiale [shallow]
+        Silly& operator=(const Silly& a) { p = a.p; return *this; }   // copia superficiale [shallow]
         // ...
     };
 
@@ -5360,8 +5501,8 @@ Un costruttore di default spesso semplifica il compito di definire uno [stato di
         // ...
     };
     
-    vector<Date> vd1(1000);   // qui serve il default di Date
-    vector<Date> vd2(1000, Date{Month::October, 7, 1885});   // alternativa
+    vector<Date> vd1(1000);   // qui c'è bisogno del default di Date
+    vector<Date> vd2(1000, Date{7, Month::October, 1885});   // alternativa
 
 Il costruttore di default viene auto-generato solo se non c'è un costruttore dichiarato dall'utente, quindi è impossibile inizializzare il vettore `vd1` nell'esempio precedente.
 L'assenza di un valore di default può riservare delle sorprese agli utenti e complicarne l'uso, quindi se lo si può ragionevolmente definire, lo si faccia.
@@ -5376,9 +5517,9 @@ Tuttavia, la maggior parte delle classi  `Date` realistiche hanno una "data iniz
         Date() = default; // [Si veda anche](#Rc-default)
         // ...
     private:
-        int dd = 1;
-        int mm = 1;
-        int yyyy = 1970;
+        int dd {1};
+        int mm {1};
+        int yyyy {1970};
         // ...
     };
     
@@ -5497,9 +5638,9 @@ Per esempio, `Vector0<int> v[100]` costa 100 allocazioni.
         Vector1(int n) :elem{new T[n]}, space{elem + n}, last{elem} {}
         // ...
     private:
-        own<T*> elem = nullptr;
-        T* space = nullptr;
-        T* last = nullptr;
+        own<T*> elem {};
+        T* space {};
+        T* last {};
     };
 
 L'uso di `{nullptr, nullptr, nullptr}` rende `Vector1{}` economico, ma è un caso speciale ed implica dei controlli a run-time.
@@ -5528,8 +5669,8 @@ Utilizzando gli inizializzatori dei membri nella stessa classe [in-class], conse
 ##### Esempio
 
     class X2 {
-        string s = "default";
-        int i = 1;
+        string s {"default"};
+        int i {1};
     public:
         // usa il costruttore di default generato dal compilatore
         // ...
@@ -6140,7 +6281,7 @@ Se `x = x` cambia il valore di `x`, si resterà sorpresi e capiteranno brutti er
         string s;
         int i;
     public:
-        Foo& operator=(Foo&& a);
+        Foo& operator=(Foo&& a) noexcept;
         // ...
     };
     
@@ -6166,11 +6307,11 @@ Lo standard ISO garantisce solo uno stato "valido ma non specificato" per i cont
 
 Ecco un modo per spostare un puntatore senza un test (lo si immagini come codice nell'implementazione di un assegnazione con spostamento):
 
-    // sposta da other.ptr a this->ptr
+    // esegue il move da other.ptr a this->ptr
     T* temp = other.ptr;
     other.ptr = nullptr;
-    delete ptr;
-    ptr = temp;
+    delete ptr; // in self-move, anche this->ptr è null; delete è una no-op
+    ptr = temp; // in self-move, il ptr originale viene ripristinato
 
 ##### Imposizione
 
@@ -6189,8 +6330,15 @@ Uno spostamento [non-throwing] verrà usato in modo più efficiente dalla standa
     template<typename T>
     class Vector {
     public:
-        Vector(Vector&& a) noexcept :elem{a.elem}, sz{a.sz} { a.sz = 0; a.elem = nullptr; }
-        Vector& operator=(Vector&& a) noexcept { elem = a.elem; sz = a.sz; a.sz = 0; a.elem = nullptr; }
+        Vector(Vector&& a) noexcept :elem{a.elem}, sz{a.sz} { a.elem = nullptr; a.sz = 0; }
+        Vector& operator=(Vector&& a) noexcept {
+            if (&a != this) {
+                delete elem;
+                elem = a.elem; a.elem = nullptr;
+                sz   = a.sz;   a.sz   = 0;
+            }
+            return *this;
+        }
         // ...
     private:
         T* elem;
@@ -6204,8 +6352,8 @@ Queste operazioni non generano errori [throw].
     template<typename T>
     class Vector2 {
     public:
-        Vector2(Vector2&& a) { *this = a; }             // usa semplicemente la copia
-        Vector2& operator=(Vector2&& a) { *this = a; }  // usa semplicemente la copia
+        Vector2(Vector2&& a) noexcept { *this = a; }             // usa solo la copia
+        Vector2& operator=(Vector2&& a) noexcept { *this = a; }  // usa solo la copia
         // ...
     private:
         T* elem;
@@ -6306,8 +6454,8 @@ Oltre alle operazioni per le quali il linguaggio offre implementazioni di defaul
     
         Tracer(const Tracer&) = default;
         Tracer& operator=(const Tracer&) = default;
-        Tracer(Tracer&&) = default;
-        Tracer& operator=(Tracer&&) = default;
+        Tracer(Tracer&&) noexcept = default;
+        Tracer& operator=(Tracer&&) noexcept = default;
     };
 
 Dato che si è definito il distruttore, si devono definire le operazioni di copia e spostamento. Il `= default` è il modo migliore e più semplice per farlo.
@@ -6322,8 +6470,8 @@ Dato che si è definito il distruttore, si devono definire le operazioni di copi
     
         Tracer2(const Tracer2& a) : message{a.message} {}
         Tracer2& operator=(const Tracer2& a) { message = a.message; return *this; }
-        Tracer2(Tracer2&& a) :message{a.message} {}
-        Tracer2& operator=(Tracer2&& a) { message = a.message; return *this; }
+        Tracer2(Tracer2&& a) noexcept :message{a.message} {}
+        Tracer2& operator=(Tracer2&& a) noexcept { message = a.message; return *this; }
     };
 
 Scrivere il codice per le operazioni di copia e spostamento è prolisso, noioso e soggetto ad errori. Un compilatore lo fa meglio.
@@ -6715,9 +6863,9 @@ In particolare, `std::vector` e `std::map` costituiscono dei modelli utili relat
         Sorted_vector() = default;
         Sorted_vector(initializer_list<T>);    // costruttore con la lista di inizializzatori: ordina e memorizza
         Sorted_vector(const Sorted_vector&) = default;
-        Sorted_vector(Sorted_vector&&) = default;
+        Sorted_vector(Sorted_vector&&) noexcept = default;
         Sorted_vector& operator=(const Sorted_vector&) = default;   // assegnazione copia
-        Sorted_vector& operator=(Sorted_vector&&) = default;        // assegnazione spostamento
+        Sorted_vector& operator=(Sorted_vector&&) noexcept = default; // assegnazione spostamento
         ~Sorted_vector() = default;
     
         Sorted_vector(const std::vector<T>& v);   // memorizza e ordina
@@ -6849,6 +6997,8 @@ Gli oggetti funzione dovrebbero essere economici da copiare (e quindi [passati p
 
 Sommario:
 
+* [F.10: Se un'operazione può essere riutilizzata, le si assegna un nome](#Rf-name)
+* [F.11: Usare una lambda anonima se c'è bisogno di un semplice oggetto funzione in un posto soltanto](#Rf-lambda)
 * [F.50: Usare una lambda quando non è possibile una funzione (per acquisire le variabili locali o scrivere una funzione locale)](#Rf-capture-vs-overload)
 * [F.52: Preferire l'acquisizione per riferimento nelle lambda da usare localmente, compresi quelli passati  agli algoritmi](#Rf-reference-capture)
 * [F.53: Evitare l'acquisizione per riferimento nelle lambda che non si useranno localmente, compresi quelli restituiti, memorizzati nell'heap o passati da un altro thread](#Rf-value-capture)
@@ -7270,7 +7420,7 @@ Per esempio, `center` deve essere implementato per ogni classe derivata da `Shap
 
 ##### Esempio, doppia gerarchia
 
-Come possiamo avere i vantaggi di gerarchie stabili dalle gerarchie di implementazioni e i benefici del riutilizzo delle implementazioni con l'ereditarietà dell'implementazione?
+Come possiamo avere i vantaggi di gerarchie stabili dalle gerarchie delle interfacce e i benefici del riutilizzo delle implementazioni con l'ereditarietà dell'implementazione?
 Una tecnica popolare è la doppia gerarchia.
 Ci sono molti modi per implementare l'idea delle doppie gerarchie; qui, useremo la variante dell'ereditarietà multipla.
 
@@ -7396,8 +7546,8 @@ La copia di una classe polimorfica è sconsigliata a causa dei problemi di spacc
     protected:
          B(const B&) = default;
          B& operator=(const B&) = default;
-         B(B&&) = default;
-         B& operator=(B&&) = default;
+         B(B&&) noexcept = default;
+         B& operator=(B&&) noexcept = default;
         // ...
     };
     
@@ -7922,8 +8072,8 @@ Si consideri:
         cout << pb2->id(); // "D"
     
     
-        if (pb1->id() == "D") {         // sembra innocuo
-            D* pd = static_cast<D*>(pb1);
+        if (pb2->id() == "D") {         // sembra innocuo
+            D* pd = static_cast<D*>(pb2);
             // ...
         }
         // ...
@@ -8581,7 +8731,7 @@ Il tipo `variant` del C++17 (presente in `<variant>`) fa al caso nostro:
     v = 123;        // v contiene un int
     int x = get<int>(v);
     v = 123.456;    // v contiene un double
-    w = get<double>(v);
+    double w = get<double>(v);
 
 ##### Imposizione
 
@@ -8781,12 +8931,15 @@ Si usi invece un `enum`:
     
     int webby = blue;   // errore: si deve essere specifici
     Web_color webby = Web_color::blue;
-
 Abbiamo usato un `enum class` per evitare il conflitto fra i nomi.
+
+##### Nota
+
+Considerare anche le variabili `constexpr` e `const inline`.
 
 ##### Imposizione
 
-Segnalare le macro che definiscono valori interi.
+Segnalare le macro che definiscono valori interi. Usare `enum` o `const inline` o un'altra alternativa non-macro.
 
 
 ### <a name="Renum-set"></a>Enum.2: Usare le enumerazioni per rappresentare insiemi di nomi di costanti correlate
@@ -8866,7 +9019,7 @@ Comodità d'uso e per evitare errori.
 
 ##### Esempio
 
-    enum Day { mon, tue, wed, thu, fri, sat, sun };
+    enum class Day { mon, tue, wed, thu, fri, sat, sun };
     
     Day& operator++(Day& d)
     {
@@ -8957,7 +9110,7 @@ Il default è più facile da leggere e da scrivere.
 
 ##### Nota
 
-È necessario specificare il [tipo sottostante] nelle dichiarazioni "forward" [in avanti] delle enumerazioni:
+Specificare il tipo in esame è necessario per il "forward-declare" di un enum o una classe enum:
 
     enum Flags : char;
     
@@ -8966,8 +9119,9 @@ Il default è più facile da leggere e da scrivere.
     // ....
     
     enum Flags : char { /* ... */ };
+o per garantire che i valori di quel tipo abbiano una specifica bit-precision:
 
-
+    enum Bitboard : uint64_t { /* ... */ };
 ##### Imposizione
 
 ????
@@ -9244,7 +9398,7 @@ Se è richiesta la semantica dei puntatori (p. es., perché il tipo restituito d
 
 * (Semplice) Un warning su un `delete` di un puntatore semplice che non sia un `owner<T>`.
 * (Moderato) Un warning sia sul fallimento di un `reset` che su un esplicito `delete` di un puntatore a `owner<T>` su ogni percorso del codice.
-* (Semplice) Avvisare se il valore di ritorno di `new` è assegnato ad un puntatore semplice.
+* (Semplice) Avvisare se il valore restituito da `new` viene assegnato ad un puntatore semplice [raw].
 * (Semplice) Avvisare se una funzione restituisce un oggetto che sia stato allocato nella funzione ma che abbia un costruttore di spostamento.
    Suggerire, invece, di restituirlo per valore.
 
@@ -9296,12 +9450,32 @@ Utilizzare invece una variabile locale:
         Gadget g{n};
         // ...
     }
-
 ##### Imposizione
 
-* (Moderato) Avvisare se un oggetto è allocato e poi de-allocato su tutte le diramazioni all'interno di una funzione. Suggerire, invece, di usare un oggetto variabile locale `auto` sullo stack.
-* (Semplice) Avverte se un locale `Unique_pointer` o uno `Shared_pointer` non viene spostato, copiato, ri-assegnato o `reset`tato prima della fine del suo ciclo di vita.
+* (Moderato) Avvisare se un oggetto è allocato e poi de-allocato su tutte le diramazioni all'interno di una funzione. Suggerire invece che dovrebbe essere un oggetto stack locale.
+* (Semplice) Avverte se un `Unique_pointer` o `Shared_pointer` locale, che non viene spostato, copiato, riassegnato o `reset` prima della fine del suo ciclo di vita, non viene dichiarato `const`.
+   Eccezione: non produrre tale avviso su un `Unique_pointer` locale a un array "unbounded". (Vedere di seguito.)
 
+##### Eccezione
+
+È corretto creare un `const unique_ptr<T[]>` locale in un buffer allocato nell'heap, poiché questo è un modo valido per rappresentare un array dinamico con uno scope.
+
+##### Esempio
+
+Un caso d'uso valido per una variabile `const unique_ptr<T[]>` locale:
+
+    int get_median_value(const std::list<int>& integers)
+    {
+      const auto size = integers.size();
+
+      // OK: dichiarazione di un unique_ptr<T[]>.
+      const auto local_buffer = std::make_unique_for_overwrite<int[]>(size);
+
+      std::copy_n(begin(integers), size, local_buffer.get());
+      std::nth_element(local_buffer.get(), local_buffer.get() + size/2, local_buffer.get() + size);
+
+      return local_buffer[size/2];
+    }
 ### <a name="Rr-global"></a>R.6: Evitare le variabili globali non-`const`
 
 Cfr. [I.2](#Ri-global)
@@ -9379,7 +9553,7 @@ In caso contrario, un'eccezione o un return potrebbero causare un leak.
 
 ##### Esempio, cattivo
 
-    void f(const string& name)
+    void func(const string& name)
     {
         FILE* f = fopen(name, "r");            // apre il file
         vector<char> buf(1024);
@@ -9391,7 +9565,7 @@ L'allocazione di `buf` potrebbe fallire e produrre un leak dell'handle del file.
 
 ##### Esempio
 
-    void f(const string& name)
+    void func(const string& name)
     {
         ifstream f{name};   // apre il file
         vector<char> buf(1024);
@@ -9497,19 +9671,17 @@ Si consideri:
 
     void f()
     {
-        X x;
-        X* p1 { new X };              // si veda anche ???
-        unique_ptr<X> p2 { new X };   // proprietà unica; si veda anche ???
-        shared_ptr<X> p3 { new X };   // proprietà condivisa; si veda anche ???
-        auto p4 = make_unique<X>();   // proprietà esclusiva, preferibile all'uso esplicito di "new"
-        auto p5 = make_shared<X>();   // proprietà condivisa, preferibile all'uso esplicito di "new"
+        X* p1 { new X };              // bad, p1 genererà un leak
+        auto p2 = make_unique<X>();   // good, proprietà unica
+        auto p3 = make_shared<X>();   // good, proprietà condivisa
     }
 
 Con ciò si avrà un leak dell'oggetto usato per inizializzare `p1` (solamente).
 
 ##### Imposizione
 
-(Semplice) Avvisare se il valore di ritorno di `new`, o di una chiamata a una funzione che restituisce un tipo di puntatore, viene assegnato ad un puntatore semplice.
+* (Semplice) Avvisare se il valore restituito da `new` viene assegnato ad un puntatore semplice [raw].
+* (Semplice) Avvisare se il risultato di una funzione che restituisce un puntatore proprietario "raw" viene assegnato a un puntatore "raw".
 
 ### <a name="Rr-unique"></a>R.21: Preferire `unique_ptr` a `shared_ptr` a meno che non sia necessario condividere il possesso
 
@@ -9681,7 +9853,7 @@ Usando `unique_ptr` in questo modo si documenta e si rafforza il trasferimento d
 * (Semplice) Avvisare se una funzione prende un parametro `Unique_pointer<T>` per riferimento lvalue e non assegna ad esso né ci chiama `reset()` in almeno un ramo del codice. Suggerire, invece, di prendere un `T*` o un `T&`.
 * (Sempice) ((Foundation)) Avvisare se una funzione accetta un parametro `Unique_pointer<T>` per riferimento a `const`. Suggerire, invece, di prendere un`const T*` o un `const T&`.
 
-### <a name="Rr-reseat"></a>R.33: Prendere un parametro `unique_ptr<widget>&` per esprimere che una funzione ricolloca/restituisce [reseat] il `widget`
+### <a name="Rr-reseat"></a>R.33: Prendere un parametro `unique_ptr<widget>&` per esprimere che una funzione riposiziona [reseats] il `widget`
 
 ##### Motivo
 
@@ -9950,7 +10122,7 @@ Grandi parti della libreria standard si basano sull'allocazione dinamica (free s
 
 ##### Imposizione
 
-Non facile. ??? Cercare loop disordinati, nidificati, funzioni lunghe, assenza di chiamate a funzioni, mancanza dell'utilizzo dei tipi non-built-in. Complessità ciclomatica?
+Non facile. ??? Cercare loop disordinati, cicli nidificati, funzioni lunghe, assenza di chiamate di funzione, mancanza di utilizzo di tipi nativi. Complessità ciclomatica?
 
 ### <a name="Res-abstr"></a>ES.2: Preferire astrazioni adatte all'uso diretto delle funzionalità del linguaggio
 
@@ -9979,7 +10151,7 @@ Quello equivalente più tradizionale e a livello più basso è più lungo, più 
             is.read(s, maxstring);
             res[elemcount++] = s;
         }
-        nread = &elemcount;
+        *nread = elemcount;
         return res;
     }
 
@@ -9987,7 +10159,7 @@ Una volta aggiunto il controllo per l'overflow e la gestione degli errori questo
 
 ##### Imposizione
 
-Non facile. ??? Cercare loop disordinati, nidificati, funzioni lunghe, assenza di chiamate a funzioni, mancanza dell'utilizzo dei tipi non-built-in. Complessità ciclomatica?
+Non facile. ??? Cercare loop disordinati, cicli nidificati, funzioni lunghe, assenza di chiamate di funzione, mancanza di utilizzo di tipi nativi. Complessità ciclomatica?
 
 ### <a name="Res-DRY"></a>ES.3: Non ripetersi, evitare codice ridondante
 
@@ -10525,10 +10697,10 @@ La regola *inizializzare sempre* è una regola di stile volta a migliorare la ma
 
 Ecco un esempio che viene spesso considerato per dimostrare la necessità di una regola più rilassata per l'inizializzazione
 
-    widget i;    // "widget" un tipo che è costoso da inizializzare, forse un grande POD [Plain Old Data]
+    widget i;    // "widget" un tipo costoso da inizializzare, forse un tipo semplice e di grandi dimensioni
     widget j;
     
-    if (cond) {  // bad: i e j vengono inizializzati "in ritardo"
+    if (cond) {  // bad: i e j vengono inizializzati "in ritardo" [late]
         i = f1();
         j = f2();
     }
@@ -10744,11 +10916,11 @@ Evitare l'inizializzazione `()`, che da adito ad ambiguità nel parser.
 
 Per i contenitori, esiste una tradizione sull'uso di `{...}` per un elenco di elementi e `(...)` per le dimensioni:
 
-    vector<int> v1(10);    // vettore di 10 elementi con il valore di default a 0
-    vector<int> v2{10};    // vettore di 1 elemento con il valore 10
+    vector<int> v1(10);    // vettore di 10 elementi con 0 come valore di default
+    vector<int> v2{10};    // vettore di 1 elemento con valore 10
     
-    vector<int> v3(1, 2);  // vettore di 1 elemento con il valore 2
-    vector<int> v4{1, 2};  // vettore di 2 elementi con i valori 1 e 2
+    vector<int> v3(1, 2);  // vettore di 1 elemento con valore 2
+    vector<int> v4{1, 2};  // vettore di 2 element1 con valori 1 e 2
 
 ##### Nota
 
@@ -10758,7 +10930,8 @@ Gli inizializzatori `{}` non consentono le conversioni "narrowing" (e questo di 
 
     int x {7.9};   // errore: narrowing
     int y = 7.9;   // OK: y diventa 7. Si spera in un warning del compilatore
-    int z = gsl::narrow_cast<int>(7.9);  // OK: è richiesto
+    int z {gsl::narrow_cast<int>(7.9)};    // OK: è stato richiesto
+    auto zz = gsl::narrow_cast<int>(7.9);  // OK: è stato richiesto
 
 ##### Nota
 
@@ -10841,11 +11014,12 @@ L'uso di `std::unique_ptr` è il modo più semplice per evirare "leak". È affid
         // ... nessuna assegnazione a p2 ...
         vector<int> v(7);
         v.at(7) = 0;                    // eccezione generata
+        delete p2;                      // troppo tardi per evitare leak
         // ...
     }
 
 Se `leak == true` l'oggetto puntato da `p2` è perso [leak] e l'oggetto puntato da `p1` non lo è.
-Lo stesso vale quando `at()` solleva un errore.
+Lo stesso vale quando `at()` solleva un errore. In entrambi i casi, l'istruzione `delete p2` non viene raggiunta.
 
 ##### Imposizione
 
@@ -11023,8 +11197,6 @@ Inoltre, `#` e `##` incoraggiano la definizione e l'uso delle macro:
 
 Esistono soluzioni alternative per la gestione delle stringhe di basso livello utilizzando le macro. Per esempio:
 
-    string s = "asdf" "lkjh";   // ordinaria concatenazione letterale della stringa
-    
     enum E { a, b };
     
     template<int x>
@@ -11036,9 +11208,10 @@ Esistono soluzioni alternative per la gestione delle stringhe di basso livello u
         }
     }
     
-    void f(int x, int y)
+    void f()
     {
-        string sx = stringify<x>();
+        string s1 = stringify<a>();
+        string s2 = stringify<b>();
         // ...
     }
 
@@ -11149,7 +11322,7 @@ Richiede un codice disordinato per il-cast-e-pieno-di-macro per funzionare corre
         error(7, "this", "is", "an", "error");  // crash
         const char* is = "is";
         string an = "an";
-        error(7, "this", "is", an, "error"); // crash
+        error(7, "this", is, an, "error"); // crash
     }
 
 **Alternativa**: L'overloading. I template. I template variadici.
@@ -12079,7 +12252,7 @@ Il linguaggio già sa che un valore restituito è un oggetto temporaneo che può
 
 * Segnalare l'uso di `std::move(x)` dove `x` è un rvalue o il linguaggio lo tratterà già come un rvalue, compreso `return std::move(local_variable);` e `std::move(f())` su una funzione che restituisce per valore.
 * Segnalare le funzioni che prendono un parametro `S&&` se non c'è alcun overload `const S&` che si prenda cura degli lvalue.
-* Segnalare uno `std::move` dell'argomento passato ad un parametro, tranne quando il tipo del parametro è un riferimento rvalue `X&&` o il tipo è "move-only" ed il parametro viene passato per valore.
+* Segnalare un argomento spostato con `std::move`, passato a un parametro, tranne quando il tipo di parametro è un riferimento rvalue `X&&` o quando il tipo è "move-only" e il parametro viene passato per valore.
 * Segnalare quando `std::move` viene applicato ad un "forwarding" del riferimento (`T&&` dove `T` è un tipo di parametro template). Usare, invece, `std::forward`.
 * Segnalare quando `std::move` viene applicato ad un valore diverso da un riferimento rvalue a un non-const. (Un caso più generale della regola precedente per coprire i casi non-forwarding).
 * Segnalare quando `std::forward` viene applicato ad un riferimento rvalue (`X&&` dove `X` è un tipo parametro non-template). Usare, invece, `std::move`.
@@ -12134,8 +12307,8 @@ Questo esempio non solo viola la [regola di nessun `new` semplice [naked]](#Res-
 
 ##### Imposizione
 
-* Se il `new` e il `delete` stanno nello stesso scope, si possono segnalare gli errori.
-* Se il `new` e il `delete` stanno in una coppia costruttore/distruttore, si possono segnalare gli errori.
+* Segnalare `new` e `delete` non corrispondenti se si trovano nello stesso scope.
+* Segnalare `new` e `delete` non corrispondenti se si trovano in una coppia costruttore/distruttore.
 
 ### <a name="Res-arr2"></a>ES.62: Non confrontare i puntatori in diversi array
 
@@ -12374,7 +12547,7 @@ Esistono molti approcci per affrontare questo potenziale problema:
 
 Ci sono due potenziali problemi col test per il `nullptr`:
 
-* non è sempre ovvio cosa fare se si trova `nullptr`
+* non è sempre ovvio cosa fare se troviamo `nullptr`
 * il test può essere ridondante e/o relativamente costoso
 * non è ovvio se il test deve proteggere da una violazione o è parte della logica richiesta.
 
@@ -12876,11 +13049,11 @@ Quello che ad un umano appare come una variabile senza un nome per un compilator
 
     void f()
     {
-        lock<mutex>{mx};   // Bad
+        lock_guard<mutex>{mx};   // Bad
         // ...
     }
 
-Questo dichiara un oggetto `lock` senza nome che esce immediatamente dallo scope al punto e virgola.
+Questo dichiara un oggetto `lock_guard` anonimo che esce immediatamente dallo scope vicino al punto e virgola.
 Non è un errore insolito.
 In particolare, questo esempio può portare a conflitti difficili da trovare.
 
@@ -13068,7 +13241,7 @@ I tipi senza segno supportano la gestione dei bit senza le sorprese del bit del 
 
 ##### Nota
 
-I tipi senza segno possono anche essere utili per l'aritmetica del modulo.
+I tipi senza segno possono anche essere utili per l'aritmetica modulare.
 Tuttavia, se si vuole l'aritmetica modulare, si aggiungano i commenti necessari, evidenziando il comportamento 'arrotolato', in quanto questo codice può meravigliare alcuni programmatori.
 
 ##### Imposizione
@@ -13109,7 +13282,7 @@ Qui siamo stati molto espliciti su ciò che sta accadendo, ma se si fosse visto 
 
 ##### Eccezione
 
-Usare i tipi unsigned se si vuole veramente l'aritmetica del modulo - aggiungere i commenti opportuni evidenziando il comportamento 'arrotolato', in quanto questo codice può meravigliare alcuni programmatori.
+Usare i tipi unsigned se si vuole veramente l'aritmetica modulare - aggiungere i commenti opportuni evidenziando il comportamento 'arrotolato', in quanto questo codice può meravigliare alcuni programmatori.
 
 ##### Esempio
 
@@ -13261,7 +13434,7 @@ Si consideri:
     auto a = area(height, 2);   // se l'input è -2 a diventa 4294967292
 
 Si ricordi che `-1` quando viene assegnato ad un `unsigned int` diventa il più grande numero `unsigned int`.
-Inoltre, poiché l'aritmetica senza segno è l'aritmetica del modulo, la moltiplicazione non genera overflow, ma si 'arrotola'.
+Inoltre, poiché l'aritmetica senza segno è l'aritmetica modulare, la moltiplicazione non genera overflow, ma si 'arrotola'.
 
 ##### Esempio
 
@@ -13337,7 +13510,7 @@ Per evitare le insidie ​​con `auto` e `int`.
 
 ##### Nota
 
-L'array nativo usa indici signed.
+L'array nativo consente l'indicizzazione con segno.
 I container della libreria standard usano indici unsigned.
 Pertanto, non è possibile alcuna soluzione perfetta e pienamente compatibile (a meno che e fin quando i container della libreria standard non modificheranno l'odierno uso degli indici signed in futuro).
 Dati i noti problemi con i mix tra signed e unsigned, è meglio attenersi agli interi (signed) di dimensioni sufficienti, che è garantito da `gsl::index`.
@@ -13545,9 +13718,9 @@ Col C++20 possiamo fare ancora meglio
 
 La chiave è passare informazioni sufficienti per scegliere una buona implementazione.
 In questo, le interfacce `sort` mostrano qui un ulteriore punto debole: Si basano implicitamente sul tipo di elemento che abbia definito il "minore di" (`<`).
-Per completare l'interfaccia, è necessaria una seconda versione che accetti un criterio di confronto:
+Per completare l'interfaccia, abbiamo bisogno di una seconda versione che accetti un criterio di confronto:
 
-    // confronta gli elementi di c usando p
+    // confronta gli elementi di c usando r
     template<random_access_range R, class C> requires sortable<R, C>
     void sort(R&& r, C c);
 
@@ -13574,7 +13747,7 @@ In particolare, quando si scrive una funzione che non sia un dettaglio di implem
    L'ideale è una generalizzazione "zero-overhead".
 * Librerie: Usare librerie con delle buone interfacce.
    Se non è disponibile una libreria se ne crei una imitando lo stile dell'interfaccia di una buona libreria.
-   La [libreria standard](#S-stdlib) è il primo buon posto per ispirarsi.
+   La [libreria standard](#sl-the-standard-library) è il primo buon posto per ispirarsi.
 * Isolamento: Isolare il proprio codice da quello disordinato e/o vecchio stile fornendo un'interfaccia adatta.
    Questo è talvolta detto "fornire un wrapper" per il codice utile/necessario ma disordinato.
    Non lasciare che i cattivi progetti "si insinuino" nel proprio codice.
@@ -13620,7 +13793,7 @@ Una volta completata l'implementazione iniziale, la si esamini; una volta distri
 ##### Nota
 
 Una necessità di efficienza non implica una necessità di [codice a basso-livello](#Rper-low).
-Un codice di alto livello non implica lentezza e prolissità.
+Il codice di alto livello non è necessariamente lento o prolisso.
 
 ##### Nota
 
@@ -13637,7 +13810,7 @@ Una domanda che può essere utile è "quale interfaccia sarebbe necessaria se qu
 ##### Nota
 
 Questa regola non contraddice la regola [Non ottimizzare prematuramente](#Rper-Knuth).
-Essa la completa e incoraggia gli sviluppatori a permettere una successiva - appropriata e non-prematura - ottimizzazione, se e dove necessario.
+Essa la completa, incoraggiando gli sviluppatori a consentire un'ottimizzazione successiva, appropriata e non-prematura, se e dove necessario.
 
 ##### Imposizione
 
@@ -13718,10 +13891,10 @@ Esistono tecniche simili per selezionare la funzione ottimale da chiamare.
 
 ##### Nota
 
-L'ideale è *non* provare ad eseguire tutto in fase di compilazione.
-Ovviamente, la maggior parte dei calcoli dipende dagli input, quindi non si possono spostare al tempo della compilazione, ma al di là di questo vincolo logico c'è il fatto che un calcolo complesso in fase di compilazione può aumentare seriamente i tempi di compilazione e complicare il debug.
+L'ideale è *not* per cercare di eseguire tutto in fase di compilazione.
+Ovviamente, la maggior parte dei calcoli dipende dagli input, quindi non si possono spostare in fase di compilazione, ma al di là di questo vincolo logico c'è il fatto che il calcolo complesso in fase di compilazione ne può aumentare notevolmente i tempi e complicare il debug.
 È anche possibile che si rallenti il codice mediante il calcolo in fase di compilazione.
-Questo è certamente raro, ma suddividendo un calcolo generico in diversi sotto-calcoli ottimizzati è possibile rendere meno efficace la cache delle istruzioni.
+Questo è certamente raro, ma scomponendo un calcolo generale in sotto-calcoli separatamente ottimali, è possibile rendere meno efficace la cache delle istruzioni.
 
 ##### Imposizione
 
@@ -13769,7 +13942,7 @@ Le prestazioni sono solitamente dominate dai tempi di accesso alla memoria.
 
 ##### Motivo
 
-Le prestazioni sono molto sensibili alle prestazioni della cache e gli algoritmi della cache favoriscono un accesso semplice (generalmente lineare) ai dati adiacenti.
+Le prestazioni sono molto sensibili alle prestazioni della cache e gli algoritmi della cache favoriscono il semplice accesso (solitamente lineare) ai dati adiacenti.
 
 ##### Esempio
 
@@ -14123,7 +14296,7 @@ Sfortunatamente le esigenze e i vincoli delle persone differiscono in modo così
 
 ##### Imposizione
 
-Spetta al costruttore dell'applicazione decidere quali tool di supporto sono utili per una particolare applicazione.
+Spetta a un costruttore di applicazioni scegliere quali strumenti di supporto sono utili per una particolare applicazione.
 
 ## <a name="SScp-con"></a>CP.con: Concorrenza
 
@@ -14739,15 +14912,23 @@ Segnalare i `lock()` e gli `unlock()` "[naked]".
 
 ##### Motivo
 
-Un oggetto locale senza nome è un temporaneo che esce immediatamente dallo scope.
+Un oggetto locale anonimo è un oggetto temporaneo che esce immediatamente dallo scope.
 
 ##### Esempio
 
-    unique_lock<mutex>(m1);
-    lock_guard<mutex> {m2};
-    lock(m1, m2);
+    // mutex globali
+    mutex m1;
+    mutex m2;
 
-Questo sembra abbastanza innocente, ma non lo è.
+    void f()
+    {
+        unique_lock<mutex>(m1); // (A)
+        lock_guard<mutex> {m2}; // (B)
+        // funziona nella sezione critica ...
+    }
+Questo sembra abbastanza innocente, ma non lo è. In (A), `m1` è un locale costruito dal default `unique_lock`, che nasconde il globale `::m1` (e non lo blocca).
+In (B) un temporaneo anonimo `lock_guard` viene costruito e 'locca'`::m2`, ma esce subito dallo scope e sblocca nuovamente `::m2`.
+Per il resto della funzione `f()` nessuno dei due mutex è bloccato.
 
 ##### Imposizione
 
@@ -15345,7 +15526,7 @@ Le regole sono fatte per aiutare a evitare i diversi tipi di errori:
 * Violazione del tipo (p.es., uso improprio delle `union` e dei cast)
 * Perdita (leak) delle risorse (compresi i 'memory leak')
 * Errori sui limiti [bound]
-* Errori sul ciclo di vita (p.es., accesso ad un oggetto dopo il `delete`)
+* Errori del diclodi vita [lifetime] (ad es. accesso a un oggetto dopo che aver subito un `delete`)
 * Errori di complessità (errori logici dati da espressioni o idee eccessivamente complesse)
 * Errori di interfaccia (p.es., un valore inatteso passato ad un'interfaccia)
 
@@ -15403,7 +15584,7 @@ Per rendere la gestione degli errori sistematica, robusta e non-ripetitiva.
         // ...
     }
 
-Qui, i costruttori `vector` e `string` potrebbero non essere in grado di allocare abbastanza memoria per i loro elementi, il costruttore di `vector` potrebbe non essere in grado di copiare le `Thing` nella sua lista degli inizializzatori, e `File_handle` potrebbe non essere in grado di aprire il file richiesto.
+Qui, i costruttori dei `vector` e delle `string` potrebbero non essere in grado di allocare memoria sufficiente per i loro elementi, il costruttore dei `vector` potrebbe non essere in grado di copiare i `Thing` nella sua lista di inizializzazione, e `File_handle` potrebbe non essere in grado di aprire il file richiesto.
 In ogni caso, generano un errore per gestire il chiamante di `use()`.
 Se `use()` è in grado di gestire il fallimento nel costruire `bar` può assumere il controllo usando `try`/`catch`.
 in entrambi i casi, il costruttore di `Foo` distrugge correttamente i membri prima di passare il controllo a chiunque abbia tentato di creare un `Foo`.
@@ -15515,7 +15696,7 @@ Non tutte le funzioni membro si possono chiamare.
 
 L'invariante della classe - qui definito come commento - è stabilito dal suo costruttore.
 `new` solleva un errore se non può allocare la memoria richiesta.
-Gli operatori, in particolare l'operatore di indicizzazione [subscript], si basano sull'invariante.
+Gli operatori, in particolare l'operatore di indicizzazione, si basano sull'invariante.
 
 **Si veda anche**: [Se un costruttore non è in grado di costruire un oggetto valido, generare un'eccezione](#Rc-throw)
 
@@ -15941,7 +16122,7 @@ Meglio:
 
 ##### Motivo
 
-`finalmente` dalle [GSL](#S-gsl) è meno 'verboso' e più difficile da sbagliare rispetto al `try`/`catch`.
+`finalmente` dalle [GSL](#gsl-guidelines-support-library) è meno 'verboso' e più difficile da sbagliare rispetto al `try`/`catch`.
 
 ##### Esempio
 
@@ -16330,7 +16511,7 @@ Segnalare tutti i "gestori nascosti".
 
 Non può esserci una condizione di conflitto su una costante.
 È più facile ragionare su un programma quando molti degli oggetti non possono cambiare i loro valori.
-Le interfacce che promettono "nessun cambiamento" degli oggetti passati come argomenti migliorano notevolmente la leggibilità.
+Le interfacce che promettono "nessuna modifica" degli oggetti passati come argomenti aumentano notevolmente la leggibilità.
 
 Riepilogo delle regole sulle costanti:
 
@@ -16352,20 +16533,26 @@ Si previene una modifica del valore accidentale o difficile da notare .
     for (const int i : c) cout << i << '\n';    // solo lettura: const
     
     for (int i : c) cout << i << '\n';          // BAD: solo lettura
+##### Eccezioni
 
-##### Eccezione
+Una variabile locale restituita per valore e che è più economica da spostare rispetto a copy non dovrebbe essere dichiarata `const` poiché potrebbe forzare una copia non necessaria.
 
+    std::vector<int> f(int i)
+    {
+        std::vector<int> v{ i, i, i };  // const non necessario
+        return v;
+    }
 I parametri della funzione passati per valore vengono raramente cambiati, ma altrettanto raramente dichiarati `const`.
 Per evitare confusione ed un sacco di falsi positivi, non imporre questa regola ai parametri delle funzioni.
 
-    void f(const char* const p); // pedante
     void g(const int i) { ... }  // pedante
 
 Si noti che un parametro della funzione è una variabile locale, quindi le sue modifiche sono locali.
 
 ##### Imposizione
 
-* Segnalare le variabili non-`const` che non vengono modificate (eccetto i parametri per evitare molti falsi positivi)
+* Segnala le variabili non `const` che non sono state modificate (ad eccezione dei parametri per evitare molti falsi positivi
+   e le variabili locali restituite)
 
 ### <a name="Rconst-fct"></a>Con.2: Per default, creare le funzioni membro `const`
 
@@ -16606,7 +16793,7 @@ Riepilogo delle regole sulla meta-programmazione:
 
 Riepilogo delle altre regole sui template:
 
-* [T.140: Dare un nome a tutte le funzioni potenzialmente riutilizzabili](#Rt-name)
+* [T.140: Se un'operazione può essere riutilizzata, le si assegna un nome](#Rt-name)
 * [T.141: Usare una lambda anonima se si necessita di un semplice oggetto funzione in un solo posto](#Rt-lambda)
 * [T.142: Usare le variabili template per semplificare la notazione](#Rt-var)
 * [T.143: Non scrivere involontariamente codice non-generico](#Rt-non-generic)
@@ -16911,7 +17098,7 @@ Segnalare i tipi di argomenti template senza concetti
 
 ##### Motivo
 
-I concept "standard" (quelli descritti nelle [GSL](#S-gsl) e nello stesso standard ISO) fanno risparmiare il lavoro di pensare ai propri concepts, sono pensati meglio di quanto si possa riuscire a fare in proprio e migliorano l'interoperabilità.
+I concept "standard" (quelli descritti nelle [GSL](#gsl-guidelines-support-library) e nello stesso standard ISO) fanno risparmiare il lavoro di pensare ai propri concepts, sono pensati meglio di quanto si possa riuscire a fare in proprio e migliorano l'interoperabilità.
 
 ##### Nota
 
@@ -17033,7 +17220,7 @@ La capacità di specificare semantiche significative è una caratteristica disti
 ##### Esempio
 
     template<typename T>
-    // Si presume che gli operatori +, -, * e /, per un numero, seguano le consuete regole matematiche
+    // Si presuppone che gli operatori +, -, *, e / per un numero seguano le consuete regole matematiche
     concept Number = requires(T a, T b) { a+b; a-b; a*b; a/b; };
     
     template<Number N>
@@ -17902,21 +18089,22 @@ La specializzazione offre un potente meccanismo per fornire implementazioni alte
 
 Questa è una versione semplificata di `std::copy` (viene ignorata la possibilità di sequenze non contigue)
 
-    struct pod_tag {};
-    struct non_pod_tag {};
+    struct trivially_copyable_tag {};
+    struct non_trivially_copyable_tag {};
     
-    template<class T> struct copy_trait { using tag = non_pod_tag; };   // T non è un "Plain Old Data"
-    
-    template<> struct copy_trait<int> { using tag = pod_tag; };         // int è un "Plain Old Data"
+    // T non è banalmente copiabile
+    template<class T> struct copy_trait { using tag = non_trivially_copyable_tag; };
+    // int è banalmente copiabile
+    template<> struct copy_trait<int> { using tag = trivially_copyable_tag; };
     
     template<class Iter>
-    Out copy_helper(Iter first, Iter last, Iter out, pod_tag)
+    Out copy_helper(Iter first, Iter last, Iter out, trivially_copyable_tag)
     {
         // usa memmove
     }
     
     template<class Iter>
-    Out copy_helper(Iter first, Iter last, Iter out, non_pod_tag)
+    Out copy_helper(Iter first, Iter last, Iter out, non_trivially_copyable_tag)
     {
         // usa un ciclo che chiama i costruttori copia
     }
@@ -17924,7 +18112,8 @@ Questa è una versione semplificata di `std::copy` (viene ignorata la possibilit
     template<class Iter>
     Out copy(Iter first, Iter last, Iter out)
     {
-        return copy_helper(first, last, out, typename copy_trait<Value_type<Iter>>::tag{})
+        using tag_type = typename copy_trait<std::iter_value_t<Iter>>;
+        return copy_helper(first, last, out, tag_type{})
     }
     
     void use(vector<int>& vi, vector<int>& vi2, vector<string>& vs, vector<string>& vs2)
@@ -17937,10 +18126,10 @@ Questa è una tecnica generale e potente per la selezione dell'algoritmo in fase
 
 ##### Nota
 
-Quando diventeranno ampiamente disponibili i `concept`, tali alternative si potranno distinguere direttamente:
+Con i vincoli C++20, tali alternative possono essere distinte direttamente:
 
     template<class Iter>
-        requires Pod<Value_type<Iter>>
+        requires std::is_trivially_copyable_v<std::iter_value_t<Iter>>
     Out copy_helper(In, first, In last, Out out)
     {
         // usare memmove
@@ -18430,90 +18619,14 @@ Scrivere il proprio "supporto TMP avanzato" solo se è veramente necessario.
 
 ## <a name="SS-temp-other"></a>Altre regole dei template
 
-### <a name="Rt-name"></a>T.140: Dare un nome a tutte le funzioni potenzialmente riutilizzabili
+### <a name="Rt-name"></a>T.140: Se un'operazione può essere riutilizzata, le si assegna un nome
 
-##### Motivo
 
-Documentazione, leggibilità, possibilità di riutilizzo.
-
-##### Esempio
-
-    struct Rec {
-        string name;
-        string addr;
-        int id;         // identificatore unico
-    };
-    
-    bool same(const Rec& a, const Rec& b)
-    {
-        return a.id == b.id;
-    }
-    
-    vector<Rec*> find_id(const string& name);    // cerca tutti i record per "name"
-    
-    auto x = find_if(vr.begin(), vr.end(),
-        [&](Rec& r) {
-            if (r.name.size() != n.size()) return false; // il nome da confrontare è in n
-            for (int i = 0; i < r.name.size(); ++i)
-                if (tolower(r.name[i]) != tolower(n[i])) return false;
-            return true;
-        }
-    );
-
-Qui c'è una funzione nascosta (confronto "case insensitive" di stringhe), come spesso accade quando gli argomenti della lambda diventano grandi.
-
-    bool compare_insensitive(const string& a, const string& b)
-    {
-        if (a.size() != b.size()) return false;
-        for (int i = 0; i < a.size(); ++i) if (tolower(a[i]) != tolower(b[i])) return false;
-        return true;
-    }
-    
-    auto x = find_if(vr.begin(), vr.end(),
-        [&](Rec& r) { compare_insensitive(r.name, n); }
-    );
-
-O forse (se si preferisce evitare il nome implicito legato a n):
-
-    auto cmp_to_n = [&n](const string& a) { return compare_insensitive(a, n); };
-    
-    auto x = find_if(vr.begin(), vr.end(),
-        [](const Rec& r) { return cmp_to_n(r.name); }
-    );
-
-##### Nota
-
-Se funzioni, lambda o operatori.
-
-##### Eccezione
-
-* Le lambda usate logicamente solo localmente, come un argomento di `for_each` e algoritmi simili per il controllo del flusso.
-* Le lambda come [inizializzatori](#???)
-
-##### Imposizione
-
-* (difficile) segnalare le lambda simili
-* ???
+Vedere [F.10](#Rf-name)
 
 ### <a name="Rt-lambda"></a>T.141: Usare una lambda anonima se si necessita di un semplice oggetto funzione in un solo posto
 
-##### Motivo
-
-Questo rende il codice conciso e offre una località migliore delle alternative.
-
-##### Esempio
-
-    auto earlyUsersEnd = std::remove_if(users.begin(), users.end(),
-                                        [](const User &a) { return a.id > 100; });
-
-
-##### Eccezione
-
-Dare un nome ad una lambda può essere utile per chiarezza anche se viene usata una sola volta.
-
-##### Imposizione
-
-* Cercare lambda identiche o quasi identiche (da sostituire con nomi di funzioni o nomi di lambda).
+Vedere [F.11](#Rf-lambda)
 
 ### <a name="Rt-var"></a>T.142?: Usare le variabili template per semplificare la notazione
 
@@ -18733,17 +18846,18 @@ Utilizzare i file di intestazione [header] per rappresentare le interfacce ed en
 Riepilogo delle regole sui file sorgenti:
 
 * [SF.1: Usare un suffisso `.cpp` per i file del codice e `.h` per i file delle interfacce nei propri progetti se non si sta già seguendo un'altra convenzione](#Rs-file-suffix)
-* [SF.2: Un file `.h` non deve contenere definizioni di oggetti o definizioni di funzioni non-inline](#Rs-inline)
-* [SF.3: Usare i file `.h` per tutte le dichiarazioni usate in più file sorgenti](#Rs-declaration-header)
-* [SF.4: Includere in un file, i file `.h` prima delle altre dichiarazioni](#Rs-include-order)
-* [SF.5: Un file `.cpp` deve includere i(l) file `.h` che ne definiscono l'interfaccia](#Rs-consistency)
+* [SF.2: Un file header non deve contenere definizioni di oggetti né definizioni di funzioni non inline](#Rs-inline)
+* [SF.3: Usare file header per tutte le dichiarazioni usate in più file sorgenti](#Rs-declaration-header)
+* [SF.4: Includere i file header prima di altre dichiarazioni in un file](#Rs-include-order)
+* [SF.5: Un file `.cpp` deve includere file header che ne definiscono l'interfaccia](#Rs-consistency)
 * [SF.6: Usare le direttive `using namespace` per la transizione, per le librerie di base (come la `std`), o (solamente) all'interno di uno scope locale](#Rs-using)
 * [SF.7: Non scrivere `using namespace` nello scope globale in un file header](#Rs-using-directive)
-* [SF.8: Usare la protezione per gli `#include` per tutti i file `.h`](#Rs-guards)
+* [SF.8: Usare la protezione degli `#include` per tutti i file header](#Rs-guards)
 * [SF.9: Evitare le dipendenze cicliche tra i file sorgenti](#Rs-cycles)
 * [SF.10: Evitare dipendenze da nomi inclusi [`#include`] implicitamente](#Rs-implicit)
 * [SF.11: I file header devono essere autonomi [self-contained]](#Rs-contained)
 * [SF.12: Preferire la forma virgolettata di `#include` per i file relativi a quello principale e la forma con parentesi angolari negli altri casi](#Rs-incform)
+* [SF.13: Usare identificatori portatili di header nelle istruzioni `#include`](#Rs-portable-header-id)
 
 * [SF.20: Usare i `namespace` per esprimere le strutture logiche](#Rs-namespace)
 * [SF.21: Non usare un namespace senza nome (anonimo) in un header](#Rs-unnamed)
@@ -18751,47 +18865,10 @@ Riepilogo delle regole sui file sorgenti:
 
 ### <a name="Rs-file-suffix"></a>SF.1: Usare un suffisso `.cpp` per i file del codice e `.h` per i file delle interfacce nei propri progetti se non si sta già seguendo un'altra convenzione
 
-##### Motivo
+Vedere [NL.27](#Rl-file-suffix)
 
-È una convenzione di vecchia data.
-Ma la coerenza è più importante, quindi se il progetto utilizza qualcos'altro, lo si segua.
+### <a name="Rs-inline"></a>SF.2: Un file header non deve contenere definizioni di oggetti né definizioni di funzioni non inline
 
-##### Nota
-
-Questa convenzione riflette un modello di uso comune: Gli header vengono molto spesso condivisi col C per compilare sia come C++ che C, che tipicamente usa `.h`, ed è più facile dare un nome a tutti gli header `.h` anziché avere diverse estensioni solo per quegli header che si intendono usare col C. D'altra parte, i file delle di implementazione vengono raramente condivisi col C e quindi dovrebbero generalmente essere distinti dai file `.c`, quindi normalmente è meglio dare un nome a tutti i file C++ dell'implementazione con qualcos'altro (come `.cpp`).
-
-I nomi specifici `.h` e `.cpp` non sono richiesti (solo raccomandati per default) e si utilizzano ampiamente altri nomi.
-Esempi sono `.hh`, `.C`, e `.cxx`. Usare questi nomi in modo equivalente.
-In questo documento, ci si riferisce a `.h` e `.cpp` come abbreviazioni per file header e file di implementazione, anche se l'effettiva estensione potrebbe essere diversa.
-
-L'IDE utilizzato (se se ne usa uno) potrebbe essere più restrittivo sui suffissi.
-
-##### Esempio
-
-    // foo.h:
-    extern int a;   // una dichiarazione
-    extern void foo();
-    
-    // foo.cpp:
-    int a;   // una definizione
-    void foo() { ++a; }
-
-`foo.h` fornisce l'interfaccia a `foo.cpp`. Sarà meglio evitare le variabili globali.
-
-##### Esempio, cattivo
-
-    // foo.h:
-    int a;   // una definizione
-    void foo() { ++a; }
-
-Scrivendo `#include <foo.h>` due volte in un programma, si ottiene un errore di due violazioni regola-della-definizione-singola.
-
-##### Imposizione
-
-* Segnalare nomi di file non-convenzionali.
-* Controllare che `.h` e `.cpp` (ed equivalenti) seguano le regole seguenti.
-
-### <a name="Rs-inline"></a>SF.2: Un file `.h` non deve contenere definizioni di oggetti o definizioni di funzioni non-inline
 
 ##### Motivo
 
@@ -18815,9 +18892,9 @@ L'inclusione di entità soggette alla regola della definizione-singola comporta 
 
 Linkando `file1.cpp` e `file2.cpp` si otterranno due errori del linker.
 
-**Formulazione alternativa**: Un file `.h` deve contenere solamente:
+**Formulazione alternativa**: Un file header deve contenere solo:
 
-* degli `#include` di altri file `.h` (possibilmente con delle protezioni per gli include)
+* degli `#include` di altri file header (possibilmente con delle protezioni per gli include)
 * template
 * definizioni di classi
 * dichiarazioni di funzioni
@@ -18832,7 +18909,7 @@ Linkando `file1.cpp` e `file2.cpp` si otterranno due errori del linker.
 
 Controllare l'elenco positivo precedente.
 
-### <a name="Rs-declaration-header"></a>SF.3: Usare i file `.h` per tutte le dichiarazioni usate in più file sorgenti
+### <a name="Rs-declaration-header"></a>SF.3: Usare file header per tutte le dichiarazioni usate in più file sorgenti
 
 ##### Motivo
 
@@ -18854,7 +18931,7 @@ L'utente di `bar` non può sapere se l'interfaccia usata è completa e corretta.
 
 * Segnalare le dichiarazioni di entità in altri file sorgenti non inserite in un `.h`.
 
-### <a name="Rs-include-order"></a>SF.4: Includere in un file, i file `.h` prima delle altre dichiarazioni
+### <a name="Rs-include-order"></a>SF.4: Includere i file header prima di altre dichiarazioni in un file
 
 ##### Motivo
 
@@ -18899,7 +18976,7 @@ Tuttavia
 
 Facile.
 
-### <a name="Rs-consistency"></a>SF.5: Un file `.cpp` deve includere i(l) file `.h` che ne definiscono l'interfaccia
+### <a name="Rs-consistency"></a>SF.5: Un file `.cpp` deve includere file header che ne definiscono l'interfaccia
 
 ##### Motivo
 
@@ -18989,10 +19066,6 @@ e M funzioni ciascuna contenente un `using namespace X` con N righe di codice in
 
 [Non scrivere `using namespace` nello scope globale in un file header](#Rs-using-directive).
 
-##### Imposizione
-
-Segnalare direttive `using namespace` multiple per diversi namespace in un solo file sorgente.
-
 ### <a name="Rs-using-directive"></a>SF.7: Non scrivere `using namespace` nello scope globale in un file header
 
 ##### Motivo
@@ -19023,7 +19096,7 @@ Un'eccezione è `using namespace std::literals;`. Questo è necessario per usare
 
 Segnalare `using namespace` nello scope globale nel file header.
 
-### <a name="Rs-guards"></a>SF.8: Usare la protezione per gli `#include` per tutti i file `.h`
+### <a name="Rs-guards"></a>SF.8: Usare la protezione degli `#include` per tutti i file header
 
 ##### Motivo
 
@@ -19179,11 +19252,11 @@ Tuttavia, il consiglio è quello di utilizzare la forma virgolettata per include
 ##### Esempio
 
     // foo.cpp:
-    #include <string>                // Dalla libreria standard, richiede la forma <>
-    #include <some_library/common.h> // Un file non localmente relativo, incluso da un'altra libreria; usa la forma <>
-    #include "foo.h"                 // Un file localmente relativo a foo.cpp nello stesso progetto, usa la forma ""
-    #include "foo_utils/utils.h"     // Un file localmente relativo a foo.cpp nello stesso progetto, usa la forma ""
-    #include <component_b/bar.h>     // Un file nello stesso progetto localizzato tramite un path di ricerca, usa la forma <>
+    #include <string>                // Dalla libreria standard, richiede il modulo <>
+    #include <some_library/common.h> // Un file che non è relativo localmente, incluso da un'altra libreria; utilizzare il modulo <>
+    #include "foo.h"                 // Un file localmente relativo a foo.cpp nello stesso progetto, usare il modulo ""
+    #include "util/util.h"           // Un file localmente relativo a foo.cpp nello stesso progetto, usare il modulo ""
+    #include <component_b/bar.h>     // Un file nello stesso progetto individuato tramite un path di ricerca, utilizzare il modulo <>
 
 ##### Nota
 
@@ -19194,6 +19267,33 @@ I creatori delle librerie dovrebbero mettere i loro header in una cartella e far
 ##### Imposizione
 
 Un test dovrebbe individuare se gli header referenziati tramite `""` possono invece essere referenziati con `<>`.
+
+### <a name="Rs-portable-header-id"></a>SF.13: Usare identificatori portatili di header nelle istruzioni `#include`
+
+##### Motivo
+
+Lo [standard](http://eel.is/c++draft/cpp.include) non specifica come i compilatori individuano in modo univoco gli header da un identificatore in una direttiva `#include`, né specifica cosa costituisce l'unicità. Ad esempio, se l'implementazione considera gli identificatori con distinzione tra maiuscole e minuscole o se gli identificatori sono path del file system verso un file header e, in tal caso, come viene delimitato un path gerarchico del file system.
+
+Per massimizzare la portabilità delle direttive `#include` tra compilatori, le linee guida sono:
+
+* utilizzare la distinzione tra maiuscole e minuscole per l'identificatore dell'header, corrispondendo al modo in cui l'header è definita dallo standard, dalla specifica, dall'implementazione o dal file che fornisce l'header.
+* quando l'identificatore dell'header è un path gerarchico, utilizzare la barra `/` per delimitare i componenti del percorso poiché questo è il carattere di delimitazione più ampiamente accettato per i path.
+
+##### Esempio
+
+    // esempi buoni
+    #include <vector>
+    #include <string>
+    #include "util/util.h"
+    
+    // esempi cattivi
+    #include <VECTOR>        // bad: la libreria standard definisce un header identificata come <vector>, non <VECTOR>
+    #include <String>        // bad: la libreria standard definisce un header identificata come <string>, non <String>
+    #include "Util/Util.H"   // bad: il file di header esiste nel file system come "util/util.h"
+    #include "util\util.h"   // bad: potrebbe non funzionare se l'implementazione interpreta `\u` come una sequenza di escape o dove '\' non è un separatore di path valido
+##### Imposizione
+
+È possibile applicare solo su implementazioni in cui gli identificatori di header fanno distinzione tra maiuscole e minuscole e che supportano solo `/` come delimitatore del path del file.
 
 ### <a name="Rs-namespace"></a>SF.20: Usare i `namespace` per esprimere le strutture logiche
 
@@ -19329,8 +19429,21 @@ Le aggiunte a `std` potrebbero creare conflitti con le future versioni dello sta
 
 ##### Esempio
 
-    ???
+    namespace std { // BAD: viola lo standard
 
+    class My_vector {
+        //     . . .
+    };
+    
+    }
+    
+    namespace Foo { // GOOD: è consentito il namespace utente
+    
+    class My_vector {
+        //     . . .
+    };
+
+    }
 ##### Imposizione
 
 Possibile, ma disordinata e suscettibile di causare problemi con le piattaforme.
@@ -19961,7 +20074,8 @@ Durante la scrittura in un file, c'è raramente bisogno di eseguire il `flush`.
 Per gli stream di stringhe (nello specifico `ostringstream`), l'inserimento di un `endl` è del tutto equivalente
 all'inserimento di un carattere `'\n'`, ma anche in questo caso, `endl` potrebbe essere notevolmente più lento.
 
-`endl` *non* si occupa di produrre una sequenza di fine riga specifica per la piattaforma (come "\r\n" su Windows). Quindi, per uno stream di stringhe, `s << endl` inserisce semplicemente un *singolo* carattere, `'\n'`.
+`endl` *non* si occupa di produrre una sequenza di fine riga specifica della piattaforma (come `"\r\n"` su
+Windows). Quindi, per uno stream di stringhe, `s << endl` inserisce semplicemente un *singolo* carattere, `'\n'`.
 
 ##### Nota
 
@@ -19983,7 +20097,7 @@ Fornisce i clock per registrare i `time_point`.
 
 Riepilogo delle regole sulla Libreria Standard del C:
 
-* [S.C.1: Non usare setjmp/longjmp](#Rclib-jmp)
+* [SL.C.1: Non usare setjmp/longjmp](#Rclib-jmp)
 * [???](#???)
 * [???](#???)
 
@@ -20063,7 +20177,7 @@ Riepilogo delle non-regole:
 * [NR.1: Non insistere sul fatto che tutte le dichiarazioni dovrebbero stare all'inizio di una funzione](#Rnr-top)
 * [NR.2: Non insistere sul dover avere un'unica istruzione `return` in una funzione](#Rnr-single-return)
 * [NR.3: Non evitare le eccezioni](#Rnr-no-exceptions)
-* [NR.4: Non insistere sul voler mettere ogni classe nel proprio file sorgente](#Rnr-lots-of-files)
+* [NR.4: Non insistere nel voler mettere ogni definizione di classe nel proprio file sorgente](#Rnr-lots-of-files)
 * [NR.5: Non usare l'inizializzazione a due fasi [two-phase]](#Rnr-two-phase-init)
 * [NR.6: Non mettere tutte le operazioni di ripulitura alla fine di una funzione e il `goto exit`](#Rnr-goto-exit)
 * [NR.7: Non rendere tutti i dati membro come `protected`](#Rnr-protected-data)
@@ -20242,7 +20356,7 @@ Da ricordare
 * [RAII](#Re-raii)
 * Contratti/asserzioni: Usare `Expects` e `Ensures` del GSL (fino a quando non si avrà il supporto nel linguaggio per i contratti)
 
-### <a name="Rnr-lots-of-files"></a>NR.4: Non insistere sul voler mettere ogni classe nel proprio file sorgente
+### <a name="Rnr-lots-of-files"></a>NR.4: Non insistere nel voler mettere ogni definizione di classe nel proprio file sorgente
 
 ##### Motivo
 
@@ -20317,7 +20431,7 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
     if (!picture.Init()) {
         puts("Error, invalid picture");
     }
-    // ora si ha un'istanza di un oggetto picture non valida.
+    // ora si ha un'istanza di oggetto immagine non valida.
 
 ##### Esempio, buono
 
@@ -20351,10 +20465,10 @@ Suddividere in due l'inizializzazione, porta a invarianti più deboli, codice pi
     };
     
     Picture picture1(100, 100);
-    // qui picture è pronta-all'uso...
+    // picture1 è pronto all'uso...
     
-    // y non ha una dimensione valida,
-    // per la violazione del contratto di default verrà chiamato, quindi, std::terminate
+    // non è una dimensione valida per y,
+    // Violando il contratto di default si chiamerà std::terminate
     Picture picture2(100, 0);
     // non si arriva qui...
 
@@ -20446,7 +20560,7 @@ Sezioni sui riferimenti:
 
 ## <a name="SS-rules"></a>RF.rules: Regole di codifica
 
-* [Linee-guida AUTOSAR [AUTomotive Open System ARchitecture] per l'uso del linguaggio C++14 per sistemi critici e sicuri v17.10](https://www.autosar.org/fileadmin/user_upload/standards/adaptive/17-10/AUTOSAR_RS_CPP14Guidelines.pdf)
+* [Linee-guida AUTOSAR [AUTomotive Open System ARchitecture] per l'uso del linguaggio C++14 per sistemi critici e sicuri v17.10](https://web.archive.org/web/20220629085753/https://www.autosar.org/fileadmin/user_upload/standards/adaptive/17-03/AUTOSAR_RS_CPP14Guidelines.pdf)
 * [Requisiti e linee-guida della libreria Boost](http://www.boost.org/development/requirements.html).
    ???.
 * [Bloomberg: BDE C++ Coding](https://github.com/bloomberg/bde/wiki/CodingStandards.pdf).
@@ -20474,7 +20588,7 @@ Sezioni sui riferimenti:
    ???.
 * [Possibility.com: C++ Coding Standard](http://www.possibility.com/Cpp/CppCodingStandard.html).
    ???.
-* [SEI CERT: Secure C++ Coding Standard](https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=637).
+* [SEI CERT: Secure C++ Coding Standard](https://wiki.sei.cmu.edu/confluence/x/Wnw-BQ).
    Un set di regole ben fatto (con esempi e razionali) per il codice [security-sensitive].
    Molte delle regole si applicano in generale.
 * [High Integrity C++ Coding Standard](http://www.codingstandard.com/).
@@ -20518,7 +20632,7 @@ Sezioni sui riferimenti:
 * [Il sito di Bjarne Stroustrup](http://www.stroustrup.com)
 * [WG21](http://www.open-std.org/jtc1/sc22/wg21/)
 * [Boost](http://www.boost.org)<a name="Boost"></a>
-* [Adobe open source](http://www.adobe.com/open-source.html)
+* [Adobe open source](https://opensource.adobe.com/)
 * [Librerie Poco](http://pocoproject.org/)
 * Sutter's Mill?
 * ???
@@ -20550,7 +20664,7 @@ Sezioni sui riferimenti:
 
 ## <a name="SS-core"></a>RF.core: Materiali sulle "Core Guidelines"
 
-Questa sezione contiene i materiali utilizzati per presentare le "Core guidelines" e le idee di fondo:
+Questa sezione contiene materiali che sono stati utili per presentare le "core guidelines" e le idee su cui si basano:
 
 * [La nostra documentazione](https://github.com/isocpp/CppCoreGuidelines/tree/master/docs)
 * Stroustrup, Sutter, and Dos Reis: [A brief introduction to C++'s model for type- and resource-safety](http://www.stroustrup.com/resource-model.pdf). Un documento don moltissimi esempi.
@@ -20656,7 +20770,7 @@ Riepilogo del profilo sulla sicurezza dei tipi [type safety]:
    Preferire la [costruzione](#Res-construct), i [[named cast]](#Res-casts-named) oppure `T{expression}`.
 * <a name="Pro-type-init"></a>Type.5: Non usare una variabile prima che sia stata inizializzata: [inizializzare sempre](#Res-always).
 * <a name="Pro-type-memberinit"></a>Type.6: Inizializzare sempre una variabile membro: [inizializzare sempre](#Res-always), forse utilizzando i [costruttori di default](#Rc-default0) o gli [gli inizializzatori membro di default](#Rc-in-class-initializer).
-* <a name="Pro-type-unon"></a>Type.7: Evitare le semplici [naked] union: [Usare, invece, `variant`](#Ru-naked).
+* <a name="Pro-type-union"></a>Type.7: Evitare le semplici [naked] union: [Usare, invece, `variant`](#Ru-naked).
 * <a name="Pro-type-varargs"></a>Type.8: Evitare i vararg: [Non usare gli argomenti `va_arg`](#F-varargs).
 
 ##### Impatto
@@ -20734,6 +20848,8 @@ Alla fine, si usa [quello proposto nel C++17](http://www.open-std.org/jtc1/sc22/
 Alcuni dei tipi della GSL elencati in seguito potrebbero non essere supportati nella libreria utilizzata per motivi tecnici quali le limitazioni delle attuali versioni del C++.
 Pertanto, consultare la documentazione GSL per ulteriori informazioni.
 
+Per ogni tipo di GSL di seguito ne indichiamo un invariante. Tale invariante vale fintanto che il codice utente cambia solo lo stato di un oggetto GSL utilizzando le funzioni membro/free fornite dal tipo (ovvero, il codice utente non ignora l'interfaccia del tipo per modificare il valore/bit dell'oggetto violando qualsiasi altra regola delle Guidelines).
+
 Riepilogo dei componenti della GSL:
 
 * [GSL.view: Viste [Views]](#SS-views)
@@ -20783,7 +20899,9 @@ Se qualcosa si suppone che non possa essere `nullptr`, lo si affermi così:
 * `span<T>`       // `[p:p+n)`, costruttore da `{p, q}` e `{p, n}`; `T` è il tipo del puntatore
 * `span_p<T>`     // `{p, predicate}` `[p:q)` dove `q` è il primo elemento per cui `predicate(*p)` è vero
 
-Uno `span<T>` si riferisce a zero o più `T` mutabili a meno che `T` sia un tipo `const`.
+Uno `span<T>` si riferisce a zero o più `T` mutabili a meno che `T` sia un tipo `const`. Per default, tutti gli accessi agli elementi dello span, in particolare tramite `operator[]`, sono sicuramente bounds-checked.
+
+> Nota: Lo `span` di GSL (inizialmente chiamato `array_view`) è stato proposto per l'inclusione nella libreria standard C++, ed è stato adottato (con modifiche al nome e all'interfaccia) tranne che `std::span` non prevede il controllo dei limiti. Pertanto GSL ha cambiato il nome e l'interfaccia di `span` per tener traccia di `std::span` e dovrebbe essere esattamente lo stesso di `std::span`, e l'unica differenza dovrebbe essere che `span` di GSL è completamente bounds-safe per default. Se la sicurezza dei limiti [bounds-safety] potrebbe influire sulla sua interfaccia, allora quelle proposte di modifica dovrebbero essere riportate tramite il comitato ISO C++ per mantenere l'interfaccia `gsl::span` compatibile con `std::span`. Se una futura evoluzione di <std::span` aggiunge il controllo dei limiti, `gsl::span` può essere rimossa.
 
 "L'aritmetica del puntatore" viene fatta meglio negli `span`.
 Un `char*` che punta a più di un `char` ma non è una stringa "C-style" (p.es., un puntatore in un buffer di input) deve essere rappresentato da uno `span`.
@@ -20801,8 +20919,8 @@ Usare `not_null<zstring>` per stringhe "C-style" che non possono essere `nullptr
 
 * `unique_ptr<T>`     // proprietà unica: `std::unique_ptr<T>`
 * `shared_ptr<T>`     // proprietà condivisa: `std::shared_ptr<T>` (un puntamento conteggiato)
-* `stack_array<T>`    // Un array allocato sullo stack-allocated array. Il numero degli elementi viene determinato alla costruzione e successivamente fissato. Gli elementi sono mutabili a meno che `T` non sia un tipo `const`.
-* `dyn_array<T>`      // ??? necessario ??? Un array allocato sull'heap. Il numero degli elementi viene determinato alla costruzione e successivamente fissato.
+* `stack_array<T>`    // Un array allocato sullo stack-allocated array. Il numero di elementi è determinato in fase di costruzione e fissato per il seguito. Gli elementi sono mutabili a meno che `T` non sia un tipo `const`.
+* `dyn_array<T>`      // ??? necessario ??? Un array allocato sull'heap. Il numero di elementi è determinato in fase di costruzione e fissato per il seguito.
    Gli elementi sono mutabili a meno che `T` non sia un tipo `const`. Fondamentalmente uno `span` che alloca e possiede i suoi elementi.
 
 ## <a name="SS-assertions"></a>GSL.assert: Assertions
@@ -20886,6 +21004,7 @@ Regole sulla nomenclatura e il layout:
 * [NL.21: Dichiarare un (solo) nome per ogni dichiarazione](#Rl-dcl)
 * [NL.25: Non usare `void` come tipo di un argomento](#Rl-void)
 * [NL.26: Usare la notazione `const` convenzionale](#Rl-const)
+* [NL.27: Usare un suffisso `.cpp` per il file del codice e `.h` per quelli dell'interfaccia](#Rl-file-suffix)
 
 La maggior parte di queste regole sono estetiche e i programmatori hanno forti opinioni.
 Gli IDE tendono inoltre ad avere impostazioni predefinite e una gamma di alternative.
@@ -21090,7 +21209,8 @@ Lo standard ISO, usa solo minuscole e numeri, le parole sono separate con gli [u
 * `vector`
 * `my_map`
 
-Evitare i doppi [underscore] `__`.
+Evitare nomi di identificatori che contengono doppi caratteri di sottolineatura `__` o che iniziano con un carattere di sottolineatura seguito da una lettera maiuscola (ad esempio, `_Throws`).
+Tali identificatori sono riservati per l'implementazione del C++.
 
 ##### Esempio
 
@@ -21139,7 +21259,7 @@ Per evitare di confondere le macro con nomi che obbediscono alle regole sullo sc
 
 ##### Nota
 
-Questa regola si applica alle costanti simboliche non-macro:
+In particolare, questo evita di confondere le macro con costanti simboliche non macro (vedere anche [Enum.5: Non usare `TUTTO_IN_MAIUSCOLO` per gli enumeratori](#Renum-caps))
 
     enum bad { BAD, WORSE, HORRIBLE }; // BAD
 
@@ -21494,6 +21614,46 @@ Questa regola è stata aggiunta dopo molte richieste di regolamentazione.
 ##### Imposizione
 
 Segnalare l'utilizzo di `const` come suffisso di un tipo.
+
+### <a name="Rl-file-suffix"></a>NL.27: Usare un suffisso `.cpp` per il file del codice e `.h` per quelli dell'interfaccia
+
+##### Motivo
+
+È una convenzione di vecchia data.
+Ma la coerenza è più importante, quindi se il progetto utilizza qualcos'altro, lo si segua.
+
+##### Nota
+
+Questa convenzione riflette un modello di uso comune: Gli header vengono molto spesso condivisi col C per compilare sia come C++ che C, che tipicamente usa `.h`, ed è più facile dare un nome a tutti gli header `.h` anziché avere diverse estensioni solo per quegli header che si intendono usare col C. D'altra parte, i file delle di implementazione vengono raramente condivisi col C e quindi dovrebbero generalmente essere distinti dai file `.c`, quindi normalmente è meglio dare un nome a tutti i file C++ dell'implementazione con qualcos'altro (come `.cpp`).
+
+I nomi specifici `.h` e `.cpp` non sono richiesti (solo raccomandati per default) e si utilizzano ampiamente altri nomi.
+Esempi sono `.hh`, `.C`, e `.cxx`. Usare questi nomi in modo equivalente.
+In questo documento, ci si riferisce a `.h` e `.cpp` come abbreviazioni per file header e file di implementazione, anche se l'effettiva estensione potrebbe essere diversa.
+
+L'IDE utilizzato (se se ne usa uno) potrebbe essere più restrittivo sui suffissi.
+
+##### Esempio
+
+    // foo.h:
+    extern int a;   // una dichiarazione
+    extern void foo();
+    
+    // foo.cpp:
+    int a;   // una definizione
+    void foo() { ++a; }
+`foo.h` fornisce l'interfaccia a `foo.cpp`. Sarà meglio evitare le variabili globali.
+
+##### Esempio, cattivo
+
+    // foo.h:
+    int a;   // una definizione
+    void foo() { ++a; }
+Scrivendo `#include <foo.h>` due volte in un programma, si ottiene un errore di due violazioni regola-della-definizione-singola.
+
+##### Imposizione
+
+* Segnalare nomi di file non-convenzionali.
+* Controllare che `.h` e `.cpp` (ed equivalenti) seguano le regole seguenti.
 
 # <a name="S-faq"></a>FAQ: Risposte a domande frequenti
 
@@ -22264,7 +22424,7 @@ Maggiori informazioni su molti argomenti riguardo al C++ si possono trovare sul 
 * *costruttore*: un'operazione che inizializza ("costruisce") un oggetto.
    In genere un costruttore stabilisce un invariante e spesso acquisisce le risorse necessarie per un oggetto per essere usate (che vengono poi generalmente rilasciate da un distruttore).
 * *contenitore*: un oggetto che contiene elementi (atri oggetti).
-* *copia*: un'operazione che rende due oggetti i cui valori se confrontati risultano uguali. Si veda anche spostamento [move].
+* *copy*: un'operazione che fa in modo che due oggetti abbiano valori uguali al confronto. Si veda anche spostamento [move].
 * *correttezza*: un programma o parte di esso è corretto se soddisfa le sue specifiche.
    Sfortunatamente, una specifica può essere incompleta o incoerente, oppure può non rispondere alle aspettative degli utenti.
    Quindi, per produrre un codice accettabile, talvolta si deve fare di più che seguire semplicemente le specifiche formali.
@@ -22307,7 +22467,7 @@ Maggiori informazioni su molti argomenti riguardo al C++ si possono trovare sul 
 * *iterazione*: l'atto di eseguire ripetutamente un pezzo di codice; si vada ricorsione.
 * *iteratore*: un oggetto che identifica un elemento di una sequenza.
 * *ISO*: International Organization for Standardization (Organizzazione Internazionale per la Standardizzazione). Il linguaggio C++ è uno standard ISO, ISO/IEC 14882. Ulteriori informazioni su [iso.org](http://iso.org).
-* *libreria*: una raccolta di tipi, funzioni, classi, ecc. che implementano un insieme di servizi (astrazioni) destinate a essere potenzialmente utilizzate come parte di più programmi.
+* *library*: una raccolta di tipi, funzioni, classi, ecc. che implementa un insieme di servizi (astrazioni) pensati per essere potenzialmente utilizzati come parte di più programmi.
 * *ciclo-di-vita [lifetime]*: il tempo dall'inizializzazione di un oggetto fino a quando diventa inutilizzabile (esce dallo scope, viene cancellato o il programma termina).
 * *linker*: un programma che unisce file di codice oggetto e librerie formando un programma eseguibile.
 * *letterale [literal]*: una notazione che indica direttamente un valore, così come 12 indica il valore intero di "dodici".
@@ -22347,7 +22507,7 @@ Maggiori informazioni su molti argomenti riguardo al C++ si possono trovare sul 
 * *arrotondamento*: conversione di un valore al valore matematicamente più vicino di un tipo meno preciso.
 * *RTTI*: Run-Time Type Information. ???
 * *scope*: la regione del testo di un programma (il codice sorgente) entro cui si può far riferimento ad un nome.
-* *semi-regolare*: un tipo concreto che sia copiabile (oltre che spostabile) e costruibile per default (vedere il concetto `std::semiregular`). Il risultato di una copia è un oggetto indipendente con lo stesso valore dell'originale. Un tipo semi-regolare funziona quasi come un tipo nativo come `int`, ma possibilmente senza un operatore `==`. Si veda anche *tipo regolare*.
+* *semi-regolare*: un tipo concreto che sia copiabile (oltre che spostabile) e costruibile per default (vedere il concetto `std::semiregular`). Il risultato di una copia è un oggetto indipendente con lo stesso valore dell'originale. Un tipo semiregolare si comporta approssimativamente come un tipo nativo come `int`, ma possibilmente senza un operatore `==`. Si veda anche *tipo regolare*.
 * *sequenza*: elementi che si possono scorrere con un ordine lineare.
 * *software*: una raccolta di pezzi di codice e dati correlati; spesso usato in modo intercambiabile con programma.
 * *codice sorgente*: il codice prodotto da un programmatore e (in linea di principio) leggibile da altri programmatori.

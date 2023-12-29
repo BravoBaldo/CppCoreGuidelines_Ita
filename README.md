@@ -5,12 +5,12 @@ Traduzione italiana delle CppCoreGuidelines.
 ## HTML version formatted for browsing in Italian:
 
 1) execute: pandoc -s -o output.html -f markdown -t html ..\\CppCoreGuidelines.md
-2) Insert the body content of "output.html" (without tags <body> and </body>) and replace the tag <InsertOrgBodyHere/> in a coy of the file "Shell.html"
-3) Copy the first 2 lists of #S-abstract and "Supporting sections" (from <ul>...</ul> without tags) in a new temporary text document.
-	3a) replace '<li><a href="' with '<a class="sidebar-nav-item active" href="'
-	3b) remove all '</li>'
-	3c) insert '<br/>' between the 2 lists
-	3d) move all the text replacing tag <InsertSideBarHere/> in "Shell.html"
+2) Insert the body content of "output.html" (without tags &lt;body&gt; and &lt;/body&gt;) and replace the tag &lt;InsertOrgBodyHere/&gt; in a coy of the file "Shell.html"
+3) Copy the first 2 lists of #S-abstract and "Supporting sections" (from &lt;ul&gt;...&lt;/ul&gt; without tags) in a new temporary text document.
+	3a) replace '&lt;li&gt;&lt;a href="' with '&lt;a class="sidebar-nav-item active" href="'
+	3b) remove all '&lt;/li&gt;'
+	3c) insert '&lt;br/&gt;' between the 2 lists
+	3d) move all the text replacing tag &lt;InsertSideBarHere/&gt; in "Shell.html"
 4) Save this modified "Shell.html" as "CppCoreGuidelines_Ita.md" and Enjoy :)
 
 ## Tools used:
