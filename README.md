@@ -15,9 +15,9 @@ Traduzione italiana delle CppCoreGuidelines.
 
 ## Tools used:
 
-* [OmegaT v.4.3.2](https://omegat.org) - (but with [Okapi Filters For OmegaT-1.7-1.39](https://okapiframework.org/wiki/index.php/Okapi_Filters_Plugin_for_OmegaT)).
-* [Pandoc v.2.9.2](https://pandoc.org).
-* [Notepad++ v.7.8.2](https://notepad-plus-plus.org).
+* [OmegaT v.5.7.1](https://omegat.org) - (but with [Okapi Filter: okapiFiltersForOmegaT-1.9-1.41.0](https://okapiframework.org/wiki/index.php/Okapi_Filters_Plugin_for_OmegaT)).
+* [Pandoc v.3.1.8](https://pandoc.org).
+* [Notepad++ v.8.6](https://notepad-plus-plus.org).
 * [Dillinger](https://dillinger.io) - an online Markdown editor/viewer.
 * [Balabolka](http://balabolka.site) - Text To Speech system
 
