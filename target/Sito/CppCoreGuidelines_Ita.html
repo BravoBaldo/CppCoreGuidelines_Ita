@@ -108,7 +108,6 @@ generica</a>
 <a class="sidebar-nav-item active" href="#S-cpl">CPL: Programmazione C-style</a>
 <a class="sidebar-nav-item active" href="#S-source">SF: File sorgenti</a>
 <a class="sidebar-nav-item active" href="#sl-the-standard-library">SL: La Libreria Standard</a>
-
 <br/>
 <a class="sidebar-nav-item active" href="#S-A">A: Idee architetturali</a>
 <a class="sidebar-nav-item active" href="#S-not">NR: Non-Regole e falsi miti</a>
@@ -127,7 +126,6 @@ codice</a>
 <a class="sidebar-nav-item active" href="#S-glossary">Glossario</a>
 <a class="sidebar-nav-item active" href="#S-unclassified">To-do: Proto-regole non
 classificate</a>
-
 	  
       </small>
     </nav></div>
@@ -135,8 +133,8 @@ classificate</a>
     <div class="banner"><a href="https://github.com/BravoBaldo/CppCoreGuidelines_Ita"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt='"Fork me" su GitHub' data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a></div>
     <div class="content container">
 
-<h1 id="c-core-guidelines"><a name="main"></a>C++ Core Guidelines</h1>
-<p>12 Ottobre 2023</p>
+	<h1 id="c-core-guidelines"><a name="main"></a>C++ Core Guidelines</h1>
+<p>15 Febbraio 2024</p>
 <p>Editori:</p>
 <ul>
 <li><a href="http://www.stroustrup.com">Bjarne Stroustrup</a></li>
@@ -276,8 +274,8 @@ href="#Rs-inline">negli header</a></li>
 <li>inizializzazione: <a href="#Res-always">sempre</a> – <a
 href="#Res-list">preferire <code>{}</code></a> – <a
 href="#Res-lambda-init">lambda</a> – <a
-href="#Rc-in-class-initializer">inizializzatori in-class</a> – <a
-href="#Rc-initialize">membri della classe</a> – <a
+href="#Rc-in-class-initializer">inizializzatori membro di default</a> –
+<a href="#Rc-initialize">membri della classe</a> – <a
 href="#Rc-factory">funzioni factory</a></li>
 <li>espressione lambda: <a href="#SS-lambdas">quando usarla</a></li>
 <li>operatore: <a href="#Ro-conventional">convenzionale</a> – <a
@@ -564,18 +562,20 @@ imporre; alcuni commenti sono semplici desideri che potrebbero ispirare
 qualche produttore di tool.</p>
 <p>I tool che implementano queste regole devono rispettare la sintassi
 seguente per sopprimere esplicitamente una regola:</p>
-<pre><code>[[gsl::suppress(tag)]]</code></pre>
+<pre><code>[[gsl::suppress(&quot;tag&quot;)]]</code></pre>
 <p>e facoltativamente con un messaggio (seguendo la solita sintassi
 degli attributi dello standard C++11):</p>
-<pre><code>[[gsl::suppress(tag, justification: &quot;message&quot;)]]</code></pre>
+<pre><code>[[gsl::suppress(&quot;tag&quot;, justification: &quot;message&quot;)]]</code></pre>
 <p>dove</p>
 <ul>
-<li><p><code>tag</code> è il nome di appoggio dell’elemento in cui
-compare la regola di Imposizione [Enforcement] (p.es., per <a
-href="#Rh-public">C.134</a> è “Rh-public”), il nome di un profilo di un
-gruppo-di-regole (“type”, “bounds”, o “lifetime”), o una specifica
-regola di un profilo (<a href="#Pro-type-cstylecast">type.4</a>, o <a
-href="#Pro-bounds-arrayindex">bounds.2</a>)</p></li>
+<li><p><code>"tag"</code> è una stringa letterale con il nome
+dell’ancora [anchor] dell’elemento in cui appare la regola di
+[Enforcement] (ad esempio, per <a href="#Rh-public">C.134</a> è
+“Rh-public”), il nome di un gruppo di regole di profilo (“type”,
+“bounds”, o “lifetime”), o una regola specifica in un profilo (<a
+href="#Pro-type-cstylecast">type.4</a> o <a
+href="#Pro-bounds-arrayindex">bounds.2</a>). Qualsiasi testo che non
+rientri tra questi dovrebbe essere rigettato.</p></li>
 <li><p><code>"message"</code> è una stringa letterale</p></li>
 </ul>
 <h2
@@ -2601,7 +2601,7 @@ complessità. Ma si deve far fronte anche ai casi rari, meno sicuri e
 necessariamente più costosi. Tali esempi sono discussi in <a
 href="http://www.stroustrup.com/resource-model.pdf">[Str15]</a>.</p>
 <p>Quindi, si scrive una classe</p>
-<pre><code>class Istream { [[gsl::suppress(lifetime)]]
+<pre><code>class Istream { [[gsl::suppress(&quot;lifetime&quot;)]]
 public:
     enum Opt { from_line = 1 };
     Istream() { }
@@ -2677,7 +2677,7 @@ il parametro</a></li>
 <li><a href="#Rf-out">F.20: Per i valori “out”, preferire i valori di
 ritorno ai parametri di output</a></li>
 <li><a href="#Rf-out-multi">F.21: Per il return di valori “out”
-multipli, preferire il ritorno di una struct o di una tupla</a></li>
+multipli, preferire la restituzione di una struct</a></li>
 <li><a href="#Rf-ptr-ref">F.60: Preferire <code>T*</code> a
 <code>T&amp;</code> quando “nessun argomento” è una valida
 opzione</a></li>
@@ -3536,9 +3536,9 @@ deve essenzialmente essere sempre inoltrato tramite
 utilizzando <code>...</code>) esattamente una volta su ogni percorso di
 flusso di controllo statico:</p>
 <pre><code>template&lt;class F, class... Args&gt;
-inline auto invoke(F f, Args&amp;&amp;... args)
+inline decltype(auto) invoke(F&amp;&amp; f, Args&amp;&amp;... args)
 {
-    return f(forward&lt;Args&gt;(args)...);
+    return forward&lt;F&gt;(f)(forward&lt;Args&gt;(args)...);
 }</code></pre>
 <h5 id="esempio-47">Esempio</h5>
 <p>A volte si può inoltrare [forward] un parametro composito a pezzi, un
@@ -3635,18 +3635,18 @@ vengono letti prima di essere scritti e sono di un tipo economico da
 restituire; questi dovrebbero essere valori di ritorno in “out”.</li>
 </ul>
 <h3
-id="f.21-per-il-return-di-valori-out-multipli-preferire-il-ritorno-di-una-struct-o-una-tupla"><a name="Rf-out-multi"></a>F.21:
-Per il return di valori “out” multipli, preferire il ritorno di una
-struct o una tupla</h3>
+id="f.21-per-il-return-di-valori-out-multipli-preferire-la-restituzione-di-una-struct"><a name="Rf-out-multi"></a>F.21:
+Per il return di valori “out” multipli, preferire la restituzione di una
+struct</h3>
 <h5 id="motivo-50">Motivo</h5>
 <p>Un valore di ritorno si auto-dichiara come valore “output-only”. Si
-noti che il C++ può restituire valori di ritorno multipli, per
-convenzione usando una <code>tupla</code> (compreso <code>pair</code>),
-con l’eventuale ulteriore vantaggio di <code>tie</code> [legame] e dei
-binding strutturati (C++17) dal lato del chiamante. Preferire l’uso di
-una struttura con un nome dove ci sono semantiche sul valore restituito.
-Altrimenti, è utile una <code>tupla</code> senza nome, nel codice
-generico.</p>
+noti che il C++ ha valori multipli restituiti, per convenzione
+utilizzando tipi simili a tuple (<code>struct</code>,
+<code>array</code>, <code>tuple</code>, ecc.), possibilmente con la
+comodità aggiuntiva dei [binding] strutturati (C++17) nel sito della
+chiamata. Se possibile, preferire l’uso di una <code>struct</code> con
+un nome. Altrimenti, è utile una <code>tuple</code> nei template
+variadici.</p>
 <h5 id="esempio-51">Esempio</h5>
 <pre><code>// BAD: parametro output-only documentato in un commento
 int f(const string&amp; input, /*output only*/ string&amp; output_data)
@@ -3657,27 +3657,28 @@ int f(const string&amp; input, /*output only*/ string&amp; output_data)
 }
 
 // GOOD: auto-descrittivo
-tuple&lt;int, string&gt; f(const string&amp; input)
+struct f_result { int status; string data; };
+
+f_result f(const string&amp; input)
 {
     // ...
     return {status, something()};
 }</code></pre>
-<p>La libreria standard del C++98 usava già questo stile, perché una
-<code>pair</code> è una <code>tuple</code> di due elementi. Per esempio,
-dato un <code>set&lt;string&gt; my_set</code>, si consideri:</p>
+<p>La libreria standard di C++98 utilizzava questo stile in alcuni
+punti, restituendo <code>pair</code> [coppie] in alcune funzioni. Ad
+esempio, dato un <code>set&lt;string&gt; my_set</code>, si
+consideri:</p>
 <pre><code>// C++98
-result = my_set.insert(&quot;Hello&quot;);
-if (result.second) do_something_with(result.first);    // espediente</code></pre>
-<p>Col C++11 lo possiamo scrivere mettendo il risultato direttamente
-nelle variabili locali esistenti:</p>
-<pre><code>Sometype iter;                                // inizializza col default se non abbiamo già
-Someothertype success;                        // usato queste variabili per altri scopi
-
-tie(iter, success) = my_set.insert(&quot;Hello&quot;);   // valore di ritorno normale
-if (success) do_something_with(iter);</code></pre>
-<p>Col C++17 si possono usare i “structured bindings” per dichiarare ed
-inizializzare le variabili multiple:</p>
-<pre><code>if (auto [ iter, success ] = my_set.insert(&quot;Hello&quot;); success) do_something_with(iter);</code></pre>
+pair&lt;set::iterator, bool&gt; result = my_set.insert(&quot;Hello&quot;);
+if (result.second)
+    do_something_with(result.first);    // workaround</code></pre>
+<p>Con C++17 siamo in grado di utilizzare “binding strutturati” per
+assegnare un nome a ciascun membro:</p>
+<pre><code>if (auto [ iter, success ] = my_set.insert(&quot;Hello&quot;); success)
+    do_something_with(iter);</code></pre>
+<p>Una <code>struct</code> con nomi significativi è più comune nel
+moderno C++. Vedere per esempio <code>ranges::min_max_result</code>,
+<code>from_chars_result</code>, e altri.</p>
 <h5 id="eccezione-16">Eccezione</h5>
 <p>A volte c’è bisogno di passare un oggetto ad una funzione per
 modificarne lo stato. In questi casi, passare l’oggetto per riferimento
@@ -3698,17 +3699,19 @@ quando è necessario espandere la capacità di <code>s</code>. Questa
 tecnica è talvolta detta schema di “out allocato-dal-chiamante” ed è
 particolarmente utile per i tipi, come <code>string</code> e
 <code>vector</code>, che eseguono allocazioni nel [free store].</p>
-<p>Per confrontare, se si passassero i valori in uscita come valori di
-ritorno, si farebbe qualcosa del genere:</p>
-<pre><code>pair&lt;istream&amp;, string&gt; get_string(istream&amp; in)  // non raccomandato
+<p>Per fare un confronto, se distribuissimo tutti i valori come valori
+di ritorno, scriveremmo qualcosa del genere:</p>
+<pre><code>struct get_string_result { istream&amp; in; string s; };
+
+get_string_result get_string(istream&amp; in)  // non raccomandato
 {
     string s;
     in &gt;&gt; s;
     return {in, move(s)};
 }
 
-for (auto p = get_string(cin); p.first; p.second = get_string(p.first).second) {
-    // fa qualcosa con p.second
+for (auto [in, s] = get_string(cin); in; s = get_string(in).s) {
+    // fa qualcosa con la string
 }</code></pre>
 <p>Si ritiene che sia notevolmente meno elegante e con prestazioni
 significativamente meno performanti.</p>
@@ -3717,7 +3720,7 @@ l’eccezione non è realmente un’eccezione perché si basa su parametri
 in-out, anziché su parametri di out citati nella regola. Tuttavia, si
 preferisce essere espliciti, piuttosto che criptici.</p>
 <h5 id="nota-59">Nota</h5>
-<p>In molti casi, potrebbe essere utile restituire un tipo specifico
+<p>Nella maggior parte dei casi, è utile restituire un tipo specifico,
 definito dall’utente. Per esempio:</p>
 <pre><code>struct Distance {
     int value;
@@ -3727,18 +3730,21 @@ definito dall’utente. Per esempio:</p>
 Distance d1 = measure(obj1);        // accesso a d1.value e a d1.unit
 auto d2 = measure(obj2);            // accesso a d2.value e a d2.unit
 auto [value, unit] = measure(obj3); // accesso a value e a unit; in qualche modo ridondante
-                                    // to people who know measure()
+                                    // a chi conosce measure()
 auto [x, y] = measure(obj4);        // da non fare; è probabile che confonda</code></pre>
-<p>I super-generici <code>pair</code> e <code>tuple</code> si devono
-usare solo quando il valore restituito rappresenta entità indipendenti
-anziché un’astrazione.</p>
-<p>Un altro esempio, si usa uno specifico tipo lungo le righe di
-<code>variant&lt;T, error_code&gt;</code>, anziché usare la generica
-<code>tuple</code>.</p>
+<p>Le eccessivamente generiche <code>pair</code> e <code>tuple</code>
+dovrebbero essere utilizzate solo quando il valore restituito
+rappresenta entità indipendenti invece che un’astrazione.</p>
+<p>Un’altra possibilità è quella di usare <code>optional&lt;T&gt;</code>
+o <code>expected&lt;T, error_code&gt;</code>, invece di
+<code>pair</code> e <code>tuple</code>. Se utilizzati in modo
+appropriato, questi tipi trasmettono più informazioni su cosa
+significano i membri rispetto a <code>pair&lt;T, bool&gt;</code> e a
+<code>pair&lt;T, error_code&gt;</code>.</p>
 <h5 id="nota-60">Nota</h5>
-<p>Quando la tupla da restituire viene inizializzata da variabili locali
-costose da copiare, il <code>move</code> esplicito può essere utile per
-evitare la copia:</p>
+<p>Quando l’oggetto da restituire viene inizializzato da variabili
+locali che sono costose da copiare, un <code>move</code> esplicito può
+essere utile per evitare la copia:</p>
 <pre><code>pair&lt;LargeObject, LargeObject&gt; f(const string&amp; input)
 {
     LargeObject large1 = g(input);
@@ -3760,6 +3766,9 @@ dell’anti-pattern dall’<a href="#Res-move">ES.56</a></p>
 Un parametro di output è quello in cui la funzione scrive, invoca una
 funzione membro non-<code>const</code> o lo passa come
 non-<code>const</code>.</li>
+<li>I tipi restituiti <code>pair</code> e <code>tuple</code> dovrebbero
+essere sostituiti da <code>struct</code>, quando possibile. Nei template
+variadici, <code>tuple</code> è spesso inevitabile.</li>
 </ul>
 <h3
 id="f.60-preferire-t-a-t-quando-nessun-argomento-è-una-valida-opzione"><a name="Rf-ptr-ref"></a>F.60:
@@ -4021,15 +4030,19 @@ l’ownership</h3>
 rappresentare la proprietà [ownership] condivisa. Ovvero, l’ultimo
 proprietario cancella l’oggetto.</p>
 <h5 id="esempio-59">Esempio</h5>
-<pre><code>shared_ptr&lt;const Image&gt; im { read_image(somewhere) };
+<pre><code>{
+shared_ptr&lt;const Image&gt; im { read_image(somewhere) };
 
 std::thread t0 {shade, args0, top_left, im};
 std::thread t1 {shade, args1, top_right, im};
 std::thread t2 {shade, args2, bottom_left, im};
 std::thread t3 {shade, args3, bottom_right, im};
 
-// scollega [detach] i thread
-// l&#39;ultimo thread per finire cancella l&#39;immagine</code></pre>
+    // il detach dei ìthread richiede una particolare attenzione (ad es. eseguire join prima
+    // che termini il main), ma anche se si esegue il detach di questi quattro thread ...
+}
+// ... shared_ptr garantisce che alla fine l&#39;ultimo thread che termina
+//     elimini in modo sicuro l&#39;immagine</code></pre>
 <h5 id="nota-71">Nota</h5>
 <p>Preferire un <code>unique_ptr</code> rispetto a uno
 <code>shared_ptr</code> se non c’è mai più di un solo proprietario per
@@ -4646,8 +4659,8 @@ metaprogramma template.</p>
 <code>va_start</code>, o <code>va_arg</code>.</li>
 <li>Emette una diagnostica per il passaggio di un argomento ad un
 parametro vararg di una funzione che non offre un overload per un tipo
-più specifico nella posizione del vararg. Per correggere: Utilizzare una
-funzione diversa o <code>[[suppress(types)]]</code>.</li>
+più specifico nella posizione del vararg. Per risolvere: Usare una
+funzione diversa, o <code>[[suppress("type")]]</code>.</li>
 </ul>
 <h3
 id="f.56-evitare-inutili-condizioni-di-annidamento"><a name="F-nesting"></a>F.56:
@@ -5279,10 +5292,10 @@ che inizializza solamente i dati membri; usare, invece, gli
 inizializzatori dei membri</a></li>
 <li><a href="#Rc-explicit">C.46: Per default, dichiarare costruttori ad
 argomento singolo con <code>explicit</code></a></li>
-<li><a href="#Rc-order">C.47: Definire e inizializzare le variabili
-membro secondo l’ordine di dichiarazione dei membri</a></li>
+<li><a href="#Rc-order">C.47: Definire e inizializzare i dati membro
+secondo l’ordine di dichiarazione dei membri</a></li>
 <li><a href="#Rc-in-class-initializer">C.48: Preferire gli
-inizializzatori [in-class] agli inizializzatori dei membri nei
+inizializzatori membro di default agli inizializzatori membro nei
 costruttori per gli inizializzatori costanti</a></li>
 <li><a href="#Rc-initialize">C.49: Nei costruttori preferire
 l’inizializzazione alle assegnazioni</a></li>
@@ -5506,18 +5519,18 @@ public:
 porterà a confusione e bug.</p>
 <h5 id="imposizione-80">Imposizione</h5>
 <ul>
-<li>(Complesso) Un costruttore di copia/[move] e un corrispondente
-operatore di assegnazione di copia/[move] devono scrivere le stesse
-variabili membro allo stesso livello di deferenza.</li>
-<li>(copia/[move]) Ciascuna variabile membro scritta in un costruttore
-di copia/[move] deve essere inizializzata anche in tutti gli altri
+<li>(Complesso) Un costruttore di copia/spostamento e il corrispondente
+operatore di assegnazione di copia/spostamento dovrebbero scrivere sugli
+stessi dati membri allo stesso livello di dereferenziazione.</li>
+<li>(Complesso) Tutti i dati membri scritti in un costruttore di
+copia/spostamento devono essere inizializzati anche da tutti gli altri
 costruttori.</li>
-<li>(Complesso) Se un costruttore di copia/[move] esegue una [deep copy]
-di una variabile membro, allora il distruttore deve modificare la
-variabile membro.</li>
-<li>(Complesso) Se un distruttore modifica una variabile membro, tale
-variabile membro dev’essere scritta in qualsiasi costruttore o operatore
-di assegnazione di copia/[move].</li>
+<li>(Complesso) Se un costruttore di copia/spostamento esegue una copia
+“deep” [approfondita] di un dato membro, il distruttore dovrebbe
+modificare il dato membro.</li>
+<li>(Complesso) Se un distruttore sta modificando un dato membro, tale
+dato membro deve essere scritto in qualsiasi costruttore di
+copia/spostamento e operatore di assegnazione.</li>
 </ul>
 <h2 id="c.dtor-distruttori"><a name="SS-dtor"></a>C.dtor:
 Distruttori</h2>
@@ -5641,13 +5654,13 @@ Type_checker tc { p, /* ... */ };</code></pre>
 possiede.</p>
 <h5 id="imposizione-82">Imposizione</h5>
 <ul>
-<li>(Semplice) Se una classe ha variabili membro puntatori o riferimenti
-che sono proprietari (p.es., considerati proprietari utilizzando
-<code>gsl::owner</code>), allora questi dovrebbero essi referenziati nel
-suo distruttore.</li>
-<li>(Difficile) Determinare se le variabili membro puntatori o
-riferimenti sono proprietari quando non c’è alcuna istruzione esplicita
-sulla proprietà (p.es., guardando nei costruttori).</li>
+<li>(Semplice) Se una classe ha puntatori o membri di riferimento che
+sono proprietari (ad esempio, considerati proprietari utilizzando
+<code>gsl::owner</code>), allora è necessario fare riferimento ad essi
+nel suo distruttore.</li>
+<li>(Difficile) Determinare se il puntatore o i membri di riferimento
+sono proprietari quando non esiste una dichiarazione esplicita di
+proprietà (ad esempio, esaminando i costruttori).</li>
 </ul>
 <h3
 id="c.32-se-una-classe-ha-un-puntatore-raw-t-o-un-riferimento-t-si-valuti-se-potrebbe-essere-proprietario"><a name="Rc-dtor-ptr"></a>C.32:
@@ -5944,9 +5957,10 @@ necessità di molti costruttori. Per esempio:</p>
 
 Rec2 r1 {&quot;Foo&quot;, 7};
 Rec2 r2 {&quot;Bar&quot;};</code></pre>
-<p>Il costruttore di <code>Rec2</code> è ridondante. Inoltre, il default
-per un <code>int</code> sarà fatto meglio come un <a
-href="#Rc-in-class-initializer">member initializer</a>.</p>
+<p>Il costruttore di <code>Rec2</code> è ridondante. Inoltre, il valore
+di default per <code>int</code> sarebbe meglio se fosse un <a
+href="#Rc-in-class-initializer">inizializzatore di membro di
+default</a>.</p>
 <p><strong>Si veda anche</strong>: <a href="#Rc-complete">costruire
 oggetti validi</a> e <a href="#Rc-throw">eccezioni nei
 costruttori</a>.</p>
@@ -5989,9 +6003,9 @@ void f()
 <a href="#Rc-factory">si usa una funzione factory</a>.</p>
 <h5 id="imposizione-89">Imposizione</h5>
 <ul>
-<li>(Semplice) Ogni costruttore dovrebbe inizializzare ogni variabile
-membro (o esplicitamente, tramite una chiamata a un costruttore
-[delegating], o con la costruzione di default).</li>
+<li>(Semplice) Ogni costruttore dovrebbe inizializzare ogni dato membro
+(esplicitamente, tramite una chiamata ctor delegante o tramite
+costruttore di default).</li>
 <li>(Ignoto) Se un costruttore ha un contratto <code>Ensures</code>,
 provare a vedere se vale come post-condizione.</li>
 </ul>
@@ -6149,7 +6163,7 @@ ottiene implicitamente un costruttore di default:</p>
     vector&lt;int&gt; v;
 };
 
-X x; // significa X{{}, {}}; questo è la stringa vuota e il vettore vuoto</code></pre>
+X x; // significa X{ { }, { } }; questa è la stringa vuota e il vettore vuoto</code></pre>
 <p>Attenzione che i tipi [built-in] non vengono correttamente costruiti
 di default:</p>
 <pre><code>struct X {
@@ -6277,9 +6291,9 @@ id="c.45-non-definire-un-costruttore-di-default-che-inizializza-solamente-i-dati
 Non definire un costruttore di default che inizializza solamente i dati
 membri; usare, invece, gli inizializzatori dei membri</h3>
 <h5 id="motivo-99">Motivo</h5>
-<p>Utilizzando gli inizializzatori dei membri nella stessa classe
-[in-class], consente al compilatore di generare la funzione. La funzione
-generata dal compilatore può essere più efficiente.</p>
+<p>L’uso degli inizializzatori dei membri di default consente al
+compilatore di generare la funzione. La funzione generata dal
+compilatore può essere più efficiente.</p>
 <h5 id="esempio-cattivo-33">Esempio, cattivo</h5>
 <pre><code>class X1 { // BAD: non usa gli inizializzatori dei membri
     string s;
@@ -6297,8 +6311,8 @@ public:
     // ...
 };</code></pre>
 <h5 id="imposizione-93">Imposizione</h5>
-<p>(Semplice) Un costruttore di default dovrebbe fare di più del solo
-inizializzare le variabili membro con delle costanti.</p>
+<p>(Semplice) Un costruttore di default dovrebbe fare di più che
+inizializzare semplicemente i dati membri con costanti.</p>
 <h3
 id="c.46-per-default-dichiarare-costruttori-ad-argomento-singolo-con-explicit"><a name="Rc-explicit"></a>C.46:
 Per default, dichiarare costruttori ad argomento singolo con
@@ -6337,9 +6351,9 @@ dichiarati <code>explicit</code>. Dei buoni costruttori con argomento
 singolo non-<code>explicit</code> sono rari nella maggior parte dei
 codici. Avvertire per quelli che non sono in una “lista positiva”.</p>
 <h3
-id="c.47-definire-e-inizializzare-le-variabili-membro-secondo-lordine-di-dichiarazione"><a name="Rc-order"></a>C.47:
-Definire e inizializzare le variabili membro secondo l’ordine di
-dichiarazione</h3>
+id="c.47-definire-e-inizializzare-i-dati-membro-secondo-lordine-di-dichiarazione-dei-membri"><a name="Rc-order"></a>C.47:
+Definire e inizializzare i dati membro secondo l’ordine di dichiarazione
+dei membri</h3>
 <h5 id="motivo-101">Motivo</h5>
 <p>Per ridurre al minimo la confusione e gli errori. Questo è l’ordine
 con cui avviene l’inizializzazione (indipendentemente dall’ordine degli
@@ -6360,10 +6374,9 @@ membri nello stesso ordine con cui sono dichiarati.</p>
 <p><strong>Si veda anche</strong>: <a
 href="#Sd-order">Discussione</a></p>
 <h3
-id="c.48-preferire-gli-inizializzatori-allinterno-della-classe-in-class-agli-inizializzatori-dei-membri-nei-costruttori-per-gli-inizializzatori-costanti"><a name="Rc-in-class-initializer"></a>C.48:
-Preferire gli inizializzatori all’interno della classe [in-class] agli
-inizializzatori dei membri nei costruttori per gli inizializzatori
-costanti</h3>
+id="c.48-preferire-gli-inizializzatori-membro-di-default-agli-inizializzatori-membro-nei-costruttori-per-gli-inizializzatori-costanti"><a name="Rc-in-class-initializer"></a>C.48:
+Preferire gli inizializzatori membro di default agli inizializzatori
+membro nei costruttori per gli inizializzatori costanti</h3>
 <h5 id="motivo-102">Motivo</h5>
 <p>Rende esplicito che ci si aspetta di usare lo stesso valore in tutti
 i costruttori. Evitare le ripetizioni. Evitare i problemi di
@@ -6411,11 +6424,12 @@ public:
 };</code></pre>
 <h5 id="imposizione-96">Imposizione</h5>
 <ul>
-<li>(Semplice) Ogni costruttore dovrebbe inizializzare ogni variabile
-membro (o esplicitamente, tramite una chiamata a un costruttore
-[delegating], o con la costruzione di default).</li>
+<li>(Semplice) Ogni costruttore dovrebbe inizializzare ogni dato membro
+(esplicitamente, tramite una chiamata ctor delegante o tramite
+costruttore di default).</li>
 <li>(Semplice) Gli argomenti di default per i costruttori suggeriscono
-come l’inizializzatore [in-class] potrebbe essere più appropriato.</li>
+che un inizializzatore di membro di default potrebbe essere più
+appropriato.</li>
 </ul>
 <h3
 id="c.49-nei-costruttori-preferire-linizializzazione-alle-assegnazioni"><a name="Rc-initialize"></a>C.49:
@@ -6571,8 +6585,8 @@ public:
     // ...
 };</code></pre>
 <p><strong>Si veda anche</strong>: Se l’“azione ripetuta” è una semplice
-inizializzazione, si consideri <a href="#Rc-in-class-initializer">un
-inizializzatore [in-class] del membro</a>.</p>
+inizializzazione, considerare <a href="#Rc-in-class-initializer">un
+inizializzatore membro di default</a>.</p>
 <h5 id="imposizione-97">Imposizione</h5>
 <p>(Moderato) Cercare parti di costruttori simili</p>
 <h3
@@ -8379,9 +8393,9 @@ e nessuna funzione membro.</p>
     int x {0};
     int y {0};
 };</code></pre>
-<p>Si noti che è possibile inserire degli inizializzatori di default
-sulle variabili membro: <a href="#Rc-initialize">C.49: Nei costruttori
-preferire l’inizializzazione alle assegnazioni</a>.</p>
+<p>Notare che possiamo inserire inizializzatori di default sui dati
+membri: <a href="#Rc-initialize">C.49: Nei costruttori preferire
+l’inizializzazione alle assegnazioni</a>.</p>
 <h5 id="nota-151">Nota</h5>
 <p>La chiave di questa regola è se la semantica del getter/setter è
 banale. Anche se non è una definizione completa di “banale”, si
@@ -9052,10 +9066,10 @@ struct D : B { int y; };
 void use(B*);
 
 D a[] = {{1, 2}, {3, 4}, {5, 6}};
-B* p = a;     // bad: un decadimento in &amp;a[0] che viene convertito in un B*
-p[1].x = 7;   // sovrascrive a[0].y
+B* p = a;     // bad: a decade in &amp;a[0] che viene convertito in B*
+p[1].x = 7;   // sovrascrive [overwrite] a[0].y
 
-use(a);       // bad: un decadimento in &amp;a[0] che viene convertito in un B*</code></pre>
+use(a);       // bad: a decade in &amp;a[0] che viene convertito in B*</code></pre>
 <h5 id="imposizione-145">Imposizione</h5>
 <ul>
 <li>Segnalare tutte le combinazioni di decadimenti e basi di array in
@@ -11697,7 +11711,7 @@ programmatori più abili. È stata anche una delle principali fonti di
 errori e complessità. Molti di questi errori vengono introdotti durante
 gli anni di manutenzione dopo l’implementazione iniziale.</p>
 <h5 id="esempio-194">Esempio</h5>
-<p>Questa regola copre le variabili membro.</p>
+<p>Questa regola riguarda i dati membri.</p>
 <pre><code>class X {
 public:
     X(int i, int ci) : m2{i}, cm2{ci} {}
@@ -13289,8 +13303,8 @@ in cui lo slicing è voluto, il codice può sorprendere.</p>
 class Circle : public Shape { /* ... */ Point c; int r; };
 
 Circle c {{0, 0}, 42};
-Shape s {c};    // la copia costruisce solo la parte Shape di Circle
-s = c;          // e l&#39;assegnazione copia solo la parte Shape di Circle
+Shape s {c};    // la copy costruisce solo la parte Shape di Circle
+s = c;          // o copy assegna solo la parte Shape di Circle
 
 void assign(const Shape&amp; src, Shape&amp; dest)
 {
@@ -14037,9 +14051,9 @@ prolissa.</p>
 <h5 id="esempio-238">Esempio</h5>
 <p>Questa regola è particolarmente utile quando una dichiarazione viene
 utilizzata come condizione</p>
-<pre><code>if (auto pc = dynamic_cast&lt;Circle&gt;(ps)) { ... } // eseguito se ps punta ad un tipo di Circle, buono
+<pre><code>if (auto pc = dynamic_cast&lt;Circle*&gt;(ps)) { ... } // eseguito se ps punta a un tipo di Circle, bene
 
-if (auto pc = dynamic_cast&lt;Circle&gt;(ps); pc != nullptr) { ... } // non raccomandato</code></pre>
+if (auto pc = dynamic_cast&lt;Circle*&gt;(ps); pc != nullptr) { ... } // non raccomandato</code></pre>
 <h5 id="esempio-239">Esempio</h5>
 <p>Si noti che, nelle condizioni, sono applicate le conversioni
 implicite in bool. Per esempio:</p>
@@ -15222,11 +15236,11 @@ href="https://gcc.gnu.org/wiki/ThreadSafetyAnnotation">GCC</a> hanno
 qualche supporto per l’annotazione statica delle proprietà sulla
 sicurezza del thread. L’uso coerente di questa tecnica trasforma molte
 classi di errori sulla sicurezza dei thread in errori di compilazione.
-Le annotazioni sono generalmente locali (rendendo una particolare
-variabile membro come protetta da un particolare mutex), e sono
-solitamente facili da imparare. Tuttavia, come con molti tool statici,
-possono spesso presentare falsi negativi; casi che avrebbero dovuto
-essere rilevati ma vengono autorizzati.</p></li>
+Le annotazioni sono generalmente locali (contrassegnando un particolare
+dato membro come protetto da un particolare mutex) e solitamente sono
+facili da imparare. Tuttavia, come con molti tool statici, possono
+spesso presentare falsi negativi; casi che avrebbero dovuto essere
+rilevati ma vengono autorizzati.</p></li>
 <li><p>strumenti di imposizione [enforcement] dinamica: Il <a
 href="http://clang.llvm.org/docs/ThreadSanitizer.html">Thread
 Sanitizer</a> di Clang (aka TSAN) è un potente esempio di strumenti
@@ -16481,8 +16495,8 @@ please_use_this(&amp;vl);   // &#39;porta&#39; un riferimento a questo &quot;alt
 <h5 id="esempio-cattivo-126">Esempio, cattivo</h5>
 <p>Le variabili locali <code>volatile</code> sono quasi sempre sbagliate
 – come si possono condividere con altri linguaggi o con l’hardware se
-sono temporanee? Lo stesso vale quasi altrettanto fortemente per le
-variabili membro, per lo stesso motivo.</p>
+sono temporanee? Lo stesso vale quasi altrettanto fortemente per i dati
+membri, per lo stesso motivo.</p>
 <pre><code>void f()
 {
     volatile int i = 0; // bad, variabile locale volatile
@@ -16490,7 +16504,7 @@ variabili membro, per lo stesso motivo.</p>
 }
 
 class My_type {
-    volatile int i = 0; // sospetto, variabile membro volatile
+    volatile int i = 0; // sospetto, membro dato volatile
     // ecc.
 };</code></pre>
 <h5 id="nota-268">Nota</h5>
@@ -16499,8 +16513,8 @@ class My_type {
 sincronizzazione</a>.</p>
 <h5 id="imposizione-284">Imposizione</h5>
 <ul>
-<li>Segnalare le variabili membro e locali <code>volatile T</code>;
-quasi certamente si intendeva usare invece
+<li>Segnalare <code>volatile T</code> locale e i dati membro; quasi
+certamente si intendeva usare, invece,
 <code>atomic&lt;T&gt;</code>.</li>
 <li>???</li>
 </ul>
@@ -17699,9 +17713,9 @@ utenza.</p>
 <p><strong>Si veda anche</strong>: <a href="#Ri-pimpl">Pimpl</a></p>
 <h5 id="imposizione-302">Imposizione</h5>
 <ul>
-<li>Segnalare una funzione membro non segnata come <code>const</code>,
-ma che non esegue un’operazione non-<code>const</code> su alcuna
-variabile membro.</li>
+<li>Segnalare una funzione membro non contrassegnata con
+<code>const</code>, ma che non esegue un’operazione
+non-<code>const</code> su alcun dato membro.</li>
 </ul>
 <h3
 id="con.3-per-default-passare-puntatori-e-riferimenti-const"><a name="Rconst-ref"></a>Con.3:
@@ -22038,7 +22052,7 @@ genere, è impostato nello strumento di analisi utilizzato.</p>
 <p>Per sopprimere l’applicazione di un controllo del profilo, inserire
 un’annotazione <code>suppress</code> in un contratto del linguaggio. Per
 esempio:</p>
-<pre><code>[[suppress(bounds)]] char* raw_find(char* p, int n, char x)    // find x in p[0]..p[n - 1]
+<pre><code>[[suppress(&quot;bounds&quot;)]] char* raw_find(char* p, int n, char x)    // cerca x in p[0]..p[n - 1]
 {
     // ...
 }</code></pre>
@@ -22099,11 +22113,11 @@ href="#Res-casts-named">[named cast]</a> oppure
 <li><p><a name="Pro-type-init"></a>Type.5: Non usare una variabile prima
 che sia stata inizializzata: <a href="#Res-always">inizializzare
 sempre</a>.</p></li>
-<li><p><a name="Pro-type-memberinit"></a>Type.6: Inizializzare sempre
-una variabile membro: <a href="#Res-always">inizializzare sempre</a>,
-forse utilizzando i <a href="#Rc-default0">costruttori di default</a> o
-gli <a href="#Rc-in-class-initializer">gli inizializzatori membro di
-default</a>.</p></li>
+<li><p><a name="Pro-type-memberinit"></a>Type.6: Inizializzare sempre un
+dato membro: <a href="#Res-always">inizializzare sempre</a>,
+possibilmente utilizzando <a href="#Rc-default0">costruttori di
+default</a> o <a href="#Rc-in-class-initializer">inizializzatori membro
+di default</a>.</p></li>
 <li><p><a name="Pro-type-union"></a>Type.7: Evitare le semplici [naked]
 union: <a href="#Ru-naked">Usare, invece,
 <code>variant</code></a>.</p></li>
@@ -22233,7 +22247,7 @@ delle Guidelines).</p>
 <p>Riepilogo dei componenti della GSL:</p>
 <ul>
 <li><a href="#SS-views">GSL.view: Viste [Views]</a></li>
-<li><a href="#SS-ownership">GSL.owner</a></li>
+<li><a href="#SS-ownership">GSL.owner: Ownership pointers</a></li>
 <li><a href="#SS-assertions">GSL.assert: Assertions</a></li>
 <li><a href="#SS-utilities">GSL.util: Utilities</a></li>
 <li><a href="#SS-gsl-concepts">GSL.concept: Concepts</a></li>
@@ -22684,8 +22698,8 @@ scope limitato.</p>
 <h3
 id="nl.8-usare-uno-stile-coerente-per-i-nomi"><a name="Rl-name"></a>NL.8:
 Usare uno stile coerente per i nomi</h3>
-<p><strong>Motivazione</strong>: La coerenza e lo stile della
-nomenclatura aumentano la leggibilità.</p>
+<p><strong>Motivazione</strong>: La coerenza nella denominazione e nello
+stile della nomenclatura aumentano la leggibilità.</p>
 <h5 id="nota-378">Nota</h5>
 <p>Esistono molti stili e quando si utilizzano più librerie, non è
 possibile seguire tutte le diverse convenzioni. Scegliere uno “stile
@@ -23035,10 +23049,10 @@ int const y = 9;    // bad
 const int *const p = nullptr;   // OK, da puntatore costante a int costante
 int const *const p = nullptr;   // bad, da puntatore costante a int costante</code></pre>
 <h5 id="nota-393">Nota</h5>
-<p>Sappiamo bene che si potrebbero portare esempi “cattivi” più logici
-di quelli contrassegnati con “OK”, ma questi confondono più gente,
-specialmente i principianti che si affidano al materiale didattico fatto
-con uno stile OK molto più comune e convenzionale.</p>
+<p>Sappiamo bene che si potrebbero dire che gli esempi “cattivi” sono
+più logici di quelli contrassegnati con “OK”, ma questi confondono più
+gente, specialmente i principianti che si affidano al materiale
+didattico fatto con uno stile OK molto più comune e convenzionale.</p>
 <p>Come sempre, si ricordi che l’obiettivo di queste regole di
 denominazione e layout è la coerenza e che l’estetica varia
 enormemente.</p>
@@ -23377,15 +23391,15 @@ Discussione</h1>
 gruppi di regole. In particolare, qui vengono presentate ulteriori
 motivazioni, esempi più estesi e le discussioni sulle alternative.</p>
 <h3
-id="discussione-definire-e-inizializzare-le-variabili-membro-nellordine-di-dichiarazione-del-membro"><a name="Sd-order"></a>Discussione:
-Definire e inizializzare le variabili membro nell’ordine di
-dichiarazione del membro</h3>
-<p>Le variabili membro vengono sempre inizializzate nell’ordine in cui
-sono state dichiarate nella definizione della classe, quindi scriverle
-in questo ordine nella lista di inizializzazione del costruttore.
-Scriverle con un ordine diverso rende semplicemente il codice confuso
-perché non verrà eseguito nell’ordine visto e questo potrebbe rendere
-arduo la ricerca di bug dipendenti dall’ordine.</p>
+id="discussione-definire-e-inizializzare-i-dati-membri-nellordine-di-dichiarazione-dei-membri"><a name="Sd-order"></a>Discussione:
+definire e inizializzare i dati membri nell’ordine di dichiarazione dei
+membri</h3>
+<p>I dati membri vengono sempre inizializzati nell’ordine in cui sono
+dichiarati nella definizione della classe, quindi si devono scrivere in
+quell’ordine nell’elenco di inizializzazione del costruttore. Scriverle
+con un ordine diverso rende semplicemente il codice confuso perché non
+verrà eseguito nell’ordine visto e questo potrebbe rendere arduo la
+ricerca di bug dipendenti dall’ordine.</p>
 <pre><code>class Employee {
     string email, first, last;
 public:
@@ -23407,8 +23421,8 @@ che siano impostate con i loro valori, ma addirittura prima che vengano
 costruite.</p>
 <p>Se la definizione della classe e il body del costruttore stanno in
 file separati, con l’andare del tempo l’influenza che ha l’ordine della
-dichiarazione delle variabili membro sulla correttezza del costruttore
-sarà sempre più difficile da individuare.</p>
+dichiarazione dei dati membro sulla correttezza del costruttore sarà
+sempre più difficile da individuare.</p>
 <p><strong>Riferimenti</strong>:</p>
 <p><a href="#Cline99">[Cline99]</a> §22.03-11, <a
 href="#Dewhurst03">[Dewhurst03]</a> §52-53, <a
@@ -24538,7 +24552,7 @@ restrittivo o più ampio?</p></li>
 ma io non cambio effettivamente la variabile, le assegno solo un valore
 la prima volta che la chiamo … argh</p></li>
 <li><p>Inizializzare sempre le variabili, utilizzare le liste di
-inizializzazione per le variabili membro.</p></li>
+inizializzazione per i dati membri.</p></li>
 <li><p>A chiunque scriva un’interfaccia pubblica che prenda o
 restituisca <code>void*</code> gli si dovrebbero tagliare le mani.
 Questa è stata la favorita per diversi anni. :)</p></li>

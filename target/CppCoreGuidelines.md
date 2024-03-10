@@ -1,6 +1,6 @@
 # <a name="main"></a>C++ Core Guidelines
 
-12 Ottobre 2023
+15 Febbraio 2024
 
 Editori:
 
@@ -142,7 +142,7 @@ Si possono provare le regole per delle specifiche funzionalità del linguaggio:
    [sempre](#Res-always) --
    [preferire `{}`](#Res-list) --
    [lambda](#Res-lambda-init) --
-   [inizializzatori in-class](#Rc-in-class-initializer) --
+   [inizializzatori membro di default](#Rc-in-class-initializer) --
    [membri della classe](#Rc-initialize) --
    [funzioni factory](#Rc-factory)
 * espressione lambda:
@@ -370,15 +370,15 @@ Non limitiamo il nostro commento nelle sezioni **Imposizione** alle cose che sap
 
 I tool che implementano queste regole devono rispettare la sintassi seguente per sopprimere esplicitamente una regola:
 
-    [[gsl::suppress(tag)]]
+    [[gsl::suppress("tag")]]
 
 e facoltativamente con un messaggio (seguendo la solita sintassi degli attributi dello standard C++11):
 
-    [[gsl::suppress(tag, justification: "message")]]
+    [[gsl::suppress("tag", justification: "message")]]
 
 dove
 
-* `tag` è il nome di appoggio dell'elemento in cui compare la regola di Imposizione [Enforcement] (p.es., per [C.134](#Rh-public) è "Rh-public"), il nome di un profilo di un gruppo-di-regole ("type", "bounds", o "lifetime"), o una specifica regola di un profilo ([type.4](#Pro-type-cstylecast), o [bounds.2](#Pro-bounds-arrayindex))
+* `"tag"` è una stringa letterale con il nome dell'ancora [anchor] dell'elemento in cui appare la regola di [Enforcement] (ad esempio, per [C.134](#Rh-public) è "Rh-public"), il nome di un gruppo di regole di profilo ("type", "bounds", o "lifetime"), o una regola specifica in un profilo ([type.4](#Pro-type-cstylecast) o [bounds.2](#Pro-bounds-arrayindex)). Qualsiasi testo che non rientri tra questi dovrebbe essere rigettato.
 
 * `"message"` è una stringa letterale
 
@@ -2266,7 +2266,7 @@ Tali esempi sono discussi in [[Str15]](http://www.stroustrup.com/resource-model.
 
 Quindi, si scrive una classe
 
-    class Istream { [[gsl::suppress(lifetime)]]
+    class Istream { [[gsl::suppress("lifetime")]]
     public:
         enum Opt { from_line = 1 };
         Istream() { }
@@ -2318,7 +2318,7 @@ Regole per l'espressione del passaggio dei parametri:
 * [F.18: I parametri "si-sposterà-da", si passano per `X&&` o con `std::move`](#Rf-consume)
 * [F.19: I parametri "forward", si passano per `TP&&` e si esegue `std::forward` solo per il parametro](#Rf-forward)
 * [F.20: Per i valori "out", preferire i valori di ritorno ai parametri di output](#Rf-out)
-* [F.21: Per il return di valori "out" multipli, preferire il ritorno di una struct o di una tupla](#Rf-out-multi)
+* [F.21: Per il return di valori "out" multipli, preferire la restituzione di una struct](#Rf-out-multi)
 * [F.60: Preferire `T*` a `T&` quando "nessun argomento" è una valida opzione](#Rf-ptr-ref)
 
 Regole sulla semantica del passaggio dei parametri:
@@ -3071,9 +3071,9 @@ In quel caso, e solo in quel caso, si rende il parametro `TP&&` dove `TP` è un 
 Di solito si inoltra l'intero parametro (o pacchetto di parametri, utilizzando `...`) esattamente una volta su ogni percorso di flusso di controllo statico:
 
     template<class F, class... Args>
-    inline auto invoke(F f, Args&&... args)
+    inline decltype(auto) invoke(F&& f, Args&&... args)
     {
-        return f(forward<Args>(args)...);
+        return forward<F>(f)(forward<Args>(args)...);
     }
 ##### Esempio
     
@@ -3157,13 +3157,15 @@ L'ottimizzazione del valore di ritorno non gestisce il caso dell'assegnazione, m
 
 * Segnalare il riferimento a parametri non-`const` che non vengono letti prima di essere scritti e sono di un tipo economico da restituire; questi dovrebbero essere valori di ritorno in "out".
 
-### <a name="Rf-out-multi"></a>F.21: Per il return di valori "out" multipli, preferire il ritorno di una struct o una tupla
+### <a name="Rf-out-multi"></a>F.21: Per il return di valori "out" multipli, preferire la restituzione di una struct
 
 ##### Motivo
 
 Un valore di ritorno si auto-dichiara come valore "output-only".
-Si noti che il C++ può restituire valori di ritorno multipli, per convenzione usando una `tupla` (compreso `pair`), con l'eventuale ulteriore vantaggio di `tie` [legame] e dei binding strutturati (C++17) dal lato del chiamante.
-Preferire l'uso di una struttura con un nome dove ci sono semantiche sul valore restituito. Altrimenti, è utile una `tupla` senza nome, nel codice generico.
+Si noti che il C++ ha valori multipli restituiti, per convenzione utilizzando tipi simili a tuple (`struct`, `array`, `tuple`, ecc.),
+possibilmente con la comodità aggiuntiva dei [binding] strutturati (C++17) nel sito della chiamata.
+Se possibile, preferire l'uso di una `struct` con un nome.
+Altrimenti, è utile una `tuple` nei template variadici.
 
 ##### Esempio
 
@@ -3176,30 +3178,26 @@ Preferire l'uso di una struttura con un nome dove ci sono semantiche sul valore 
     }
     
     // GOOD: auto-descrittivo
-    tuple<int, string> f(const string& input)
+    struct f_result { int status; string data; };
+
+    f_result f(const string& input)
     {
         // ...
         return {status, something()};
     }
-
-La libreria standard del C++98 usava già questo stile, perché una `pair` è una `tuple` di due elementi.
-Per esempio, dato un `set<string> my_set`, si consideri:
+La libreria standard di C++98 utilizzava questo stile in alcuni punti, restituendo `pair` [coppie] in alcune funzioni.
+Ad esempio, dato un `set<string> my_set`, si consideri:
 
     // C++98
-    result = my_set.insert("Hello");
-    if (result.second) do_something_with(result.first);    // espediente
+    pair<set::iterator, bool> result = my_set.insert("Hello");
+    if (result.second)
+        do_something_with(result.first);    // workaround
+Con C++17 siamo in grado di utilizzare "binding strutturati" per assegnare un nome a ciascun membro:
 
-Col C++11 lo possiamo scrivere mettendo il risultato direttamente nelle variabili locali esistenti:
-
-    Sometype iter;                                // inizializza col default se non abbiamo già
-    Someothertype success;                        // usato queste variabili per altri scopi
-    
-    tie(iter, success) = my_set.insert("Hello");   // valore di ritorno normale
-    if (success) do_something_with(iter);
-
-Col C++17 si possono usare i "structured bindings" per dichiarare ed inizializzare le variabili multiple:
-
-    if (auto [ iter, success ] = my_set.insert("Hello"); success) do_something_with(iter);
+    if (auto [ iter, success ] = my_set.insert("Hello"); success)
+        do_something_with(iter);
+Una `struct` con nomi significativi è più comune nel moderno C++.
+Vedere per esempio `ranges::min_max_result`, `from_chars_result`, e altri.
 
 ##### Eccezione
 
@@ -3220,17 +3218,19 @@ Si passa `s` per evitare ripetute allocazioni.
 Riutilizzando `s` (passato per riferimento), si alloca nuova memoria solo quando è necessario espandere la capacità di `s`.
 Questa tecnica è talvolta detta schema di "out allocato-dal-chiamante" ed è particolarmente utile per i tipi, come `string` e `vector`, che eseguono allocazioni nel [free store].
 
-Per confrontare, se si passassero i valori in uscita come valori di ritorno, si farebbe qualcosa del genere:
+Per fare un confronto, se distribuissimo tutti i valori come valori di ritorno, scriveremmo qualcosa del genere:
 
-    pair<istream&, string> get_string(istream& in)  // non raccomandato
+    struct get_string_result { istream& in; string s; };
+
+    get_string_result get_string(istream& in)  // non raccomandato
     {
         string s;
         in >> s;
         return {in, move(s)};
     }
     
-    for (auto p = get_string(cin); p.first; p.second = get_string(p.first).second) {
-        // fa qualcosa con p.second
+    for (auto [in, s] = get_string(cin); in; s = get_string(in).s) {
+        // fa qualcosa con la string
     }
 
 Si ritiene che sia notevolmente meno elegante e con prestazioni significativamente meno performanti.
@@ -3240,7 +3240,7 @@ Tuttavia, si preferisce essere espliciti, piuttosto che criptici.
 
 ##### Nota
 
-In molti casi, potrebbe essere utile restituire un tipo specifico definito dall'utente.
+Nella maggior parte dei casi, è utile restituire un tipo specifico, definito dall'utente.
 Per esempio:
 
     struct Distance {
@@ -3251,16 +3251,16 @@ Per esempio:
     Distance d1 = measure(obj1);        // accesso a d1.value e a d1.unit
     auto d2 = measure(obj2);            // accesso a d2.value e a d2.unit
     auto [value, unit] = measure(obj3); // accesso a value e a unit; in qualche modo ridondante
-                                        // to people who know measure()
+                                        // a chi conosce measure()
     auto [x, y] = measure(obj4);        // da non fare; è probabile che confonda
+Le eccessivamente generiche `pair` e `tuple` dovrebbero essere utilizzate solo quando il valore restituito rappresenta entità indipendenti invece che un'astrazione.
 
-I super-generici `pair` e `tuple` si devono usare solo quando il valore restituito rappresenta entità indipendenti anziché un'astrazione.
-
-Un altro esempio, si usa uno specifico tipo lungo le righe di `variant<T, error_code>`, anziché usare la generica `tuple`.
+Un'altra possibilità è quella di usare `optional<T>` o `expected<T, error_code>`, invece di `pair` e `tuple`.
+Se utilizzati in modo appropriato, questi tipi trasmettono più informazioni su cosa significano i membri rispetto a `pair<T, bool>` e a `pair<T, error_code>`.
 
 ##### Nota
 
-Quando la tupla da restituire viene inizializzata da variabili locali costose da copiare, il `move` esplicito può essere utile per evitare la copia:
+Quando l'oggetto da restituire viene inizializzato da variabili locali che sono costose da copiare, un `move` esplicito può essere utile per evitare la copia:
 
     pair<LargeObject, LargeObject> f(const string& input)
     {
@@ -3282,6 +3282,8 @@ Si noti che questo è diverso da `return move(...)` dell'anti-pattern dall'[ES.5
 
 * I parametri di output devono essere sostituiti da valori di ritorno.
    Un parametro di output è quello in cui la funzione scrive, invoca una funzione membro non-`const` o lo passa come non-`const`.
+* I tipi restituiti `pair` e `tuple` dovrebbero essere sostituiti da `struct`, quando possibile.
+   Nei template variadici, `tuple` è spesso inevitabile.
 
 ### <a name="Rf-ptr-ref"></a>F.60: Preferire `T*` a `T&` quando "nessun argomento" è una valida opzione
 
@@ -3529,6 +3531,7 @@ L'uso dello `std::shared_ptr` è il modo standard per rappresentare la propriet�
 
 ##### Esempio
 
+    {
     shared_ptr<const Image> im { read_image(somewhere) };
     
     std::thread t0 {shade, args0, top_left, im};
@@ -3536,9 +3539,11 @@ L'uso dello `std::shared_ptr` è il modo standard per rappresentare la propriet�
     std::thread t2 {shade, args2, bottom_left, im};
     std::thread t3 {shade, args3, bottom_right, im};
     
-    // scollega [detach] i thread
-    // l'ultimo thread per finire cancella l'immagine
-
+        // il detach dei ìthread richiede una particolare attenzione (ad es. eseguire join prima
+        // che termini il main), ma anche se si esegue il detach di questi quattro thread ...
+    }
+    // ... shared_ptr garantisce che alla fine l'ultimo thread che termina
+    //     elimini in modo sicuro l'immagine
 ##### Nota
 
 Preferire un `unique_ptr` rispetto a uno `shared_ptr` se non c'è mai più di un solo proprietario per volta.
@@ -4122,7 +4127,7 @@ La dichiarazione di un parametro `...` talvolta è utile nelle tecniche che non 
 ##### Imposizione
 
 * Emette una diagnostica per l'uso di `va_list`, `va_start`, o `va_arg`.
-* Emette una diagnostica per il passaggio di un argomento ad un parametro vararg di una funzione che non offre un overload per un tipo più specifico nella posizione del vararg. Per correggere: Utilizzare una funzione diversa o `[[suppress(types)]]`.
+* Emette una diagnostica per il passaggio di un argomento ad un parametro vararg di una funzione che non offre un overload per un tipo più specifico nella posizione del vararg. Per risolvere: Usare una funzione diversa, o `[[suppress("type")]]`.
 
 
 ### <a name="F-nesting"></a>F.56: Evitare inutili condizioni di annidamento
@@ -4732,8 +4737,8 @@ Regole del costruttore:
 * [C.44: È preferibile che i costruttori di default siano semplici e che non sollevino errori [non-throwing]](#Rc-default00)
 * [C.45: Non definire un costruttore di default che inizializza solamente i dati membri; usare, invece, gli inizializzatori dei membri](#Rc-default)
 * [C.46: Per default, dichiarare costruttori ad argomento singolo con `explicit`](#Rc-explicit)
-* [C.47: Definire e inizializzare le variabili membro secondo l'ordine di dichiarazione dei membri](#Rc-order)
-* [C.48: Preferire gli inizializzatori [in-class] agli inizializzatori dei membri nei costruttori per gli inizializzatori costanti](#Rc-in-class-initializer)
+* [C.47: Definire e inizializzare i dati membro secondo l'ordine di dichiarazione dei membri](#Rc-order)
+* [C.48: Preferire gli inizializzatori membro di default agli inizializzatori membro nei costruttori per gli inizializzatori costanti](#Rc-in-class-initializer)
 * [C.49: Nei costruttori preferire l'inizializzazione alle assegnazioni](#Rc-initialize)
 * [C.50: Usare una funzione factory se c'è bisogno di un "comportamento virtuale" durante l'inizializzazione](#Rc-factory)
 * [C.51: Utilizzare i costruttori [delegating] per rappresentare azioni comuni a tutti i costruttori di una classe](#Rc-delegating)
@@ -4920,10 +4925,10 @@ Queste operazioni non concordano per la semantica della copia. Ciò porterà a c
 
 ##### Imposizione
 
-* (Complesso) Un costruttore di copia/[move] e un corrispondente operatore di assegnazione di copia/[move] devono scrivere le stesse variabili membro allo stesso livello di deferenza.
-* (copia/[move]) Ciascuna variabile membro scritta in un costruttore di copia/[move] deve essere inizializzata anche in tutti gli altri costruttori.
-* (Complesso) Se un costruttore di copia/[move] esegue una [deep copy] di una variabile membro, allora il distruttore deve modificare la variabile membro.
-* (Complesso) Se un distruttore modifica una variabile membro, tale variabile membro dev'essere scritta in qualsiasi costruttore o operatore di assegnazione di copia/[move].
+* (Complesso) Un costruttore di copia/spostamento e il corrispondente operatore di assegnazione di copia/spostamento dovrebbero scrivere sugli stessi dati membri allo stesso livello di dereferenziazione.
+* (Complesso) Tutti i dati membri scritti in un costruttore di copia/spostamento devono essere inizializzati anche da tutti gli altri costruttori.
+* (Complesso) Se un costruttore di copia/spostamento esegue una copia "deep" [approfondita] di un dato membro, il distruttore dovrebbe modificare il dato membro.
+* (Complesso) Se un distruttore sta modificando un dato membro, tale dato membro deve essere scritto in qualsiasi costruttore di copia/spostamento e operatore di assegnazione.
 
 ## <a name="SS-dtor"></a>C.dtor: Distruttori
 
@@ -5045,8 +5050,9 @@ Qui `p` fa riferimento a `pp` ma non lo possiede.
 
 ##### Imposizione
 
-* (Semplice) Se una classe ha variabili membro puntatori o riferimenti che sono proprietari (p.es., considerati proprietari utilizzando `gsl::owner`), allora questi dovrebbero essi referenziati nel suo distruttore.
-* (Difficile) Determinare se le variabili membro puntatori o riferimenti sono proprietari quando non c'è alcuna istruzione esplicita sulla proprietà (p.es., guardando nei costruttori).
+* (Semplice) Se una classe ha puntatori o membri di riferimento che sono proprietari (ad esempio, considerati proprietari utilizzando `gsl::owner`), allora è necessario fare riferimento ad essi nel suo distruttore.
+* (Difficile) Determinare se il puntatore o i membri di riferimento sono proprietari quando non esiste una dichiarazione esplicita di proprietà
+   (ad esempio, esaminando i costruttori).
 
 ### <a name="Rc-dtor-ptr"></a>C.32: Se una classe ha un puntatore [raw] (`T*`) o un riferimento (`T&`), si valuti se potrebbe essere proprietario
 
@@ -5344,7 +5350,7 @@ La regola della lista di inizializzatori del C++11 elimina la necessità di molt
     Rec2 r2 {"Bar"};
 
 Il costruttore di `Rec2` è ridondante.
-Inoltre, il default per un `int` sarà fatto meglio come un [member initializer](#Rc-in-class-initializer).
+Inoltre, il valore di default per `int` sarebbe meglio se fosse un [inizializzatore di membro di default](#Rc-in-class-initializer).
 
 **Si veda anche**: [costruire oggetti validi](#Rc-complete) e [eccezioni nei costruttori](#Rc-throw).
 
@@ -5387,7 +5393,7 @@ Se una classe non può convenientemente costruire un oggetto valido, [si usa una
 
 ##### Imposizione
 
-* (Semplice) Ogni costruttore dovrebbe inizializzare ogni variabile membro (o esplicitamente, tramite una chiamata a un costruttore [delegating], o con la costruzione di default).
+* (Semplice) Ogni costruttore dovrebbe inizializzare ogni dato membro (esplicitamente, tramite una chiamata ctor delegante o tramite costruttore di default).
 * (Ignoto) Se un costruttore ha un contratto `Ensures`, provare a vedere se vale come post-condizione.
 
 ##### Nota
@@ -5534,7 +5540,7 @@ Una classe con membri che abbiano tutti costruttori di default, ottiene implicit
         vector<int> v;
     };
     
-    X x; // significa X{{}, {}}; questo è la stringa vuota e il vettore vuoto
+    X x; // significa X{ { }, { } }; questa è la stringa vuota e il vettore vuoto
 
 Attenzione che i tipi [built-in] non vengono correttamente costruiti di default:
 
@@ -5654,7 +5660,7 @@ Impostare un `Vector1` a vuoto dopo aver rilevato un errore è banale.
 
 ##### Motivo
 
-Utilizzando gli inizializzatori dei membri nella stessa classe [in-class], consente al compilatore di generare la funzione. La funzione generata dal compilatore può essere più efficiente.
+L'uso degli inizializzatori dei membri di default consente al compilatore di generare la funzione. La funzione generata dal compilatore può essere più efficiente.
 
 ##### Esempio, cattivo
 
@@ -5678,7 +5684,7 @@ Utilizzando gli inizializzatori dei membri nella stessa classe [in-class], conse
 
 ##### Imposizione
 
-(Semplice) Un costruttore di default dovrebbe fare di più del solo inizializzare le variabili membro con delle costanti.
+(Semplice) Un costruttore di default dovrebbe fare di più che inizializzare semplicemente i dati membri con costanti.
 
 ### <a name="Rc-explicit"></a>C.46: Per default, dichiarare costruttori ad argomento singolo con explicit
 
@@ -5718,7 +5724,7 @@ I costruttori copia e [move] non devono essere creati con `explicit` perché non
 
 (Semplice) I costruttori con singolo argomento devono essere dichiarati `explicit`. Dei buoni costruttori con argomento singolo non-`explicit` sono rari nella maggior parte dei codici. Avvertire per quelli che non sono in una "lista positiva".
 
-### <a name="Rc-order"></a>C.47: Definire e inizializzare le variabili membro secondo l'ordine di dichiarazione
+### <a name="Rc-order"></a>C.47: Definire e inizializzare i dati membro secondo l'ordine di dichiarazione dei membri
 
 ##### Motivo
 
@@ -5742,7 +5748,7 @@ Per ridurre al minimo la confusione e gli errori. Questo è l'ordine con cui avv
 
 **Si veda anche**: [Discussione](#Sd-order)
 
-### <a name="Rc-in-class-initializer"></a>C.48: Preferire gli inizializzatori all'interno della classe [in-class] agli inizializzatori dei membri nei costruttori per gli inizializzatori costanti
+### <a name="Rc-in-class-initializer"></a>C.48: Preferire gli inizializzatori membro di default agli inizializzatori membro nei costruttori per gli inizializzatori costanti
 
 ##### Motivo
 
@@ -5788,8 +5794,8 @@ Come può un manutentore sapere se `j` sia stato deliberatamente lasciato non in
 
 ##### Imposizione
 
-* (Semplice) Ogni costruttore dovrebbe inizializzare ogni variabile membro (o esplicitamente, tramite una chiamata a un costruttore [delegating], o con la costruzione di default).
-* (Semplice) Gli argomenti di default per i costruttori suggeriscono come l'inizializzatore [in-class] potrebbe essere più appropriato.
+* (Semplice) Ogni costruttore dovrebbe inizializzare ogni dato membro (esplicitamente, tramite una chiamata ctor delegante o tramite costruttore di default).
+* (Semplice) Gli argomenti di default per i costruttori suggeriscono che un inizializzatore di membro di default potrebbe essere più appropriato.
 
 ### <a name="Rc-initialize"></a>C.49: Nei costruttori preferire l'inizializzazione alle assegnazioni
 
@@ -5945,8 +5951,7 @@ L'azione comune diventa noiosa da scrivere e potrebbe accidentalmente non essere
             :Date2{dd, mm, current_year()} {}
         // ...
     };
-
-**Si veda anche**: Se l'"azione ripetuta" è una semplice inizializzazione, si consideri [un inizializzatore [in-class] del membro](#Rc-in-class-initializer).
+**Si veda anche**: Se l'"azione ripetuta" è una semplice inizializzazione, considerare [un inizializzatore membro di default](#Rc-in-class-initializer).
 
 ##### Imposizione
 
@@ -7589,8 +7594,7 @@ Si consideri di trasformare tale classe in una `struct` -- ovvero, un gruppo di 
         int x {0};
         int y {0};
     };
-
-Si noti che è possibile inserire degli inizializzatori di default sulle variabili membro: [C.49: Nei costruttori preferire l'inizializzazione alle assegnazioni](#Rc-initialize).
+Notare che possiamo inserire inizializzatori di default sui dati membri: [C.49: Nei costruttori preferire l'inizializzazione alle assegnazioni](#Rc-initialize).
 
 ##### Nota
 
@@ -8212,10 +8216,10 @@ Indicizzando [Subscripting] il puntatore base risultante porterà ad accedere ad
     void use(B*);
     
     D a[] = {{1, 2}, {3, 4}, {5, 6}};
-    B* p = a;     // bad: un decadimento in &a[0] che viene convertito in un B*
-    p[1].x = 7;   // sovrascrive a[0].y
+    B* p = a;     // bad: a decade in &a[0] che viene convertito in B*
+    p[1].x = 7;   // sovrascrive [overwrite] a[0].y
     
-    use(a);       // bad: un decadimento in &a[0] che viene convertito in un B*
+    use(a);       // bad: a decade in &a[0] che viene convertito in B*
 
 ##### Imposizione
 
@@ -10754,7 +10758,7 @@ Molti di questi errori vengono introdotti durante gli anni di manutenzione dopo 
 
 ##### Esempio
 
-Questa regola copre le variabili membro.
+Questa regola riguarda i dati membri.
 
     class X {
     public:
@@ -12347,8 +12351,8 @@ Nei rari casi in cui lo slicing è voluto, il codice può sorprendere.
     class Circle : public Shape { /* ... */ Point c; int r; };
     
     Circle c {{0, 0}, 42};
-    Shape s {c};    // la copia costruisce solo la parte Shape di Circle
-    s = c;          // e l'assegnazione copia solo la parte Shape di Circle
+    Shape s {c};    // la copy costruisce solo la parte Shape di Circle
+    s = c;          // o copy assegna solo la parte Shape di Circle
     
     void assign(const Shape& src, Shape& dest)
     {
@@ -13139,9 +13143,9 @@ Spesso, `if (p)` viene letto come "se `p` è valido" che è una diretta espressi
 
 Questa regola è particolarmente utile quando una dichiarazione viene utilizzata come condizione
 
-    if (auto pc = dynamic_cast<Circle>(ps)) { ... } // eseguito se ps punta ad un tipo di Circle, buono
+    if (auto pc = dynamic_cast<Circle*>(ps)) { ... } // eseguito se ps punta a un tipo di Circle, bene
     
-    if (auto pc = dynamic_cast<Circle>(ps); pc != nullptr) { ... } // non raccomandato
+    if (auto pc = dynamic_cast<Circle*>(ps); pc != nullptr) { ... } // non raccomandato
 
 ##### Esempio
 
@@ -14286,7 +14290,7 @@ Sfortunatamente le esigenze e i vincoli delle persone differiscono in modo così
 * Strumenti di imposizione [enforcement] statica: sia [clang](http://clang.llvm.org/docs/ThreadSafetyAnalysis.html) e qualche più vecchia versione di [GCC](https://gcc.gnu.org/wiki/ThreadSafetyAnnotation)
    hanno qualche supporto per l'annotazione statica delle proprietà sulla sicurezza del thread.
    L'uso coerente di questa tecnica trasforma molte classi di errori sulla sicurezza dei thread in errori di compilazione.
-   Le annotazioni sono generalmente locali (rendendo una particolare variabile membro come protetta da un particolare mutex), e sono solitamente facili da imparare. Tuttavia, come con molti tool statici, possono spesso presentare falsi negativi; casi che avrebbero dovuto essere rilevati ma vengono autorizzati.
+   Le annotazioni sono generalmente locali (contrassegnando un particolare dato membro come protetto da un particolare mutex) e solitamente sono facili da imparare. Tuttavia, come con molti tool statici, possono spesso presentare falsi negativi; casi che avrebbero dovuto essere rilevati ma vengono autorizzati.
 
 * strumenti di imposizione [enforcement] dinamica: Il [Thread Sanitizer](http://clang.llvm.org/docs/ThreadSanitizer.html) di Clang (aka TSAN) è un potente esempio di strumenti dinamici: esso cambia la compilazione e l'esecuzione del proprio programma aggiungendo un conteggio sull'accesso della memoria, identificando assolutamente i conflitti in una data esecuzione del codice binario.
    Il suo costo è sia in memoria (5-10x nella maggior parte dei casi) che in rallentamento della CPU (2-20x).
@@ -15483,7 +15487,7 @@ A volte il codice C++ alloca memoria `volatile` e la condivide con "qualcun altr
 ##### Esempio, cattivo
 
 Le variabili locali `volatile` sono quasi sempre sbagliate -- come si possono condividere con altri linguaggi o con l'hardware se sono temporanee?
-Lo stesso vale quasi altrettanto fortemente per le variabili membro, per lo stesso motivo.
+Lo stesso vale quasi altrettanto fortemente per i dati membri, per lo stesso motivo.
 
     void f()
     {
@@ -15492,7 +15496,7 @@ Lo stesso vale quasi altrettanto fortemente per le variabili membro, per lo stes
     }
     
     class My_type {
-        volatile int i = 0; // sospetto, variabile membro volatile
+        volatile int i = 0; // sospetto, membro dato volatile
         // ecc.
     };
 
@@ -15502,7 +15506,7 @@ In C++, diversamente da altri linguaggi, `volatile` non ha [niente a che fare co
 
 ##### Imposizione
 
-* Segnalare le variabili membro e locali `volatile T`; quasi certamente si intendeva usare invece `atomic<T>`.
+* Segnalare `volatile T` locale e i dati membro; quasi certamente si intendeva usare, invece, `atomic<T>`.
 * ???
 
 ### <a name="Rconc-signal"></a>CP.201: ??? Signal
@@ -16627,7 +16631,7 @@ Un altro modo per dire che la proprietà `const` non è transitiva.
 
 ##### Imposizione
 
-* Segnalare una funzione membro non segnata come `const`, ma che non esegue un'operazione non-`const` su alcuna variabile membro.
+* Segnalare una funzione membro non contrassegnata con `const`, ma che non esegue un'operazione non-`const` su alcun dato membro.
 
 ### <a name="Rconst-ref"></a>Con.3: Per default, passare puntatori e riferimenti `const`
 
@@ -20737,7 +20741,7 @@ L'abilitazione di un profilo è definita dall'implementazione; in genere, è imp
 
 Per sopprimere l'applicazione di un controllo del profilo, inserire un'annotazione `suppress` in un contratto del linguaggio. Per esempio:
 
-    [[suppress(bounds)]] char* raw_find(char* p, int n, char x)    // find x in p[0]..p[n - 1]
+    [[suppress("bounds")]] char* raw_find(char* p, int n, char x)    // cerca x in p[0]..p[n - 1]
     {
         // ...
     }
@@ -20769,7 +20773,8 @@ Riepilogo del profilo sulla sicurezza dei tipi [type safety]:
 * <a name="Pro-type-cstylecast"></a>Type.4: Non usare cast `(T)expression` in stile C o quelli funzionali `T(expression)`:
    Preferire la [costruzione](#Res-construct), i [[named cast]](#Res-casts-named) oppure `T{expression}`.
 * <a name="Pro-type-init"></a>Type.5: Non usare una variabile prima che sia stata inizializzata: [inizializzare sempre](#Res-always).
-* <a name="Pro-type-memberinit"></a>Type.6: Inizializzare sempre una variabile membro: [inizializzare sempre](#Res-always), forse utilizzando i [costruttori di default](#Rc-default0) o gli [gli inizializzatori membro di default](#Rc-in-class-initializer).
+* <a name="Pro-type-memberinit"></a>Type.6: Inizializzare sempre un dato membro: [inizializzare sempre](#Res-always), possibilmente utilizzando [costruttori di default](#Rc-default0) o
+   [inizializzatori membro di default](#Rc-in-class-initializer).
 * <a name="Pro-type-union"></a>Type.7: Evitare le semplici [naked] union: [Usare, invece, `variant`](#Ru-naked).
 * <a name="Pro-type-varargs"></a>Type.8: Evitare i vararg: [Non usare gli argomenti `va_arg`](#F-varargs).
 
@@ -20853,7 +20858,7 @@ Per ogni tipo di GSL di seguito ne indichiamo un invariante. Tale invariante val
 Riepilogo dei componenti della GSL:
 
 * [GSL.view: Viste [Views]](#SS-views)
-* [GSL.owner](#SS-ownership)
+* [GSL.owner: Ownership pointers](#SS-ownership)
 * [GSL.assert: Assertions](#SS-assertions)
 * [GSL.util: Utilities](#SS-utilities)
 * [GSL.concept: Concepts](#SS-gsl-concepts)
@@ -21194,7 +21199,7 @@ Usare `p` per un puntatore e `x` per una variabile in virgola mobile è una conv
 
 ### <a name="Rl-name"></a>NL.8: Usare uno stile coerente per i nomi
 
-**Motivazione**: La coerenza e lo stile della nomenclatura aumentano la leggibilità.
+**Motivazione**: La coerenza nella denominazione e nello stile della nomenclatura aumentano la leggibilità.
 
 ##### Nota
 
@@ -21604,7 +21609,7 @@ Coerente in tantissimo codice esistente.
 
 ##### Nota
 
-Sappiamo bene che si potrebbero portare esempi "cattivi" più logici di quelli contrassegnati  con "OK", ma questi confondono più gente, specialmente i principianti che si affidano al materiale didattico fatto con uno stile OK molto più comune e convenzionale.
+Sappiamo bene che si potrebbero dire che gli esempi "cattivi" sono più logici di quelli contrassegnati con "OK", ma questi confondono più gente, specialmente i principianti che si affidano al materiale didattico fatto con uno stile OK molto più comune e convenzionale.
 
 Come sempre, si ricordi che l'obiettivo di queste regole di denominazione e layout è la coerenza e che l'estetica varia enormemente.
 
@@ -21808,9 +21813,9 @@ La modernizzazione potrebbe essere molto più veloce, più semplice e sicura se 
 Questa sezione contiene materiale supplementare sulle regole e sui gruppi di regole.
 In particolare, qui vengono presentate ulteriori motivazioni, esempi più estesi e le discussioni sulle alternative.
 
-### <a name="Sd-order"></a>Discussione: Definire e inizializzare le variabili membro nell'ordine di dichiarazione del membro
+### <a name="Sd-order"></a>Discussione: definire e inizializzare i dati membri nell'ordine di dichiarazione dei membri
 
-Le variabili membro vengono sempre inizializzate nell'ordine in cui sono state dichiarate nella definizione della classe, quindi scriverle in questo ordine nella lista di inizializzazione del costruttore. Scriverle con un ordine diverso rende semplicemente il codice confuso perché non verrà eseguito nell'ordine visto e questo potrebbe rendere arduo la ricerca di bug dipendenti dall'ordine.
+I dati membri vengono sempre inizializzati nell'ordine in cui sono dichiarati nella definizione della classe, quindi si devono scrivere in quell'ordine nell'elenco di inizializzazione del costruttore. Scriverle con un ordine diverso rende semplicemente il codice confuso perché non verrà eseguito nell'ordine visto e questo potrebbe rendere arduo la ricerca di bug dipendenti dall'ordine.
 
     class Employee {
         string email, first, last;
@@ -21828,7 +21833,7 @@ Le variabili membro vengono sempre inizializzate nell'ordine in cui sono state d
 
 In questo esempio, `email` verrà costruita prima di `first` e di `last` perché è dichiarata per prima. Questo vuol dire che il suo costruttore tenterà di usare `first` e `last` troppo presto -- non solo prima che siano impostate con i loro valori, ma addirittura prima che vengano costruite.
 
-Se la definizione della classe e il body del costruttore stanno in file separati, con l'andare del tempo l'influenza che ha l'ordine della dichiarazione delle variabili membro sulla correttezza del costruttore sarà sempre più difficile da individuare.
+Se la definizione della classe e il body del costruttore stanno in file separati, con l'andare del tempo l'influenza che ha l'ordine della dichiarazione dei dati membro sulla correttezza del costruttore sarà sempre più difficile da individuare.
 
 **Riferimenti**:
 
@@ -22550,7 +22555,7 @@ Oppure, si deciderà di non cambiare nulla e la voce verrà cancellata.
 * Ci dovrebbero essere dei namespace inline (tipo `std::literals::*_literals`)?
 * Evitare le conversioni implicite
 * Le funzioni membro const dovrebbero essere [thread safe] ... aka, ma io non cambio effettivamente la variabile, le assegno solo un valore la prima volta che la chiamo ... argh
-* Inizializzare sempre le variabili, utilizzare le liste di inizializzazione per le variabili membro.
+* Inizializzare sempre le variabili, utilizzare le liste di inizializzazione per i dati membri.
 * A chiunque scriva un'interfaccia pubblica che prenda o restituisca `void*` gli si dovrebbero tagliare le mani. Questa è stata la favorita per diversi anni. :)
 * Dove possibile usare `const` per: funzioni membro, variabili e (urrà) `const_iterators`
 * Utilizzare `auto`
