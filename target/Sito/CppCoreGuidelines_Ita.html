@@ -91,7 +91,7 @@
         </div><!-- Items have to be added manually until for now -->      
       <b><a class="sidebar-nav-item active" href="#main">Top</a></b>
 	  
-	  <a class="sidebar-nav-item active" href="#S-introduction">In: Introduzione</a>
+<a class="sidebar-nav-item active" href="#S-introduction">In: Introduzione</a>
 <a class="sidebar-nav-item active" href="#S-philosophy">P: Filosofia</a>
 <a class="sidebar-nav-item active" href="#S-interfaces">I: Interfacce</a>
 <a class="sidebar-nav-item active" href="#S-functions">F: Funzioni</a>
@@ -133,8 +133,8 @@ classificate</a>
     <div class="banner"><a href="https://github.com/BravoBaldo/CppCoreGuidelines_Ita"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt='"Fork me" su GitHub' data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a></div>
     <div class="content container">
 
-	<h1 id="c-core-guidelines"><a name="main"></a>C++ Core Guidelines</h1>
-<p>15 Febbraio 2024</p>
+<h1 id="c-core-guidelines"><a name="main"></a>C++ Core Guidelines</h1>
+<p>11 Maggio 2024</p>
 <p>Editori:</p>
 <ul>
 <li><a href="http://www.stroustrup.com">Bjarne Stroustrup</a></li>
@@ -152,9 +152,10 @@ l’uso, la modifica e la creazione di opere derivate da questo progetto
 sono concesse con una licenza simile a quella del MIT. Per contribuire a
 questo progetto si richiede l’accettazione di una “Licenza per
 Collaboratori” [Contributor License]. Si consulti il file allegato <a
-href="LICENSE">LICENSE</a> per i dettagli. Questo progetto è a
-disposizione degli “utenti amichevoli” per usarlo, copiarlo, modificarlo
-e ricavarne altri lavori, sperando in input costruttivi.</p>
+href="https://github.com/isocpp/CppCoreGuidelines/blob/master/LICENSE">LICENSE</a>
+per i dettagli. Questo progetto è a disposizione degli “utenti
+amichevoli” per usarlo, copiarlo, modificarlo e ricavarne altri lavori,
+sperando in input costruttivi.</p>
 <p>I commenti e i suggerimenti per migliorare sono sempre benvenuti. Si
 prevede di modificare ed estendere questo documento man mano che
 migliora la nostra comprensione, il linguaggio o l’insieme delle
@@ -1423,9 +1424,13 @@ le linee-guida che si desidera che seguano.</p>
 <h5 id="nota-12">Nota</h5>
 <p>Cfr.</p>
 <ul>
-<li><a href="???">Tool di analisi statica</a></li>
+<li><a
+href="https://en.wikipedia.org/wiki/List_of_tools_for_static_code_analysis">Tool
+di analisi statica</a></li>
 <li><a href="#Rconc-tools">Tool sulla concorrenza</a></li>
-<li><a href="???">Tool per i test</a></li>
+<li><a
+href="https://github.com/isocpp/CppCoreGuidelines/tree/master">Tool per
+i test</a></li>
 </ul>
 <p>Esistono molti altri tipi di strumenti, come repository di sorgenti,
 tool per la compilazione, ecc., ma questi vanno oltre lo scopo di queste
@@ -3260,10 +3265,10 @@ diventano grandi.</p>
 auto x = find_if(vr.begin(), vr.end(),
     [&amp;](Rec&amp; r) { return compare_insensitive(r.name, n); }
 );</code></pre>
-<p>O forse (se si preferisce evitare il nome implicito legato a n): auto
-cmp_to_n = <a href="const%20string&amp;%20a">&amp;n</a> { return
-compare_insensitive(a, n); };</p>
-<pre><code>auto x = find_if(vr.begin(), vr.end(),
+<p>O forse (se si preferisce evitare il nome implicito legato a n):</p>
+<pre><code>auto cmp_to_n = [&amp;n](const string&amp; a) { return compare_insensitive(a, n); };
+
+auto x = find_if(vr.begin(), vr.end(),
     [](const Rec&amp; r) { return cmp_to_n(r.name); }
 );</code></pre>
 <h5 id="nota-54">Nota</h5>
@@ -3368,12 +3373,16 @@ gli rvalue passati come parametri “input-only”:</p>
 <li>Se la funzione eseguirà incondizionatamente un move dell’argomento,
 prenderlo per <code>&amp;&amp;</code>. Cfr. <a
 href="#Rf-consume">F.18</a>.</li>
-<li>Se la funzione manterrà la copia dell’argomento, oltre a passarlo
-per <code>const&amp;</code> (per gli lvalue), si aggiunge un overload
-che passa il parametro per <code>&amp;&amp;</code> (per gli rvalue) e,
-nel corpo della funzione, degli <code>std::move</code> su di esso alla
-sua destinazione. In sostanza, questi overload aggiungono un
-“si-sposterà-da”; cfr. <a href="#Rf-consume">F.18</a>.</li>
+<li>Se la funzione manterrà una copia modificabile localmente
+dell’argomento solo per il proprio uso locale, prenderla per valore va
+bene</li>
+<li>Se la funzione manterrà una copia dell’argomento da passare a
+un’altra destinazione (a un’altra funzione o da archiviare in una
+posizione non locale), oltre a passare <code>const&amp;</code> (per
+lvalue), si aggiunge un overload che passa il parametro tramite
+<code>&amp;&amp;</code> (per rvalue) e nel corpo <code>std::move</code>
+lo porta alla sua destinazione. In sostanza, questi overload aggiungono
+un “si-sposterà-da”; cfr. <a href="#Rf-consume">F.18</a>.</li>
 <li>In casi speciali, come i parametri “input + copia” multipli, si
 considera l’uso del ‘perfect forwarding’. Cfr. <a
 href="#Rf-forward">F.19</a>.</li>
@@ -3707,7 +3716,7 @@ get_string_result get_string(istream&amp; in)  // non raccomandato
 {
     string s;
     in &gt;&gt; s;
-    return {in, move(s)};
+    return { in, move(s) };
 }
 
 for (auto [in, s] = get_string(cin); in; s = get_string(in).s) {
@@ -4031,12 +4040,12 @@ rappresentare la proprietà [ownership] condivisa. Ovvero, l’ultimo
 proprietario cancella l’oggetto.</p>
 <h5 id="esempio-59">Esempio</h5>
 <pre><code>{
-shared_ptr&lt;const Image&gt; im { read_image(somewhere) };
+    shared_ptr&lt;const Image&gt; im { read_image(somewhere) };
 
-std::thread t0 {shade, args0, top_left, im};
-std::thread t1 {shade, args1, top_right, im};
-std::thread t2 {shade, args2, bottom_left, im};
-std::thread t3 {shade, args3, bottom_right, im};
+    std::thread t0 {shade, args0, top_left, im};
+    std::thread t1 {shade, args1, top_right, im};
+    std::thread t2 {shade, args2, bottom_left, im};
+    std::thread t3 {shade, args3, bottom_right, im};
 
     // il detach dei ìthread richiede una particolare attenzione (ad es. eseguire join prima
     // che termini il main), ma anche se si esegue il detach di questi quattro thread ...
@@ -4080,7 +4089,7 @@ proprietà dell’oggetto puntato al chiamante.</p>
 <p>Le posizioni possono anche essere trasferite da iteratori, indici e
 riferimenti. Un riferimento è spesso un’alternativa superiore ad un
 puntatore <a href="#Rf-ptr-ref">se non c’è bisogno di usare
-<code>nullptr</code></a> o <a href="???">se l’oggetto a cui si fa
+<code>nullptr</code></a> o <a href="#S-const">se l’oggetto a cui si fa
 riferimento non deve cambiare</a>.</p>
 <h5 id="nota-73">Nota</h5>
 <p>Non restituire un puntatore a qualcosa che non rientra nello scope
@@ -4298,7 +4307,7 @@ linguaggio” così spesso che vale la pena citarla. Dichiarare il
 <code>main</code> (l’unico <code>main</code> globale di un programma)
 <code>void</code> limita la portabilità.</p>
 <h5 id="esempio-64">Esempio</h5>
-<pre><code>    void main() { /* ... */ };  // bad, non è C++
+<pre><code>void main() { /* ... */ };  // bad, non è C++
 
     int main()
     {
@@ -4347,19 +4356,22 @@ il valore di ritorno) di qualsiasi operatore di assegnamento.</p>
 id="f.48-non-fare-return-stdmovelocal"><a name="Rf-return-move-local"></a>F.48:
 Non fare <code>return std::move(local)</code></h3>
 <h5 id="motivo-64">Motivo</h5>
-<p>Con la garanzia dell’elisione della copia [copy elision], ora si
-ottiene quasi sempre un peggioramento delle prestazioni utilizzando
-espressamente <code>std::move</code> nel comando return.</p>
+<p>La restituzione di una variabile locale la sposta implicitamente
+comunque. Un <code>std::move</code> esplicito è sempre peggiorativo,
+perché impedisce l’ottimizzazione del valore di ritorno [Return Value
+Optimization ] (RVO), che può eliminare completamente lo
+spostamento.</p>
 <h5 id="esempio-cattivo-21">Esempio, cattivo</h5>
-<pre><code>S f()
+<pre><code>S bad()
 {
   S result;
   return std::move(result);
 }</code></pre>
 <h5 id="esempio-buono-3">Esempio, buono</h5>
-<pre><code>S f()
+<pre><code>S good()
 {
   S result;
+  // Chiamato RVO: sposta l&#39;elisione nella migliore delle ipotesi, sposta la costruzione nella peggiore
   return result;
 }</code></pre>
 <h5 id="imposizione-58">Imposizione</h5>
@@ -4585,8 +4597,6 @@ esplicitamente <code>this</code>.</p>
         // ...
 
         auto lambda = [=] { use(i, x); };   // BAD: &quot;sembra&quot; una cattura per copia/valore
-        // [&amp;] ha l&#39;identica semantica e copia il puntatore this secondo le regole correnti
-        // [=,this] e [&amp;,this] non sono migliori e confondono
 
         x = 42;
         lambda(); // chiama use(0, 42);
@@ -5477,9 +5487,9 @@ i tipi dei loro argomenti:</p>
 <pre><code>class X {
 public:
     // ...
-    virtual ~X() = default;            // distruttore (virtuale se X deve essere una classe base)
-    X(const X&amp;) = default;             // costruttore copia
-    X&amp; operator=(const X&amp;) = default;  // assegnazione copia
+    virtual ~X() = default;               // distruttore (virtuale se X deve essere una classe base)
+    X(const X&amp;) = default;                // costruttore copia
+    X&amp; operator=(const X&amp;) = default;     // assegnazione copia
     X(X&amp;&amp;) noexcept = default;            // costruttore [move]
     X&amp; operator=(X&amp;&amp;) noexcept = default; // assegnazione [move]
 };</code></pre>
@@ -5598,10 +5608,6 @@ private:
 };</code></pre>
 <p>Il distruttore di default lo fa meglio, più efficientemente e non può
 andare in errore.</p>
-<h5 id="nota-108">Nota</h5>
-<p>Se il distruttore di default è necessario, ma la sua generazione è
-stata soppressa (p.es., definendo un costruttore di spostamento), si usa
-<code>=default</code>.</p>
 <h5 id="imposizione-81">Imposizione</h5>
 <p>Si cercano delle probabili “risorse implicite”, come puntatori e
 riferimenti. Si cercano le classi con distruttori anche se tutti i loro
@@ -5612,7 +5618,7 @@ Tutte le risorse acquisite da una classe devono essere rilasciate dal
 distruttore della classe</h3>
 <h5 id="motivo-88">Motivo</h5>
 <p>Prevenire i [leak] delle risorse, specialmente in caso di errore.</p>
-<h5 id="nota-109">Nota</h5>
+<h5 id="nota-108">Nota</h5>
 <p>Per le risorse rappresentate come classi con un completo set di
 operazioni di default, ciò avviene automaticamente.</p>
 <h5 id="esempio-85">Esempio</h5>
@@ -5630,7 +5636,7 @@ qualsiasi file che potrebbe aver aperto alla distruzione del suo
 };</code></pre>
 <p><code>X2</code> potrebbe generare un [leak] da un handle del
 file.</p>
-<h5 id="nota-110">Nota</h5>
+<h5 id="nota-109">Nota</h5>
 <p>Che dire di un socket che non viene chiuso? Un distruttore o
 un’operazione di chiusura o pulizia <a href="#Rc-dtor-fail">non dovrebbe
 mai fallire</a>. Se tuttavia capita, c’è un problema che non ha una
@@ -5642,7 +5648,7 @@ operazioni di “chiusura/rilascio” non si possono rieseguire. In molti
 hanno cercato di risolvere questo problema, ma non è nota alcuna
 soluzione generale. Se possibile, considerare la mancata
 chiusura/pulizia un errore progettuale fondamentale e terminare.</p>
-<h5 id="nota-111">Nota</h5>
+<h5 id="nota-110">Nota</h5>
 <p>Una classe può contenere puntatori e riferimenti a oggetti che non
 possiede. Ovviamente, tali oggetti non dovrebbero subire un
 <code>delete</code> da parte del distruttore della classe. Per
@@ -5677,7 +5683,7 @@ Se una classe ha un puntatore [raw] (<code>T*</code>) o un riferimento
 }</code></pre>
 <p>L’unico modo per determinare la proprietà potrebbe essere l’analisi
 del codice.</p>
-<h5 id="nota-112">Nota</h5>
+<h5 id="nota-111">Nota</h5>
 <p>La proprietà dovrebbe essere chiara nel nuovo codice (e nel codice
 legacy revisionato) secondo <a href="#Rr-owner">R.20</a> per puntatori
 proprietari e <a href="#Rr-ptr">R.3</a> per puntatori non proprietari. I
@@ -5744,12 +5750,12 @@ void use(Smart_ptr3&lt;int&gt; p1)
 {
     auto p2 = p1;   // OK: nessuna distruzione doppia
 }</code></pre>
-<h5 id="nota-113">Nota</h5>
+<h5 id="nota-112">Nota</h5>
 <p>Spesso il modo più semplice per avere un distruttore è quello di
 sostituire il puntatore con uno smart pointer (p.es.,
 <code>std::unique_ptr</code>) e lasciare che il compilatore ne organizzi
 opportunamente la distruzione implicita.</p>
-<h5 id="nota-114">Nota</h5>
+<h5 id="nota-113">Nota</h5>
 <p>Perché non richiedere semplicemente che tutti i puntatori proprietari
 siano “smart pointer”? Ciò a volte richiederebbe modifiche non banali al
 codice e potrebbe influire sulle ABI.</p>
@@ -5792,11 +5798,11 @@ void use()
     unique_ptr&lt;Base&gt; p = make_unique&lt;D&gt;();
     // ...
 } // la distruzione di p chiama ~Base(), non ~D(), che &#39;perde&#39; [leak] D::s e forse anche altro</code></pre>
-<h5 id="nota-115">Nota</h5>
+<h5 id="nota-114">Nota</h5>
 <p>Una funzione virtuale definisce un’interfaccia per le classi derivate
 che possono essere utilizzate senza guardare le classi derivate. Se
 l’interfaccia consente la distruzione, dovrebbe essere sicuro farlo.</p>
-<h5 id="nota-116">Nota</h5>
+<h5 id="nota-115">Nota</h5>
 <p>Un distruttore deve essere non-private altrimenti se ne impedirà
 l’uso, per esempio:</p>
 <pre><code>class X {
@@ -5844,7 +5850,7 @@ X::~X() noexcept
     if (cannot_release_a_resource) terminate();
     // ...
 }</code></pre>
-<h5 id="nota-117">Nota</h5>
+<h5 id="nota-116">Nota</h5>
 <p>In molti hanno cercato di escogitare uno schema infallibile per
 affrontare i fallimenti nei distruttori. Nessuno è riuscito a elaborare
 uno schema generale. Questo può essere un vero problema nella pratica:
@@ -5855,10 +5861,10 @@ href="#Sd-never-fail">discussione</a>. A peggiorare il problema, molte
 operazioni di “chiusura/rilascio” non si possono rieseguire. Se
 possibile, considerare la mancata chiusura/pulizia un errore progettuale
 fondamentale e terminare.</p>
-<h5 id="nota-118">Nota</h5>
+<h5 id="nota-117">Nota</h5>
 <p>Dichiarare un distruttore <code>noexcept</code>. Ciò garantirà il
 normale completamento o la terminazione del programma.</p>
-<h5 id="nota-119">Nota</h5>
+<h5 id="nota-118">Nota</h5>
 <p>Se una risorsa non può essere rilasciata e il programma non deve
 fallire, si provi a segnalare l’errore al resto del sistema in qualche
 modo (forse anche modificando qualche stato globale e sperando che
@@ -5871,7 +5877,7 @@ estremità della connessione può gestire correttamente il problema. Il
 distruttore potrebbe inviare un messaggio (in qualche modo) alla parte
 responsabile del sistema, assumere di aver chiuso la connessione e
 tornare normalmente.</p>
-<h5 id="nota-120">Nota</h5>
+<h5 id="nota-119">Nota</h5>
 <p>Se un distruttore usa operazioni che potrebbero non riuscire, può
 rilevare le eccezioni e, in qualche caso, completare comunque
 correttamente (p.es., utilizzando un meccanismo diverso da quello che è
@@ -5886,7 +5892,7 @@ Creare i distruttori come <code>noexcept</code></h3>
 <p><a href="#Rc-dtor-fail">Un distruttore non deve fallire</a>. Se un
 distruttore tenta di uscire con un’eccezione, si tratta di un errore di
 progettazione e sarebbe meglio che il programma terminasse.</p>
-<h5 id="nota-121">Nota</h5>
+<h5 id="nota-120">Nota</h5>
 <p>Un distruttore (sia “user-defined” che generato dal compilatore) è
 implicitamente dichiarato <code>noexcept</code> (indipendentemente dal
 codice) se tutti i membri della sua classe hanno distruttori
@@ -5904,7 +5910,7 @@ classe</p>
     ~X() { }    // implicitamente noexcept(false); ovvero può [throw]
 };</code></pre>
 <p>Quindi, in caso di dubbio, dichiarare un distruttore noexcept.</p>
-<h5 id="nota-122">Nota</h5>
+<h5 id="nota-121">Nota</h5>
 <p>Perché non dichiarare quindi tutti i distruttori noexcept? Perché in
 molti casi questo – specialmente nei casi semplici – potrebbe generare
 disordine.</p>
@@ -5934,7 +5940,7 @@ private:
 };</code></pre>
 <p>Spesso è una buona idea esprimere l’invariante come una
 <code>Ensures</code> sul costruttore.</p>
-<h5 id="nota-123">Nota</h5>
+<h5 id="nota-122">Nota</h5>
 <p>Un costruttore può essere utilizzato per comodità anche se una classe
 non ha un invariante. Per esempio:</p>
 <pre><code>struct Rec {
@@ -5946,7 +5952,7 @@ non ha un invariante. Per esempio:</p>
 
 Rec r1 {7};
 Rec r2 {&quot;Foo bar&quot;};</code></pre>
-<h5 id="nota-124">Nota</h5>
+<h5 id="nota-123">Nota</h5>
 <p>La regola della lista di inizializzatori del C++11 elimina la
 necessità di molti costruttori. Per esempio:</p>
 <pre><code>struct Rec2{
@@ -6009,7 +6015,7 @@ costruttore di default).</li>
 <li>(Ignoto) Se un costruttore ha un contratto <code>Ensures</code>,
 provare a vedere se vale come post-condizione.</li>
 </ul>
-<h5 id="nota-125">Nota</h5>
+<h5 id="nota-124">Nota</h5>
 <p>Se un costruttore acquisisce una risorsa (per creare un oggetto
 valido), tale risorsa deve essere <a href="#Rc-dtor-release">rilasciata
 dal distruttore</a>. L’idioma dell’avere dei costruttori che
@@ -6076,7 +6082,7 @@ void f()
     }
     // ...
 }</code></pre>
-<h5 id="nota-126">Nota</h5>
+<h5 id="nota-125">Nota</h5>
 <p>Per una definizione di una variabile (p-es., sullo stack o come
 membro di un altro oggetto) non esiste alcuna esplicita chiamata a
 funzione da cui si possa restituire un codice d’errore. Lasciarsi dietro
@@ -6096,7 +6102,7 @@ href="#Rr-raii">RAII</a>.</p>
 “inizializzazione post-costruttore” o “inizializzazione a due fasi”, si
 desista. Se proprio si deve fare, si cerchi tra le <a
 href="#Rc-factory">funzioni factory</a>.</p>
-<h5 id="nota-127">Nota</h5>
+<h5 id="nota-126">Nota</h5>
 <p>Uno dei motivi per cui le persone hanno usato le funzioni
 <code>init()</code> anziché inizializzare direttamente nel costruttore è
 stato quello di evitare la replicazione del codice. <a
@@ -6155,7 +6161,7 @@ private:
 };
 
 vector&lt;Date&gt; vd1(1000);</code></pre>
-<h5 id="nota-128">Nota</h5>
+<h5 id="nota-127">Nota</h5>
 <p>Una classe con membri che abbiano tutti costruttori di default,
 ottiene implicitamente un costruttore di default:</p>
 <pre><code>struct X {
@@ -6340,7 +6346,7 @@ public:
 Complex z = 10.7;   // conversione attesa</code></pre>
 <p><strong>i veda anche</strong>: <a href="#Ro-conversion">Discussione
 sulle conversioni implicite</a></p>
-<h5 id="nota-129">Nota</h5>
+<h5 id="nota-128">Nota</h5>
 <p>I costruttori copia e [move] non devono essere creati con
 <code>explicit</code> perché non eseguono conversioni. I costruttori
 ‘explicit’ di copia/[move] rendono difficile il passaggio e la
@@ -6480,7 +6486,7 @@ durante l’inizializzazione</h3>
 stato di una parte derivata dell’oggetto, bisogna usare una funzione
 virtuale (o equivalente) minimizzando la finestra di opportunità per
 abusare di un oggetto costruito male.</p>
-<h5 id="nota-130">Nota</h5>
+<h5 id="nota-129">Nota</h5>
 <p>un modo più generale di presentare gli argomenti ad una funzione
 <code>unique_ptr</code> per default; se si condividono alcuni utilizzi,
 il chiamante può <code>spostare</code> lo <code>unique_ptr</code> in uno
@@ -6542,7 +6548,7 @@ essere chiamato pubblicamente, quindi si evita che un oggetto non
 completamente costruito se ne vada libero. Fornendo la funzione factory
 <code>create()</code>, si rende conveniente la costruzione (nel [free
 store]).</p>
-<h5 id="nota-131">Nota</h5>
+<h5 id="nota-130">Nota</h5>
 <p>Le funzioni factory convenzionali vengono allocate nel [free store],
 anziché sullo stack o in un oggetto che lo racchiude.</p>
 <p><strong>Si veda anche</strong>: <a
@@ -6654,7 +6660,7 @@ Foo f();
 
 a = b;    // assegna un lvalue: copia
 a = f();  // assegna un rvalue: potenzialmente uno spostamento</code></pre>
-<h5 id="nota-132">Nota</h5>
+<h5 id="nota-131">Nota</h5>
 <p>La tecnica di implementazione dello <code>swap</code> offre la <a
 href="#Abrahams01">garanzia forte</a>.</p>
 <h5 id="esempio-100">Esempio</h5>
@@ -6773,7 +6779,7 @@ X2 y = x;
 if (x != y) throw Bad{};
 x.modify();
 if (x != y) throw Bad{};  // presuppone la semantica del puntatore</code></pre>
-<h5 id="nota-133">Nota</h5>
+<h5 id="nota-132">Nota</h5>
 <p>Preferire la semantica del valore a meno che non si stia costruendo
 uno “smart pointer”. La semantica del valore è la più semplice su cui
 ragionare ed è quella che si aspettano le strutture della libreria
@@ -6793,7 +6799,7 @@ con eleganza ed efficienza:</p>
 <pre><code>std::vector&lt;int&gt; v = {3, 1, 4, 1, 5, 9};
 v = v;
 // il valore di v resta {3, 1, 4, 1, 5, 9}</code></pre>
-<h5 id="nota-134">Nota</h5>
+<h5 id="nota-133">Nota</h5>
 <p>L’assegnazione di default generata dai membri che gestiscono
 correttamente l’auto-assegnazione gestisce correttamente
 l’auto-assegnazione.</p>
@@ -6806,7 +6812,7 @@ l’auto-assegnazione.</p>
 Bar b;
 // ...
 b = b;   // corretto ed efficiente</code></pre>
-<h5 id="nota-135">Nota</h5>
+<h5 id="nota-134">Nota</h5>
 <p>È possibile gestire l’auto-assegnazione testandola esplicitamente, ma
 spesso è più rapido e più elegante farlo senza un test (p.es., <a
 href="#Rc-swap">utilizzando <code>swap</code></a>).</p>
@@ -6903,7 +6909,7 @@ void use()
     X y = std::move(x);
     x = X{};   // OK
 } // OK: x può essere distrutto</code></pre>
-<h5 id="nota-136">Nota</h5>
+<h5 id="nota-135">Nota</h5>
 <p>Idealmente, quello rimosso dovrebbe avere il valore di default del
 tipo. Accertarsene, a meno che non ci sia una ragione eccezionalmente
 buona per non farlo. Tuttavia, non tutti i tipi hanno un valore di
@@ -6914,7 +6920,7 @@ economicamente meglio: La libreria standard presuppone che sia possibile
 assegnare ad un oggetto da cui si è rimosso il valore. Lasciare sempre
 l’oggetto da cui si è rimosso il valore in uno stato valido
 (necessariamente specificato).</p>
-<h5 id="nota-137">Nota</h5>
+<h5 id="nota-136">Nota</h5>
 <p>A meno che non ci sia una ragione eccezionalmente forte per non
 farlo, fare in modo che <code>x = std::move(y); y = z;</code> funzioni
 con la semantica convenzionale.</p>
@@ -6955,12 +6961,12 @@ Foo&amp; Foo::operator=(Foo&amp;&amp; a) noexcept  // OK, ma ha un costo
 <code>if (this == &amp;a) return *this;</code> della discussione sull’<a
 href="#Rc-copy-self">auto-assegnazione</a> è ancor più rilevante per
 l’auto-spostamento.</p>
-<h5 id="nota-138">Nota</h5>
+<h5 id="nota-137">Nota</h5>
 <p>Non è noto un modo generale per evitare che dopo un test
 <code>if (this == &amp;a) return *this;</code> per un assegnazione con
 spostamento si abbia ancora una risposta corretta (ovvero, dopo
 <code>x = x</code> il valore di <code>x</code> resta invariato).</p>
-<h5 id="nota-139">Nota</h5>
+<h5 id="nota-138">Nota</h5>
 <p>Lo standard ISO garantisce solo uno stato “valido ma non specificato”
 per i contenitori della standard-library. Sembra che questo non sia
 stato un problema nei 10 anni di utilizzo sperimentale ed in produzione.
@@ -7086,7 +7092,7 @@ void f(B&amp; b)
 
 D d;
 f(d);</code></pre>
-<h5 id="nota-140">Nota</h5>
+<h5 id="nota-139">Nota</h5>
 <p>Se è necessario creare copie complete [deep] di oggetti polimorfici,
 si usano le funzioni <code>clone()</code>: cfr. <a
 href="#Rh-copy">C.130</a>.</p>
@@ -7241,7 +7247,7 @@ esplicitamente non è una chiamata virtuale anche se la funzione è
 <p><strong>Si veda anche</strong> <a href="#Rc-factory">funzioni
 factory</a> per come ottenere l’effetto di una chiamata a una funzione
 di una classe derivata senza rischiare il comportamento indefinito.</p>
-<h5 id="nota-141">Nota</h5>
+<h5 id="nota-140">Nota</h5>
 <p>Non c’è nulla di intrinsecamente sbagliato nel chiamare funzioni
 virtuali da costruttori o distruttori. La semantica di tali chiamate è
 “type safe”. Tuttavia, l’esperienza dimostra che tali chiamate sono
@@ -7354,13 +7360,13 @@ bool operator==(const X&amp; a, const X&amp; b) noexcept {
 };</code></pre>
 <p>Il confronto di <code>B</code> accetta le conversioni per il secondo
 operando, ma non per il primo.</p>
-<h5 id="nota-142">Nota</h5>
+<h5 id="nota-141">Nota</h5>
 <p>Se una classe è in uno stato di errore, come, per il
 <code>double</code>, il <code>NaN</code>, c’è la tentazione di fare un
 confronto con lo stato erroneo. L’alternativa consiste nel fare in modo
 che due stati erronei risultino uguali, mentre il confronto tra uno
 stato valido ed uno erroneo risulti falso.</p>
-<h5 id="nota-143">Nota</h5>
+<h5 id="nota-142">Nota</h5>
 <p>Questa regola si applica a tutti i soliti operatori di confronto:
 <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>,
 <code>&gt;</code>, e <code>&gt;=</code>.</p>
@@ -7413,7 +7419,7 @@ B&amp; b2 = d2;
 b2 == d;   // confronta nome e numero, ignora il carattere di d2 e di d</code></pre>
 <p>Naturalmente ci sono modi per far funzionare <code>==</code> in una
 gerarchia, ma gli approcci improvvisati non sono scalabili</p>
-<h5 id="nota-144">Nota</h5>
+<h5 id="nota-143">Nota</h5>
 <p>Questa regola si applica a tutti i soliti operatori di confronto:
 <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>,
 <code>&gt;</code>, <code>&gt;=</code> e <code>&lt;=&gt;</code>.</p>
@@ -7532,7 +7538,7 @@ Seguire la STL quando si definisce un contenitore</h3>
 <h5 id="motivo-125">Motivo</h5>
 <p>I contenitori della STL sono familiari alla maggior parte dei
 programmatori C++ e hanno un design fondamentalmente solido.</p>
-<h5 id="nota-145">Nota</h5>
+<h5 id="nota-144">Nota</h5>
 <p>Esistono, ovviamente, altri stili di progettazione e talvolta si
 discostano dallo stile della libreria standard, ma in assenza di un
 solido motivo per differenziarsi, è più semplice e più facile sia per
@@ -7551,7 +7557,7 @@ class Sorted_vector {
     Sorted_vector(initializer_list&lt;T&gt;);    // costruttore con la lista di inizializzatori: ordina e memorizza
     Sorted_vector(const Sorted_vector&amp;) = default;
     Sorted_vector(Sorted_vector&amp;&amp;) noexcept = default;
-    Sorted_vector&amp; operator=(const Sorted_vector&amp;) = default;   // assegnazione copia
+    Sorted_vector&amp; operator=(const Sorted_vector&amp;) = default;     // assegnazione copia
     Sorted_vector&amp; operator=(Sorted_vector&amp;&amp;) noexcept = default; // assegnazione spostamento
     ~Sorted_vector() = default;
 
@@ -7588,7 +7594,7 @@ Fornire una semantica del valore ad un contenitore</h3>
 <h5 id="motivo-126">Motivo</h5>
 <p>Gli oggetti regolari sono più semplici da immaginare e gestire di
 quelli irregolari. Familiarità.</p>
-<h5 id="nota-146">Nota</h5>
+<h5 id="nota-145">Nota</h5>
 <p>Se ha senso, si crea un contenitore <code>Regolare</code> (il
 concetto). In particolare, ci si assicuri che un oggetto risulti uguale
 a se stesso da un’operazione di confronto.</p>
@@ -7984,7 +7990,7 @@ void use()
     unique_ptr&lt;B&gt; p = make_unique&lt;D&gt;();
     // ...
 } // comportamento non definito, potrebbe chiamare solo B::~B e perdere [leak] la stringa</code></pre>
-<h5 id="nota-147">Nota</h5>
+<h5 id="nota-146">Nota</h5>
 <p>Ci sono persone che non seguono questa regola perché intendono usare
 una classe solo attraverso un <code>shared_ptr</code>:
 <code>std::shared_ptr&lt;B&gt; p = std::make_shared&lt;D&gt;(args);</code>
@@ -8093,7 +8099,7 @@ vale a dire, obbliga i suoi utenti a dover ricompilare dopo aver
 modificato l’implementazione. I dati in una classe base aumentano la
 complessità dell’implementazione della base e possono portare alla
 replicazione del codice.</p>
-<h5 id="nota-148">Nota</h5>
+<h5 id="nota-147">Nota</h5>
 <p>Definizione:</p>
 <ul>
 <li>l’ereditarietà dell’interfaccia è l’utilizzo dell’ereditarietà per
@@ -8305,11 +8311,11 @@ int user()
 membri nell’interfaccia astratta o se l’uso diretto di un membro offre
 un’opportunità di ottimizzazione (p.es., se una funzione membro
 dell’implementazione è <code>final</code>)</p>
-<h5 id="nota-149">Nota</h5>
+<h5 id="nota-148">Nota</h5>
 <p>Un’altra tecnica (correlata) per separare l’interfaccia e
 l’implementazione è la <a href="#Ri-pimpl">Pimpl [Pointer to
 implementation]</a>.</p>
-<h5 id="nota-150">Nota</h5>
+<h5 id="nota-149">Nota</h5>
 <p>Spesso c’è da scegliere tra l’offrire funzionalità comuni come
 funzioni della classe base (implementate) e funzioni a sé stanti (in un
 namespace di implementazione). Le classi base forniscono una notazione
@@ -8396,7 +8402,7 @@ e nessuna funzione membro.</p>
 <p>Notare che possiamo inserire inizializzatori di default sui dati
 membri: <a href="#Rc-initialize">C.49: Nei costruttori preferire
 l’inizializzazione alle assegnazioni</a>.</p>
-<h5 id="nota-151">Nota</h5>
+<h5 id="nota-150">Nota</h5>
 <p>La chiave di questa regola è se la semantica del getter/setter è
 banale. Anche se non è una definizione completa di “banale”, si
 consideri se ci potrebbero essere delle differenze, oltre alla sintassi,
@@ -8465,7 +8471,7 @@ classi, quindi qualsiasi modifica alla rappresentazione della classe
 diventa proibitiva. Non c’è alcuna invariante imposta per i dati
 protected; è molto simile ad un insieme di variabili globali. I dati
 protected sono di fatto diventati globali in moltissimi sorgenti.</p>
-<h5 id="nota-152">Nota</h5>
+<h5 id="nota-151">Nota</h5>
 <p>Spesso i dati protected sembrano allettanti per consentire
 innumerevoli miglioramenti tramite la derivazione. Spesso, quello che si
 ottiene sono modifiche ed errori inaspettati. <a
@@ -8473,7 +8479,7 @@ href="#Rc-private">Preferire dati <code>private</code></a> con
 un’invariante ben specificato e ben rispettato. In alternativa, e spesso
 è meglio, <a href="#Rh-abstract">tenere i dati all’esterno di qualsiasi
 classe usata come interfaccia</a>.</p>
-<h5 id="nota-153">Nota</h5>
+<h5 id="nota-152">Nota</h5>
 <p>La funzione membro protected può andar bene.</p>
 <h5 id="imposizione-132">Imposizione</h5>
 <p>Segnalare le classi con dati <code>protected</code>.</p>
@@ -8561,12 +8567,12 @@ input; <code>ostream</code> fornisce l’interfaccia per le operazioni di
 output. <code>iostream</code> fornisce l’unione delle interfacce di
 <code>istream</code> e <code>ostream</code> e la sincronizzazione
 necessaria affinché ci siano entrambe su un unico flusso.</p>
-<h5 id="nota-154">Nota</h5>
+<h5 id="nota-153">Nota</h5>
 <p>Questo è un uso molto comune dell’eredità perché è comune la
 necessità di avere più interfacce diverse per un’implementazione e tali
 interfacce risultano spesso non facilmente o naturalmente organizzate in
 una gerarchia con un’unica radice.</p>
-<h5 id="nota-155">Nota</h5>
+<h5 id="nota-154">Nota</h5>
 <p>Tali interfacce sono tipicamente classi astratte.</p>
 <h5 id="imposizione-134">Imposizione</h5>
 <p>???</p>
@@ -8589,7 +8595,7 @@ le operazioni di output (ed alcuni dati). <code>iostream</code> fornisce
 l’unione delle interfacce di <code>istream</code> e <code>ostream</code>
 e la sincronizzazione necessaria affinché ci siano entrambe su un unico
 flusso.</p>
-<h5 id="nota-156">Nota</h5>
+<h5 id="nota-155">Nota</h5>
 <p>Questo è un uso relativamente raro perché l’implementazione può
 spesso essere organizzata in una gerarchia con un’unica radice.</p>
 <h5 id="esempio-128">Esempio</h5>
@@ -8637,7 +8643,7 @@ class Derive2 : public Interface, virtual protected Utility {
 };</code></pre>
 <p>Avere <code>Utility</code> a fattor comune ha senso se molte classi
 derivate condividono significativi “dettagli implementativi”.</p>
-<h5 id="nota-157">Nota</h5>
+<h5 id="nota-156">Nota</h5>
 <p>Ovviamente, l’esempio è troppo “teorico”, ma è difficile trovare un
 <em>piccolo</em> esempio realistico. <code>Interface</code> è la radice
 di una <a href="#Rh-abstract">gerarchia di interfaccia</a> e
@@ -8645,7 +8651,7 @@ di una <a href="#Rh-abstract">gerarchia di interfaccia</a> e
 implementazione</a>. Questo è un <a
 href="https://www.quora.com/What-are-the-uses-and-advantages-of-virtual-base-class-in-C%2B%2B/answer/Lance-Diduck">esempio
 leggermente più realistico</a> con una spiegazione.</p>
-<h5 id="nota-158">Nota</h5>
+<h5 id="nota-157">Nota</h5>
 <p>Spesso, la linearizzazione di una gerarchia costituisce una soluzione
 migliore.</p>
 <h5 id="imposizione-136">Imposizione</h5>
@@ -8682,7 +8688,7 @@ public:
     int f(int i) override { std::cout &lt;&lt; &quot;f(int): &quot;; return i + 1; }
     using B::f; // espone f(double)
 };</code></pre>
-<h5 id="nota-159">Nota</h5>
+<h5 id="nota-158">Nota</h5>
 <p>Questo problema riguarda sia le funzioni membro virtuali che quelle
 non virtuali</p>
 <p>Per le basi variadiche, il C++17 ha introdotto una forma variadica
@@ -8707,21 +8713,21 @@ della gerarchia.</p>
 class My_widget final : public Widget { /* ... */ };
 
 class My_improved_widget : public My_widget { /* ... */ };  // errore: non lo si può fare</code></pre>
-<h5 id="nota-160">Nota</h5>
+<h5 id="nota-159">Nota</h5>
 <p>Non tutte le classi sono pensate per essere classi base. La maggior
 parte delle classi della standard-library ne sono esempi (p.es.,
 <code>std::vector</code> e <code>std::string</code> non sono progettate
 per derivarle). Questa regola riguarda l’utilizzo di <code>final</code>
 sulle classi con funzioni virtuali pensate per essere interfacce per una
 gerarchia di classi.</p>
-<h5 id="nota-161">Nota</h5>
+<h5 id="nota-160">Nota</h5>
 <p>Fermare una singola funzione virtuale con <code>final</code> va
 incontro ad errori in quanto <code>final</code> può facilmente essere
 bypassato quando si definisce/sovrascrive un insieme di funzioni.
 Fortunatamente, il compilatore rileva questi errori: Non è possibile
 ri-dichiarare/ri-aprire un membro <code>final</code> in una classe
 derivata.</p>
-<h5 id="nota-162">Nota</h5>
+<h5 id="nota-161">Nota</h5>
 <p>Le richieste di miglioramenti delle prestazioni da <code>final</code>
 devono essere motivate. Troppo spesso, tali affermazioni si basano su
 congetture o esperienze con altri linguaggi.</p>
@@ -8855,13 +8861,13 @@ void f()
     user2(&amp;b);  // bad errore
     user3(&amp;b);  // OK *se* il programmatore ha il diritto di controllo su some_condition
 }</code></pre>
-<h5 id="nota-163">Nota</h5>
+<h5 id="nota-162">Nota</h5>
 <p>Come per altri cast, di <code>dynamic_cast</code> se ne è abusato. <a
 href="#Rh-use-virtual">Preferire le funzioni virtuali al casting</a>.
 Preferire il <a href="#???">polimorfismo statico</a> alla navigazione
 nella gerarchia dove possibile (non è necessaria alcuna risoluzione a
 run-time) ed è ragionevolmente conveniente.</p>
-<h5 id="nota-164">Nota</h5>
+<h5 id="nota-163">Nota</h5>
 <p>Alcune persone usano <code>dynamic_cast</code> dove sarebbe più
 appropriato un <code>typeid</code>; il <code>dynamic_cast</code> è un
 “tipo di operazione” generale per scoprire l’interfaccia migliore per un
@@ -9065,7 +9071,7 @@ struct D : B { int y; };
 
 void use(B*);
 
-D a[] = {{1, 2}, {3, 4}, {5, 6}};
+D a[] = { {1, 2}, {3, 4}, {5, 6} };
 B* p = a;     // bad: a decade in &amp;a[0] che viene convertito in B*
 p[1].x = 7;   // sovrascrive [overwrite] a[0].y
 
@@ -9139,7 +9145,7 @@ public:
 copie sono uguali</a>.</p>
 <h5 id="esempio-cattivo-61">Esempio, cattivo</h5>
 <pre><code>X operator+(X a, X b) { return a.v - b.v; }   // bad: fa sì che + sottragga</code></pre>
-<h5 id="nota-165">Nota</h5>
+<h5 id="nota-164">Nota</h5>
 <p>Gli operatori non-membri devono essere definiti friend o definiti
 nello <a href="#Ro-namespace">stesso namespace dei loro operandi</a>. <a
 href="#Ro-symmetric">Gli operatori binari dovrebbero trattare i loro
@@ -9201,7 +9207,7 @@ void open(const char* name, const char* mode =&quot;r&quot;);   // apre il file<
 nomi sono stati ridotti al minimo (comune), aprendo la strada alla
 confusione. Fortunatamente, il sistema dei tipi rileverà molti di questi
 errori.</p>
-<h5 id="nota-166">Nota</h5>
+<h5 id="nota-165">Nota</h5>
 <p>Porre particolare attenzione ai nomi comuni e popolari, come
 <code>open</code>, <code>move</code>, <code>+</code>, e
 <code>==</code>.</p>
@@ -9214,7 +9220,7 @@ Evitare la conversione implicita degli operatori</h3>
 <p>Le conversioni implicite possono essere essenziali (p.es., da
 <code>double</code> a <code>int</code>) ma spesso causano sorprese
 (p.es., da <code>String</code> a stringhe C-style).</p>
-<h5 id="nota-167">Nota</h5>
+<h5 id="nota-166">Nota</h5>
 <p>Preferire le conversioni con un nome esplicito finché non appare una
 seria esigenza. Per “seria esigenza” si intende un motivo fondamentale e
 frequente nel dominio dell’applicazione (come una conversione di numeri
@@ -9320,7 +9326,7 @@ class X {
     Ptr operator&amp;() { return Ptr{this}; }
     // ...
 };</code></pre>
-<h5 id="nota-168">Nota</h5>
+<h5 id="nota-167">Nota</h5>
 <p>Se si “pasticcia” con l’operatore <code>&amp;</code> ci si assicuri
 che la sua definizione abbia dei significati corrispondenti per
 <code>-&gt;</code>, <code>[]</code>, <code>*</code>, e <code>.</code>
@@ -9356,7 +9362,7 @@ utilizzabile/componibile col codice basato sulla convenzione di
 <pre><code>My_class var { /* ... */ };
 // ...
 cout &lt;&lt; &quot;var = &quot; &lt;&lt; var &lt;&lt; &#39;\n&#39;;</code></pre>
-<h5 id="nota-169">Nota</h5>
+<h5 id="nota-168">Nota</h5>
 <p>Ci sono convenzioni forti e resistenti per il significato della
 maggior parte degli operatori, come ad esempio</p>
 <ul>
@@ -9413,7 +9419,7 @@ namespace M {
 e <code>M</code>. Ciò può risultare molto confuso. Eliminando la
 definizione di <code>namespace M</code> la confusione si trasforma nella
 possibilità di commettere un errore.</p>
-<h5 id="nota-170">Nota</h5>
+<h5 id="nota-169">Nota</h5>
 <p>Se un operatore binario è definito per due tipi definiti diversamente
 in diversi namespace, non si può seguire questa regola. Per esempio:</p>
 <pre><code>Vec::Vector operator*(const Vec::Vector&amp;, const Mat::Matrix&amp;);</code></pre>
@@ -9698,7 +9704,7 @@ dichiarato <code>char*</code>, <code>unsigned char*</code> o
 <code>std::byte*</code> dell’oggetto, è un comportamento definito.
 (L’uso di <code>reinterpret_cast</code> è sconsigliato, ma almeno si può
 vedere che succede qualcosa di strano.</p>
-<h5 id="nota-171">Nota</h5>
+<h5 id="nota-170">Nota</h5>
 <p>Sfortunatamente, le <code>union</code>i vengono comunemente usate per
 il “type punning”. Non si considera “a volte funziona come previsto” un
 argomento conclusivo.</p>
@@ -9761,7 +9767,7 @@ int webby = blue;   // errore: si deve essere specifici
 Web_color webby = Web_color::blue;</code></pre>
 <p>Abbiamo usato un <code>enum class</code> per evitare il conflitto fra
 i nomi.</p>
-<h5 id="nota-172">Nota</h5>
+<h5 id="nota-171">Nota</h5>
 <p>Considerare anche le variabili <code>constexpr</code> e
 <code>const inline</code>.</p>
 <h5 id="imposizione-161">Imposizione</h5>
@@ -9777,7 +9783,7 @@ correlate</h3>
 un tipo con un nome.</p>
 <h5 id="esempio-152">Esempio</h5>
 <pre><code>enum class Web_color { red = 0xFF0000, green = 0x00FF00, blue = 0x0000FF };</code></pre>
-<h5 id="nota-173">Nota</h5>
+<h5 id="nota-172">Nota</h5>
 <p>Lo switch con una enumerazione è una cosa comune ed il compilatore
 può mettere in guardia da insoliti valori delle label di un case. Per
 esempio:</p>
@@ -9861,7 +9867,7 @@ Non usare <code>TUTTO_IN_MAIUSCOLO</code> per gli enumeratori</h3>
 <h5 id="motivo-174">Motivo</h5>
 <p>Evitare conflitti con le macro.</p>
 <h5 id="esempio-cattivo-65">Esempio, cattivo</h5>
-<pre><code> // webcolors.h (un header di terze parti)
+<pre><code>// webcolors.h (un header di terze parti)
 #define RED   0xFF0000
 #define GREEN 0x00FF00
 #define BLUE  0x0000FF
@@ -9904,7 +9910,7 @@ il tipo intero di default. <code>int</code> è compatibile con gli
 enum class Web_color : int32_t { red   = 0xFF0000,
                                  green = 0x00FF00,
                                  blue  = 0x0000FF };  // il [tipo sottostante] è ridondante</code></pre>
-<h5 id="nota-174">Nota</h5>
+<h5 id="nota-173">Nota</h5>
 <p>Specificare il tipo in esame è necessario per il “forward-declare” di
 un enum o una classe enum:</p>
 <pre><code>enum Flags : char;
@@ -10095,7 +10101,7 @@ public:
     Port(const Port&amp;) = delete;
     Port&amp; operator=(const Port&amp;) = delete;
 };</code></pre>
-<h5 id="nota-175">Nota</h5>
+<h5 id="nota-174">Nota</h5>
 <p>Laddove una risorsa abbia “strani comportamenti” perché non è
 rappresentata come una classe con un distruttore, la si racchiude in una
 classe o si usa <a href="#Re-finally"><code>finally</code></a></p>
@@ -10129,7 +10135,7 @@ Si usi invece <code>span</code>.</p>
 di caratteri terminanti con zero. Si usi <code>zstring</code> invece di
 <code>char*</code> per indicare che ci si affida a questa
 convenzione.</p>
-<h5 id="nota-176">Nota</h5>
+<h5 id="nota-175">Nota</h5>
 <p>Attualmente molte delle volte che si usa un puntatore ad un singolo
 elemento si potrebbe usare un riferimento. Tuttavia, dove
 <code>nullptr</code> è un valore possibile, un riferimento potrebbe non
@@ -10205,7 +10211,7 @@ alcuni di questi sono proprietari. Alcune interfacce non possono essere
 semplicemente annotate con <code>owner</code> perché devono restare
 compilabili come C (anche se questo sarebbe un raro buon uso per una
 macro, che si espanderebbe in <code>owner</code> solo in C++).</p>
-<h5 id="nota-177">Nota</h5>
+<h5 id="nota-176">Nota</h5>
 <p><code>owner&lt;T*&gt;</code> non ha una semantica di default oltre a
 <code>T*</code>. Esso può essere utilizzato senza modificare alcun
 codice utilizzandolo e senza influire sulle ABI. È semplicemente un
@@ -10230,21 +10236,21 @@ void caller(int n)
     // ...
     delete p;
 }</code></pre>
-<p>Oltre a subire del problema del <a href="#???">leak</a>, ciò aggiunge
-un’allocazione spuria e un’operazione di de-allocazione, ed è
-inutilmente prolissa. Se Gadget è economico da spostare al di fuori di
-una funzione (ovvero, è piccolo o ha un’efficiente operazione di
-spostamento), basta restituirlo “per valore” (si veda <a
-href="#Rf-out">“out” dei valori di ritorno</a>):</p>
+<p>Oltre a soffrire del problema del <a href="#Rp-leak">leak</a>, questo
+aggiunge un’allocazione e una de-allocazione spurie, ed è inutilmente
+prolissa. Se Gadget è economico da spostare al di fuori di una funzione
+(ovvero, è piccolo o ha un’efficiente operazione di spostamento), basta
+restituirlo “per valore” (si veda <a href="#Rf-out">“out” dei valori di
+ritorno</a>):</p>
 <pre><code>Gadget make_gadget(int n)
 {
     Gadget g{n};
     // ...
     return g;
 }</code></pre>
-<h5 id="nota-178">Nota</h5>
+<h5 id="nota-177">Nota</h5>
 <p>Questa regola si applica alle funzioni factory.</p>
-<h5 id="nota-179">Nota</h5>
+<h5 id="nota-178">Nota</h5>
 <p>Se è richiesta la semantica dei puntatori (p. es., perché il tipo
 restituito deve far riferimento ad una classe base della gerarchia
 (un’interfaccia)), restituire uno “smart pointer.”</p>
@@ -10401,7 +10407,7 @@ Evitare di chiamare esplicitamente <code>new</code> e
 un gestore di risorse (che potrebbe chiamare <code>delete</code>). Se il
 puntatore restituito da <code>new</code> viene assegnato ad un semplice
 puntatore, l’oggetto può generare un leak.</p>
-<h5 id="nota-180">Nota</h5>
+<h5 id="nota-179">Nota</h5>
 <p>In un programma di grandi dimensioni, un semplice <code>delete</code>
 (ovvero un <code>delete</code> nel codice dell’applicazione, anziché
 nella parte di codice dedicata alla gestione delle risorse) è un
@@ -10513,7 +10519,7 @@ allocazione/de-allocazione</h3>
     void operator delete(void*);
     // ...
 };</code></pre>
-<h5 id="nota-181">Nota</h5>
+<h5 id="nota-180">Nota</h5>
 <p>Se si vuole che non venga de-allocata la memoria, si aggiunge
 <code>=delete</code> all’operazione di de-allocazione. Non lasciarla
 senza dichiarazione.</p>
@@ -10582,7 +10588,9 @@ Usare <code>make_shared()</code> per creare gli
 <p><code>make_shared</code> fornisce un’istruzione più concisa della
 costruzione. Offre inoltre l’opportunità di eliminare un’allocazione
 separata per i conteggi dei riferimento, posizionando il conteggio di
-<code>shared_ptr</code> vicino al proprio oggetto.</p>
+<code>shared_ptr</code> vicino al proprio oggetto. Garantisce inoltre la
+sicurezza delle eccezioni in espressioni complesse (nel codice
+precedente a C++17).</p>
 <h5 id="esempio-171">Esempio</h5>
 <p>Si consideri:</p>
 <pre><code>shared_ptr&lt;X&gt; p1 { new X{2} }; // bad
@@ -10601,7 +10609,7 @@ Usare <code>make_unique()</code> per creare gli
 <h5 id="motivo-192">Motivo</h5>
 <p><code>make_unique</code> fornisce una dichiarazione più concisa della
 costruzione. Garantisce inoltre la sicurezza delle eccezioni in
-espressioni complesse.</p>
+espressioni complesse (nel codice precedente a C++17).</p>
 <h5 id="esempio-172">Esempio</h5>
 <pre><code>unique_ptr&lt;Foo&gt; p {new Foo{7}};    // OK: ma ripetitivo
 
@@ -10647,7 +10655,7 @@ public:
 private:
   std::weak_ptr&lt;foo&gt; back_reference_;
 };</code></pre>
-<h5 id="nota-182">Nota</h5>
+<h5 id="nota-181">Nota</h5>
 <p>??? (HS [Herb Sutter]: Molte persone dicono “interrompere cicli”,
 mentre io penso che “proprietà condivisa [shared ownership] temporanea”
 sia più pertinente). ???(BS [Bjarne Stroustrup]: Interrompere cicli è
@@ -10742,7 +10750,7 @@ esprimere che una funzione riposiziona [reseats] il
 <h5 id="motivo-196">Motivo</h5>
 <p>Usando <code>unique_ptr</code> in questo modo si documenta e si
 rafforza la semantica del ricollocamento [reseating] della chiamata.</p>
-<h5 id="nota-183">Nota</h5>
+<h5 id="nota-182">Nota</h5>
 <p>“reseat” (ricollocare) significa “fare in modo che un puntatore o un
 puntatore intelligente si riferiscano a un oggetto diverso”.</p>
 <h5 id="esempio-175">Esempio</h5>
@@ -10802,7 +10810,7 @@ esprimere che una funzione può ricollocare [reseat] lo shared
 pointer</h3>
 <h5 id="motivo-198">Motivo</h5>
 <p>Ciò rende esplicito il ricollocamento [reseat] della funzione.</p>
-<h5 id="nota-184">Nota</h5>
+<h5 id="nota-183">Nota</h5>
 <p>Eseguire un “reseat” [ricollocamento] significa “fare in modo che un
 puntatore o un puntatore intelligente si riferiscano a un oggetto
 diverso”.</p>
@@ -10871,7 +10879,7 @@ semplice o il riferimento da un puntatore intelligente, che mantiene in
 vita l’oggetto. È necessario assicurarsi che il puntatore intelligente
 non possa essere inavvertitamente ripristinato o riassegnato nel resto
 della catena delle chiamate.</p>
-<h5 id="nota-185">Nota</h5>
+<h5 id="nota-184">Nota</h5>
 <p>Per fare ciò, a volte è necessario tenere una copia locale di un
 puntatore intelligente, che mantiene saldamente in vita l’oggetto per la
 durata della funzione e della sequenza delle chiamate.</p>
@@ -11431,7 +11439,7 @@ case NE:
     // ...
 // ...
 }</code></pre>
-<h5 id="nota-186">Nota</h5>
+<h5 id="nota-185">Nota</h5>
 <p>Non usare il <code>TUTTO_IN_MAIUSCOLO</code> per le costanti solo
 perché le macro venivano usate per le costanti.</p>
 <h5 id="imposizione-197">Imposizione</h5>
@@ -11512,7 +11520,7 @@ inizializzatore potrebbe richiedere una conversione.</p>
 <h5 id="esempio-190">Esempio</h5>
 <pre><code>auto lst = { 1, 2, 3 };   // lst è una lista per l&#39;inizializzazione
 auto x{1};   // x is an int (in C++17; initializer_list in C++11)</code></pre>
-<h5 id="nota-187">Nota</h5>
+<h5 id="nota-186">Nota</h5>
 <p>A partire dal C++20, possiamo (e dovremmo) usare i concetti per
 essere più specifici sul tipo che stiamo deducendo:</p>
 <pre><code>// ...
@@ -11551,7 +11559,7 @@ return d;</code></pre>
 trascurare il fatto che una nuova <code>d</code> è stata introdotta
 nello scope più interno. Questa è una nota fonte di bug. Talvolta tale
 riutilizzo di un nome in uno scope interno è detto “shadowing”.</p>
-<h5 id="nota-188">Nota</h5>
+<h5 id="nota-187">Nota</h5>
 <p>Lo shadowing è un problema principalmente quando le funzioni sono
 troppo grandi e troppo complesse.</p>
 <h5 id="esempio-191">Esempio</h5>
@@ -11634,7 +11642,7 @@ Meglio:</p>
     string s;    // OK: inizializzato col default
     // ...
 }</code></pre>
-<h5 id="nota-189">Nota</h5>
+<h5 id="nota-188">Nota</h5>
 <p>La regola <em>inizializzare sempre</em> è deliberatamente più forte
 della regola del linguaggio <em>un oggetto deve essere inizializzato
 prima di essere usato</em>. Quest’ultima regola, più rilassata, rileva i
@@ -11705,7 +11713,7 @@ else {
 usato-prima-della-assegnazione. Inoltre, abbiamo introdotto una
 complessità nello spazio degli stati per il widget: quali operazioni
 sono valide su un widget <code>uninit</code> e quali no?</p>
-<h5 id="nota-190">Nota</h5>
+<h5 id="nota-189">Nota</h5>
 <p>L’inizializzazione complessa è stata popolare per decenni con i
 programmatori più abili. È stata anche una delle principali fonti di
 errori e complessità. Molti di questi errori vengono introdotti durante
@@ -11769,7 +11777,7 @@ dell’usato-prima-della-assegnazione.</p>
 cin &gt;&gt; i2;</code></pre>
 <p>Un buon ottimizzatore dovrebbe conoscere le operazioni di input ed
 eliminare l’operazione ridondante.</p>
-<h5 id="nota-191">Nota</h5>
+<h5 id="nota-190">Nota</h5>
 <p>A volte, una lambda può essere utilizzata come inizializzatore per
 evitare una variabile non inizializzata:</p>
 <pre><code>error_code ec;
@@ -11879,7 +11887,7 @@ vector&lt;int&gt; v2{10};    // vettore di 1 elemento con valore 10
 
 vector&lt;int&gt; v3(1, 2);  // vettore di 1 elemento con valore 2
 vector&lt;int&gt; v4{1, 2};  // vettore di 2 element1 con valori 1 e 2</code></pre>
-<h5 id="nota-192">Nota</h5>
+<h5 id="nota-191">Nota</h5>
 <p>Gli inizializzatori <code>{}</code> non consentono le conversioni
 “narrowing” (e questo di solito è una cosa buona) e permettono i
 costruttori espliciti (il che va bene, si sta inizializzando
@@ -11889,7 +11897,7 @@ intenzionalmente una nuova variabile).</p>
 int y = 7.9;   // OK: y diventa 7. Si spera in un warning del compilatore
 int z {gsl::narrow_cast&lt;int&gt;(7.9)};    // OK: è stato richiesto
 auto zz = gsl::narrow_cast&lt;int&gt;(7.9);  // OK: è stato richiesto</code></pre>
-<h5 id="nota-193">Nota</h5>
+<h5 id="nota-192">Nota</h5>
 <p>L’inizializzazione <code>{}</code> si può usare per quasi tutte le
 inizializzazioni; non le altre forme di inizializzazione:</p>
 <pre><code>auto p = new vector&lt;int&gt; {1, 2, 3, 4, 5};   // vettore inizializzato
@@ -11904,7 +11912,7 @@ struct S {
 <p>Per questo motivo, l’inizializzazione <code>{}</code> è spesso
 chiamata “inizializzazione uniforme” (sebbene purtroppo siano rimaste
 alcune irregolarità).</p>
-<h5 id="nota-194">Nota</h5>
+<h5 id="nota-193">Nota</h5>
 <p>L’inizializzazione di una variabile dichiarata usando
 <code>auto</code> con un singolo valore, ad esempio, <code>{v}</code>,
 ha avuto risultati a sorpresa fino al C++17. Le regole del C++17 sono
@@ -11917,7 +11925,7 @@ auto x22 = {7, 8};  // x22 è una initializer_list&lt;int&gt; con gli elementi 7
 <p>Usare <code>={...}</code> se si vuole veramente una
 <code>initializer_list&lt;T&gt;</code></p>
 <pre><code>auto fib10 = {1, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 è una lista</code></pre>
-<h5 id="nota-195">Nota</h5>
+<h5 id="nota-194">Nota</h5>
 <p><code>={}</code> dà un’inizializzazione copia mentre <code>{}</code>
 dà un’inizializzazione diretta. Similmente alla stessa distinzione tra
 l’inizializzazione-copia e l’inizializzazione-diretta, ciò può portare a
@@ -12011,7 +12019,7 @@ Non usare una variabile per due usi non correlati</h3>
     for (i = 0; i &lt; 20; ++i) { /* ... */ }
     for (i = 0; i &lt; 200; ++i) { /* ... */ } // bad: i è stata riciclata
 }</code></pre>
-<h5 id="nota-196">Nota</h5>
+<h5 id="nota-195">Nota</h5>
 <p>Come ottimizzazione, si potrebbe voler ri-utilizzare un buffer come
 un block-note, ma anche in questo caso si preferisca limitare lo ‘scope’
 della variabile il più possibile e si faccia attenzione a non provocare
@@ -12052,7 +12060,7 @@ void f()
     int a2[m];   // errore: non è C++ ISO
     // ...
 }</code></pre>
-<h5 id="nota-197">Nota</h5>
+<h5 id="nota-196">Nota</h5>
 <p>La definizione di <code>a1</code> è C++ legale e c’è sempre stata.
 C’è molto codice come questo. Tuttavia, è soggetto a errori, soprattutto
 quando la dimensione [bound] non è locale. Inoltre, è una fonte
@@ -12119,12 +12127,12 @@ compilatore. Le macro complicano gli strumenti di building.</p>
 <p>Questa macro dall’aspetto innocuo trasforma una singola
 <code>c</code> minuscola invece di una <code>C</code> in un brutto bug
 sul controllo del flusso.</p>
-<h5 id="nota-198">Nota</h5>
+<h5 id="nota-197">Nota</h5>
 <p>Questa regola non vieta l’uso delle macro per il “controllo della
 configurazione” usate negli <code>#ifdef</code>, ecc.</p>
 <p>In futuro, è probabile che i moduli eliminino la necessità di macro
 nel controllo della configurazione.</p>
-<h5 id="nota-199">Nota</h5>
+<h5 id="nota-198">Nota</h5>
 <p>Questa regola ha lo scopo di scoraggiare anche l’uso di
 <code>#</code> per la “stringification” e di <code>##</code> per la
 concatenazione. Come è solito per le macro, ci sono usi “per lo più
@@ -12209,7 +12217,7 @@ Se è necessario usare le macro, dargli dei nomi univoci</h3>
 <pre><code>#define MYCHAR        /* BAD, alla fine ci si scontrerà con qualche altro MYCHAR*/
 
 #define ZCORP_CHAR    /* Resta diabolico, ma meno prono a conflitti */</code></pre>
-<h5 id="nota-200">Nota</h5>
+<h5 id="nota-199">Nota</h5>
 <p>Evitare le macro se possibile: <a href="#Res-macros">ES.30</a>, <a
 href="#Res-macros2">ES.31</a> e <a href="#Res-ALL_CAPS">ES.32</a>.
 Tuttavia, ci sono miliardi di righe di codice disseminate di macro e una
@@ -12283,7 +12291,7 @@ void use()
 
     error(5, &quot;oh&quot;, &quot;no&quot;, nullptr); // Errore di compilazione! Non c&#39;è bisogno del nullptr.
 }</code></pre>
-<h5 id="nota-201">Nota</h5>
+<h5 id="nota-200">Nota</h5>
 <p>Questo è fondamentalmente il modo in cui è implementato
 <code>printf</code>.</p>
 <h5 id="imposizione-214">Imposizione</h5>
@@ -12327,13 +12335,13 @@ x = x++ + x++ + ++x;</code></pre>
 si basano su comportamenti indefiniti). Altre sono semplicemente così
 complicate e/o insolite che persino i bravi programmatori potrebbero
 fraintenderle o trascurare un problema nella fretta.</p>
-<h5 id="nota-202">Nota</h5>
+<h5 id="nota-201">Nota</h5>
 <p>Il C++17 inasprisce le regole per l’ordine di valutazione (da
 sinistra a destra, tranne da destra a sinistra nelle assegnazioni, e
 l’ordine di valutazione degli argomenti della funzione non è
 specificato; <a href="#Res-order">cfr. ES.43</a>), ma ciò non cambia il
 fatto che le espressioni complicate sono potenzialmente confuse.</p>
-<h5 id="nota-203">Nota</h5>
+<h5 id="nota-202">Nota</h5>
 <p>Un programmatore dovrebbe conoscere e utilizzare le regole di base
 per le espressioni.</p>
 <h5 id="esempio-206">Esempio</h5>
@@ -12382,7 +12390,7 @@ operazioni logiche, ma si prenda in considerazione di mescolare le
 operazioni logiche bit a bit con gli altri operatori che necessitano
 delle parentesi.</p>
 <pre><code>if ((a &amp; flag) != 0)  // OK: funziona come previsto</code></pre>
-<h5 id="nota-204">Nota</h5>
+<h5 id="nota-203">Nota</h5>
 <p>Si dovrebbe essere abbastanza esperti da non aver bisogno delle
 parentesi per:</p>
 <pre><code>if (a &lt; 0 || a &lt;= max) {
@@ -12402,7 +12410,7 @@ Usare in modo semplice e diretto i puntatori</h3>
 <h5 id="motivo-227">Motivo</h5>
 <p>La gestione dei puntatori complicati è una delle principali fonti di
 errori.</p>
-<h5 id="nota-205">Nota</h5>
+<h5 id="nota-204">Nota</h5>
 <p>Usare, invece, <code>gsl::span</code>. I puntatori dovrebbero <a
 href="#Ri-array">fare riferimento solo a singoli oggetti</a>.
 L’aritmetica dei puntatori è fragile e facile da sbagliare, la fonte di
@@ -12449,7 +12457,7 @@ costante come indice può essere convalidato dal compilatore.</p>
 
     use(a.data(), 3);  // OK
 }</code></pre>
-<h5 id="nota-206">Nota</h5>
+<h5 id="nota-205">Nota</h5>
 <p>L’indicizzazione tramite una variabile è difficile da convalidare sia
 per i tool che per gli umani. <code>span</code> è un tipo sicuro, col
 controllo dei limiti [bounds-checked], per l’accesso ai dati degli
@@ -12525,7 +12533,7 @@ void f2(array&lt;int, 10&gt; arr, int pos) // A2: Aggiungere uno span locale e u
     for (auto&amp; e : arr)
          e = i++;
 }</code></pre>
-<h5 id="nota-207">Nota</h5>
+<h5 id="nota-206">Nota</h5>
 <p>I tool possono proporre una riscrittura degli accessi agli array che
 implichi, invece, l’uso di espressioni di indici dinamici
 <code>at()</code>:</p>
@@ -12583,7 +12591,7 @@ Evitare espressioni con un ordine di valutazione incerto</h3>
 Anche se sembra fare qualcosa di ragionevole, potrebbe fare altro su un
 altro compilatore (p.es., la successiva release del proprio compilatore)
 o con un diverso settaggio dell’ottimizzatore.</p>
-<h5 id="nota-208">Nota</h5>
+<h5 id="nota-207">Nota</h5>
 <p>Il C++17 inasprisce le regole per l’ordine di valutazione:
 da-sinistra-a-destra, tranne da destra a sinistra nelle assegnazioni, e
 l’ordine di valutazione degli argomenti della funzione non è
@@ -12603,7 +12611,7 @@ Non dipendere dall’ordine di valutazione degli argomenti di una
 funzione</h3>
 <h5 id="motivo-229">Motivo</h5>
 <p>Perché quell’ordine non è specificato.</p>
-<h5 id="nota-209">Nota</h5>
+<h5 id="nota-208">Nota</h5>
 <p>Il C++17 inasprisce le regole per l’ordine di valutazione, ma
 l’ordine di valutazione degli argomenti della funzione non è ancora
 specificato.</p>
@@ -12670,7 +12678,7 @@ void f(int x, long y, double d)
     char c2 = y;   // bad: narrowing
     char c3 = d;   // bad: narrowing
 }</code></pre>
-<h5 id="nota-210">Nota</h5>
+<h5 id="nota-209">Nota</h5>
 <p>La libreria di supporto delle linee guida offre un’operazione
 <code>narrow_cast</code> per specificare che il narrowing è accettabile
 e un <code>narrow</code> (“narrow if”) che genera un’eccezione se un
@@ -12685,7 +12693,7 @@ unsigned u = 0;
 u = d;                               // bad: narrowing
 u = gsl::narrow_cast&lt;unsigned&gt;(d);   // OK (lo si è chiesto): u diventa 4294967289
 u = gsl::narrow&lt;unsigned&gt;(d);        // OK: solleva un narrowing_error</code></pre>
-<h5 id="nota-211">Nota</h5>
+<h5 id="nota-210">Nota</h5>
 <p>Questa regola non si applica alle <a
 href="https://en.cppreference.com/w/cpp/language/implicit_conversion#Contextual_conversions">conversioni
 contestuali in bool</a>:</p>
@@ -12745,7 +12753,7 @@ cout &lt;&lt; d &lt;&lt; &#39; &#39; &lt;&lt; *p &lt;&lt; &#39; &#39; &lt;&lt; *
 <p>Io ho ottenuto</p>
 <pre><code>3.29048e-321 666 666</code></pre>
 <p>Sorpresi? Sono contento che il programma non vada in crash.</p>
-<h5 id="nota-212">Nota</h5>
+<h5 id="nota-211">Nota</h5>
 <p>I programmatori che scrivono cast in genere presumono di sapere cosa
 stanno facendo o che scrivere un cast rende il programma “più facile da
 leggere”. Infatti, spesso disabilitano le regole generali sull’uso dei
@@ -12839,7 +12847,7 @@ era derivato da <code>B</code>, ma qualcuno ha eseguito il refactoring
 della gerarchia. Il cast in stile C è pericoloso perché può fare
 qualsiasi tipo di conversione, privandoci di qualsiasi protezione dagli
 errori (ora e in futuro).</p>
-<h5 id="nota-213">Nota</h5>
+<h5 id="nota-212">Nota</h5>
 <p>Invece, quando si converte senza perdita di informazioni (p.es. da
 <code>float</code> a <code>double</code> o da <code>int32</code> a
 <code>int64</code>), si può usare l’inizializzazione tra parenesi
@@ -12851,7 +12859,7 @@ anche le conversioni tra tipi che potrebbero comportare una perdita di
 precisione. (È un errore di compilazione tentare di inizializzare un
 <code>float</code> da un <code>double</code> in questo modo, per
 esempio).</p>
-<h5 id="nota-214">Nota</h5>
+<h5 id="nota-213">Nota</h5>
 <p><code>reinterpret_cast</code> può essere essenziale, ma gli usi
 essenziali (p.es., trasformare un indirizzo macchina in un puntatore)
 non sono sicuri:</p>
@@ -13232,7 +13240,7 @@ funzioni di gestione delle risorse</h3>
 <h5 id="motivo-238">Motivo</h5>
 <p>La gestione diretta delle risorse nel codice di un’applicazione è
 soggetta ad errori ed è noiosa.</p>
-<h5 id="nota-215">Nota</h5>
+<h5 id="nota-214">Nota</h5>
 <p>Questa è anche nota come la regola del “Nessun semplice [naked]
 <code>new</code>!”</p>
 <h5 id="esempio-cattivo-98">Esempio, cattivo</h5>
@@ -13263,7 +13271,7 @@ ad errori nel rilascio delle risorse e/o corrompere la memoria.</p>
     // ...
     delete p;   // errore: basta il delete dell&#39;oggetto p, anziché il delete dell&#39;array p[]
 }</code></pre>
-<h5 id="nota-216">Nota</h5>
+<h5 id="nota-215">Nota</h5>
 <p>Questo esempio non solo viola la <a href="#Res-new">regola di nessun
 <code>new</code> semplice [naked]</a> come nel precedente esempio, ma
 presenta molti altri problemi.</p>
@@ -13287,7 +13295,7 @@ Non confrontare i puntatori in diversi array</h3>
     if (&amp;a1[5] &lt; &amp;a2[7]) {}       // bad: indefinito
     if (0 &lt; &amp;a1[5] - &amp;a2[7]) {}   // bad: indefinito
 }</code></pre>
-<h5 id="nota-217">Nota</h5>
+<h5 id="nota-216">Nota</h5>
 <p>Questo esempio presenta molti più problemi.</p>
 <h5 id="imposizione-230">Imposizione</h5>
 <p>???</p>
@@ -13302,7 +13310,7 @@ in cui lo slicing è voluto, il codice può sorprendere.</p>
 <pre><code>class Shape { /* ... */ };
 class Circle : public Shape { /* ... */ Point c; int r; };
 
-Circle c {{0, 0}, 42};
+Circle c { {0, 0}, 42 };
 Shape s {c};    // la copy costruisce solo la parte Shape di Circle
 s = c;          // o copy assegna solo la parte Shape di Circle
 
@@ -13310,7 +13318,7 @@ void assign(const Shape&amp; src, Shape&amp; dest)
 {
     dest = src;
 }
-Circle c2 {{1, 1}, 43};
+Circle c2 { {1, 1}, 43 };
 assign(c, c2);   // oops, non viene trasferito tutto lo stato
 assert(c == c2); // se si fornisce la copia, si deve anche fornire il confronto,
                  // ma questo probabilmente restituirà false</code></pre>
@@ -13367,17 +13375,17 @@ narrowing e dalla reinterpretazione</p>
 quando si usano le notazioni <code>T(e)</code> o <code>(T)e</code>, e
 non sono portabili tra le piattaforme con dimensioni diverse degli
 interi e dei puntatori.</p>
-<h5 id="nota-218">Nota</h5>
+<h5 id="nota-217">Nota</h5>
 <p><a href="#Res-casts">Evitare i cast</a> (conversione esplicita del
 tipo) e, se lo si deve fare, <a href="#Res-casts-named">preferire i
 “named cast”</a>.</p>
-<h5 id="nota-219">Nota</h5>
+<h5 id="nota-218">Nota</h5>
 <p>Se non è ambiguo, la <code>T</code> può essere lasciata fuori da
 <code>T{e}</code>.</p>
 <pre><code>complex&lt;double&gt; f(complex&lt;double&gt;);
 
 auto z = f({2*pi, 1});</code></pre>
-<h5 id="nota-220">Nota</h5>
+<h5 id="nota-219">Nota</h5>
 <p>La notazione della costruzione è la più generale <a
 href="#Res-list">notazione dell’inizializzatore</a>.</p>
 <h5 id="eccezione-46">Eccezione</h5>
@@ -13424,6 +13432,9 @@ Non de-referenziare un puntatore non valido</h3>
 <p>Dereferenziare un puntatore non valido, come <code>nullptr</code>, è
 un comportamento indefinito, che di solito porta ad arresti anomali
 immediati, risultati errati o corruzione della memoria.</p>
+<h5 id="nota-220">Nota</h5>
+<p>Per puntatore qui si intende qualsiasi riferimento indiretto a un
+oggetto, incluso equivalentemente un iteratore o una vista.</p>
 <h5 id="nota-221">Nota</h5>
 <p>Questa è una regola ovvia e ben conosciuta del linguaggio, ma può
 essere ben difficile da seguire. Sono necessari un buon stile di
@@ -16629,7 +16640,7 @@ non-ripetitiva.</p>
 
 void use()
 {
-    Foo bar {{Thing{1}, Thing{2}, Thing{monkey}}, {&quot;my_file&quot;, &quot;r&quot;}, &quot;Here we go!&quot;};
+    Foo bar { {Thing{1}, Thing{2}, Thing{monkey} }, {&quot;my_file&quot;, &quot;r&quot;}, &quot;Here we go!&quot;};
     // ...
 }</code></pre>
 <p>Qui, i costruttori dei <code>vector</code> e delle
@@ -18366,7 +18377,7 @@ utente.</p>
 <h5 id="esempio-cattivo-134">Esempio, cattivo</h5>
 <pre><code>template&lt;typename T&gt;
 // bad; insufficiente
-concept Addable = requires(T a, T b) { a+b; };
+concept Addable = requires(T a, T b) { a + b; };
 
 template&lt;Addable N&gt;
 auto algo(const N&amp; a, const N&amp; b) // usa due numeri
@@ -18394,7 +18405,7 @@ vincolo sintattico.</p>
 <h5 id="esempio-304">Esempio</h5>
 <pre><code>template&lt;typename T&gt;
 // Si presuppone che gli operatori +, -, *, e / per un numero seguano le consuete regole matematiche
-concept Number = requires(T a, T b) { a+b; a-b; a*b; a/b; };
+concept Number = requires(T a, T b) { a + b; a - b; a * b; a / b; };
 
 template&lt;Number N&gt;
 auto algo(const N&amp; a, const N&amp; b)
@@ -18431,7 +18442,7 @@ implementatori e i manutentori.</p>
 <p>Questa è una specifica variante della regola generale <a
 href="#Rt-low">un concetto deve avere un senso semantico</a>.</p>
 <h5 id="esempio-cattivo-135">Esempio, cattivo</h5>
-<pre><code>template&lt;typename T&gt; concept Subtractable = requires(T a, T b) { a-b; };</code></pre>
+<pre><code>template&lt;typename T&gt; concept Subtractable = requires(T a, T b) { a - b; };</code></pre>
 <p>Questo non ha un senso semantico. C’è almeno bisogno di
 <code>+</code> per rendere <code>-</code> significativo e utile.</p>
 <p>Esempi di set completi sono</p>
@@ -18520,10 +18531,10 @@ potente strumento di progettazione.</p>
     // Gli operatori +, -, *, e / per un numero si suppone che seguano le solite regole matematiche
     // axiom(T a, T b) { a + b == b + a; a - a == 0; a * (b + c) == a * b + a * c; /*...*/ }
     concept Number = requires(T a, T b) {
-        {a + b} -&gt; convertible_to&lt;T&gt;;
-        {a - b} -&gt; convertible_to&lt;T&gt;;
-        {a * b} -&gt; convertible_to&lt;T&gt;;
-        {a / b} -&gt; convertible_to&lt;T&gt;;
+        { a + b } -&gt; convertible_to&lt;T&gt;;
+        { a - b } -&gt; convertible_to&lt;T&gt;;
+        { a * b } -&gt; convertible_to&lt;T&gt;;
+        { a / b } -&gt; convertible_to&lt;T&gt;;
     };</code></pre>
 <h5 id="nota-309">Nota</h5>
 <p>Questo è un assioma in senso matematico: qualcosa che può essere
@@ -21798,10 +21809,8 @@ librerie usate sono state approvate per applicazioni “mission critical”.
 Non deve sorprendere che ci sia qualche somiglianza con queste
 linee-guida perché Bjarne Stroustrup è stato uno degli autori della
 JSF++. Raccomandata, ma si noti che ha un focus molto specifico.</li>
-<li><a
-href="https://www.misra.org.uk/Buyonline/tabid/58/Default.aspx">MISRA
-C++ 2008: Linee-guida per l’uso del linguaggio C++ in sistemi
-critici</a>.</li>
+<li><a href="https://misra.org.uk/product/misra-cpp2023/">MISRA C++:2023
+Guidelines for the use C++17 in critical systems</a>.</li>
 <li><a
 href="https://firefox-source-docs.mozilla.org/code-quality/coding-style/using_cxx_in_firefox_code.html">Utilizzo
 del C++ nel Codice di Mozilla</a>. Come indica il nome, si pone lo scopo
@@ -22338,8 +22347,8 @@ completamente bounds-safe per default. Se la sicurezza dei limiti
 proposte di modifica dovrebbero essere riportate tramite il comitato ISO
 C++ per mantenere l’interfaccia <code>gsl::span</code> compatibile con
 <code>std::span</code>. Se una futura evoluzione di
-&lt;std::span<code>aggiunge il controllo dei limiti,</code>gsl::span`
-può essere rimossa.</p>
+<code>std::span</code> aggiunge il controllo dei limiti,
+<code>gsl::span</code> potrà essere rimossa.</p>
 </blockquote>
 <p>“L’aritmetica del puntatore” viene fatta meglio negli
 <code>span</code>. Un <code>char*</code> che punta a più di un
@@ -23118,7 +23127,7 @@ linee-guida.</p>
 <h3
 id="faq.1-quali-sono-gli-obiettivi-di-queste-linee-guida"><a name="Faq-aims"></a>FAQ.1:
 Quali sono gli obiettivi di queste linee-guida?</h3>
-<p>Cfr. <a href="#S-abstract">inizio pagina</a>. Questo è un progetto
+<p>Cfr.<a href="#S-abstract">inizio pagina</a>. Questo è un progetto
 open source per manutenere delle linee-guida moderne e autorevoli per la
 scrittura di codice C++ con l’attuale C++ Standard. Le linee-guida sono
 progettate per essere moderne, applicabili alle macchine quando
@@ -23705,7 +23714,7 @@ public:
 <ol type="1">
 <li><p>Gli oggetti <code>Nefarious</code> sono difficili da usare in
 sicurezza anche come variabili locali:</p>
-<pre><code> void test(string&amp; s)
+<pre><code>void test(string&amp; s)
  {
      Nefarious n;          // preparazione difficile
      string copy = s;      // copia la stringa
@@ -23718,7 +23727,7 @@ propagate due eccezioni contemporaneamente.</p></li>
 difficili da usare in sicurezza, perché i loro distruttori devono
 invocare il distruttore di <code>Nefarious</code> restando al loro volta
 avvelenati dal suo comportamento:</p>
-<pre><code> class Innocent_bystander {
+<pre><code>class Innocent_bystander {
      Nefarious member;     // oops, avvelena il distruttore della classe che lo racchiude
      // ...
  };
@@ -23734,10 +23743,10 @@ avvelenati dal suo comportamento:</p>
 invocato <code>std::terminate</code>.</p></li>
 <li><p>Non è possibile creare in modo affidabile oggetti
 <code>Nefarious</code> globali o statici:</p>
-<pre><code> static Nefarious n;       // oops, non si può intercettare alcuna eccezione del distruttore</code></pre></li>
+<pre><code>static Nefarious n;       // oops, non si può intercettare alcuna eccezione del distruttore</code></pre></li>
 <li><p>Non è possibile creare in modo affidabile array di
 <code>Nefarious</code>:</p>
-<pre><code> void test()
+<pre><code>void test()
  {
      std::array&lt;Nefarious, 10&gt; arr; // questa riga può eseguire std::terminate()
  }</code></pre>
@@ -23752,7 +23761,7 @@ tali distruttori va in [throw]? Non esiste una risposta
 soddisfacente.</p></li>
 <li><p>Si possono usare gli oggetti <code>Nefarious</code> nei
 contenitori standard:</p>
-<pre><code> std::vector&lt;Nefarious&gt; vec(10);   // questa riga può eseguire std::terminate()</code></pre>
+<pre><code>std::vector&lt;Nefarious&gt; vec(10);   // questa riga può eseguire std::terminate()</code></pre>
 <p>La libreria standard proibisce l’esecuzione del [throw] in tutti i
 distruttori che usa. Non si possono memorizzare oggetti
 <code>Nefarious</code> nei contenitori standard o usarli con qualsiasi
@@ -23974,7 +23983,7 @@ private:
 };</code></pre>
 <p>Questa classe è un gestore di risorsa. Gestisce il ciclo di vita
 delle <code>T</code>. Per farlo, <code>Vector</code> deve definire o
-cancellare <a href="???">l’insieme delle operazioni speciali</a>
+cancellare <a href="#Rc-five">l’insieme delle operazioni speciali</a>
 (costruttori, un distruttore, ecc.).</p>
 <h5 id="esempio-410">Esempio</h5>
 <pre><code>??? risorsa non-memoria &quot;strana&quot;  ???</code></pre>
@@ -24585,7 +24594,7 @@ dovrebbero invece consigliare le lambda?</p></li>
 <code>p = (s1 + s2).c_str();</code></p></li>
 <li><p>invalidazione di un puntatore/iteratore che ha a che fare con
 puntatori appesi [dangling]:</p>
-<pre><code>   void bad()
+<pre><code> void bad()
    {
        int* p = new int[700];
        int* q = &amp;p[7];
@@ -24705,6 +24714,7 @@ Alexandrescu. C++ Coding Standards. Addison-Wesley 2005.</li>
 <li><a name="Taligent94"></a> [Taligent94]: Taligent’s Guide to
 Designing Programs (Addison-Wesley, 1994).</li>
 </ul>
+
 
     </div>
   </body>
