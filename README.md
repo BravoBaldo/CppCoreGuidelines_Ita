@@ -2,16 +2,7 @@
 Italian translation of CppCoreGuidelines.
 Traduzione italiana delle CppCoreGuidelines.
 
-## HTML version formatted for browsing in Italian:
-
-1) execute: pandoc -s -o output.html -f markdown -t html ..\\CppCoreGuidelines.md
-2) Insert the body content of "output.html" (without tags &lt;body&gt; and &lt;/body&gt;) and replace the tag &lt;InsertOrgBodyHere/&gt; in a copy of the file "Shell.html"
-3) Copy the first 2 lists of #S-abstract and "Supporting sections" (from &lt;ul&gt;...&lt;/ul&gt; without tags) in a new temporary text document.
-	3a) replace '&lt;li&gt;&lt;a href="' with '&lt;a class="sidebar-nav-item active" href="'
-	3b) remove all '&lt;/li&gt;'
-	3c) insert '&lt;br/&gt;' between the 2 lists
-	3d) move all the text replacing tag &lt;InsertSideBarHere/&gt; in "Shell.html"
-4) Save this modified "Shell.html" as "CppCoreGuidelines_Ita.md" and Enjoy :)
+* Moved to [Sphinx](https://www.sphinx-doc.org/)
 
 ## Tools used:
 
@@ -27,7 +18,6 @@ Traduzione italiana delle CppCoreGuidelines.
 
 ## ToDo
 
-* Move to [Sphinx](https://www.sphinx-doc.org/)
 * Translation maintenance.
 * [Automatic] Conversion to SQL format (database).
 * Tool (app?) for read/modify CppCoreGuidelines.
