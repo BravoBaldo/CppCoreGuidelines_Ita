@@ -1,5 +1,5 @@
 const DOCUMENTATION_OPTIONS = {
-    VERSION: 'Maggio 2024',
+    VERSION: '20240712',
     LANGUAGE: 'it',
     COLLAPSE_INDEX: false,
     BUILDER: 'singlehtml',
